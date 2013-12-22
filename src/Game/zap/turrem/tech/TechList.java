@@ -11,6 +11,43 @@ public class TechList
 	{
 		techlist.put(name, tech);
 	}
+	
+	public static Tech getTech(Class<? extends Tech> tech, int pass)
+	{
+		String name = getTechName(tech, pass);
+		return getTech(name);
+	}
+	
+	public static String getTechName(Class<? extends Tech> tech, int pass)
+	{
+		int passnum = Tech.getPassNum(tech);
+		String name = Tech.getTechName(tech, pass);
+		if (passnum > 1)
+		{
+			pass = pass % passnum;
+			name += "." + pass;
+		}
+		else
+		{
+			pass = 0;
+		}
+		return name;
+	}
+	
+	public static String getTechName(Class<? extends Tech> tech)
+	{
+		return getTechName(tech, 0);
+	}
+	
+	public static Tech getTech(Class<? extends Tech> tech)
+	{
+		return getTech(tech, 0);
+	}
+	
+	public static Tech getTech(String tech)
+	{
+		return techlist.get(tech);
+	}
 
 	public static boolean loadTechClass(Class<?> tech)
 	{
@@ -25,7 +62,7 @@ public class TechList
 					Tech t = techs[i];
 					if (t instanceof TechBase)
 					{
-						String name = t.getFinalName(i);
+						String name = t.getName(i);
 						addTech((TechBase) t, name);
 					}
 				}

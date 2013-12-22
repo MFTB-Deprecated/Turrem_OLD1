@@ -11,40 +11,13 @@ import java.lang.reflect.Method;
 public abstract class Tech
 {
 	/**
-	 * Gets the name to register the tech with
-	 * @param pass The tech load pass number
-	 * @return The name to register the tech under
-	 */
-	protected abstract String getName(int pass);
-
-	/**
 	 * Builds the final registration name, reformats the string
 	 * @param pass The tech load pass number
 	 * @return The name to register the tech under
 	 */
-	public final String getFinalName(int pass)
+	public final String getName(int pass)
 	{
-		String name = this.getName(pass);
-		String newName = "";
-		boolean cap = true;
-		for (int i = 0; i < name.length(); i++)
-		{
-			char c = name.charAt(i);
-			if (cap)
-			{
-				c = Character.toUpperCase(c);
-			}
-			cap = false;
-			if (Character.isSpaceChar(c))
-			{
-				cap = true;
-			}
-			else
-			{
-				newName += c;
-			}
-		}
-		return newName;
+		return getTechName(this.getClass(), pass);
 	}
 
 	/**
@@ -74,23 +47,61 @@ public abstract class Tech
 
 	/**
 	 * How many passes tech class should have
-	 * @param ownclass Tech's class
+	 * @param tech Tech's class
 	 * @return Number of passes
 	 * @throws IllegalAccessException Bad
 	 * @throws IllegalArgumentException Bad
 	 * @throws InvocationTargetException Bad
 	 * @throws SecurityException Bad
 	 */
-	protected static final int getPassNum(Class<? extends Tech> ownclass) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, SecurityException
+	protected static final int getPassNum(Class<? extends Tech> tech)
 	{
 		try
 		{
-			return (int) ownclass.getMethod("numPass").invoke(null);
+			return (int) tech.getMethod("numPass").invoke(null);
 		}
-		catch (NoSuchMethodException e)
+		catch (Exception e)
 		{
 			return 1;
 		}
+	}
+	
+	protected static final String getTechName(Class<? extends Tech> tech, int pass)
+	{
+		String name = tech.getName();
+		int numpass = 1;
+		try
+		{
+			numpass = getPassNum(tech);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		if (numpass > 1)
+		{
+			name += "." + pass;
+		}
+		String newName = "";
+		boolean cap = true;
+		for (int i = 0; i < name.length(); i++)
+		{
+			char c = name.charAt(i);
+			if (cap)
+			{
+				c = Character.toUpperCase(c);
+			}
+			cap = false;
+			if (Character.isSpaceChar(c))
+			{
+				cap = true;
+			}
+			else
+			{
+				newName += c;
+			}
+		}
+		return newName;
 	}
 	
 	/**

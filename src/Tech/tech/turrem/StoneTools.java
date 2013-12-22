@@ -8,10 +8,4 @@ public class StoneTools extends TechBase
 	{
 		
 	}
-	
-	@Override
-	protected String getName(int pass)
-	{
-		return "StoneTools";
-	}
 }
