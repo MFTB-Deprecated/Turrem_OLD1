@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import zap.turrem.tech.Tech;
+import zap.turrem.tech.TechBase;
 import zap.turrem.tech.TechList;
 
 public class Turrem
@@ -27,7 +27,7 @@ public class Turrem
 		for (int i = 0; i < classlist.length; i++)
 		{
 			Class<?> stone = cl.loadClass(classlist[i]);
-			if (Tech.class.isAssignableFrom(stone))
+			if (TechBase.class.isAssignableFrom(stone))
 			{
 				if (TechList.loadTechClass(stone))
 				{

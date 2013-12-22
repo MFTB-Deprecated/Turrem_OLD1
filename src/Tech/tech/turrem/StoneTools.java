@@ -1,16 +1,16 @@
 package tech.turrem;
 
-import zap.turrem.tech.Tech;
+import zap.turrem.tech.TechBase;
 
-public class StoneTools extends Tech
+public class StoneTools extends TechBase
 {
 	public StoneTools(int pass)
 	{
-		super(pass);
+		
 	}
-
+	
 	@Override
-	public String getName()
+	protected String getName(int pass)
 	{
 		return "StoneTools";
 	}
