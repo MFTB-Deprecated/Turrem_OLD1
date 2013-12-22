@@ -26,7 +26,7 @@ public class Turrem
 	{
 		try
 		{
-			JarLoader.loadTechJar(this.dir);
+			JarLoader.loadTechJar(this.dir + "jars/");
 		}
 		catch (Exception e)
 		{

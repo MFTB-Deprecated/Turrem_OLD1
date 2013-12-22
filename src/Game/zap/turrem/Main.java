@@ -4,7 +4,10 @@ public class Main
 {
 	public static void main(String[] args)
 	{
-		Turrem t = new Turrem("C:/Users/Sam Sartor/Turrem/bin/jars/", new Session());
+		String dir = System.getProperty("user.dir");
+		dir = dir.replaceAll("\\\\", "\\/");
+		dir += "/";
+		Turrem t = new Turrem(dir, new Session());
 		t.doLoad();
 	}
 }
