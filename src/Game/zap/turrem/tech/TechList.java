@@ -1,7 +1,9 @@
 package zap.turrem.tech;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +12,37 @@ public class TechList
 	protected static List<TechBase> techlist = new ArrayList<TechBase>();
 	protected static Map<String, Integer> identifierMap = new HashMap<String, Integer>();
 
+	public static void loadBranches()
+	{
+		Iterator<TechBase> it = techlist.iterator();
+		while (it.hasNext())
+		{
+			it.next().loadBranches();
+		}
+	}
+	
+	@Deprecated
+	public static void callMethod(String methoud, Object... pars)
+	{
+		Iterator<TechBase> it = techlist.iterator();
+		Class<?>[] parclass = new Class[pars.length];
+		for (int i = 0; i < pars.length; i++)
+		{
+			parclass[i] = pars[i].getClass();
+		}
+		while (it.hasNext())
+		{
+			try
+			{
+				TechBase.class.getMethod(methoud, parclass).invoke(it.next(), pars);
+			}
+			catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e)
+			{
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	public static int addTech(TechBase tech, String name)
 	{
 		int id = techlist.size();
@@ -18,36 +51,47 @@ public class TechList
 		return id;
 	}
 	
-	public static Tech getTech(Class<? extends Tech> tech, int pass)
+	public static TechBase getTech(Class<? extends Tech> tech, int pass)
 	{
-		String name = getTechIdentifier(tech, pass);
+		String name = getIdentifier(tech, pass);
 		return getTech(name);
 	}
 	
-	public static String getTechIdentifier(Class<? extends Tech> tech, int pass)
+	public static String getIdentifier(Class<? extends Tech> tech, int pass)
 	{
 		String name = Tech.getTechIdentifier(tech, pass);
 		return name;
 	}
 	
-	public static String getTechIdentifier(Class<? extends Tech> tech)
+	public static TechBase getTech(int index)
 	{
-		return getTechIdentifier(tech, 0);
+		return techlist.get(index);
 	}
 	
-	public static Tech getTech(Class<? extends Tech> tech)
+	public static String getIdentifier(int index)
+	{
+		TechBase t = getTech(index);
+		return t.getIdentifier();
+	}
+	
+	public static String getIdentifier(Class<? extends Tech> tech)
+	{
+		return getIdentifier(tech, 0);
+	}
+	
+	public static TechBase getTech(Class<? extends Tech> tech)
 	{
 		return getTech(tech, 0);
 	}
 	
 	public static int getIndex(Class<? extends Tech> tech, int pass)
 	{
-		return getIndex(getTechIdentifier(tech, pass));
+		return getIndex(getIdentifier(tech, pass));
 	}
 	
 	public static int getIndex(Class<? extends Tech> tech)
 	{
-		return getIndex(getTechIdentifier(tech));
+		return getIndex(getIdentifier(tech));
 	}
 	
 	public static int getIndex(TechBase tech)
@@ -65,9 +109,9 @@ public class TechList
 		return identifierMap.get(tech);
 	}
 	
-	public static Tech getTech(String tech)
+	public static TechBase getTech(String tech)
 	{
-		return techlist.get(getIndex(tech));
+		return getTech(getIndex(tech));
 	}
 
 	public static boolean loadTechClass(Class<?> tech)

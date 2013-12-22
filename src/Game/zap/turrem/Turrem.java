@@ -1,5 +1,7 @@
 package zap.turrem;
 
+import zap.turrem.tech.TechList;
+
 
 public class Turrem
 {
@@ -30,6 +32,7 @@ public class Turrem
 		{
 			e.printStackTrace();
 		}
+		TechList.loadBranches();
 	}
 
 	public Session getSession()

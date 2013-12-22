@@ -1,6 +1,8 @@
 package tech.turrem;
 
 import zap.turrem.tech.TechBase;
+import zap.turrem.tech.branch.BranchAvailable;
+import zap.turrem.tech.branch.BranchSpontaneous;
 
 public class StoneTools extends TechBase
 {
@@ -11,12 +13,35 @@ public class StoneTools extends TechBase
 
 	public static int numPass()
 	{
-		return 2;
+		return 3;
 	}
-	
+
 	@Override
 	public String getName()
 	{
-		return (this.pass == 0 ? "Stone Tools" : "Sharp Stone Tools");
+		switch (this.pass)
+		{
+			case 0:
+				return "Stones";
+			case 1:
+				return "Stone Tools";
+			case 2:
+				return "Sharp Stone Tools";
+			default:
+				return "Stone Tools";
+		}
+	}
+
+	@Override
+	public void loadBranches()
+	{
+		if (this.pass == 0)
+		{
+			this.addBranch(new BranchSpontaneous(this.getIndex(HittingRocks.class, 1)));
+		}
+		if (this.pass == 1)
+		{
+			this.addBranch(new BranchAvailable(this.getIndex(StoneTools.class, 2), this.getIndex(Flint.class, 0)));
+		}
 	}
 }
