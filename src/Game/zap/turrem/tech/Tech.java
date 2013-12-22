@@ -15,9 +15,19 @@ public abstract class Tech
 	 * @param pass The tech load pass number
 	 * @return The name to register the tech under
 	 */
-	public final String getName(int pass)
+	public final String getIdentifier(int pass)
 	{
-		return getTechName(this.getClass(), pass);
+		return getTechIdentifier(this.getClass(), pass);
+	}
+	
+	/**
+	 * Gets the index of this tech at a certain pass
+	 * @param pass Tech pass number
+	 * @return Tech's index
+	 */
+	public final int getId(int pass)
+	{
+		return TechList.getIndex(this, pass);
 	}
 
 	/**
@@ -66,7 +76,13 @@ public abstract class Tech
 		}
 	}
 	
-	protected static final String getTechName(Class<? extends Tech> tech, int pass)
+	/**
+	 * Static get tech name
+	 * @param tech The Tesh's class
+	 * @param pass The pass number
+	 * @return Tech identification name
+	 */
+	protected static final String getTechIdentifier(Class<? extends Tech> tech, int pass)
 	{
 		String name = tech.getName();
 		int numpass = 1;
@@ -80,7 +96,12 @@ public abstract class Tech
 		}
 		if (numpass > 1)
 		{
-			name += "." + pass;
+			pass = pass % numpass;
+			name += "#" + pass;
+		}
+		else
+		{
+			pass = 0;
 		}
 		String newName = "";
 		boolean cap = true;

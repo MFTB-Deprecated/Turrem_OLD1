@@ -6,6 +6,12 @@ public class StoneTools extends TechBase
 {
 	public StoneTools(int pass)
 	{
-		
+		super(pass);
+	}
+
+	@Override
+	public String getName()
+	{
+		return "Stone Tools";
 	}
 }
