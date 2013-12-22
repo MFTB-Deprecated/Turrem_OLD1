@@ -2,9 +2,9 @@ package tech.turrem;
 
 import zap.turrem.tech.TechBase;
 
-public class StoneTools extends TechBase
+public class Flint extends TechBase
 {
-	public StoneTools(int pass)
+	public Flint(int pass)
 	{
 		super(pass);
 	}
@@ -17,6 +17,6 @@ public class StoneTools extends TechBase
 	@Override
 	public String getName()
 	{
-		return (this.pass == 0 ? "Stone Tools" : "Sharp Stone Tools");
+		return this.pass == 0 ? "Flint and a Rock" : "Flint and Steel";
 	}
 }
