@@ -1,10 +1,15 @@
 package zap.turrem.tech;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class TechList
 {
-	public static int addTech(Tech tech, String name)
+	protected static Map<String, Tech> techlist = new HashMap<String, Tech>();
+	
+	public static void addTech(Tech tech, String name)
 	{
-		return -1;
+		techlist.put(name, tech);
 	}
 	
 	public static boolean loadTechClass(Class<?> tech)

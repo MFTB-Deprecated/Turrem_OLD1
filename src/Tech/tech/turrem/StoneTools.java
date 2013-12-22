@@ -1,4 +1,4 @@
-package tech;
+package tech.turrem;
 
 import zap.turrem.tech.Tech;
 

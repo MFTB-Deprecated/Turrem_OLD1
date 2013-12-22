@@ -31,11 +31,11 @@ public class Turrem
 			{
 				if (TechList.loadTechClass(stone))
 				{
-					System.out.println("Loaded tech: " + stone.getName());
+					System.out.println("Loaded techs: " + stone.getName());
 				}
 				else
 				{
-					System.out.println("Could not load tech: " + stone.getName());
+					System.out.println("Could not load techs: " + stone.getName());
 				}
 			}
 		}
