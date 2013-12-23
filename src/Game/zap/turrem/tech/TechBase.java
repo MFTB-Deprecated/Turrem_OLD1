@@ -46,7 +46,7 @@ public abstract class TechBase extends Tech
 		this.branches = bs;
 	}
 
-	protected final int getIndex(Class<? extends Tech> tech, int pass)
+	protected final int getIndex(Class<? extends TechBase> tech, int pass)
 	{
 		return TechList.getIndex(tech, pass);
 	}

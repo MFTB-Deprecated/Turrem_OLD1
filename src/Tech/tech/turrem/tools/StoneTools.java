@@ -1,5 +1,7 @@
-package tech.turrem;
+package tech.turrem.tools;
 
+import tech.turrem.materials.stone.Flint;
+import tech.turrem.materials.stone.HittingRocks;
 import zap.turrem.tech.TechBase;
 import zap.turrem.tech.branch.BranchAvailable;
 import zap.turrem.tech.branch.BranchSpontaneous;
