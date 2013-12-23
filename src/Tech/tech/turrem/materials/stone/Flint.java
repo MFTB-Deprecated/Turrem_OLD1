@@ -1,8 +1,7 @@
 package tech.turrem.materials.stone;
 
-import tech.turrem.Fire;
 import zap.turrem.tech.TechBase;
-import zap.turrem.tech.branch.BranchSpontaneous;
+import zap.turrem.tech.branch.BranchActive;
 
 public class Flint extends TechBase
 {
@@ -27,12 +26,7 @@ public class Flint extends TechBase
 	{
 		if (this.pass == 0)
 		{
-			this.addBranch(new BranchSpontaneous(this.getIndex(Fire.class, 0)));
-		}
-		if (this.pass == 1)
-		{
-			this.addBranch(new BranchSpontaneous(this.getIndex(Fire.class, 0)));
-			this.addBranch(new BranchSpontaneous(this.getIndex(Fire.class, 1)));
+			(new BranchActive(this)).addRequired(HittingRocks.class, 0).push();
 		}
 	}
 }

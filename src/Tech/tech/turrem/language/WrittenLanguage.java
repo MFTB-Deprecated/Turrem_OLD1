@@ -1,11 +1,8 @@
 package tech.turrem.language;
 
-import tech.turrem.math.Numerals;
-import tech.turrem.tools.StoneTools;
-import tech.turrem.writing.ClayTablet;
 import zap.turrem.tech.TechBase;
+import zap.turrem.tech.branch.BranchActive;
 import zap.turrem.tech.branch.BranchAvailable;
-import zap.turrem.tech.branch.BranchSudden;
 
 public class WrittenLanguage extends TechBase
 {
@@ -17,24 +14,25 @@ public class WrittenLanguage extends TechBase
 	@Override
 	public void loadBranches()
 	{
-		this.addBranch(new BranchAvailable(this.getIndex(ClayTablet.class, 0), this.getIndex(StoneTools.class, 2)));
 		if (this.pass == 0)
 		{
-			this.addBranch(new BranchSudden(this.getIndex(WrittenLanguage.class, 1)));
+			(new BranchActive(this)).addRequired(SpokenLanguage.class, 1).push();
 		}
 		if (this.pass == 1)
 		{
-			this.addBranch(new BranchAvailable(this.getIndex(Numerals.class, 0)));
-			this.addBranch(new BranchAvailable(this.getIndex(SpokenLanguage.class, 2)));
-			this.addBranch(new BranchAvailable(this.getIndex(WrittenLanguage.class, 2)));
+			(new BranchActive(this)).addRequired(WrittenLanguage.class, 0).push();
 		}
 		if (this.pass == 2)
 		{
-			this.addBranch(new BranchAvailable(this.getIndex(WrittenLanguage.class, 3)));
+			(new BranchAvailable(this)).addRequired(WrittenLanguage.class, 1).push();
 		}
 		if (this.pass == 3)
 		{
-			this.addBranch(new BranchAvailable(this.getIndex(WrittenLanguage.class, 4)));
+			(new BranchAvailable(this)).addRequired(WrittenLanguage.class, 2).push();
+		}
+		if (this.pass == 4)
+		{
+			(new BranchAvailable(this)).addRequired(WrittenLanguage.class, 3).push();
 		}
 	}
 

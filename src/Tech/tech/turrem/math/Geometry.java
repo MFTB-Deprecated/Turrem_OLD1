@@ -1,5 +1,7 @@
 package tech.turrem.math;
 
+import zap.turrem.tech.branch.BranchAvailable;
+
 public class Geometry extends MathmaticalTech
 {
 	public Geometry(int pass)
@@ -10,7 +12,7 @@ public class Geometry extends MathmaticalTech
 	@Override
 	public void loadBranches()
 	{
-		
+		(new BranchAvailable(this)).addRequired(Arithmetic.class, 2).push();
 	}
 
 	@Override
@@ -18,5 +20,4 @@ public class Geometry extends MathmaticalTech
 	{
 		return "Geometry";
 	}
-
 }

@@ -1,5 +1,6 @@
 package tech.turrem.math;
 
+import tech.turrem.language.WrittenLanguage;
 import zap.turrem.tech.branch.BranchAvailable;
 
 public class Numerals extends MathmaticalTech
@@ -12,11 +13,7 @@ public class Numerals extends MathmaticalTech
 	@Override
 	public void loadBranches()
 	{
-		if (this.pass == 0)
-		{
-			this.addBranch(new BranchAvailable(this.getIndex(Arithmetic.class, 0)));
-			this.addBranch(new BranchAvailable(this.getIndex(Zero.class, 0)));
-		}
+		(new BranchAvailable(this)).addRequired(WrittenLanguage.class, 1).push();
 	}
 
 	@Override

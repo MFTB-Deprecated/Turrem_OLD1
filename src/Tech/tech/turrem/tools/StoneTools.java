@@ -4,7 +4,6 @@ import tech.turrem.materials.stone.Flint;
 import tech.turrem.materials.stone.HittingRocks;
 import zap.turrem.tech.TechBase;
 import zap.turrem.tech.branch.BranchAvailable;
-import zap.turrem.tech.branch.BranchSpontaneous;
 
 public class StoneTools extends TechBase
 {
@@ -39,11 +38,15 @@ public class StoneTools extends TechBase
 	{
 		if (this.pass == 0)
 		{
-			this.addBranch(new BranchSpontaneous(this.getIndex(HittingRocks.class, 1)));
+			(new BranchAvailable(this)).addRequired(HittingRocks.class, 0).push();
 		}
 		if (this.pass == 1)
 		{
-			this.addBranch(new BranchAvailable(this.getIndex(StoneTools.class, 2), this.getIndex(Flint.class, 0)));
+			(new BranchAvailable(this)).addRequired(HittingRocks.class, 1).push();
+		}
+		if (this.pass == 2)
+		{
+			(new BranchAvailable(this)).addRequired(StoneTools.class, 1).addRequired(Flint.class, 0).push();
 		}
 	}
 }

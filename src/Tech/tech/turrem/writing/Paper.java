@@ -1,10 +1,11 @@
 package tech.turrem.writing;
 
+import tech.turrem.language.WrittenLanguage;
 import tech.turrem.materials.plant.Fiber;
 import tech.turrem.materials.plant.Glue;
 import zap.turrem.tech.TechBase;
+import zap.turrem.tech.branch.BranchActive;
 import zap.turrem.tech.branch.BranchAvailable;
-import zap.turrem.tech.branch.BranchSudden;
 
 public class Paper extends TechBase
 {
@@ -18,19 +19,23 @@ public class Paper extends TechBase
 	{
 		if (this.pass == 0)
 		{
-			this.addBranch(new BranchAvailable(this.getIndex(Paper.class, 1), this.getIndex(Fiber.class, 1)));
+			(new BranchAvailable(this)).addRequired(ClayTablet.class, 1).addRequired(Ink.class, 1).addRequired(WrittenLanguage.class, 1).addRequired(Fiber.class, 0).push();
 		}
 		if (this.pass == 1)
 		{
-			this.addBranch(new BranchSudden(this.getIndex(Paper.class, 2), this.getIndex(Fiber.class, 2)));
+			(new BranchAvailable(this)).addRequired(Paper.class, 0).addRequired(Fiber.class, 1).push();
 		}
 		if (this.pass == 2)
 		{
-			this.addBranch(new BranchSudden(this.getIndex(Paper.class, 3)));
+			(new BranchActive(this)).addRequired(Paper.class, 1).addRequired(Fiber.class, 2).push();
 		}
 		if (this.pass == 3)
 		{
-			this.addBranch(new BranchSudden(this.getIndex(Paper.class, 4), this.getIndex(Glue.class, 2)));
+			(new BranchActive(this)).addRequired(Paper.class, 2).push();
+		}
+		if (this.pass == 4)
+		{
+			(new BranchAvailable(this)).addRequired(Paper.class, 3).addRequired(Glue.class, 2).push();
 		}
 	}
 

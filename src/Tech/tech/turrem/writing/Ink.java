@@ -13,9 +13,13 @@ public class Ink extends TechBase
 	@Override
 	public void loadBranches()
 	{
-		if (this.pass == 0)
+		if (this.pass == 1)
 		{
-			this.addBranch(new BranchAvailable(this.getIndex(Ink.class, 1), this.getIndex(Paper.class, 0)));
+			(new BranchAvailable(this)).addRequired(Paper.class, 0).addRequired(Ink.class, 0).push();
+		}
+		if (this.pass == 2)
+		{
+			(new BranchAvailable(this)).addRequired(Paper.class, 0).addRequired(Ink.class, 0).push();
 		}
 	}
 
@@ -38,5 +42,11 @@ public class Ink extends TechBase
 			default:
 				return "Ink";
 		}
+	}
+	
+	@Override
+	public boolean isEntryLevel()
+	{
+		return this.pass == 0;
 	}
 }

@@ -1,6 +1,6 @@
 package tech.turrem.math;
 
-import zap.turrem.tech.branch.BranchSudden;
+import zap.turrem.tech.branch.BranchActive;
 
 public class Ratio extends MathmaticalTech
 {
@@ -14,11 +14,15 @@ public class Ratio extends MathmaticalTech
 	{
 		if (this.pass == 0)
 		{
-			this.addBranch(new BranchSudden(this.getIndex(Ratio.class, 1)));
+			(new BranchActive(this)).addRequired(Numerals.class, 0).addRequired(Arithmetic.class, 0).push();
 		}
 		if (this.pass == 1)
 		{
-			this.addBranch(new BranchSudden(this.getIndex(Ratio.class, 2)));
+			(new BranchActive(this)).addRequired(Ratio.class, 0).addRequired(Arithmetic.class, 1).push();
+		}
+		if (this.pass == 2)
+		{
+			(new BranchActive(this)).addRequired(Ratio.class, 1).addRequired(Zero.class, 0).push();
 		}
 	}
 

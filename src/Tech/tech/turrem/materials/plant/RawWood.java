@@ -1,7 +1,7 @@
 package tech.turrem.materials.plant;
 
 import zap.turrem.tech.TechBase;
-import zap.turrem.tech.branch.BranchAvailable;
+import zap.turrem.tech.branch.BranchActive;
 
 public class RawWood extends TechBase
 {
@@ -13,7 +13,14 @@ public class RawWood extends TechBase
 	@Override
 	public void loadBranches()
 	{
-		this.addBranch(new BranchAvailable(this.getIndex(Fiber.class, 1), this.getIndex(Fiber.class, 0)));
+		if (this.pass == 1)
+		{
+			(new BranchActive(this)).addRequired(RawWood.class, 0).push();
+		}
+		if (this.pass == 2)
+		{
+			(new BranchActive(this)).addRequired(RawWood.class, 1).push();
+		}
 	}
 
 	public static int numPass()
@@ -35,5 +42,11 @@ public class RawWood extends TechBase
 			default:
 				return "Wood";
 		}
+	}
+	
+	@Override
+	public boolean isEntryLevel()
+	{
+		return this.pass == 0;
 	}
 }

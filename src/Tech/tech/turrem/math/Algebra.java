@@ -1,5 +1,7 @@
 package tech.turrem.math;
 
+import zap.turrem.tech.branch.BranchAvailable;
+
 public class Algebra extends MathmaticalTech
 {
 	public Algebra(int pass)
@@ -10,7 +12,7 @@ public class Algebra extends MathmaticalTech
 	@Override
 	public void loadBranches()
 	{
-		
+		(new BranchAvailable(this)).addRequired(Arithmetic.class, 2).addRequired(Arithmetic.class, 1).push();
 	}
 
 	@Override

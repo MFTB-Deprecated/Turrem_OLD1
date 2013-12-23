@@ -7,6 +7,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import zap.turrem.tech.branch.Branch;
+import zap.turrem.tech.branch.BranchList;
+
 public class TechList
 {
 	protected static List<TechBase> techlist = new ArrayList<TechBase>();
@@ -17,7 +20,13 @@ public class TechList
 		Iterator<TechBase> it = techlist.iterator();
 		while (it.hasNext())
 		{
-			it.next().loadBranches();
+			it.next().loadAllBranches();
+		}
+		System.out.println("Loaded " + BranchList.branchCount() + " branches");
+		int dif = Branch.instanceCount - BranchList.branchCount();
+		if (dif != 0)
+		{
+			System.out.println("Warning! " + dif + " branch(es) are not pushed to list");
 		}
 	}
 

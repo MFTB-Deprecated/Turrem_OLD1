@@ -1,33 +1,73 @@
 package zap.turrem.tech.branch;
 
+import zap.turrem.tech.Tech;
 import zap.turrem.tech.TechBase;
 import zap.turrem.tech.TechList;
 
-//TODO Functional branches
-public abstract class Branch
+public class Branch
 {
-	protected int tech;
-
-	protected int[] needed;
-
-	public Branch(int tech, int... neededtech)
+	public static int instanceCount = 0;
+	
+	protected int[] techs = new int[0];
+	protected int[] requiredtechs = new int[0];
+	
+	private int id = -1;
+	
+	public Branch(int tech)
 	{
-		this.tech = tech;
-		this.needed = neededtech;
+		this.techs = new int[] {tech};
+		instanceCount++;
+	}
+	
+	public int getId()
+	{
+		return id;
 	}
 
-	public int getTechIndex()
+	public Branch(String tech)
 	{
-		return this.tech;
+		this(TechList.getIndex(tech));
 	}
-
-	public String getTechIdentifier()
+	
+	public Branch(TechBase tech)
 	{
-		return TechList.getIdentifier(this.getTechIndex());
+		this(TechList.getIndex(tech));
 	}
-
-	public TechBase getTech()
+	
+	public Branch(Class<? extends Tech> tech, int pass)
 	{
-		return TechList.getTech(this.getTechIndex());
+		this(TechList.getIndex(tech, pass));
+	}
+	
+	public Branch addRequired(int tech)
+	{
+		int[] ts = new int[this.requiredtechs.length + 1];
+		ts[0] = tech;
+		for (int i = 0; i < this.requiredtechs.length; i++)
+		{
+			ts[i + 1] = this.requiredtechs[i];
+		}
+		this.requiredtechs = ts;
+		return this;
+	}
+	
+	public Branch addRequired(String tech)
+	{
+		return this.addRequired(TechList.getIndex(tech));
+	}
+	
+	public Branch addRequired(TechBase tech)
+	{
+		return this.addRequired(TechList.getIndex(tech));
+	}
+	
+	public Branch addRequired(Class<? extends Tech> tech, int pass)
+	{
+		return this.addRequired(TechList.getIndex(tech, pass));
+	}
+	
+	public void push()
+	{
+		this.id = BranchList.addBranch(this);
 	}
 }

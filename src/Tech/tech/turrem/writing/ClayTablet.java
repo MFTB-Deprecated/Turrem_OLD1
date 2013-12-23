@@ -1,7 +1,6 @@
 package tech.turrem.writing;
 
 import tech.turrem.language.WrittenLanguage;
-import tech.turrem.materials.plant.Fiber;
 import tech.turrem.tools.StoneTools;
 import zap.turrem.tech.TechBase;
 import zap.turrem.tech.branch.BranchAvailable;
@@ -18,11 +17,11 @@ public class ClayTablet extends TechBase
 	{
 		if (this.pass == 0)
 		{
-			this.addBranch(new BranchAvailable(this.getIndex(ClayTablet.class, 1), this.getIndex(StoneTools.class, 1)));
+			(new BranchAvailable(this)).addRequired(WrittenLanguage.class, 0).addRequired(StoneTools.class, 2).push();
 		}
 		if (this.pass == 1)
 		{
-			this.addBranch(new BranchAvailable(this.getIndex(Paper.class, 0), this.getIndex(Ink.class, 1), this.getIndex(WrittenLanguage.class, 1), this.getIndex(Fiber.class, 0)));
+			(new BranchAvailable(this)).addRequired(ClayTablet.class, 0).addRequired(StoneTools.class, 1).push();
 		}
 	}
 

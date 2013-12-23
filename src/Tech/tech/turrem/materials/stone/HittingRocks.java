@@ -2,8 +2,7 @@ package tech.turrem.materials.stone;
 
 import tech.turrem.tools.StoneTools;
 import zap.turrem.tech.TechBase;
-import zap.turrem.tech.branch.BranchAvailable;
-import zap.turrem.tech.branch.BranchSudden;
+import zap.turrem.tech.branch.BranchSpontaneous;
 
 public class HittingRocks extends TechBase
 {
@@ -26,20 +25,15 @@ public class HittingRocks extends TechBase
 	@Override
 	public void loadBranches()
 	{
-		if (this.pass == 0)
-		{
-			this.addBranch(new BranchAvailable(this.getIndex(StoneTools.class, 0)));
-			this.addBranch(new BranchSudden(this.getIndex(Flint.class, 0)));
-		}
 		if (this.pass == 1)
 		{
-			this.addBranch(new BranchAvailable(this.getIndex(StoneTools.class, 1)));
+			(new BranchSpontaneous(this)).addRequired(StoneTools.class, 0).push();
 		}
 	}
 	
 	@Override
 	public boolean isEntryLevel()
 	{
-		return true;
+		return this.pass == 0;
 	}
 }

@@ -1,10 +1,27 @@
 package zap.turrem.tech.branch;
 
-//TODO Gui to research tech
+import zap.turrem.tech.Tech;
+import zap.turrem.tech.TechBase;
+
 public class BranchAvailable extends Branch
 {
-	public BranchAvailable(int tech, int... neededtech)
+	public BranchAvailable(int tech)
 	{
-		super(tech, neededtech);
+		super(tech);
+	}
+
+	public BranchAvailable(String tech)
+	{
+		super(tech);
+	}
+	
+	public BranchAvailable(TechBase tech)
+	{
+		super(tech);
+	}
+	
+	public BranchAvailable(Class<? extends Tech> tech, int pass)
+	{
+		super(tech, pass);
 	}
 }

@@ -1,6 +1,5 @@
 package tech.turrem.materials.plant;
 
-import tech.turrem.writing.Paper;
 import zap.turrem.tech.TechBase;
 import zap.turrem.tech.branch.BranchAvailable;
 import zap.turrem.tech.branch.BranchSpontaneous;
@@ -15,13 +14,13 @@ public class Fiber extends TechBase
 	@Override
 	public void loadBranches()
 	{
-		if (this.pass == 0)
-		{
-			this.addBranch(new BranchAvailable(this.getIndex(Paper.class, 0)));
-		}
 		if (this.pass == 1)
 		{
-			this.addBranch(new BranchSpontaneous(this.getIndex(Fiber.class, 2)));
+			(new BranchAvailable(this)).addRequired(RawWood.class, 0).push();
+		}
+		if (this.pass == 2)
+		{
+			(new BranchSpontaneous(this)).addRequired(Fiber.class, 1).push();
 		}
 	}
 
@@ -44,5 +43,11 @@ public class Fiber extends TechBase
 			default:
 				return "Paper";
 		}
+	}
+	
+	@Override
+	public boolean isEntryLevel()
+	{
+		return this.pass == 0;
 	}
 }

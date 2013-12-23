@@ -1,7 +1,8 @@
 package tech.turrem.language;
 
 import zap.turrem.tech.TechBase;
-import zap.turrem.tech.branch.BranchSudden;
+import zap.turrem.tech.branch.BranchActive;
+import zap.turrem.tech.branch.BranchAvailable;
 
 public class SpokenLanguage extends TechBase
 {
@@ -13,13 +14,13 @@ public class SpokenLanguage extends TechBase
 	@Override
 	public void loadBranches()
 	{
-		if (this.pass == 0)
-		{
-			this.addBranch(new BranchSudden(this.getIndex(SpokenLanguage.class, 1)));
-		}
 		if (this.pass == 1)
 		{
-			this.addBranch(new BranchSudden(this.getIndex(WrittenLanguage.class, 0)));
+			(new BranchActive(this)).addRequired(SpokenLanguage.class, 0).push();
+		}
+		if (this.pass == 2)
+		{
+			(new BranchAvailable(this)).addRequired(WrittenLanguage.class, 1).addRequired(SpokenLanguage.class, 1).push();
 		}
 	}
 
@@ -47,6 +48,6 @@ public class SpokenLanguage extends TechBase
 	@Override
 	public boolean isEntryLevel()
 	{
-		return true;
+		return this.pass == 0;
 	}
 }

@@ -14,13 +14,15 @@ public class Arithmetic extends MathmaticalTech
 	{
 		if (this.pass == 0)
 		{
-			this.addBranch(new BranchAvailable(this.getIndex(Arithmetic.class, 1), this.getIndex(Zero.class, 0)));
-			this.addBranch(new BranchAvailable(this.getIndex(Arithmetic.class, 2), this.getIndex(Ratio.class, 1)));
+			(new BranchAvailable(this)).addRequired(Numerals.class, 0).push();
+		}
+		if (this.pass == 1)
+		{
+			(new BranchAvailable(this)).addRequired(Arithmetic.class, 0).addRequired(Zero.class, 0).push();
 		}
 		if (this.pass == 2)
 		{
-			this.addBranch(new BranchAvailable(this.getIndex(Geometry.class, 0)));
-			this.addBranch(new BranchAvailable(this.getIndex(Algebra.class, 0)));
+			(new BranchAvailable(this)).addRequired(Arithmetic.class, 0).addRequired(Ratio.class, 1).push();
 		}
 	}
 
