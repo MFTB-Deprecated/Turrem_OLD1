@@ -3,8 +3,9 @@ package zap.turrem.tech.branch;
 import zap.turrem.tech.Tech;
 import zap.turrem.tech.TechBase;
 import zap.turrem.tech.TechList;
+import zap.turrem.tech.branch.data.BranchData;
 
-public class Branch
+public abstract class Branch
 {
 	public static int instanceCount = 0;
 	
@@ -70,4 +71,12 @@ public class Branch
 	{
 		this.id = BranchList.addBranch(this);
 	}
+	
+	public abstract void onStart(BranchData data);
+	
+	public abstract boolean isDone(BranchData data);
+	
+	public abstract boolean onTick(BranchData data, int tickRate);
+	
+	public abstract void onDone(BranchData data);
 }
