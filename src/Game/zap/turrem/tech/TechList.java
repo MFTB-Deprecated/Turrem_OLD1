@@ -21,6 +21,11 @@ public class TechList
 		}
 	}
 	
+	public static int techCount()
+	{
+		return techlist.size();
+	}
+	
 	@Deprecated
 	public static void callMethod(String methoud, Object... pars)
 	{

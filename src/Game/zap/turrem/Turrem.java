@@ -1,7 +1,7 @@
 package zap.turrem;
 
 import zap.turrem.tech.TechList;
-
+import zap.turrem.utils.Timer;
 
 public class Turrem
 {
@@ -24,6 +24,8 @@ public class Turrem
 
 	public void doLoad()
 	{
+		Timer timer = new Timer();
+		timer.start();
 		try
 		{
 			JarLoader.loadTechJar(this.dir + "jars/");
@@ -33,6 +35,8 @@ public class Turrem
 			e.printStackTrace();
 		}
 		TechList.loadBranches();
+		long nano = timer.end();
+		System.out.printf("Loaded %d techs in %.2fms%n", TechList.techCount(), nano * 0.000001D);
 	}
 
 	public Session getSession()
