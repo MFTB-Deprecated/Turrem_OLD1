@@ -36,4 +36,10 @@ public class HittingRocks extends TechBase
 			this.addBranch(new BranchAvailable(this.getIndex(StoneTools.class, 1)));
 		}
 	}
+	
+	@Override
+	public boolean isEntryLevel()
+	{
+		return true;
+	}
 }

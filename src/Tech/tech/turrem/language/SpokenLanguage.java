@@ -43,4 +43,10 @@ public class SpokenLanguage extends TechBase
 				return "Language";
 		}
 	}
+	
+	@Override
+	public boolean isEntryLevel()
+	{
+		return true;
+	}
 }

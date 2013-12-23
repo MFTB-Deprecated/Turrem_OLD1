@@ -50,4 +50,9 @@ public abstract class TechBase extends Tech
 	{
 		return TechList.getIndex(tech, pass);
 	}
+	
+	public boolean isEntryLevel()
+	{
+		return false;
+	}
 }
