@@ -8,6 +8,7 @@ public class Main
 		dir = dir.replaceAll("\\\\", "\\/");
 		dir += "/";
 		Turrem t = new Turrem(dir, new Session());
-		t.doLoad();
+		Thread.currentThread().setName("Turrem main thread");
+		t.run();
 	}
 }

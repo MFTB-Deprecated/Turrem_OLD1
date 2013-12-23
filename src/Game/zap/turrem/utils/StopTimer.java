@@ -3,7 +3,7 @@ package zap.turrem.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Timer
+public class StopTimer
 {
 	private long startTime;
 	private boolean timing = false;

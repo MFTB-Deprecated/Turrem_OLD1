@@ -1,12 +1,15 @@
 package zap.turrem;
 
-import zap.turrem.tech.TechList;
-import zap.turrem.utils.Timer;
+import zap.turrem.client.ITurremGame;
+import zap.turrem.client.TurremGame;
+import zap.turrem.client.TurremMenu;
 
 public class Turrem
 {
 	private Session session;
 	private String dir;
+	
+	private ITurremGame game;
 	
 	private static Turrem instance;
 
@@ -22,23 +25,23 @@ public class Turrem
 		instance = this;
 	}
 
-	public void doLoad()
+	public void run()
 	{
-		Timer timer = new Timer();
-		timer.start();
-		try
-		{
-			JarLoader.loadTechJar(this.dir + "jars/");
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-		TechList.loadBranches();
-		long nano = timer.end();
-		System.out.printf("Loaded %d techs in %.2fms%n", TechList.techCount(), nano * 0.000001D);
+		this.gotoMenu();
 	}
-
+	
+	public void gotoGame()
+	{
+		this.game = new TurremGame(this);
+		this.game.run();
+	}
+	
+	public void gotoMenu()
+	{
+		this.game = new TurremMenu(this);
+		this.game.run();
+	}
+	
 	public Session getSession()
 	{
 		return session;
