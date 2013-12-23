@@ -234,7 +234,7 @@ class PerlinLayerLinear extends PerlinLayer
 			if (this.parent instanceof PerlinLayer)
 			{
 				PerlinLayer l = (PerlinLayer) this.parent;
-				l.removeme(corner);
+				l.removeme(this.corner);
 			}
 			else
 			{

@@ -21,16 +21,18 @@ public class TurremGame implements ITurremGame
 	public TurremGame(Turrem turrem)
 	{
 		this.theTurrem = turrem;
-		tickspace = (int) (1000 / tps);
+		this.tickspace = (int) (1000 / tps);
 	}
 
+	// TODO Could use improvements
+	// TODO Learn how to thread
 	@Override
 	public void runGameLoop()
 	{
-		long diff = System.currentTimeMillis() - mils;
-		if (diff >= tickspace || diff < 0)
+		long diff = System.currentTimeMillis() - this.mils;
+		if (diff >= this.tickspace || diff < 0)
 		{
-			mils = System.currentTimeMillis();
+			this.mils = System.currentTimeMillis();
 			this.runTick();
 		}
 	}
@@ -38,6 +40,8 @@ public class TurremGame implements ITurremGame
 	public void runTick()
 	{
 		this.tickcount++;
+
+		// TODO Program Game
 
 		if (this.tickcount > 1000)
 		{
@@ -47,7 +51,7 @@ public class TurremGame implements ITurremGame
 
 	public boolean isrunning()
 	{
-		return running;
+		return this.running;
 	}
 
 	@Override

@@ -53,10 +53,10 @@ public class PerlinWorld implements IPerlinGroup
 
 	public void clear()
 	{
-		layers.clear();
-		chunks.clear();
-		xpos.clear();
-		ypos.clear();
+		this.layers.clear();
+		this.chunks.clear();
+		this.xpos.clear();
+		this.ypos.clear();
 	}
 
 	public float[] getChunk(int chunkx, int chunky)
@@ -72,10 +72,10 @@ public class PerlinWorld implements IPerlinGroup
 				}
 			}
 		}
-		int xind = chunkx / layersize;
-		int yind = chunky / layersize;
-		float u = chunkx / (float) layersize - xind;
-		float v = chunky / (float) layersize - yind;
+		int xind = chunkx / this.layersize;
+		int yind = chunky / this.layersize;
+		float u = chunkx / (float) this.layersize - xind;
+		float v = chunky / (float) this.layersize - yind;
 		IPerlinLayer l = this.makeLayer(xind, yind);
 		float[] fs = l.getChunk(u, v);
 		if (this.saveOld)

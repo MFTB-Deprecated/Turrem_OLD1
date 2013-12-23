@@ -1,6 +1,5 @@
 package zap.turrem.utils.perlin;
 
-
 public abstract class PerlinLayer implements IPerlinLayer
 {
 	protected IPerlinGroup parent;

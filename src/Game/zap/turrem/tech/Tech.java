@@ -4,14 +4,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
- * Do not extend this!
- * Extend TechBase instead
+ * Do not extend this! Extend TechBase instead
+ * 
  * @author Sam Sartor
  */
 public abstract class Tech
 {
 	/**
 	 * Builds the final registration name, reformats the string
+	 * 
 	 * @param pass The tech load pass number
 	 * @return The name to register the tech under
 	 */
@@ -19,9 +20,10 @@ public abstract class Tech
 	{
 		return getTechIdentifier(this.getClass(), pass);
 	}
-	
+
 	/**
 	 * Gets the index of this tech at a certain pass
+	 * 
 	 * @param pass Tech pass number
 	 * @return Tech's index
 	 */
@@ -39,7 +41,8 @@ public abstract class Tech
 	 * @throws IllegalAccessException Bad
 	 * @throws IllegalArgumentException Bad
 	 * @throws InvocationTargetException Bad
-	 * @throws NoSuchMethodException Hint, your tech's constructor should have a single int as its parameters
+	 * @throws NoSuchMethodException Hint, your tech's constructor should have a
+	 *             single int as its parameters
 	 * @throws SecurityException Bad
 	 */
 	public static final Tech newInstance(int pass, Class<? extends Tech> ownclass) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException
@@ -57,6 +60,7 @@ public abstract class Tech
 
 	/**
 	 * How many passes tech class should have
+	 * 
 	 * @param tech Tech's class
 	 * @return Number of passes
 	 * @throws IllegalAccessException Bad
@@ -75,9 +79,10 @@ public abstract class Tech
 			return 1;
 		}
 	}
-	
+
 	/**
 	 * Static get tech name
+	 * 
 	 * @param tech The Tesh's class
 	 * @param pass The pass number
 	 * @return Tech identification name
@@ -124,9 +129,10 @@ public abstract class Tech
 		}
 		return newName;
 	}
-	
+
 	/**
 	 * Builds all instances of tech class
+	 * 
 	 * @param ownclass Tech's class
 	 * @return Tech instances (length equal to pass number)
 	 */

@@ -3,12 +3,13 @@ package zap.turrem.tech.branch;
 import zap.turrem.tech.TechBase;
 import zap.turrem.tech.TechList;
 
+//TODO Functional branches
 public abstract class Branch
 {
 	protected int tech;
-	
+
 	protected int[] needed;
-	
+
 	public Branch(int tech, int... neededtech)
 	{
 		this.tech = tech;
@@ -17,14 +18,14 @@ public abstract class Branch
 
 	public int getTechIndex()
 	{
-		return tech;
+		return this.tech;
 	}
-	
+
 	public String getTechIdentifier()
 	{
 		return TechList.getIdentifier(this.getTechIndex());
 	}
-	
+
 	public TechBase getTech()
 	{
 		return TechList.getTech(this.getTechIndex());

@@ -20,12 +20,12 @@ public class TechList
 			it.next().loadBranches();
 		}
 	}
-	
+
 	public static int techCount()
 	{
 		return techlist.size();
 	}
-	
+
 	@Deprecated
 	public static void callMethod(String methoud, Object... pars)
 	{
@@ -47,7 +47,7 @@ public class TechList
 			}
 		}
 	}
-	
+
 	public static int addTech(TechBase tech, String name)
 	{
 		int id = techlist.size();
@@ -55,65 +55,65 @@ public class TechList
 		identifierMap.put(name, id);
 		return id;
 	}
-	
+
 	public static TechBase getTech(Class<? extends Tech> tech, int pass)
 	{
 		String name = getIdentifier(tech, pass);
 		return getTech(name);
 	}
-	
+
 	public static String getIdentifier(Class<? extends Tech> tech, int pass)
 	{
 		String name = Tech.getTechIdentifier(tech, pass);
 		return name;
 	}
-	
+
 	public static TechBase getTech(int index)
 	{
 		return techlist.get(index);
 	}
-	
+
 	public static String getIdentifier(int index)
 	{
 		TechBase t = getTech(index);
 		return t.getIdentifier();
 	}
-	
+
 	public static String getIdentifier(Class<? extends Tech> tech)
 	{
 		return getIdentifier(tech, 0);
 	}
-	
+
 	public static TechBase getTech(Class<? extends Tech> tech)
 	{
 		return getTech(tech, 0);
 	}
-	
+
 	public static int getIndex(Class<? extends Tech> tech, int pass)
 	{
 		return getIndex(getIdentifier(tech, pass));
 	}
-	
+
 	public static int getIndex(Class<? extends Tech> tech)
 	{
 		return getIndex(getIdentifier(tech));
 	}
-	
+
 	public static int getIndex(TechBase tech)
 	{
 		return getIndex(tech.getIdentifier());
 	}
-	
+
 	public static int getIndex(Tech tech, int pass)
 	{
 		return getIndex(tech.getIdentifier(pass));
 	}
-	
+
 	public static int getIndex(String tech)
 	{
 		return identifierMap.get(tech);
 	}
-	
+
 	public static TechBase getTech(String tech)
 	{
 		return getTech(getIndex(tech));

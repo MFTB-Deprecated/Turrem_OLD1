@@ -68,12 +68,12 @@ public class StopTimer
 			return;
 		}
 		this.timing = false;
-		long time = t - startTime;
+		long time = t - this.startTime;
 		if (time < 0)
 		{
-			time = Long.MAX_VALUE - startTime + t - Long.MIN_VALUE;
+			time = Long.MAX_VALUE - this.startTime + t - Long.MIN_VALUE;
 		}
-		laps.add(time);
+		this.laps.add(time);
 	}
 
 	public long end()

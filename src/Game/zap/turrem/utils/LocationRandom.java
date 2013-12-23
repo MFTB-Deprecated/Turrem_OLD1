@@ -1,6 +1,5 @@
 package zap.turrem.utils;
 
-
 public class LocationRandom
 {
 	private long seed;
@@ -55,7 +54,7 @@ public class LocationRandom
 
 		if ((n & -n) == n) // i.e., n is a power of 2
 		{
-			return (int) ((n * (long) next(31, x, y)) >> 31);
+			return (int) ((n * (long) this.next(31, x, y)) >> 31);
 		}
 
 		this.lastseed = this.posSeed(x, y);
@@ -63,7 +62,7 @@ public class LocationRandom
 		int bits, val;
 		do
 		{
-			bits = next(31);
+			bits = this.next(31);
 			val = bits % n;
 		}
 		while (bits - val + (n - 1) < 0);
@@ -72,7 +71,7 @@ public class LocationRandom
 
 	public float nextFloat(int x, int y)
 	{
-		return next(24, x, y) / ((float) (1 << 24));
+		return this.next(24, x, y) / ((float) (1 << 24));
 	}
 
 	public long getLocSeed(int x, int y)

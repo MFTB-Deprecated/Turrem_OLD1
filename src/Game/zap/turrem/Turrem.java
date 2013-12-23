@@ -8,9 +8,9 @@ public class Turrem
 {
 	private Session session;
 	private String dir;
-	
+
 	private ITurremGame game;
-	
+
 	private static Turrem instance;
 
 	public static Turrem getTurrem()
@@ -29,26 +29,26 @@ public class Turrem
 	{
 		this.gotoMenu();
 	}
-	
+
 	public void gotoGame()
 	{
 		this.game = new TurremGame(this);
 		this.game.run();
 	}
-	
+
 	public void gotoMenu()
 	{
 		this.game = new TurremMenu(this);
 		this.game.run();
 	}
-	
+
 	public Session getSession()
 	{
-		return session;
+		return this.session;
 	}
-	
+
 	public String getDir()
 	{
-		return dir;
+		return this.dir;
 	}
 }

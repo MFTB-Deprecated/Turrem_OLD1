@@ -2,6 +2,7 @@ package zap.turrem.client;
 
 import zap.turrem.Turrem;
 
+//TODO Create GUI
 public class TurremMenu implements ITurremGame
 {
 	public static boolean newMenu = true;
@@ -16,7 +17,7 @@ public class TurremMenu implements ITurremGame
 	@Override
 	public void runGameLoop()
 	{
-
+		// TODO Game loop?
 	}
 
 	@Override
@@ -30,6 +31,7 @@ public class TurremMenu implements ITurremGame
 	{
 		if (newMenu)
 		{
+			// TODO Actual main menu
 			newMenu = false;
 			this.theTurrem.gotoGame();
 		}

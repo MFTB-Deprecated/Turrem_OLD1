@@ -16,7 +16,7 @@ public class MakeColor
 
 	public static int RGB(String hex)
 	{
-		return (int) Integer.parseInt(hex, 16);
+		return Integer.parseInt(hex, 16);
 	}
 
 	public static int HSV(int h, int s, int v)
