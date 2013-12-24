@@ -1,5 +1,7 @@
 package zap.turrem.client;
 
+import java.io.File;
+
 import zap.turrem.Turrem;
 import zap.turrem.loader.TechLoader;
 import zap.turrem.tech.TechList;
@@ -68,7 +70,8 @@ public class TurremGame implements ITurremGame
 	{
 		try
 		{
-			TechLoader.loadJar(this.theTurrem.getDir() + "jars/");
+			TechLoader loader = new TechLoader(new File(this.theTurrem.getDir() + "jars/" + "tech.jar"));
+			loader.loadJar();
 		}
 		catch (Exception e)
 		{

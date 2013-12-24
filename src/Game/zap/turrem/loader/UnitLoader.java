@@ -6,12 +6,12 @@ import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.net.URLClassLoader;
 
-import zap.turrem.tech.TechBase;
-import zap.turrem.tech.TechList;
+import zap.turrem.units.UnitBase;
+import zap.turrem.units.UnitList;
 
-public class TechLoader extends JarLoader
+public class UnitLoader extends JarLoader
 {
-	public TechLoader(File jar)
+	public UnitLoader(File jar)
 	{
 		super(jar);
 	}
@@ -20,7 +20,7 @@ public class TechLoader extends JarLoader
 	{
 		if (!this.jarfile.exists())
 		{
-			System.out.println("Error! tech.jar does not exist!");
+			System.out.println("Error! units.jar does not exist!");
 			return;
 		}
 		URL jarfile = new URL("jar", "", "file:" + this.jarfile.getAbsolutePath() + "!/");
@@ -32,15 +32,15 @@ public class TechLoader extends JarLoader
 		for (int i = 0; i < classlist.length; i++)
 		{
 			Class<?> stone = cl.loadClass(classlist[i]);
-			if (TechBase.class.isAssignableFrom(stone) && !Modifier.isAbstract(stone.getModifiers()) && stone.getPackage().getName().startsWith("tech."))
+			if (UnitBase.class.isAssignableFrom(stone) && !Modifier.isAbstract(stone.getModifiers()) && stone.getPackage().getName().startsWith("units."))
 			{
-				if (TechList.loadTechClass(stone))
+				if (UnitList.loadUnitClass(stone))
 				{
-					System.out.println("Loaded techs: " + stone.getName());
+					System.out.println("Loaded unit: " + stone.getName());
 				}
 				else
 				{
-					System.out.println("Could not load techs: " + stone.getName());
+					System.out.println("Could not load unit: " + stone.getName());
 				}
 			}
 		}
