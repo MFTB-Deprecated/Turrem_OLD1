@@ -1,7 +1,7 @@
 package zap.turrem.client;
 
-import zap.turrem.JarLoader;
 import zap.turrem.Turrem;
+import zap.turrem.loader.TechLoader;
 import zap.turrem.tech.TechList;
 import zap.turrem.utils.StopTimer;
 
@@ -68,7 +68,7 @@ public class TurremGame implements ITurremGame
 	{
 		try
 		{
-			JarLoader.loadTechJar(this.theTurrem.getDir() + "jars/");
+			TechLoader.loadJar(this.theTurrem.getDir() + "jars/");
 		}
 		catch (Exception e)
 		{
