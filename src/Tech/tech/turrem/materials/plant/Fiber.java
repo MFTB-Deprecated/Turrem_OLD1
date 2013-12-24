@@ -44,7 +44,7 @@ public class Fiber extends TechBase
 				return "Paper";
 		}
 	}
-	
+
 	@Override
 	public boolean isEntryLevel()
 	{

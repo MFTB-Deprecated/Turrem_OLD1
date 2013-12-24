@@ -13,14 +13,14 @@ public abstract class TechBase extends Tech
 	// TODO Make tech require resources and unlock things
 
 	protected int pass;
-	
+
 	public TechBase(int pass)
 	{
 		this.pass = pass;
 	}
 
 	public abstract void loadBranches();
-	
+
 	public void loadAllBranches()
 	{
 		if (this.isEntryLevel())
@@ -46,7 +46,7 @@ public abstract class TechBase extends Tech
 	{
 		return TechList.getIndex(tech, pass);
 	}
-	
+
 	public boolean isEntryLevel()
 	{
 		return false;

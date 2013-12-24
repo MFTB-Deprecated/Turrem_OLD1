@@ -43,7 +43,7 @@ public class Ink extends TechBase
 				return "Ink";
 		}
 	}
-	
+
 	@Override
 	public boolean isEntryLevel()
 	{

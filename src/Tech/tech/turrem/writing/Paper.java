@@ -13,7 +13,7 @@ public class Paper extends TechBase
 	{
 		super(pass);
 	}
-	
+
 	@Override
 	public void loadBranches()
 	{

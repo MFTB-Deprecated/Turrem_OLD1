@@ -30,7 +30,7 @@ public class HittingRocks extends TechBase
 			(new BranchSpontaneous(this)).addRequired(StoneTools.class, 0).push();
 		}
 	}
-	
+
 	@Override
 	public boolean isEntryLevel()
 	{

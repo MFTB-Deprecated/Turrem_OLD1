@@ -11,7 +11,7 @@ public class ClayTablet extends TechBase
 	{
 		super(pass);
 	}
-	
+
 	@Override
 	public void loadBranches()
 	{

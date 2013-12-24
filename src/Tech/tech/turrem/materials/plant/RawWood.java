@@ -43,7 +43,7 @@ public class RawWood extends TechBase
 				return "Wood";
 		}
 	}
-	
+
 	@Override
 	public boolean isEntryLevel()
 	{

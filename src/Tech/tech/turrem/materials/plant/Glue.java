@@ -12,7 +12,7 @@ public class Glue extends TechBase
 	@Override
 	public void loadBranches()
 	{
-		
+
 	}
 
 	public static int numPass()
