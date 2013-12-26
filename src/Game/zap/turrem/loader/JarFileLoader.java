@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-public abstract class JarLoader
+public abstract class JarFileLoader
 {
 	protected File jarfile;
 	
-	public JarLoader(File jar)
+	public JarFileLoader(File jar)
 	{
 		this.jarfile = jar;
 	}

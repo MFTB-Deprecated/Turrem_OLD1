@@ -3,7 +3,9 @@ package zap.turrem.client;
 import java.io.File;
 
 import zap.turrem.Turrem;
+import zap.turrem.loadable.JarLoader;
 import zap.turrem.loader.TechLoader;
+import zap.turrem.tech.TechBase;
 import zap.turrem.tech.TechList;
 import zap.turrem.utils.StopTimer;
 
@@ -19,11 +21,15 @@ public class TurremGame implements ITurremGame
 	private boolean running;
 
 	private long tickcount = 0;
+	
+	public JarLoader<TechBase> techloader;
 
 	public TurremGame(Turrem turrem)
 	{
 		this.theTurrem = turrem;
 		this.tickspace = (int) (1000 / tps);
+		
+		this.techloader = new JarLoader<TechBase>();
 	}
 
 	// TODO Could use improvements
@@ -63,7 +69,7 @@ public class TurremGame implements ITurremGame
 		timer.start();
 		this.doLoad();
 		long nano = timer.end();
-		System.out.printf("Loaded %d techs in %.2fms%n", TechList.techCount(), nano * 0.000001D);
+		System.out.printf("Loaded %d techs in %.2fms%n", TechList.list.count(), nano * 0.000001D);
 	}
 
 	public void doLoad()

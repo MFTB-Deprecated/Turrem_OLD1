@@ -1,6 +1,5 @@
 package zap.turrem.tech.branch;
 
-import zap.turrem.tech.Tech;
 import zap.turrem.tech.TechBase;
 import zap.turrem.tech.TechList;
 
@@ -26,17 +25,17 @@ public abstract class Branch
 
 	public Branch(String tech)
 	{
-		this(TechList.getIndex(tech));
+		this(TechList.list.getIndex(tech));
 	}
 
 	public Branch(TechBase tech)
 	{
-		this(TechList.getIndex(tech));
+		this(TechList.list.getIndex(tech));
 	}
 
-	public Branch(Class<? extends Tech> tech, int pass)
+	public Branch(Class<? extends TechBase> tech, int pass)
 	{
-		this(TechList.getIndex(tech, pass));
+		this(TechList.list.getIndex(tech, pass));
 	}
 
 	public Branch addRequired(int tech)
@@ -53,17 +52,17 @@ public abstract class Branch
 
 	public Branch addRequired(String tech)
 	{
-		return this.addRequired(TechList.getIndex(tech));
+		return this.addRequired(TechList.list.getIndex(tech));
 	}
 
 	public Branch addRequired(TechBase tech)
 	{
-		return this.addRequired(TechList.getIndex(tech));
+		return this.addRequired(TechList.list.getIndex(tech));
 	}
 
-	public Branch addRequired(Class<? extends Tech> tech, int pass)
+	public Branch addRequired(Class<? extends TechBase> tech, int pass)
 	{
-		return this.addRequired(TechList.getIndex(tech, pass));
+		return this.addRequired(TechList.list.getIndex(tech, pass));
 	}
 
 	public void push()

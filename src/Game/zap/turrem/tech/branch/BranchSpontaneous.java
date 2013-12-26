@@ -1,6 +1,5 @@
 package zap.turrem.tech.branch;
 
-import zap.turrem.tech.Tech;
 import zap.turrem.tech.TechBase;
 
 public class BranchSpontaneous extends Branch
@@ -20,7 +19,7 @@ public class BranchSpontaneous extends Branch
 		super(tech);
 	}
 
-	public BranchSpontaneous(Class<? extends Tech> tech, int pass)
+	public BranchSpontaneous(Class<? extends TechBase> tech, int pass)
 	{
 		super(tech, pass);
 	}
