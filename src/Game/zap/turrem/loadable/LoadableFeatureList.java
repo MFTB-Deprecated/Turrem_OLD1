@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class LoadableList<E extends Loadable>
+public class LoadableFeatureList<E extends Feature>
 {
 	protected List<E> list = new ArrayList<E>();
 	protected Map<String, Integer> identifierMap = new HashMap<String, Integer>();
@@ -15,7 +15,7 @@ public class LoadableList<E extends Loadable>
 	{
 		return list.size();
 	}
-	
+
 	public Iterator<E> getIterator()
 	{
 		return this.list.iterator();

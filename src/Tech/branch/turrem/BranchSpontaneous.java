@@ -1,6 +1,7 @@
-package zap.turrem.tech.branch;
+package branch.turrem;
 
 import zap.turrem.tech.TechBase;
+import zap.turrem.tech.branch.Branch;
 
 public class BranchSpontaneous extends Branch
 {

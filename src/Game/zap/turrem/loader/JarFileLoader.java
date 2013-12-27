@@ -8,18 +8,16 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-public abstract class JarFileLoader
+public class JarFileLoader
 {
 	protected File jarfile;
-	
+
 	public JarFileLoader(File jar)
 	{
 		this.jarfile = jar;
 	}
-	
-	public abstract void loadJar() throws IOException, ClassNotFoundException;
-	
-	protected String[] getClassList() throws IOException
+
+	public String[] getClassList() throws IOException
 	{
 		List<String> classNames = new ArrayList<String>();
 		ZipInputStream zip = new ZipInputStream(new FileInputStream(this.jarfile.getAbsolutePath()));

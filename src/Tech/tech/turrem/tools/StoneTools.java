@@ -1,9 +1,9 @@
 package tech.turrem.tools;
 
+import branch.turrem.BranchAvailable;
 import tech.turrem.materials.stone.Flint;
 import tech.turrem.materials.stone.HittingRocks;
 import zap.turrem.tech.TechBase;
-import zap.turrem.tech.branch.BranchAvailable;
 
 public class StoneTools extends TechBase
 {

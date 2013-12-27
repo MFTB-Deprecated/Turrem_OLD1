@@ -1,6 +1,6 @@
 package tech.turrem.math;
 
-import zap.turrem.tech.branch.BranchAvailable;
+import branch.turrem.BranchAvailable;
 
 public class Arithmetic extends MathmaticalTech
 {

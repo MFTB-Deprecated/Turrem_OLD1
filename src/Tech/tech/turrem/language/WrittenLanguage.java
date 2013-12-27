@@ -1,8 +1,8 @@
 package tech.turrem.language;
 
+import branch.turrem.BranchActive;
+import branch.turrem.BranchAvailable;
 import zap.turrem.tech.TechBase;
-import zap.turrem.tech.branch.BranchActive;
-import zap.turrem.tech.branch.BranchAvailable;
 
 public class WrittenLanguage extends TechBase
 {

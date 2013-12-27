@@ -1,6 +1,6 @@
 package zap.turrem.tech;
 
-import zap.turrem.tech.branch.BranchAvailable;
+import zap.turrem.tech.branch.BranchStarting;
 
 public abstract class TechBase extends Tech
 {
@@ -15,7 +15,7 @@ public abstract class TechBase extends Tech
 	{
 		if (this.isEntryLevel())
 		{
-			(new BranchAvailable(this)).push();
+			(new BranchStarting(this)).push();
 		}
 		this.loadBranches();
 	}

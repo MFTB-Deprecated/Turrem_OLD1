@@ -1,6 +1,6 @@
 package zap.turrem.loadable;
 
-public class JarLoader<E extends Loadable>
+public class JarLoader<E extends Feature>
 {
 	public final E newInstance(int pass, Class<? extends E> loadable)
 	{
@@ -36,8 +36,8 @@ public class JarLoader<E extends Loadable>
 	{
 		return getStaticIdentifier(loadable, pass);
 	}
-	
-	public static final int getStaticPassNum(Class<? extends Loadable> loadable)
+
+	public static final int getStaticPassNum(Class<? extends Feature> loadable)
 	{
 		try
 		{
@@ -48,8 +48,8 @@ public class JarLoader<E extends Loadable>
 			return 1;
 		}
 	}
-	
-	public static final String getStaticIdentifier(Class<? extends Loadable> loadable, int pass)
+
+	public static final String getStaticIdentifier(Class<? extends Feature> loadable, int pass)
 	{
 		String name = loadable.getName();
 		int numpass = getStaticPassNum(loadable);
@@ -84,10 +84,10 @@ public class JarLoader<E extends Loadable>
 		return newName;
 	}
 
-	public final Loadable[] newInstances(Class<? extends E> loadable)
+	public final Feature[] newInstances(Class<? extends E> loadable)
 	{
 		int passnum = getPassNum(loadable);
-		Loadable[] insts = new Loadable[passnum];
+		Feature[] insts = new Feature[passnum];
 		for (int i = 0; i < passnum; i++)
 		{
 			insts[i] = this.newInstance(i, loadable);

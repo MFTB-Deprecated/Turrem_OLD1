@@ -1,8 +1,8 @@
 package zap.turrem.tech;
 
-import zap.turrem.loadable.Loadable;
+import zap.turrem.loadable.Feature;
 
-public abstract class Tech extends Loadable
+public abstract class Tech extends Feature
 {
 	public Tech(int pass)
 	{

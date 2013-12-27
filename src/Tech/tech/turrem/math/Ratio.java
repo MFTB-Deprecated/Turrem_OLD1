@@ -1,6 +1,6 @@
 package tech.turrem.math;
 
-import zap.turrem.tech.branch.BranchActive;
+import branch.turrem.BranchActive;
 
 public class Ratio extends MathmaticalTech
 {

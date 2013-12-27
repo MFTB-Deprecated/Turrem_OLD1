@@ -1,7 +1,7 @@
 package tech.turrem.materials.stone;
 
+import branch.turrem.BranchActive;
 import zap.turrem.tech.TechBase;
-import zap.turrem.tech.branch.BranchActive;
 
 public class Flint extends TechBase
 {

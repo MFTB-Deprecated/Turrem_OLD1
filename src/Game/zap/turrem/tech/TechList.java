@@ -3,13 +3,13 @@ package zap.turrem.tech;
 import java.util.Iterator;
 
 import zap.turrem.loadable.JarLoader;
-import zap.turrem.loadable.LoadableList;
+import zap.turrem.loadable.LoadableFeatureList;
 import zap.turrem.tech.branch.Branch;
 import zap.turrem.tech.branch.BranchList;
 
 public class TechList
 {
-	public static LoadableList<TechBase> list = new LoadableList<TechBase>();
+	public static LoadableFeatureList<TechBase> list = new LoadableFeatureList<TechBase>();
 	public static JarLoader<TechBase> loader = new JarLoader<TechBase>();
 
 	public static void loadBranches()

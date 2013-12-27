@@ -1,11 +1,7 @@
 package zap.turrem.client;
 
-import java.io.File;
-
 import zap.turrem.Turrem;
-import zap.turrem.loadable.JarLoader;
-import zap.turrem.loader.TechLoader;
-import zap.turrem.tech.TechBase;
+import zap.turrem.loader.GameLoader;
 import zap.turrem.tech.TechList;
 import zap.turrem.utils.StopTimer;
 
@@ -21,19 +17,17 @@ public class TurremGame implements ITurremGame
 	private boolean running;
 
 	private long tickcount = 0;
-	
-	public JarLoader<TechBase> techloader;
+
+	private GameLoader gameloader;
 
 	public TurremGame(Turrem turrem)
 	{
 		this.theTurrem = turrem;
 		this.tickspace = (int) (1000 / tps);
 		
-		this.techloader = new JarLoader<TechBase>();
+		this.gameloader = new GameLoader(this.theTurrem.getDir());
 	}
 
-	// TODO Could use improvements
-	// TODO Learn how to thread
 	@Override
 	public void runGameLoop()
 	{
@@ -74,15 +68,7 @@ public class TurremGame implements ITurremGame
 
 	public void doLoad()
 	{
-		try
-		{
-			TechLoader loader = new TechLoader(new File(this.theTurrem.getDir() + "jars/" + "tech.jar"));
-			loader.loadJar();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		this.gameloader.loadGame();
 		TechList.loadBranches();
 	}
 
