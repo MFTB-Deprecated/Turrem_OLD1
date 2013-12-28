@@ -1,8 +1,23 @@
 package zap.turrem;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
+
+import org.lwjgl.LWJGLException;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
+
 import zap.turrem.client.ITurremGame;
 import zap.turrem.client.TurremGame;
 import zap.turrem.client.TurremMenu;
+import zap.turrem.loader.JarFileLoader;
+import zap.turrem.utils.ImgUtils;
 
 public class Turrem
 {
@@ -27,7 +42,46 @@ public class Turrem
 
 	public void run()
 	{
+		try
+		{
+			Display.setDisplayMode(new DisplayMode(200, 200));
+			Display.setTitle("Turrem");
+			this.setIcons();
+			Display.create();
+		}
+		catch (LWJGLException | IOException e)
+		{
+			e.printStackTrace();
+		}
+
 		this.gotoMenu();
+	}
+
+	public void setIcons() throws IOException
+	{
+		ArrayList<ByteBuffer> icos = new ArrayList<ByteBuffer>();
+
+		JarFileLoader assetloader = new JarFileLoader(new File(this.dir + "assets/" + "assets.jar"));
+
+		String[] filelist = assetloader.getFileList();
+		ArrayList<String> iconlist = new ArrayList<String>();
+
+		for (int i = 0; i < filelist.length; i++)
+		{
+			String file = filelist[i];
+			if (file.startsWith("assets/icons/ico") && file.endsWith(".png"))
+			{
+				iconlist.add(file);
+			}
+		}
+		
+		for (String icon : iconlist)
+		{
+			BufferedImage img = ImageIO.read(assetloader.getFileInJar(icon));
+			icos.add(ImgUtils.imgToByteBuffer(img));
+		}
+		
+		Display.setIcon(icos.toArray(new ByteBuffer[0]));
 	}
 
 	public void gotoGame()
