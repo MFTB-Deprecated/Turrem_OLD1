@@ -25,10 +25,7 @@ public abstract class TechBase extends Tech
 		return TechList.list.getIndex(this);
 	}
 
-	public String getName()
-	{
-		return this.getClass().getSimpleName();
-	}
+	public abstract String getName();
 
 	protected final int getIndex(Class<? extends TechBase> tech, int pass)
 	{

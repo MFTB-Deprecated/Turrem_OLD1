@@ -1,8 +1,8 @@
 package tech.turrem.materials.metallurgy.metals;
 
-public class Copper extends Metal
+public class Gold extends Metal
 {
-	public Copper(int pass)
+	public Gold(int pass)
 	{
 		super(pass);
 	}
@@ -10,12 +10,12 @@ public class Copper extends Metal
 	@Override
 	public String getMetalName()
 	{
-		return "Copper";
+		return "Gold";
 	}
 
 	@Override
 	public int getLevel()
 	{
-		return 1;
+		return 0;
 	}
 }
