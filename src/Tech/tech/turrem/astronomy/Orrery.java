@@ -1,5 +1,6 @@
 package tech.turrem.astronomy;
 
+import branch.turrem.BranchAvailable;
 import zap.turrem.tech.TechBase;
 
 public class Orrery extends TechBase
@@ -12,7 +13,10 @@ public class Orrery extends TechBase
 	@Override
 	public void loadBranches()
 	{
-		
+		if (this.pass == 2)
+		{
+			(new BranchAvailable(this)).addRequired(Orrery.class, 1).push();
+		}
 	}
 
 	public static int numPass()

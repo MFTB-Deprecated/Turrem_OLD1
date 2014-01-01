@@ -19,13 +19,17 @@ public class Sextant extends TechBase
 		}
 		if (this.pass == 2)
 		{
+			(new BranchAvailable(this)).addRequired(Sextant.class, 1).push();
+		}
+		if (this.pass == 3)
+		{
 			(new BranchAvailable(this)).addRequired(Sextant.class, 1).addRequired(Telescope.class, 0).push();
 		}
 	}
 
 	public static int numPass()
 	{
-		return 2;
+		return 4;
 	}
 
 	@Override
@@ -36,8 +40,10 @@ public class Sextant extends TechBase
 			case 0:
 				return "Mural Instrument";
 			case 1:
-				return "Sextant";
+				return "Dioptra";
 			case 2:
+				return "Sextant";
+			case 3:
 				return "Navigational Sextant";
 			default:
 				return "Sextant";
