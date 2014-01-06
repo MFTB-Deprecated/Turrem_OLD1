@@ -16,7 +16,7 @@ public abstract class Unit
 		return null;
 	}
 	
-	public void buildTechItem()
+	public void pushTechItem()
 	{
 		TechUnit tech = new TechUnit(this);
 		this.techItem = tech.push();

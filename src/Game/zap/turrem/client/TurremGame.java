@@ -52,7 +52,7 @@ public class TurremGame implements ITurremGame
 
 	@Override
 	public void onStart()
-	{
+	{		
 		StopTimer timer = new StopTimer();
 		timer.start();
 		this.doLoad();

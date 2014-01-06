@@ -1,6 +1,12 @@
 package zap.turrem;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
@@ -9,6 +15,8 @@ import org.lwjgl.opengl.DisplayMode;
 import zap.turrem.client.ITurremGame;
 import zap.turrem.client.TurremGame;
 import zap.turrem.client.TurremMenu;
+import zap.turrem.loaders.java.JarFileLoader;
+import zap.turrem.utils.ImgUtils;
 
 public class Turrem
 {
@@ -35,7 +43,8 @@ public class Turrem
 	{
 		try
 		{
-			Display.setDisplayMode(new DisplayMode(200, 200));
+			Display.setDisplayMode(new DisplayMode(720, 640));
+			Display.setInitialBackground(1.0F, 1.0F, 1.0F);
 			Display.setTitle("Turrem");
 			this.setIcons();
 			Display.create();
@@ -50,7 +59,6 @@ public class Turrem
 
 	public void setIcons() throws IOException
 	{
-		/*
 		ArrayList<ByteBuffer> icos = new ArrayList<ByteBuffer>();
 
 		JarFileLoader assetloader = new JarFileLoader(new File(this.dir + "assets/" + "assets.jar"));
@@ -74,7 +82,6 @@ public class Turrem
 		}
 		
 		Display.setIcon(icos.toArray(new ByteBuffer[0]));
-		*/
 	}
 
 	public void gotoGame()
