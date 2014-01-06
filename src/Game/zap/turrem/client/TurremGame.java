@@ -1,8 +1,6 @@
 package zap.turrem.client;
 
 import zap.turrem.Turrem;
-import zap.turrem.loader.GameLoader;
-import zap.turrem.tech.TechList;
 import zap.turrem.utils.StopTimer;
 
 public class TurremGame implements ITurremGame
@@ -18,14 +16,10 @@ public class TurremGame implements ITurremGame
 
 	private long tickcount = 0;
 
-	private GameLoader gameloader;
-
 	public TurremGame(Turrem turrem)
 	{
 		this.theTurrem = turrem;
 		this.tickspace = (int) (1000 / tps);
-		
-		this.gameloader = new GameLoader(this.theTurrem.getDir());
 	}
 
 	@Override
@@ -63,13 +57,12 @@ public class TurremGame implements ITurremGame
 		timer.start();
 		this.doLoad();
 		long nano = timer.end();
-		System.out.printf("Loaded %d techs in %.2fms%n", TechList.list.count(), nano * 0.000001D);
+		System.out.printf("Loaded %d techs in %.2fms%n", 0, nano * 0.000001D);
 	}
 
 	public void doLoad()
 	{
-		this.gameloader.loadGame();
-		TechList.loadBranches();
+		
 	}
 
 	public void gotoMainMenu()

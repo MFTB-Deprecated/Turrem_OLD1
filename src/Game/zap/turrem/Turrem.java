@@ -16,7 +16,6 @@ import org.lwjgl.opengl.DisplayMode;
 import zap.turrem.client.ITurremGame;
 import zap.turrem.client.TurremGame;
 import zap.turrem.client.TurremMenu;
-import zap.turrem.loader.JarFileLoader;
 import zap.turrem.utils.ImgUtils;
 
 public class Turrem
@@ -61,6 +60,7 @@ public class Turrem
 	{
 		ArrayList<ByteBuffer> icos = new ArrayList<ByteBuffer>();
 
+		/*
 		JarFileLoader assetloader = new JarFileLoader(new File(this.dir + "assets/" + "assets.jar"));
 
 		String[] filelist = assetloader.getFileList();
@@ -82,6 +82,7 @@ public class Turrem
 		}
 		
 		Display.setIcon(icos.toArray(new ByteBuffer[0]));
+		*/
 	}
 
 	public void gotoGame()
