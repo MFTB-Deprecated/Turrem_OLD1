@@ -39,6 +39,11 @@ public abstract class Branch
 		this.id = TechList.getIndex(tech, pass);
 	}
 
+	public Branch(TechBase tech, int pass)
+	{
+		this(tech.getClass(), pass);
+	}
+	
 	public Branch addRequired(int tech)
 	{
 		int[] ts = new int[this.requiredtechs.length + 1];

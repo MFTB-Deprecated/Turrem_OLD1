@@ -1,18 +1,19 @@
 package zap.turrem.tech.item;
 
+import zap.turrem.tech.Tech;
 import zap.turrem.tech.TechBase;
 
 public class JavaTechItem extends TechItem
 {
-	private TechBase tech;
+	private Tech tech;
 	private int pass;
-	
-	public JavaTechItem(TechBase tech, int pass)
+
+	public JavaTechItem(Tech tech, int pass)
 	{
 		this.tech = tech;
 		this.pass = pass;
 	}
-	
+
 	@Override
 	public String getIdentifier()
 	{
@@ -28,6 +29,9 @@ public class JavaTechItem extends TechItem
 	@Override
 	public void loadBraches()
 	{
-		this.tech.loadAllBranches(this.pass);
+		if (this.tech instanceof TechBase)
+		{
+			((TechBase) this.tech).loadAllBranches(this.pass);
+		}
 	}
 }
