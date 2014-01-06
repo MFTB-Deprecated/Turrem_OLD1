@@ -5,29 +5,19 @@ import zap.turrem.tech.TechBase;
 
 public class Astrolabe extends TechBase
 {
-	public Astrolabe(int pass)
-	{
-		super(pass);
-	}
-
 	@Override
-	public void loadBranches()
+	public void loadBraches(int pass)
 	{
-		if (this.pass == 1)
+		if (pass == 1)
 		{
-			(new BranchAvailable(this)).addRequired(Astrolabe.class, 0).addRequired(Sextant.class, 1).push();
+			(new BranchAvailable(this, pass)).addRequired(Astrolabe.class, 0).addRequired(Sextant.class, 1).push();
 		}
 	}
-	
-	public static int numPass()
-	{
-		return 2;
-	}
 
 	@Override
-	public String getName()
+	public String getName(int pass)
 	{
-		switch (this.pass)
+		switch (pass)
 		{
 			case 0:
 				return "Planisphere";
@@ -36,5 +26,16 @@ public class Astrolabe extends TechBase
 			default:
 				return "Astrolabe";
 		}
+	}
+
+	@Override
+	public boolean isStarting(int pass)
+	{
+		return false;
+	}
+	@Override
+	public int getPassCount()
+	{
+		return 2;
 	}
 }

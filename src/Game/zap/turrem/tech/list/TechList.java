@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import zap.turrem.tech.Tech;
-import zap.turrem.tech.item.JavaTechItem;
 import zap.turrem.tech.item.TechItem;
 
 public class TechList
@@ -24,7 +23,12 @@ public class TechList
 
 	public static int getIndex(String idetifier)
 	{
-		return techIds.get(idetifier);
+		Integer i = techIds.get(idetifier);
+		if (i != null)
+		{
+			return (int) i;
+		}
+		return -1;
 	}
 
 	public static int getIndex(TechItem tech)
@@ -34,16 +38,7 @@ public class TechList
 
 	public static int getIndex(Class<? extends Tech> techclass, int pass)
 	{
-		Tech tech;
-		try
-		{
-			tech = techclass.newInstance();
-		}
-		catch (Exception e)
-		{
-			return -1;
-		}
-		return getIndex(tech, pass);
+		return getIndex(Tech.getClassIdentifier(techclass, pass));
 	}
 
 	public static int getIndex(Tech tech, int pass)
@@ -57,16 +52,7 @@ public class TechList
 
 	public static TechItem getTech(Class<? extends Tech> techclass, int pass)
 	{
-		Tech tech;
-		try
-		{
-			tech = techclass.newInstance();
-		}
-		catch (Exception e)
-		{
-			return null;
-		}
-		return getTech(tech, pass);
+		return getTech(Tech.getClassIdentifier(techclass, pass));
 	}
 
 	public static TechItem getTech(Tech tech, int pass)
@@ -125,7 +111,7 @@ public class TechList
 			int n = tech.getPassCount();
 			for (int i = 0; i < n; i++)
 			{
-				TechItem item = new JavaTechItem(tech, i);
+				TechItem item = tech.buildItem(i);
 				item.push();
 			}
 			return true;

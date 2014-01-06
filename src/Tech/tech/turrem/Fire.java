@@ -7,34 +7,37 @@ import zap.turrem.tech.TechBase;
 
 public class Fire extends TechBase
 {
-	public Fire(int pass)
+	@Override
+	public boolean isStarting(int pass)
 	{
-		super(pass);
+		return false;
 	}
 
-	public static int numPass()
+	@Override
+	public void loadBraches(int pass)
+	{
+		if (pass == 0)
+		{
+			(new BranchSpontaneous(this, pass)).addRequired(Flint.class, 0).push();
+			(new BranchSpontaneous(this, pass)).addRequired(Flint.class, 1).push();
+		}
+		if (pass == 1)
+		{
+			(new BranchActive(this, pass)).addRequired(Fire.class, 0).push();
+			(new BranchSpontaneous(this, pass)).addRequired(Flint.class, 1).push();
+		}
+		
+	}
+
+	@Override
+	public int getPassCount()
 	{
 		return 2;
 	}
 
 	@Override
-	public String getName()
+	public String getName(int pass)
 	{
-		return this.pass == 0 ? "Sparks" : "Fire";
-	}
-
-	@Override
-	public void loadBranches()
-	{
-		if (this.pass == 0)
-		{
-			(new BranchSpontaneous(this)).addRequired(Flint.class, 0).push();
-			(new BranchSpontaneous(this)).addRequired(Flint.class, 1).push();
-		}
-		if (this.pass == 1)
-		{
-			(new BranchActive(this)).addRequired(Fire.class, 0).push();
-			(new BranchSpontaneous(this)).addRequired(Flint.class, 1).push();
-		}
+		return pass == 0 ? "Sparks" : "Fire";
 	}
 }
