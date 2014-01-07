@@ -13,6 +13,11 @@ public class TechList
 	private static List<TechItem> techList = new ArrayList<TechItem>();
 	private static HashMap<String, Integer> techIds = new HashMap<String, Integer>();
 
+	public static int getSize()
+	{
+		return techList.size();
+	}
+	
 	public static int addTech(TechItem tech)
 	{
 		int id = techList.size();
