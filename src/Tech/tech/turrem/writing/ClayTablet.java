@@ -7,33 +7,23 @@ import zap.turrem.tech.TechBase;
 
 public class ClayTablet extends TechBase
 {
-	public ClayTablet(int pass)
-	{
-		super(pass);
-	}
-
 	@Override
-	public void loadBranches()
+	public void loadBranches(int pass)
 	{
-		if (this.pass == 0)
+		if (pass == 0)
 		{
-			(new BranchAvailable(this)).addRequired(WrittenLanguage.class, 0).addRequired(StoneTools.class, 2).push();
+			(new BranchAvailable(this, pass)).addRequired(WrittenLanguage.class, 0).addRequired(StoneTools.class, 2).push();
 		}
-		if (this.pass == 1)
+		if (pass == 1)
 		{
-			(new BranchAvailable(this)).addRequired(ClayTablet.class, 0).addRequired(StoneTools.class, 1).push();
+			(new BranchAvailable(this, pass)).addRequired(ClayTablet.class, 0).addRequired(StoneTools.class, 1).push();
 		}
 	}
 
-	public static int numPass()
-	{
-		return 2;
-	}
-
 	@Override
-	public String getName()
+	public String getName(int pass)
 	{
-		switch (this.pass)
+		switch (pass)
 		{
 			case 0:
 				return "Stone Tablet";
@@ -42,5 +32,17 @@ public class ClayTablet extends TechBase
 			default:
 				return "Tablet";
 		}
+	}
+
+	@Override
+	public boolean isEntryLevel(int pass)
+	{
+		return false;
+	}
+
+	@Override
+	public int getPassCount()
+	{
+		return 2;
 	}
 }

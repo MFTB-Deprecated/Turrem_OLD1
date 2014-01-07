@@ -5,29 +5,19 @@ import zap.turrem.tech.TechBase;
 
 public class Orrery extends TechBase
 {
-	public Orrery(int pass)
-	{
-		super(pass);
-	}
-
 	@Override
-	public void loadBranches()
+	public void loadBranches(int pass)
 	{
-		if (this.pass == 2)
+		if (pass == 2)
 		{
-			(new BranchAvailable(this)).addRequired(Orrery.class, 1).push();
+			(new BranchAvailable(this, pass)).addRequired(Orrery.class, 1).push();
 		}
-	}
-
-	public static int numPass()
-	{
-		return 3;
 	}
 	
 	@Override
-	public String getName()
+	public String getName(int pass)
 	{
-		switch (this.pass)
+		switch (pass)
 		{
 			case 0:
 				return "Armillary sphere";
@@ -40,4 +30,15 @@ public class Orrery extends TechBase
 		}
 	}
 
+	@Override
+	public boolean isEntryLevel(int pass)
+	{
+		return false;
+	}
+
+	@Override
+	public int getPassCount()
+	{
+		return 3;
+	}
 }

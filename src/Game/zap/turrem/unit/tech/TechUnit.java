@@ -15,13 +15,13 @@ public class TechUnit extends TechBase
 	}
 
 	@Override
-	public boolean isStarting(int pass)
+	public boolean isEntryLevel(int pass)
 	{
 		return this.unit.isStarting();
 	}
 
 	@Override
-	public void loadBraches(int pass)
+	public void loadBranches(int pass)
 	{
 		TechItem[] items = this.unit.getRequiredTechs();
 		if (items != null)

@@ -4,21 +4,27 @@ import branch.turrem.BranchAvailable;
 
 public class Algebra extends MathmaticalTech
 {
-	public Algebra(int pass)
+	@Override
+	public void loadBranches(int pass)
 	{
-		super(pass);
+		(new BranchAvailable(this, pass)).addRequired(Arithmetic.class, 2).addRequired(Arithmetic.class, 1).push();
 	}
 
 	@Override
-	public void loadBranches()
-	{
-		(new BranchAvailable(this)).addRequired(Arithmetic.class, 2).addRequired(Arithmetic.class, 1).push();
-	}
-
-	@Override
-	public String getName()
+	public String getName(int pass)
 	{
 		return "Algebra";
 	}
 
+	@Override
+	public boolean isEntryLevel(int pass)
+	{
+		return false;
+	}
+
+	@Override
+	public int getPassCount()
+	{
+		return 1;
+	}
 }

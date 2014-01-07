@@ -4,26 +4,16 @@ import zap.turrem.tech.TechBase;
 
 public class MechanicalClock extends TechBase
 {
-	public MechanicalClock(int pass)
-	{
-		super(pass);
-	}
-
 	@Override
-	public void loadBranches()
+	public void loadBranches(int pass)
 	{
 		
 	}
 
-	public static int numPass()
-	{
-		return 3;
-	}
-
 	@Override
-	public String getName()
+	public String getName(int pass)
 	{
-		switch (this.pass)
+		switch (pass)
 		{
 			case 0:
 				return "Simple Mechanical Clock";
@@ -34,5 +24,17 @@ public class MechanicalClock extends TechBase
 			default:
 				return "Mechanical Clock";
 		}
+	}
+
+	@Override
+	public boolean isEntryLevel(int pass)
+	{
+		return false;
+	}
+
+	@Override
+	public int getPassCount()
+	{
+		return 3;
 	}
 }

@@ -9,45 +9,35 @@ import zap.turrem.tech.TechBase;
 
 public class Paper extends TechBase
 {
-	public Paper(int pass)
-	{
-		super(pass);
-	}
-
 	@Override
-	public void loadBranches()
+	public void loadBranches(int pass)
 	{
-		if (this.pass == 0)
+		if (pass == 0)
 		{
-			(new BranchAvailable(this)).addRequired(ClayTablet.class, 1).addRequired(Ink.class, 1).addRequired(WrittenLanguage.class, 1).addRequired(Fiber.class, 0).push();
+			(new BranchAvailable(this, pass)).addRequired(ClayTablet.class, 1).addRequired(Ink.class, 1).addRequired(WrittenLanguage.class, 1).addRequired(Fiber.class, 0).push();
 		}
-		if (this.pass == 1)
+		if (pass == 1)
 		{
-			(new BranchAvailable(this)).addRequired(Paper.class, 0).addRequired(Fiber.class, 1).push();
+			(new BranchAvailable(this, pass)).addRequired(Paper.class, 0).addRequired(Fiber.class, 1).push();
 		}
-		if (this.pass == 2)
+		if (pass == 2)
 		{
-			(new BranchActive(this)).addRequired(Paper.class, 1).addRequired(Fiber.class, 2).push();
+			(new BranchActive(this, pass)).addRequired(Paper.class, 1).addRequired(Fiber.class, 2).push();
 		}
-		if (this.pass == 3)
+		if (pass == 3)
 		{
-			(new BranchActive(this)).addRequired(Paper.class, 2).push();
+			(new BranchActive(this, pass)).addRequired(Paper.class, 2).push();
 		}
-		if (this.pass == 4)
+		if (pass == 4)
 		{
-			(new BranchAvailable(this)).addRequired(Paper.class, 3).addRequired(Glue.class, 2).push();
+			(new BranchAvailable(this, pass)).addRequired(Paper.class, 3).addRequired(Glue.class, 2).push();
 		}
 	}
-
-	public static int numPass()
-	{
-		return 5;
-	}
-
+	
 	@Override
-	public String getName()
+	public String getName(int pass)
 	{
-		switch (this.pass)
+		switch (pass)
 		{
 			case 0:
 				return "Papyrus";
@@ -62,5 +52,17 @@ public class Paper extends TechBase
 			default:
 				return "Paper";
 		}
+	}
+
+	@Override
+	public boolean isEntryLevel(int pass)
+	{
+		return false;
+	}
+
+	@Override
+	public int getPassCount()
+	{
+		return 5;
 	}
 }

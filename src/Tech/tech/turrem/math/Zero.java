@@ -4,21 +4,28 @@ import branch.turrem.BranchAvailable;
 
 public class Zero extends MathmaticalTech
 {
-	public Zero(int pass)
+	@Override
+	public void loadBranches(int pass)
 	{
-		super(pass);
+		(new BranchAvailable(this, pass)).addRequired(Numerals.class, 0).push();
 	}
 
 	@Override
-	public void loadBranches()
-	{
-		(new BranchAvailable(this)).addRequired(Numerals.class, 0).push();
-	}
-
-	@Override
-	public String getName()
+	public String getName(int pass)
 	{
 		return "Zero";
 	}
+	
 
+	@Override
+	public boolean isEntryLevel(int pass)
+	{
+		return false;
+	}
+
+	@Override
+	public int getPassCount()
+	{
+		return 1;
+	}
 }

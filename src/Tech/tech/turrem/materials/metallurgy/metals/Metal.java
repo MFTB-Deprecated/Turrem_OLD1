@@ -7,42 +7,37 @@ import zap.turrem.tech.TechBase;
 
 public abstract class Metal extends TechBase
 {
-	public Metal(int pass)
-	{
-		super(pass);
-	}
-
 	@Override
-	public void loadBranches()
+	public void loadBranches(int pass)
 	{
-		if (this.pass == 1)
+		if (pass == 1)
 		{
 			if (!this.isAlloy())
 			{
 				if (this.getLevel() == 0)
 				{
-					(new BranchActive(this)).addRequired(Metallurgy.class, 0).addRequired(this.getClass(), 0).push();
+					(new BranchActive(this, pass)).addRequired(Metallurgy.class, 0).addRequired(this.getClass(), 0).push();
 				}
 				else if (this.getLevel() == 1)
 				{
-					(new BranchAvailable(this)).addRequired(Metallurgy.class, 1).addRequired(this.getClass(), 0).push();
+					(new BranchAvailable(this, pass)).addRequired(Metallurgy.class, 1).addRequired(this.getClass(), 0).push();
 				}
 				else if (this.getLevel() == 2)
 				{
-					(new BranchAvailable(this)).addRequired(Metallurgy.class, 3).addRequired(this.getClass(), 0).push();
+					(new BranchAvailable(this, pass)).addRequired(Metallurgy.class, 3).addRequired(this.getClass(), 0).push();
 				}
 			}
 		}
-		if (this.pass == 2)
+		if (pass == 2)
 		{
-			(new BranchAvailable(this)).addRequired(Metallurgy.class, 4).addRequired(this.getClass(), 1).push();
+			(new BranchAvailable(this, pass)).addRequired(Metallurgy.class, 4).addRequired(this.getClass(), 1).push();
 		}
 	}
 
 	@Override
-	public String getName()
+	public String getName(int pass)
 	{
-		switch (this.pass)
+		switch (pass)
 		{
 			case 0:
 				if (this.isAlloy())
@@ -61,13 +56,20 @@ public abstract class Metal extends TechBase
 				return this.getMetalName();
 		}
 	}
+	
+	@Override
+	public boolean isEntryLevel(int pass)
+	{
+		return false;
+	}
 
-	public abstract String getMetalName();
-
-	public static int numPass()
+	@Override
+	public int getPassCount()
 	{
 		return 3;
 	}
+
+	public abstract String getMetalName();
 
 	public abstract int getLevel();
 

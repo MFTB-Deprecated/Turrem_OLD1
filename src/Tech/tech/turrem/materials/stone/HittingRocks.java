@@ -6,34 +6,30 @@ import zap.turrem.tech.TechBase;
 
 public class HittingRocks extends TechBase
 {
-	public HittingRocks(int pass)
+	@Override
+	public String getName(int pass)
 	{
-		super(pass);
+		return pass == 0 ? "Banging Rocks Together" : "Shaping Rocks";
 	}
 
 	@Override
-	public String getName()
+	public void loadBranches(int pass)
 	{
-		return this.pass == 0 ? "Banging Rocks Together" : "Shaping Rocks";
-	}
-
-	public static int numPass()
-	{
-		return 2;
-	}
-
-	@Override
-	public void loadBranches()
-	{
-		if (this.pass == 1)
+		if (pass == 1)
 		{
-			(new BranchSpontaneous(this)).addRequired(StoneTools.class, 0).push();
+			(new BranchSpontaneous(this, pass)).addRequired(StoneTools.class, 0).push();
 		}
 	}
 
 	@Override
-	public boolean isEntryLevel()
+	public boolean isEntryLevel(int pass)
 	{
-		return this.pass == 0;
+		return pass == 0;
+	}
+
+	@Override
+	public int getPassCount()
+	{
+		return 2;
 	}
 }

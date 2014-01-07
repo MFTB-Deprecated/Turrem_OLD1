@@ -6,45 +6,35 @@ import zap.turrem.tech.TechBase;
 
 public class WrittenLanguage extends TechBase
 {
-	public WrittenLanguage(int pass)
+	@Override
+	public void loadBranches(int pass)
 	{
-		super(pass);
+		if (pass == 0)
+		{
+			(new BranchActive(this, pass)).addRequired(SpokenLanguage.class, 1).push();
+		}
+		if (pass == 1)
+		{
+			(new BranchActive(this, pass)).addRequired(WrittenLanguage.class, 0).push();
+		}
+		if (pass == 2)
+		{
+			(new BranchAvailable(this, pass)).addRequired(WrittenLanguage.class, 1).push();
+		}
+		if (pass == 3)
+		{
+			(new BranchAvailable(this, pass)).addRequired(WrittenLanguage.class, 2).push();
+		}
+		if (pass == 4)
+		{
+			(new BranchAvailable(this, pass)).addRequired(WrittenLanguage.class, 3).push();
+		}
 	}
 
 	@Override
-	public void loadBranches()
+	public String getName(int pass)
 	{
-		if (this.pass == 0)
-		{
-			(new BranchActive(this)).addRequired(SpokenLanguage.class, 1).push();
-		}
-		if (this.pass == 1)
-		{
-			(new BranchActive(this)).addRequired(WrittenLanguage.class, 0).push();
-		}
-		if (this.pass == 2)
-		{
-			(new BranchAvailable(this)).addRequired(WrittenLanguage.class, 1).push();
-		}
-		if (this.pass == 3)
-		{
-			(new BranchAvailable(this)).addRequired(WrittenLanguage.class, 2).push();
-		}
-		if (this.pass == 4)
-		{
-			(new BranchAvailable(this)).addRequired(WrittenLanguage.class, 3).push();
-		}
-	}
-
-	public static int numPass()
-	{
-		return 5;
-	}
-
-	@Override
-	public String getName()
-	{
-		switch (this.pass)
+		switch (pass)
 		{
 			case 0:
 				return "Pictograms";
@@ -59,5 +49,17 @@ public class WrittenLanguage extends TechBase
 			default:
 				return "Written Language";
 		}
+	}
+
+	@Override
+	public boolean isEntryLevel(int pass)
+	{
+		return false;
+	}
+
+	@Override
+	public int getPassCount()
+	{
+		return 5;
 	}
 }

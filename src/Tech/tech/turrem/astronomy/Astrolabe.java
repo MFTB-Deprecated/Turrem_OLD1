@@ -6,7 +6,7 @@ import zap.turrem.tech.TechBase;
 public class Astrolabe extends TechBase
 {
 	@Override
-	public void loadBraches(int pass)
+	public void loadBranches(int pass)
 	{
 		if (pass == 1)
 		{
@@ -29,7 +29,7 @@ public class Astrolabe extends TechBase
 	}
 
 	@Override
-	public boolean isStarting(int pass)
+	public boolean isEntryLevel(int pass)
 	{
 		return false;
 	}

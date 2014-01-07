@@ -5,37 +5,27 @@ import zap.turrem.tech.TechBase;
 
 public class Sextant extends TechBase
 {
-	public Sextant(int pass)
+	@Override
+	public void loadBranches(int pass)
 	{
-		super(pass);
+		if (pass == 1)
+		{
+			(new BranchAvailable(this, pass)).addRequired(Sextant.class, 0).push();
+		}
+		if (pass == 2)
+		{
+			(new BranchAvailable(this, pass)).addRequired(Sextant.class, 1).push();
+		}
+		if (pass == 3)
+		{
+			(new BranchAvailable(this, pass)).addRequired(Sextant.class, 1).addRequired(Telescope.class, 0).push();
+		}
 	}
 
 	@Override
-	public void loadBranches()
+	public String getName(int pass)
 	{
-		if (this.pass == 1)
-		{
-			(new BranchAvailable(this)).addRequired(Sextant.class, 0).push();
-		}
-		if (this.pass == 2)
-		{
-			(new BranchAvailable(this)).addRequired(Sextant.class, 1).push();
-		}
-		if (this.pass == 3)
-		{
-			(new BranchAvailable(this)).addRequired(Sextant.class, 1).addRequired(Telescope.class, 0).push();
-		}
-	}
-
-	public static int numPass()
-	{
-		return 4;
-	}
-
-	@Override
-	public String getName()
-	{
-		switch (this.pass)
+		switch (pass)
 		{
 			case 0:
 				return "Mural Instrument";
@@ -48,5 +38,17 @@ public class Sextant extends TechBase
 			default:
 				return "Sextant";
 		}
+	}
+
+	@Override
+	public boolean isEntryLevel(int pass)
+	{
+		return false;
+	}
+
+	@Override
+	public int getPassCount()
+	{
+		return 4;
 	}
 }

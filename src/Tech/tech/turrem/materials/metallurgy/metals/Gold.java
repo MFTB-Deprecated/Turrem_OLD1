@@ -2,11 +2,6 @@ package tech.turrem.materials.metallurgy.metals;
 
 public class Gold extends Metal
 {
-	public Gold(int pass)
-	{
-		super(pass);
-	}
-
 	@Override
 	public String getMetalName()
 	{

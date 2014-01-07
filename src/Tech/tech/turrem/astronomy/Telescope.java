@@ -4,20 +4,27 @@ import zap.turrem.tech.TechBase;
 
 public class Telescope extends TechBase
 {
-	public Telescope(int pass)
-	{
-		super(pass);
-	}
-
 	@Override
-	public void loadBranches()
+	public void loadBranches(int pass)
 	{
 		
 	}
 
 	@Override
-	public String getName()
+	public String getName(int pass)
 	{
 		return "Telescope";
+	}
+
+	@Override
+	public boolean isEntryLevel(int pass)
+	{
+		return false;
+	}
+
+	@Override
+	public int getPassCount()
+	{
+		return 1;
 	}
 }

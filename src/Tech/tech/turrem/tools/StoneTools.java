@@ -7,20 +7,10 @@ import zap.turrem.tech.TechBase;
 
 public class StoneTools extends TechBase
 {
-	public StoneTools(int pass)
-	{
-		super(pass);
-	}
-
-	public static int numPass()
-	{
-		return 3;
-	}
-
 	@Override
-	public String getName()
+	public String getName(int pass)
 	{
-		switch (this.pass)
+		switch (pass)
 		{
 			case 0:
 				return "Stones";
@@ -34,19 +24,31 @@ public class StoneTools extends TechBase
 	}
 
 	@Override
-	public void loadBranches()
+	public void loadBranches(int pass)
 	{
-		if (this.pass == 0)
+		if (pass == 0)
 		{
-			(new BranchAvailable(this)).addRequired(HittingRocks.class, 0).push();
+			(new BranchAvailable(this, pass)).addRequired(HittingRocks.class, 0).push();
 		}
-		if (this.pass == 1)
+		if (pass == 1)
 		{
-			(new BranchAvailable(this)).addRequired(HittingRocks.class, 1).push();
+			(new BranchAvailable(this, pass)).addRequired(HittingRocks.class, 1).push();
 		}
-		if (this.pass == 2)
+		if (pass == 2)
 		{
-			(new BranchAvailable(this)).addRequired(StoneTools.class, 1).addRequired(Flint.class, 0).push();
+			(new BranchAvailable(this, pass)).addRequired(StoneTools.class, 1).addRequired(Flint.class, 0).push();
 		}
+	}
+
+	@Override
+	public boolean isEntryLevel(int pass)
+	{
+		return false;
+	}
+
+	@Override
+	public int getPassCount()
+	{
+		return 3;
 	}
 }

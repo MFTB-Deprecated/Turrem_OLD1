@@ -4,26 +4,16 @@ import zap.turrem.tech.TechBase;
 
 public class Glue extends TechBase
 {
-	public Glue(int pass)
+	@Override
+	public void loadBranches(int pass)
 	{
-		super(pass);
+
 	}
 
 	@Override
-	public void loadBranches()
+	public String getName(int pass)
 	{
-
-	}
-
-	public static int numPass()
-	{
-		return 3;
-	}
-
-	@Override
-	public String getName()
-	{
-		switch (this.pass)
+		switch (pass)
 		{
 			case 0:
 				return "Tar";
@@ -34,5 +24,17 @@ public class Glue extends TechBase
 			default:
 				return "Glue";
 		}
+	}
+
+	@Override
+	public boolean isEntryLevel(int pass)
+	{
+		return false;
+	}
+
+	@Override
+	public int getPassCount()
+	{
+		return 3;
 	}
 }

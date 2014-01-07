@@ -6,20 +6,27 @@ import zap.turrem.tech.TechBase;
 
 public class AstronomicalClock extends TechBase
 {
-	public AstronomicalClock(int pass)
+	@Override
+	public void loadBranches(int pass)
 	{
-		super(pass);
+		(new BranchAvailable(this, pass)).addRequired(MechanicalClock.class, 0).addRequired(Orrery.class, 1).push();
 	}
 
 	@Override
-	public void loadBranches()
-	{
-		(new BranchAvailable(this)).addRequired(MechanicalClock.class, 0).addRequired(Orrery.class, 1).push();
-	}
-
-	@Override
-	public String getName()
+	public String getName(int pass)
 	{
 		return "Astronomical Clock";
+	}
+
+	@Override
+	public boolean isEntryLevel(int pass)
+	{
+		return false;
+	}
+
+	@Override
+	public int getPassCount()
+	{
+		return 1;
 	}
 }

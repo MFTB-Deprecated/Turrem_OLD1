@@ -6,33 +6,23 @@ import zap.turrem.tech.TechBase;
 
 public class Fiber extends TechBase
 {
-	public Fiber(int pass)
-	{
-		super(pass);
-	}
-
 	@Override
-	public void loadBranches()
+	public void loadBranches(int pass)
 	{
-		if (this.pass == 1)
+		if (pass == 1)
 		{
-			(new BranchAvailable(this)).addRequired(RawWood.class, 0).push();
+			(new BranchAvailable(this, pass)).addRequired(RawWood.class, 0).push();
 		}
-		if (this.pass == 2)
+		if (pass == 2)
 		{
-			(new BranchSpontaneous(this)).addRequired(Fiber.class, 1).push();
+			(new BranchSpontaneous(this, pass)).addRequired(Fiber.class, 1).push();
 		}
 	}
 
-	public static int numPass()
-	{
-		return 3;
-	}
-
 	@Override
-	public String getName()
+	public String getName(int pass)
 	{
-		switch (this.pass)
+		switch (pass)
 		{
 			case 0:
 				return "Reeds";
@@ -46,8 +36,14 @@ public class Fiber extends TechBase
 	}
 
 	@Override
-	public boolean isEntryLevel()
+	public boolean isEntryLevel(int pass)
 	{
-		return this.pass == 0;
+		return pass == 0;
+	}
+
+	@Override
+	public int getPassCount()
+	{
+		return 3;
 	}
 }

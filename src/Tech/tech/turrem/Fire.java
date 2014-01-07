@@ -8,13 +8,13 @@ import zap.turrem.tech.TechBase;
 public class Fire extends TechBase
 {
 	@Override
-	public boolean isStarting(int pass)
+	public boolean isEntryLevel(int pass)
 	{
 		return false;
 	}
 
 	@Override
-	public void loadBraches(int pass)
+	public void loadBranches(int pass)
 	{
 		if (pass == 0)
 		{

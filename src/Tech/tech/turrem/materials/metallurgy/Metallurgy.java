@@ -4,26 +4,16 @@ import zap.turrem.tech.TechBase;
 
 public class Metallurgy extends TechBase
 {
-	public Metallurgy(int pass)
+	@Override
+	public void loadBranches(int pass)
 	{
-		super(pass);
+
 	}
 
 	@Override
-	public void loadBranches()
+	public String getName(int pass)
 	{
-
-	}
-
-	public static int numPass()
-	{
-		return 5;
-	}
-
-	@Override
-	public String getName()
-	{
-		switch (this.pass)
+		switch (pass)
 		{
 			case 0:
 				return "Shiny Rocks";
@@ -38,5 +28,17 @@ public class Metallurgy extends TechBase
 			default:
 				return "Metallurgy";
 		}
+	}
+
+	@Override
+	public boolean isEntryLevel(int pass)
+	{
+		return false;
+	}
+
+	@Override
+	public int getPassCount()
+	{
+		return 5;
 	}
 }

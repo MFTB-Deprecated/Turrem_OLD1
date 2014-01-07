@@ -5,20 +5,27 @@ import tech.turrem.language.WrittenLanguage;
 
 public class Numerals extends MathmaticalTech
 {
-	public Numerals(int pass)
+	@Override
+	public void loadBranches(int pass)
 	{
-		super(pass);
+		(new BranchAvailable(this, pass)).addRequired(WrittenLanguage.class, 1).push();
 	}
 
 	@Override
-	public void loadBranches()
-	{
-		(new BranchAvailable(this)).addRequired(WrittenLanguage.class, 1).push();
-	}
-
-	@Override
-	public String getName()
+	public String getName(int pass)
 	{
 		return "Numerals";
+	}
+	
+	@Override
+	public boolean isEntryLevel(int pass)
+	{
+		return false;
+	}
+
+	@Override
+	public int getPassCount()
+	{
+		return 1;
 	}
 }

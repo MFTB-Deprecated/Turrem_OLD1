@@ -2,11 +2,6 @@ package tech.turrem.materials.metallurgy.metals;
 
 public class Brass extends Alloy
 {
-	public Brass(int pass)
-	{
-		super(pass);
-	}
-
 	@Override
 	public String getMetalName()
 	{
