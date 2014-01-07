@@ -26,17 +26,17 @@ public abstract class Branch
 
 	public Branch(String tech)
 	{
-		this.id = TechList.getIndex(tech);
+		this(TechList.getIndex(tech));
 	}
 
 	public Branch(TechItem tech)
 	{
-		this.id = tech.getId();
+		this(tech.getId());
 	}
 
 	public Branch(Class<? extends TechBase> tech, int pass)
 	{
-		this.id = TechList.getIndex(tech, pass);
+		this(TechList.getIndex(tech, pass));
 	}
 
 	public Branch(TechBase tech, int pass)

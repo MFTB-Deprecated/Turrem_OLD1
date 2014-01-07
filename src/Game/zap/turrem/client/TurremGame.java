@@ -8,6 +8,7 @@ import java.net.URLClassLoader;
 
 import zap.turrem.Turrem;
 import zap.turrem.loaders.java.JarFileLoader;
+import zap.turrem.tech.branch.BranchList;
 import zap.turrem.tech.list.TechList;
 import zap.turrem.utils.StopTimer;
 
@@ -61,14 +62,29 @@ public class TurremGame implements ITurremGame
 	@Override
 	public void onStart()
 	{
-		StopTimer timer = new StopTimer();
-		timer.start();
 		this.doLoad();
-		long nano = timer.end();
-		System.out.printf("Loaded %d techs in %.2fms%n", TechList.getSize(), nano * 0.000001D);
 	}
 
 	public void doLoad()
+	{
+		StopTimer timer = new StopTimer();
+		timer.start();
+		this.doLoadTech();
+		long nano = timer.end();
+		System.out.printf("Loaded %d techs in %.2fms%n", TechList.getSize(), nano * 0.000001D);
+		
+		timer.start();
+		this.doLoadTechBranches();
+		nano = timer.end();
+		System.out.printf("Loaded %d tech branches in %.2fms%n", BranchList.branchCount(), nano * 0.000001D);
+	}
+	
+	public void doLoadTechBranches()
+	{
+		TechList.loadBranches();
+	}
+	
+	public void doLoadTech()
 	{
 
 		File thejar = new File(this.theTurrem.getDir() + "jars/" + "tech.jar");
@@ -118,17 +134,10 @@ public class TurremGame implements ITurremGame
 			{
 				e.printStackTrace();
 			}
-
-			boolean flag = false;
 			
 			if (stone != null)
 			{
-				flag = TechList.loadTechClass(stone);
-			}
-			
-			if (!flag)
-			{
-				System.out.println("Warning! Failed to load tech from " + stone.getName());
+				TechList.loadTechClass(stone);
 			}
 		}
 	}

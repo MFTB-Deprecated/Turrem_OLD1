@@ -27,7 +27,7 @@ public class JavaTechItem extends TechItem
 	}
 
 	@Override
-	public void loadBraches()
+	public void loadBranches()
 	{
 		if (this.tech instanceof TechBase)
 		{

@@ -79,15 +79,15 @@ public class TechList
 		return null;
 	}
 
-	public static boolean loadTechClass(Class<?> theClass)
+	public static LoadErrors loadTechClass(Class<?> theClass)
 	{
 		if (!Tech.class.isAssignableFrom(theClass))
 		{
-			return false;
+			return LoadErrors.NotTech;
 		}
 		if (Modifier.isAbstract(theClass.getModifiers()))
 		{
-			return false;
+			return LoadErrors.Abstract;
 		}
 		Object obj;
 		try
@@ -96,7 +96,7 @@ public class TechList
 		}
 		catch (Exception e)
 		{
-			return false;
+			return LoadErrors.CouldNotConstruct;
 		}
 		if (obj != null)
 		{
@@ -106,10 +106,20 @@ public class TechList
 				return loadTech(tech);
 			}
 		}
-		return false;
+		return LoadErrors.Other;
 	}
 	
-	public static boolean loadTech(Tech tech)
+	public static enum LoadErrors
+	{
+		NotTech,
+		Abstract,
+		CouldNotConstruct,
+		TechNull,
+		Other,
+		Success;
+	}
+	
+	public static LoadErrors loadTech(Tech tech)
 	{
 		if (tech != null)
 		{
@@ -119,8 +129,17 @@ public class TechList
 				TechItem item = tech.buildItem(i);
 				item.push();
 			}
-			return true;
+			return LoadErrors.Success;
 		}
-		return false;
+		return LoadErrors.TechNull;
+	}
+	
+	public static void loadBranches()
+	{
+		for (int i = 0; i < techList.size(); i++)
+		{
+			TechItem item = techList.get(i);
+			item.loadBranches();
+		}
 	}
 }

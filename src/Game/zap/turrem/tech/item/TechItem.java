@@ -10,7 +10,7 @@ public abstract class TechItem
 
 	public abstract String getName();
 	
-	public abstract void loadBraches();
+	public abstract void loadBranches();
 	
 	protected void onPush()
 	{
