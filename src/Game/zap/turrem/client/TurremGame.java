@@ -8,6 +8,7 @@ import java.net.URLClassLoader;
 
 import zap.turrem.Turrem;
 import zap.turrem.loaders.java.JarFileLoader;
+import zap.turrem.tech.TechTester;
 import zap.turrem.tech.branch.BranchList;
 import zap.turrem.tech.list.TechList;
 import zap.turrem.utils.StopTimer;
@@ -46,9 +47,11 @@ public class TurremGame implements ITurremGame
 	{
 		this.tickcount++;
 
+		TechTester.tick();
+		
 		// TODO Program Game
 
-		if (this.tickcount > 1000)
+		if (this.tickcount > 10000)
 		{
 			this.gotoMainMenu();
 		}

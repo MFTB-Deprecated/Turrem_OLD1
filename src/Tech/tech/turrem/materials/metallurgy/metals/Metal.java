@@ -10,22 +10,23 @@ public abstract class Metal extends TechBase
 	@Override
 	public void loadBranches(int pass)
 	{
+		if (pass == 0)
+		{
+			(new BranchActive(this, pass)).addRequired(Metallurgy.class, 0).push();
+		}
 		if (pass == 1)
 		{
-			if (!this.isAlloy())
+			if (this.getLevel() == 0)
 			{
-				if (this.getLevel() == 0)
-				{
-					(new BranchActive(this, pass)).addRequired(Metallurgy.class, 0).addRequired(this.getClass(), 0).push();
-				}
-				else if (this.getLevel() == 1)
-				{
-					(new BranchAvailable(this, pass)).addRequired(Metallurgy.class, 1).addRequired(this.getClass(), 0).push();
-				}
-				else if (this.getLevel() == 2)
-				{
-					(new BranchAvailable(this, pass)).addRequired(Metallurgy.class, 3).addRequired(this.getClass(), 0).push();
-				}
+				(new BranchActive(this, pass)).addRequired(Metallurgy.class, 0).addRequired(this.getClass(), 0).push();
+			}
+			else if (this.getLevel() == 1)
+			{
+				(new BranchAvailable(this, pass)).addRequired(Metallurgy.class, 1).addRequired(this.getClass(), 0).push();
+			}
+			else if (this.getLevel() == 2)
+			{
+				(new BranchAvailable(this, pass)).addRequired(Metallurgy.class, 3).addRequired(this.getClass(), 0).push();
 			}
 		}
 		if (pass == 2)
@@ -56,7 +57,7 @@ public abstract class Metal extends TechBase
 				return this.getMetalName();
 		}
 	}
-	
+
 	@Override
 	public boolean isEntryLevel(int pass)
 	{

@@ -13,7 +13,6 @@ public abstract class Alloy extends Metal
 	@Override
 	public void loadBranches(int pass)
 	{
-		super.loadBranches(pass);
 		if (pass == 0)
 		{
 			Branch b = new BranchAvailable(this, pass);
@@ -24,6 +23,10 @@ public abstract class Alloy extends Metal
 			}
 			b.addRequired(Metallurgy.class, 2);
 			b.push();
+		}
+		else
+		{
+			super.loadBranches(pass);
 		}
 	}
 

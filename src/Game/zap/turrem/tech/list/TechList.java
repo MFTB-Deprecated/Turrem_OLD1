@@ -17,13 +17,18 @@ public class TechList
 	{
 		return techList.size();
 	}
-	
+
 	public static int addTech(TechItem tech)
 	{
 		int id = techList.size();
 		techList.add(tech);
 		techIds.put(tech.getIdentifier(), id);
 		return id;
+	}
+
+	public static TechItem get(int index)
+	{
+		return techList.get(index);
 	}
 
 	public static int getIndex(String idetifier)
@@ -108,7 +113,7 @@ public class TechList
 		}
 		return LoadErrors.Other;
 	}
-	
+
 	public static enum LoadErrors
 	{
 		NotTech,
@@ -118,7 +123,7 @@ public class TechList
 		Other,
 		Success;
 	}
-	
+
 	public static LoadErrors loadTech(Tech tech)
 	{
 		if (tech != null)
@@ -133,7 +138,7 @@ public class TechList
 		}
 		return LoadErrors.TechNull;
 	}
-	
+
 	public static void loadBranches()
 	{
 		for (int i = 0; i < techList.size(); i++)

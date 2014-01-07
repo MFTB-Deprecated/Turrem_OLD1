@@ -28,7 +28,7 @@ public class RawWood extends TechBase
 			case 1:
 				return "Planks";
 			case 2:
-				return "Boards";
+				return "Manufactured Boards";
 			default:
 				return "Wood";
 		}

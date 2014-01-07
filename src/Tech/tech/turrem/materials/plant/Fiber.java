@@ -25,11 +25,11 @@ public class Fiber extends TechBase
 		switch (pass)
 		{
 			case 0:
-				return "Reeds";
+				return "Reeds as a Material";
 			case 1:
-				return "Pulp";
+				return "Plant Pulp";
 			case 2:
-				return "Plant Fiber";
+				return "The Uses of Plant Fiber";
 			default:
 				return "Paper";
 		}

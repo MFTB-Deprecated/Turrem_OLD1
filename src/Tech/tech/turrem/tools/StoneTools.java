@@ -13,7 +13,7 @@ public class StoneTools extends TechBase
 		switch (pass)
 		{
 			case 0:
-				return "Stones";
+				return "Stones as Tools";
 			case 1:
 				return "Stone Tools";
 			case 2:

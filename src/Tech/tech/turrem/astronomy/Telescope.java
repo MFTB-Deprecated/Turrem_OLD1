@@ -13,7 +13,7 @@ public class Telescope extends TechBase
 	@Override
 	public String getName(int pass)
 	{
-		return "Telescope";
+		return "Telescopes";
 	}
 
 	@Override

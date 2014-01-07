@@ -6,8 +6,6 @@ import zap.turrem.tech.list.TechList;
 
 public abstract class Branch
 {
-	public static int instanceCount = 0;
-
 	protected int[] techs = new int[0];
 	protected int[] requiredtechs = new int[0];
 
@@ -16,7 +14,16 @@ public abstract class Branch
 	public Branch(int tech)
 	{
 		this.techs = new int[] { tech };
-		instanceCount++;
+	}
+
+	public final int[] getTechs()
+	{
+		return techs;
+	}
+
+	public final int[] getRequiredTechs()
+	{
+		return requiredtechs;
 	}
 
 	public int getId()

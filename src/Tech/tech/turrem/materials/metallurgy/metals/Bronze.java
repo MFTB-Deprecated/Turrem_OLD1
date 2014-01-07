@@ -16,6 +16,6 @@ public class Bronze extends Alloy
 	@Override
 	public int getLevel()
 	{
-		return 3;
+		return 1;
 	}
 }

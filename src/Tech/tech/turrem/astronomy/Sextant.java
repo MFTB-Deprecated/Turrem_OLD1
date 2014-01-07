@@ -28,15 +28,15 @@ public class Sextant extends TechBase
 		switch (pass)
 		{
 			case 0:
-				return "Mural Instrument";
+				return "Mural Instruments";
 			case 1:
-				return "Dioptra";
+				return "Dioptras";
 			case 2:
-				return "Sextant";
+				return "Sextants";
 			case 3:
-				return "Navigational Sextant";
+				return "Sextant Navigation";
 			default:
-				return "Sextant";
+				return "Sextants";
 		}
 	}
 

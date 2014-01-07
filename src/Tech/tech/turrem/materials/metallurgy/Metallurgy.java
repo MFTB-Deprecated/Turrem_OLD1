@@ -1,5 +1,8 @@
 package tech.turrem.materials.metallurgy;
 
+import tech.turrem.Fire;
+import tech.turrem.tools.StoneTools;
+import branch.turrem.BranchAvailable;
 import zap.turrem.tech.TechBase;
 
 public class Metallurgy extends TechBase
@@ -7,7 +10,14 @@ public class Metallurgy extends TechBase
 	@Override
 	public void loadBranches(int pass)
 	{
-
+		if (pass == 0)
+		{
+			(new BranchAvailable(this, pass)).addRequired(StoneTools.class, 2).addRequired(Fire.class, 1).push();
+		}
+		if (pass > 0)
+		{
+			(new BranchAvailable(this, pass)).addRequired(this.getClass(), pass - 1).push();
+		}
 	}
 
 	@Override
@@ -16,7 +26,7 @@ public class Metallurgy extends TechBase
 		switch (pass)
 		{
 			case 0:
-				return "Shiny Rocks";
+				return "Metallic Rocks";
 			case 1:
 				return "Metallurgy";
 			case 2:

@@ -9,7 +9,7 @@ public class HittingRocks extends TechBase
 	@Override
 	public String getName(int pass)
 	{
-		return pass == 0 ? "Banging Rocks Together" : "Shaping Rocks";
+		return pass == 0 ? "Rock Pounding" : "Rock Sculpting";
 	}
 
 	@Override

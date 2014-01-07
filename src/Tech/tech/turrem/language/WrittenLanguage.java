@@ -41,7 +41,7 @@ public class WrittenLanguage extends TechBase
 			case 1:
 				return "Ideograms";
 			case 2:
-				return "Phoneme";
+				return "Phonemes";
 			case 3:
 				return "Alphabet";
 			case 4:

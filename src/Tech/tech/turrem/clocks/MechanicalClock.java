@@ -16,13 +16,13 @@ public class MechanicalClock extends TechBase
 		switch (pass)
 		{
 			case 0:
-				return "Simple Mechanical Clock";
+				return "Mechanical Clocks";
 			case 1:
-				return "Spring-driven Clock";
+				return "Spring-driven Clocks";
 			case 2:
-				return "Pendulum Clock";
+				return "Pendulum Clocks";
 			default:
-				return "Mechanical Clock";
+				return "Mechanical Clocks";
 		}
 	}
 

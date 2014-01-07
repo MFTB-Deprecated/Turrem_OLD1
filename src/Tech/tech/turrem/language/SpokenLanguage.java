@@ -27,7 +27,7 @@ public class SpokenLanguage extends TechBase
 			case 0:
 				return "Words";
 			case 1:
-				return "Language";
+				return "Simple Language";
 			case 2:
 				return "Advanced Language";
 			default:

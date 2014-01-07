@@ -15,7 +15,7 @@ public class AstronomicalClock extends TechBase
 	@Override
 	public String getName(int pass)
 	{
-		return "Astronomical Clock";
+		return "Astronomical Clocks";
 	}
 
 	@Override

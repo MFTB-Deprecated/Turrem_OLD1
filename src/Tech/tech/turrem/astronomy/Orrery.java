@@ -20,13 +20,13 @@ public class Orrery extends TechBase
 		switch (pass)
 		{
 			case 0:
-				return "Armillary sphere";
+				return "Armillary Spheres";
 			case 1:
-				return "Astrarium";
+				return "Mechanical Astrariums";
 			case 2:
-				return "Orrery";
+				return "Orreries";
 			default:
-				return "Orrery";
+				return "Orreries";
 		}
 	}
 

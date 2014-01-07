@@ -18,11 +18,11 @@ public class AncientClock extends TechBase
 			case 0:
 				return "Sundials";
 			case 1:
-				return "Candle Clock";
+				return "Candles as Clocks";
 			case 2:
-				return "Hourglass";
+				return "Hourglasses";
 			default:
-				return "Ancient Clock";
+				return "Ancient Clocks";
 		}
 	}
 

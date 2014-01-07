@@ -27,7 +27,7 @@ public class Ratio extends MathmaticalTech
 		switch (pass)
 		{
 			case 0:
-				return "Ratios";
+				return "Ratio Mathematics";
 			case 1:
 				return "Fractions";
 			case 2:

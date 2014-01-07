@@ -20,11 +20,11 @@ public class Astrolabe extends TechBase
 		switch (pass)
 		{
 			case 0:
-				return "Planisphere";
+				return "Planispheres";
 			case 1:
-				return "Astrolabe";
+				return "Astrolabes";
 			default:
-				return "Astrolabe";
+				return "Astrolabes";
 		}
 	}
 
