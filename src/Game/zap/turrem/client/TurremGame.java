@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Iterator;
 
 import zap.turrem.Turrem;
 import zap.turrem.loaders.java.JarFileLoader;
@@ -74,11 +75,13 @@ public class TurremGame implements ITurremGame
 
 		this.techtests.runMulti(50, true);
 
-		for (int j = 0; j < 10; j++)
+		Iterator<Integer> it = this.techtests.histo.keySet().iterator();
+		
+		while (it.hasNext())
 		{
 			System.out.println("");
 
-			TechItem t = TechList.get(this.techtests.getRandom());
+			TechItem t = TechList.get(it.next());
 			System.out.println("--" + "\"" + t.getName() + "\"" + " Histogram--");
 			System.out.println("");
 
@@ -88,6 +91,10 @@ public class TurremGame implements ITurremGame
 			{
 				System.out.println(out[i]);
 			}
+			
+			System.out.println("");
+			
+			System.out.printf("Average: %.1f%n", this.techtests.getHist(t.getId()).getAverage());
 		}
 	}
 
