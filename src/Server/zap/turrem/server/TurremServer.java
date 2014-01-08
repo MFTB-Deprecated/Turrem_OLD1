@@ -1,5 +1,10 @@
 package zap.turrem.server;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import zap.turrem.server.player.ClientSession;
+
 public class TurremServer
 {
 	private static TurremServer instance;
@@ -7,6 +12,8 @@ public class TurremServer
 	private String dir;
 	
 	private TurremGame theGame;
+	
+	private List<ClientSession> connected = new ArrayList<ClientSession>();
 
 	public static TurremServer getTurrem()
 	{
@@ -22,6 +29,11 @@ public class TurremServer
 	public void run()
 	{
 		
+	}
+	
+	public void addClient(ClientSession client)
+	{
+		this.connected.add(client);
 	}
 	
 	public void runGame()
