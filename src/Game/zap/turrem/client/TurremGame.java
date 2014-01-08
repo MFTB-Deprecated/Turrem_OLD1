@@ -8,8 +8,9 @@ import java.net.URLClassLoader;
 
 import zap.turrem.Turrem;
 import zap.turrem.loaders.java.JarFileLoader;
-import zap.turrem.tech.TechTester;
 import zap.turrem.tech.branch.BranchList;
+import zap.turrem.tech.debug.TechTester;
+import zap.turrem.tech.item.TechItem;
 import zap.turrem.tech.list.TechList;
 import zap.turrem.utils.StopTimer;
 
@@ -25,6 +26,8 @@ public class TurremGame implements ITurremGame
 	private boolean running;
 
 	private long tickcount = 0;
+
+	private TechTester techtests = new TechTester();
 
 	public TurremGame(Turrem turrem)
 	{
@@ -47,8 +50,6 @@ public class TurremGame implements ITurremGame
 	{
 		this.tickcount++;
 
-		TechTester.tick();
-		
 		// TODO Program Game
 
 		if (this.tickcount > 10000)
@@ -65,7 +66,29 @@ public class TurremGame implements ITurremGame
 	@Override
 	public void onStart()
 	{
+		System.out.println("--Tech Load Times--\n");
+		
 		this.doLoad();
+
+		System.out.println("\n--Random Tech Tree Example--\n");
+
+		this.techtests.runMulti(50, true);
+
+		for (int j = 0; j < 10; j++)
+		{
+			System.out.println("");
+
+			TechItem t = TechList.get(this.techtests.getRandom());
+			System.out.println("--" + "\"" + t.getName() + "\"" + " Histogram--");
+			System.out.println("");
+
+			String[] out = this.techtests.getHist(t.getId()).getGraphicOutput(8);
+
+			for (int i = 0; i < out.length; i++)
+			{
+				System.out.println(out[i]);
+			}
+		}
 	}
 
 	public void doLoad()
@@ -75,18 +98,18 @@ public class TurremGame implements ITurremGame
 		this.doLoadTech();
 		long nano = timer.end();
 		System.out.printf("Loaded %d techs in %.2fms%n", TechList.getSize(), nano * 0.000001D);
-		
+
 		timer.start();
 		this.doLoadTechBranches();
 		nano = timer.end();
 		System.out.printf("Loaded %d tech branches in %.2fms%n", BranchList.branchCount(), nano * 0.000001D);
 	}
-	
+
 	public void doLoadTechBranches()
 	{
 		TechList.loadBranches();
 	}
-	
+
 	public void doLoadTech()
 	{
 
@@ -137,7 +160,7 @@ public class TurremGame implements ITurremGame
 			{
 				e.printStackTrace();
 			}
-			
+
 			if (stone != null)
 			{
 				TechList.loadTechClass(stone);
