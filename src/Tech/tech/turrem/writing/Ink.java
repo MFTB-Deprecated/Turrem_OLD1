@@ -10,7 +10,7 @@ public class Ink extends TechBase
 	{
 		if (pass == 1)
 		{
-			(new BranchAvailable(this, pass)).addRequired(Paper.class, 0).addRequired(Ink.class, 0).push();
+			(new BranchAvailable(this, pass)).addRequired(Ink.class, 0).push();
 		}
 		if (pass == 2)
 		{
