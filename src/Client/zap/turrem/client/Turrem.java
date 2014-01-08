@@ -12,6 +12,10 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
+import zap.turrem.client.config.Config;
+import zap.turrem.client.states.Game;
+import zap.turrem.client.states.IState;
+import zap.turrem.client.states.MainMenu;
 import zap.turrem.loaders.java.JarFileLoader;
 import zap.turrem.utils.graphics.ImgUtils;
 
@@ -21,6 +25,9 @@ public class Turrem
 	private String dir;
 
 	private static Turrem instance;
+
+	private IState state;
+	private IState.EnumClientState enumstate;
 
 	public static Turrem getTurrem()
 	{
@@ -38,16 +45,119 @@ public class Turrem
 	{
 		try
 		{
-			Display.setDisplayMode(new DisplayMode(720, 640));
-			Display.setInitialBackground(1.0F, 1.0F, 1.0F);
+			if (!Config.isFullscreen())
+			{
+				Display.setDisplayMode(new DisplayMode(Config.getWidth(), Config.getHeight()));
+			}
 			Display.setTitle("Turrem");
+			Display.setVSyncEnabled(Config.isVsync());
+			Display.setFullscreen(Config.isFullscreen());
 			this.setIcons();
+
+			Config.setRefreshed();
+
 			Display.create();
 		}
 		catch (LWJGLException | IOException e)
 		{
 			e.printStackTrace();
 		}
+
+		this.enumstate = IState.EnumClientState.Menu;
+
+		this.runloop();
+	}
+
+	public void runloop()
+	{
+		while (!Display.isCloseRequested())
+		{
+			try
+			{
+				this.render();
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+				this.shutdown();
+				return;
+			}
+
+			Display.update();
+			Display.sync(Config.getLwjglSyncRate());
+		}
+		this.shutdown();
+	}
+
+	public void render() throws LWJGLException, IOException
+	{
+		if (Config.isChanged())
+		{
+			Display.destroy();
+
+			if (!Config.isFullscreen())
+			{
+				Display.setDisplayMode(new DisplayMode(Config.getWidth(), Config.getHeight()));
+			}
+			Display.setTitle("Turrem");
+			Display.setVSyncEnabled(Config.isVsync());
+			Display.setFullscreen(Config.isFullscreen());
+			this.setIcons();
+
+			Config.setRefreshed();
+
+			Display.create();
+		}
+
+		switch (this.enumstate)
+		{
+			case Menu:
+				this.renderMenu();
+				break;
+			case Game:
+				this.renderGame();
+				break;
+		}
+	}
+
+	private void renderMenu()
+	{
+		if (this.state instanceof MainMenu)
+		{
+			this.state.tick();
+		}
+		else
+		{
+			if (this.state != null)
+			{
+				this.state.end();
+			}
+			this.state = new MainMenu(this);
+			this.state.start();
+		}
+	}
+
+	private void renderGame()
+	{
+		if (this.state instanceof Game)
+		{
+			this.state.tick();
+		}
+		else
+		{
+			if (this.state != null)
+			{
+				this.state.end();
+			}
+			this.state = new Game(this);
+			this.state.start();
+		}
+	}
+
+	public void shutdown()
+	{
+		Display.destroy();
+		System.exit(0);
 	}
 
 	public void setIcons() throws IOException
@@ -67,13 +177,13 @@ public class Turrem
 				iconlist.add(file);
 			}
 		}
-		
+
 		for (String icon : iconlist)
 		{
 			BufferedImage img = ImageIO.read(assetloader.getFileInJar(icon));
 			icos.add(ImgUtils.imgToByteBuffer(img));
 		}
-		
+
 		Display.setIcon(icos.toArray(new ByteBuffer[0]));
 	}
 
