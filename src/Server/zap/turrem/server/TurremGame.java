@@ -8,11 +8,11 @@ import java.net.URLClassLoader;
 import java.util.Iterator;
 
 import zap.turrem.core.ITurremGame;
+import zap.turrem.core.loaders.java.JarFileLoader;
 import zap.turrem.core.tech.branch.BranchList;
 import zap.turrem.core.tech.debug.TechTester;
 import zap.turrem.core.tech.item.TechItem;
 import zap.turrem.core.tech.list.TechList;
-import zap.turrem.loaders.java.JarFileLoader;
 import zap.turrem.utils.StopTimer;
 
 public class TurremGame implements ITurremGame

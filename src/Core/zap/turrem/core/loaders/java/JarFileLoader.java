@@ -1,4 +1,4 @@
-package zap.turrem.loaders.java;
+package zap.turrem.core.loaders.java;
 
 import java.io.File;
 import java.io.FileInputStream;

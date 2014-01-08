@@ -1,6 +1,6 @@
 package zap.turrem.client.player;
 
-import zap.turrem.player.Player;
+import zap.turrem.core.player.Player;
 
 public class PlayerSP extends Player
 {

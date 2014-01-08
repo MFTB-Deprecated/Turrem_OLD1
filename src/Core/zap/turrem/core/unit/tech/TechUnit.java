@@ -1,9 +1,9 @@
-package zap.turrem.unit.tech;
+package zap.turrem.core.unit.tech;
 
 import zap.turrem.core.tech.TechBase;
 import zap.turrem.core.tech.branch.BranchUnitTech;
 import zap.turrem.core.tech.item.TechItem;
-import zap.turrem.unit.Unit;
+import zap.turrem.core.unit.Unit;
 
 public class TechUnit extends TechBase
 {

@@ -1,7 +1,7 @@
-package zap.turrem.unit;
+package zap.turrem.core.unit;
 
 import zap.turrem.core.tech.item.TechItem;
-import zap.turrem.unit.tech.TechUnit;
+import zap.turrem.core.unit.tech.TechUnit;
 
 public abstract class Unit
 {

@@ -16,7 +16,7 @@ import zap.turrem.client.config.Config;
 import zap.turrem.client.states.Game;
 import zap.turrem.client.states.IState;
 import zap.turrem.client.states.MainMenu;
-import zap.turrem.loaders.java.JarFileLoader;
+import zap.turrem.core.loaders.java.JarFileLoader;
 import zap.turrem.utils.graphics.ImgUtils;
 
 public class Turrem

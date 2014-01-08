@@ -1,6 +1,6 @@
-package zap.turrem.realm;
+package zap.turrem.core.realm;
 
-import zap.turrem.player.Player;
+import zap.turrem.core.player.Player;
 
 public class Realm
 {
