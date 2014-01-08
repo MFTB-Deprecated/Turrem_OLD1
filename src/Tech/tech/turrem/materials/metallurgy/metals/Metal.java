@@ -3,7 +3,7 @@ package tech.turrem.materials.metallurgy.metals;
 import tech.turrem.materials.metallurgy.Metallurgy;
 import branch.turrem.BranchActive;
 import branch.turrem.BranchAvailable;
-import zap.turrem.tech.TechBase;
+import zap.turrem.core.tech.TechBase;
 
 public abstract class Metal extends TechBase
 {

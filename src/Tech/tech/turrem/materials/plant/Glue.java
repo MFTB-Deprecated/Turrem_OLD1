@@ -1,6 +1,6 @@
 package tech.turrem.materials.plant;
 
-import zap.turrem.tech.TechBase;
+import zap.turrem.core.tech.TechBase;
 
 public class Glue extends TechBase
 {

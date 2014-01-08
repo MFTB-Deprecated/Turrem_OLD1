@@ -1,7 +1,7 @@
 package tech.turrem.astronomy;
 
 import branch.turrem.BranchAvailable;
-import zap.turrem.tech.TechBase;
+import zap.turrem.core.tech.TechBase;
 
 public class Sextant extends TechBase
 {

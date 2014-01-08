@@ -1,9 +1,9 @@
 package tech.turrem.materials.metallurgy.metals;
 
 import tech.turrem.materials.metallurgy.Metallurgy;
-import zap.turrem.tech.Tech;
-import zap.turrem.tech.TechBase;
-import zap.turrem.tech.branch.Branch;
+import zap.turrem.core.tech.Tech;
+import zap.turrem.core.tech.TechBase;
+import zap.turrem.core.tech.branch.Branch;
 import branch.turrem.BranchAvailable;
 
 public abstract class Alloy extends Metal

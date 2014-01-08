@@ -1,7 +1,7 @@
 package tech.turrem.materials.plant;
 
 import branch.turrem.BranchActive;
-import zap.turrem.tech.TechBase;
+import zap.turrem.core.tech.TechBase;
 
 public class RawWood extends TechBase
 {

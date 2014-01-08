@@ -3,7 +3,7 @@ package tech.turrem.writing;
 import branch.turrem.BranchAvailable;
 import tech.turrem.language.WrittenLanguage;
 import tech.turrem.tools.StoneTools;
-import zap.turrem.tech.TechBase;
+import zap.turrem.core.tech.TechBase;
 
 public class ClayTablet extends TechBase
 {

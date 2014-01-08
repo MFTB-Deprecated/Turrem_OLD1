@@ -1,6 +1,6 @@
 package tech.turrem.astronomy;
 
-import zap.turrem.tech.TechBase;
+import zap.turrem.core.tech.TechBase;
 
 public class Telescope extends TechBase
 {

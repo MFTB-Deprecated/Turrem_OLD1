@@ -1,6 +1,6 @@
 package tech.turrem.clocks;
 
-import zap.turrem.tech.TechBase;
+import zap.turrem.core.tech.TechBase;
 
 public class AncientClock extends TechBase
 {

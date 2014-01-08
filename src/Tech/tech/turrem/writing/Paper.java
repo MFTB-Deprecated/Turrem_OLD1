@@ -5,7 +5,7 @@ import branch.turrem.BranchAvailable;
 import tech.turrem.language.WrittenLanguage;
 import tech.turrem.materials.plant.Fiber;
 import tech.turrem.materials.plant.Glue;
-import zap.turrem.tech.TechBase;
+import zap.turrem.core.tech.TechBase;
 
 public class Paper extends TechBase
 {

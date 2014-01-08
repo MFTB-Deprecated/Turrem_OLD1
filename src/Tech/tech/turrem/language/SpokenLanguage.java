@@ -2,7 +2,7 @@ package tech.turrem.language;
 
 import branch.turrem.BranchActive;
 import branch.turrem.BranchAvailable;
-import zap.turrem.tech.TechBase;
+import zap.turrem.core.tech.TechBase;
 
 public class SpokenLanguage extends TechBase
 {
