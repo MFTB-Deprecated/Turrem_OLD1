@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
@@ -91,6 +92,11 @@ public class Turrem
 
 	public void render() throws LWJGLException, IOException
 	{
+		if (Keyboard.isKeyDown(Keyboard.KEY_F11))
+		{
+			Config.setFullscreen(!Config.isFullscreen());
+		}
+		
 		if (Config.isChanged())
 		{
 			Display.destroy();

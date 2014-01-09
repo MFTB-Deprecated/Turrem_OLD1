@@ -31,8 +31,6 @@ public class MainMenu implements IState
 	@Override
 	public void tick()
 	{
-		Config.setFullscreen(((System.currentTimeMillis() / 20000) % 2) == 0);
-		
 		glBegin(GL_QUADS);
 		
 		glEnd();
