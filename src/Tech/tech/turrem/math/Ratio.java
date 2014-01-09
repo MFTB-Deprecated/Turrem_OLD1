@@ -36,7 +36,6 @@ public class Ratio extends MathmaticalTech
 				return "Fractions";
 		}
 	}
-	
 
 	@Override
 	public boolean isEntryLevel(int pass)

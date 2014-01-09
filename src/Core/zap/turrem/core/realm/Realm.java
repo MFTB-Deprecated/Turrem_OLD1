@@ -5,7 +5,7 @@ import zap.turrem.core.player.Player;
 public class Realm
 {
 	private Player theMaster;
-	
+
 	public Realm(Player thePlayer)
 	{
 		this.theMaster = thePlayer;
@@ -13,6 +13,6 @@ public class Realm
 
 	public Player getTheMaster()
 	{
-		return theMaster;
+		return this.theMaster;
 	}
 }

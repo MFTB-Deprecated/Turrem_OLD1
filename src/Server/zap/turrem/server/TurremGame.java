@@ -26,14 +26,15 @@ public class TurremGame implements ITurremGame
 	private TechTester techtests = new TechTester();
 
 	public static final boolean testTechs = false;
-	
+
 	public TurremServer theTurrem;
-	
+
 	public TurremGame(TurremServer server)
 	{
 		this.theTurrem = server;
 	}
-	
+
+	@Override
 	public void runGameLoop()
 	{
 		long diff = System.currentTimeMillis() - this.mils;
@@ -46,7 +47,7 @@ public class TurremGame implements ITurremGame
 
 	public void runTick()
 	{
-		
+
 	}
 
 	public boolean isrunning()
@@ -54,6 +55,7 @@ public class TurremGame implements ITurremGame
 		return this.running;
 	}
 
+	@Override
 	public void onStart()
 	{
 		if (testTechs)
@@ -167,6 +169,7 @@ public class TurremGame implements ITurremGame
 		}
 	}
 
+	@Override
 	public void run()
 	{
 		this.running = true;

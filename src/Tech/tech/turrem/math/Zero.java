@@ -15,7 +15,6 @@ public class Zero extends MathmaticalTech
 	{
 		return "Zero";
 	}
-	
 
 	@Override
 	public boolean isEntryLevel(int pass)

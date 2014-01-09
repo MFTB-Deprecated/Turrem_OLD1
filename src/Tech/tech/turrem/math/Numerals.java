@@ -1,7 +1,7 @@
 package tech.turrem.math;
 
-import branch.turrem.BranchAvailable;
 import tech.turrem.language.WrittenLanguage;
+import branch.turrem.BranchAvailable;
 
 public class Numerals extends MathmaticalTech
 {
@@ -16,7 +16,7 @@ public class Numerals extends MathmaticalTech
 	{
 		return "Numerals";
 	}
-	
+
 	@Override
 	public boolean isEntryLevel(int pass)
 	{

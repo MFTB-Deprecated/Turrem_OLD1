@@ -68,7 +68,7 @@ public class JarFileLoader
 		zip.close();
 		return classNames.toArray(new String[0]);
 	}
-	
+
 	public String[] getClassList() throws IOException
 	{
 		List<String> classNames = new ArrayList<String>();

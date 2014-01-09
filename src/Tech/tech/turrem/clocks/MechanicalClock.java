@@ -7,7 +7,7 @@ public class MechanicalClock extends TechBase
 	@Override
 	public void loadBranches(int pass)
 	{
-		
+
 	}
 
 	@Override

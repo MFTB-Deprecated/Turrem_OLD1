@@ -3,8 +3,8 @@ package zap.turrem.client.config;
 public class Config
 {
 	private static int lwjglSyncRate = 60;
-	private static int width = 720;
-	private static int height = 640;
+	private static int width = 960;
+	private static int height = 600;
 	private static boolean fullscreen = false;
 	private static boolean vsync = true;
 
@@ -79,7 +79,7 @@ public class Config
 			isChanged = true;
 		}
 	}
-	
+
 	public static boolean isChanged()
 	{
 		return isChanged;

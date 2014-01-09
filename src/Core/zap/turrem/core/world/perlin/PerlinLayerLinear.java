@@ -1,6 +1,5 @@
 package zap.turrem.core.world.perlin;
 
-
 class PerlinLayerLinear extends PerlinLayer
 {
 	protected LocationRandom rand;

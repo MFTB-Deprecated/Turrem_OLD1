@@ -14,7 +14,7 @@ public class BranchStarting extends Branch
 	{
 		super(tech);
 	}
-	
+
 	public BranchStarting(TechItem tech)
 	{
 		super(tech);
@@ -24,7 +24,7 @@ public class BranchStarting extends Branch
 	{
 		super(tech, pass);
 	}
-	
+
 	public BranchStarting(TechBase tech, int pass)
 	{
 		super(tech, pass);

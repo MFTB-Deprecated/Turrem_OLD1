@@ -14,7 +14,7 @@ public class BranchUnitTech extends Branch
 	{
 		super(tech);
 	}
-	
+
 	public BranchUnitTech(TechItem tech)
 	{
 		super(tech);
@@ -24,7 +24,7 @@ public class BranchUnitTech extends Branch
 	{
 		super(tech, pass);
 	}
-	
+
 	public BranchUnitTech(TechBase tech, int pass)
 	{
 		super(tech, pass);

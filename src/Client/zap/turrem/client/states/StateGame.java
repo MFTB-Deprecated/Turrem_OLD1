@@ -2,11 +2,11 @@ package zap.turrem.client.states;
 
 import zap.turrem.client.Turrem;
 
-public class Game implements IState
+public class StateGame implements IState
 {
 	private Turrem theTurrem;
-	
-	public Game(Turrem turrem)
+
+	public StateGame(Turrem turrem)
 	{
 		this.theTurrem = turrem;
 	}
@@ -20,12 +20,12 @@ public class Game implements IState
 	@Override
 	public void end()
 	{
-		
+
 	}
 
 	@Override
 	public void tick()
 	{
-		
+
 	}
 }

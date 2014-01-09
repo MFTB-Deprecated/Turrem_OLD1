@@ -7,7 +7,7 @@ public class Telescope extends TechBase
 	@Override
 	public void loadBranches(int pass)
 	{
-		
+
 	}
 
 	@Override

@@ -14,9 +14,10 @@ import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
 import zap.turrem.client.config.Config;
-import zap.turrem.client.states.Game;
 import zap.turrem.client.states.IState;
-import zap.turrem.client.states.MainMenu;
+import zap.turrem.client.states.StateGame;
+import zap.turrem.client.states.StateIntro;
+import zap.turrem.client.states.StateMainMenu;
 import zap.turrem.core.loaders.java.JarFileLoader;
 import zap.turrem.utils.graphics.ImgUtils;
 
@@ -44,27 +45,18 @@ public class Turrem
 
 	public void run()
 	{
+		this.updateDisplay();
+
 		try
 		{
-			if (!Config.isFullscreen())
-			{
-				Display.setDisplayMode(new DisplayMode(Config.getWidth(), Config.getHeight()));
-			}
-			Display.setTitle("Turrem");
-			Display.setVSyncEnabled(Config.isVsync());
-			Display.setFullscreen(Config.isFullscreen());
-			this.setIcons();
-
-			Config.setRefreshed();
-
 			Display.create();
 		}
-		catch (LWJGLException | IOException e)
+		catch (LWJGLException e)
 		{
 			e.printStackTrace();
 		}
 
-		this.enumstate = IState.EnumClientState.Menu;
+		this.enumstate = IState.EnumClientState.Intro;
 
 		this.runloop();
 	}
@@ -96,27 +88,17 @@ public class Turrem
 		{
 			Config.setFullscreen(!Config.isFullscreen());
 		}
-		
+
 		if (Config.isChanged())
 		{
-			Display.destroy();
-
-			if (!Config.isFullscreen())
-			{
-				Display.setDisplayMode(new DisplayMode(Config.getWidth(), Config.getHeight()));
-			}
-			Display.setTitle("Turrem");
-			Display.setVSyncEnabled(Config.isVsync());
-			Display.setFullscreen(Config.isFullscreen());
-			this.setIcons();
-
-			Config.setRefreshed();
-
-			Display.create();
+			this.updateDisplay();
 		}
 
 		switch (this.enumstate)
 		{
+			case Intro:
+				this.renderIntro();
+				break;
 			case Menu:
 				this.renderMenu();
 				break;
@@ -126,9 +108,9 @@ public class Turrem
 		}
 	}
 
-	private void renderMenu()
+	private void renderIntro()
 	{
-		if (this.state instanceof MainMenu)
+		if (this.state instanceof StateIntro)
 		{
 			this.state.tick();
 		}
@@ -138,14 +120,31 @@ public class Turrem
 			{
 				this.state.end();
 			}
-			this.state = new MainMenu(this);
+			this.state = new StateIntro(this);
+			this.state.start();
+		}
+	}
+
+	private void renderMenu()
+	{
+		if (this.state instanceof StateMainMenu)
+		{
+			this.state.tick();
+		}
+		else
+		{
+			if (this.state != null)
+			{
+				this.state.end();
+			}
+			this.state = new StateMainMenu(this);
 			this.state.start();
 		}
 	}
 
 	private void renderGame()
 	{
-		if (this.state instanceof Game)
+		if (this.state instanceof StateGame)
 		{
 			this.state.tick();
 		}
@@ -155,7 +154,7 @@ public class Turrem
 			{
 				this.state.end();
 			}
-			this.state = new Game(this);
+			this.state = new StateGame(this);
 			this.state.start();
 		}
 	}
@@ -164,6 +163,83 @@ public class Turrem
 	{
 		Display.destroy();
 		System.exit(0);
+	}
+
+	public void updateDisplay()
+	{
+		this.setDisplayMode(Config.getWidth(), Config.getHeight(), Config.isFullscreen());
+		Display.setTitle("Turrem");
+		Display.setVSyncEnabled(Config.isVsync());
+		try
+		{
+			this.setIcons();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+
+		Config.setRefreshed();
+	}
+
+	public void setDisplayMode(int width, int height, boolean fullscreen)
+	{
+		if ((Display.getDisplayMode().getWidth() == width) && (Display.getDisplayMode().getHeight() == height) && (Display.isFullscreen() == fullscreen))
+		{
+			return;
+		}
+
+		try
+		{
+			DisplayMode targetDisplayMode = null;
+
+			if (fullscreen)
+			{
+				DisplayMode[] modes = Display.getAvailableDisplayModes();
+				int freq = 0;
+
+				for (int i = 0; i < modes.length; i++)
+				{
+					DisplayMode current = modes[i];
+
+					if ((current.getWidth() == width) && (current.getHeight() == height))
+					{
+						if ((targetDisplayMode == null) || (current.getFrequency() >= freq))
+						{
+							if ((targetDisplayMode == null) || (current.getBitsPerPixel() > targetDisplayMode.getBitsPerPixel()))
+							{
+								targetDisplayMode = current;
+								freq = targetDisplayMode.getFrequency();
+							}
+						}
+
+						if ((current.getBitsPerPixel() == Display.getDesktopDisplayMode().getBitsPerPixel()) && (current.getFrequency() == Display.getDesktopDisplayMode().getFrequency()))
+						{
+							targetDisplayMode = current;
+							break;
+						}
+					}
+				}
+			}
+			else
+			{
+				targetDisplayMode = new DisplayMode(width, height);
+			}
+
+			if (targetDisplayMode == null)
+			{
+				System.out.println("Failed to find value mode: " + width + "x" + height + " fs=" + fullscreen);
+				return;
+			}
+
+			Display.setDisplayMode(targetDisplayMode);
+			Display.setFullscreen(fullscreen);
+
+		}
+		catch (LWJGLException e)
+		{
+			System.out.println("Unable to setup mode " + width + "x" + height + " fullscreen=" + fullscreen + e);
+		}
 	}
 
 	public void setIcons() throws IOException
@@ -191,6 +267,16 @@ public class Turrem
 		}
 
 		Display.setIcon(icos.toArray(new ByteBuffer[0]));
+	}
+
+	public boolean isLoading()
+	{
+		return false;
+	}
+
+	public void setState(IState.EnumClientState newstate)
+	{
+		this.enumstate = newstate;
 	}
 
 	public Session getSession()

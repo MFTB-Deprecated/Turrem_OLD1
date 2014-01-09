@@ -36,7 +36,7 @@ public class TechList
 		Integer i = techIds.get(idetifier);
 		if (i != null)
 		{
-			return (int) i;
+			return i;
 		}
 		return -1;
 	}

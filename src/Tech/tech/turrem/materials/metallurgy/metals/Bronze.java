@@ -2,9 +2,10 @@ package tech.turrem.materials.metallurgy.metals;
 
 public class Bronze extends Alloy
 {
+	@Override
 	public String[] getAlloy()
 	{
-		return new String[] {this.getIdent(Copper.class), this.getIdent(Tin.class)};
+		return new String[] { this.getIdent(Copper.class), this.getIdent(Tin.class) };
 	}
 
 	@Override

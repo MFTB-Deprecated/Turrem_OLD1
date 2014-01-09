@@ -30,18 +30,19 @@ public abstract class Alloy extends Metal
 		}
 	}
 
+	@Override
 	public boolean isAlloy()
 	{
 		return true;
 	}
-	
+
 	public String getIdent(Class<? extends Metal> metal)
 	{
 		return Tech.getClassIdentifier(metal, 1);
 	}
-	
+
 	public String getIdent(Class<? extends TechBase> tech, int pass)
 	{
-		return  Tech.getClassIdentifier(tech, pass);
+		return Tech.getClassIdentifier(tech, pass);
 	}
 }

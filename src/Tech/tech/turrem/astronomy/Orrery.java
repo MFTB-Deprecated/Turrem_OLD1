@@ -1,7 +1,7 @@
 package tech.turrem.astronomy;
 
-import branch.turrem.BranchAvailable;
 import zap.turrem.core.tech.TechBase;
+import branch.turrem.BranchAvailable;
 
 public class Orrery extends TechBase
 {
@@ -13,7 +13,7 @@ public class Orrery extends TechBase
 			(new BranchAvailable(this, pass)).addRequired(Orrery.class, 1).push();
 		}
 	}
-	
+
 	@Override
 	public String getName(int pass)
 	{

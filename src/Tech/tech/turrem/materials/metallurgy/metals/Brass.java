@@ -7,10 +7,11 @@ public class Brass extends Alloy
 	{
 		return "Brass";
 	}
-	
+
+	@Override
 	public String[] getAlloy()
 	{
-		return new String[] {this.getIdent(Copper.class), this.getIdent(Zinc.class)};
+		return new String[] { this.getIdent(Copper.class), this.getIdent(Zinc.class) };
 	}
 
 	@Override

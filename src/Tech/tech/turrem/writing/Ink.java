@@ -1,7 +1,7 @@
 package tech.turrem.writing;
 
-import branch.turrem.BranchAvailable;
 import zap.turrem.core.tech.TechBase;
+import branch.turrem.BranchAvailable;
 
 public class Ink extends TechBase
 {

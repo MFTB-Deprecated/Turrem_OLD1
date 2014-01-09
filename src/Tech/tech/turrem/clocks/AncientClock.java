@@ -7,7 +7,7 @@ public class AncientClock extends TechBase
 	@Override
 	public void loadBranches(int pass)
 	{
-		
+
 	}
 
 	@Override

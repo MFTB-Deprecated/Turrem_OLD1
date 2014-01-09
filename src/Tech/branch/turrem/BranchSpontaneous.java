@@ -15,7 +15,7 @@ public class BranchSpontaneous extends Branch
 	{
 		super(tech);
 	}
-	
+
 	public BranchSpontaneous(TechItem tech)
 	{
 		super(tech);
@@ -25,7 +25,7 @@ public class BranchSpontaneous extends Branch
 	{
 		super(tech, pass);
 	}
-	
+
 	public BranchSpontaneous(TechBase tech, int pass)
 	{
 		super(tech, pass);

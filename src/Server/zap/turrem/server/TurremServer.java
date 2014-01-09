@@ -8,11 +8,11 @@ import zap.turrem.server.player.ClientSession;
 public class TurremServer
 {
 	private static TurremServer instance;
-	
+
 	private String dir;
-	
+
 	private TurremGame theGame;
-	
+
 	private List<ClientSession> connected = new ArrayList<ClientSession>();
 
 	public static TurremServer getTurrem()
@@ -25,23 +25,23 @@ public class TurremServer
 		this.dir = dir;
 		instance = this;
 	}
-	
+
 	public void run()
 	{
-		
+
 	}
-	
+
 	public void addClient(ClientSession client)
 	{
 		this.connected.add(client);
 	}
-	
+
 	public void runGame()
 	{
 		this.theGame = new TurremGame(this);
 		this.theGame.run();
 	}
-	
+
 	public String getDir()
 	{
 		return this.dir;

@@ -9,14 +9,14 @@ public abstract class TechItem
 	public abstract String getIdentifier();
 
 	public abstract String getName();
-	
+
 	public abstract void loadBranches();
-	
+
 	protected void onPush()
 	{
-		
+
 	}
-	
+
 	public final void push()
 	{
 		TechList.addTech(this);

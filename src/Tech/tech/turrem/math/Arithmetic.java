@@ -36,7 +36,7 @@ public class Arithmetic extends MathmaticalTech
 				return "Arithmetic";
 		}
 	}
-	
+
 	@Override
 	public boolean isEntryLevel(int pass)
 	{

@@ -18,12 +18,12 @@ public abstract class Branch
 
 	public final int[] getTechs()
 	{
-		return techs;
+		return this.techs;
 	}
 
 	public final int[] getRequiredTechs()
 	{
-		return requiredtechs;
+		return this.requiredtechs;
 	}
 
 	public int getId()
@@ -50,7 +50,7 @@ public abstract class Branch
 	{
 		this(tech.getClass(), pass);
 	}
-	
+
 	public Branch addRequired(int tech)
 	{
 		int[] ts = new int[this.requiredtechs.length + 1];

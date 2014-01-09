@@ -15,7 +15,7 @@ public class Geometry extends MathmaticalTech
 	{
 		return "Geometry";
 	}
-	
+
 	@Override
 	public boolean isEntryLevel(int pass)
 	{

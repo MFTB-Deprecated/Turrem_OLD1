@@ -1,7 +1,7 @@
 package tech.turrem.astronomy;
 
-import branch.turrem.BranchAvailable;
 import zap.turrem.core.tech.TechBase;
+import branch.turrem.BranchAvailable;
 
 public class Astrolabe extends TechBase
 {
@@ -33,6 +33,7 @@ public class Astrolabe extends TechBase
 	{
 		return false;
 	}
+
 	@Override
 	public int getPassCount()
 	{

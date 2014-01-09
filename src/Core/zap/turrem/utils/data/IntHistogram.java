@@ -89,7 +89,7 @@ public class IntHistogram extends Histogram<Integer>
 		{
 			out[i] = "";
 		}
-		
+
 		int min = this.getMinKey();
 		int max = this.getMaxKey();
 

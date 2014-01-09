@@ -1,8 +1,8 @@
 package tech.turrem.materials.plant;
 
+import zap.turrem.core.tech.TechBase;
 import branch.turrem.BranchAvailable;
 import branch.turrem.BranchSpontaneous;
-import zap.turrem.core.tech.TechBase;
 
 public class Fiber extends TechBase
 {
