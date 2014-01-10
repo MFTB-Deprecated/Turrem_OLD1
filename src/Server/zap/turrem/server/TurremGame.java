@@ -25,7 +25,7 @@ public class TurremGame implements ITurremGame
 
 	private TechTester techtests = new TechTester();
 
-	public static final boolean testTechs = false;
+	public static final boolean testTechs = true;
 
 	public TurremServer theTurrem;
 
