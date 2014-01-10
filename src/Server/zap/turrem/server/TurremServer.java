@@ -28,7 +28,7 @@ public class TurremServer
 
 	public void run()
 	{
-
+		this.runGame();
 	}
 
 	public void addClient(ClientSession client)
