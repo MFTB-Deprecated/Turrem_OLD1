@@ -2,11 +2,11 @@ package zap.tvfbuilder;
 
 public class Color
 {
-	public byte r;
-	public byte g;
-	public byte b;
+	public int r;
+	public int g;
+	public int b;
 	
-	public Color(byte r, byte g, byte b)
+	public Color(int r, int g, int b)
 	{
 		this.r = r;
 		this.g = g;
