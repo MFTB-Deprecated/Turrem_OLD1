@@ -22,7 +22,7 @@ public class TVFWriter
 	public TVFWriter(VoxelGrid grid)
 	{
 		this.grid = grid;
-		this.outside = new boolean[this.grid.getHeight() * this.grid.getLength() * this.grid.getWidth()];
+		this.outside = new boolean[(this.grid.getHeight() + 2) * (this.grid.getLength() + 2) * (this.grid.getWidth() + 2)];
 	}
 
 	public void build()
@@ -112,22 +112,22 @@ public class TVFWriter
 
 	public boolean getOut(int x, int y, int z, boolean def)
 	{
-		if (!this.isInGrid(x, y, z))
+		if (!this.isInGrid(x, y, z, 1))
 		{
 			return def;
 		}
 
-		return this.outside[(((y * this.grid.getLength()) + z) * this.grid.getWidth()) + x];
+		return this.outside[((((y + 1) * this.grid.getLength()) + (z + 1)) * this.grid.getWidth()) + (x + 1)];
 	}
 
 	public void setOut(int x, int y, int z, boolean out)
 	{
-		if (!this.isInGrid(x, y, z))
+		if (!this.isInGrid(x, y, z, 1))
 		{
 			return;
 		}
 
-		this.outside[(((y * this.grid.getLength()) + z) * this.grid.getWidth()) + x] = out;
+		this.outside[((((y + 1) * this.grid.getLength()) + (z + 1)) * this.grid.getWidth()) + (x + 1)] = out;
 	}
 	
 	public void write(DataOutputStream stream) throws IOException
@@ -140,7 +140,7 @@ public class TVFWriter
 		{
 			short v = it.next();
 			
-			stream.write((byte) (v + Byte.MIN_VALUE));
+			stream.write(v);
 			
 			Color c = this.grid.getColor(v);
 			
@@ -155,13 +155,13 @@ public class TVFWriter
 		{
 			Face f = this.faces.get(i);
 			
-			stream.write((byte) (f.x + Byte.MIN_VALUE));
-			stream.write((byte) (f.y + Byte.MIN_VALUE));
-			stream.write((byte) (f.z + Byte.MIN_VALUE));
+			stream.writeByte(f.x);
+			stream.writeByte(f.y);
+			stream.writeByte(f.z);
 			
 			stream.write((byte) f.dir.ind);
 			
-			stream.write((byte) (f.color + Byte.MIN_VALUE));
+			stream.writeByte(f.color);
 		}
 	}
 }

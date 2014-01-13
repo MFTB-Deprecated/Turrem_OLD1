@@ -8,7 +8,7 @@ import zap.tvfbuilder.Color;
 
 public class VoxelGrid
 {
-	private byte[] grid;
+	private short[] grid;
 	private int width;
 	private int height;
 	private int length;
@@ -20,7 +20,7 @@ public class VoxelGrid
 		this.height = h;
 		this.length = l;
 		
-		this.grid = new byte[w * h * l];
+		this.grid = new short[w * h * l];
 		this.colors = new Color[255];
 	}
 
@@ -36,8 +36,7 @@ public class VoxelGrid
 			return 255;
 		}
 		
-		int v = this.grid[(((y * this.length) + z) * this.width) + x];
-		return v - (int) Byte.MIN_VALUE;
+		return this.grid[(((y * this.length) + z) * this.width) + x];
 	}
 	
 	public final int getWidth()
@@ -65,14 +64,14 @@ public class VoxelGrid
 		
 		for (int i = 0; i < grid.grid.length; i++)
 		{
-			grid.grid[i] = stream.readByte();
+			grid.grid[i] = (short) stream.read();
 		}
 		
 		for (int i = 0; i < grid.colors.length; i++)
 		{
-			byte r = stream.readByte();
-			byte g = stream.readByte();
-			byte b = stream.readByte();
+			int r = stream.read();
+			int g = stream.read();
+			int b = stream.read();
 			
 			grid.colors[i] = new Color(r, g, b);
 		}
