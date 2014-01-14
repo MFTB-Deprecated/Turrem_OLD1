@@ -1,4 +1,4 @@
-package zap.turrem.client.models;
+package zap.turrem.utils.models;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -41,6 +41,13 @@ public class TVFFile
 	private TVFFile()
 	{
 		
+	}
+	
+	public TVFFile(VOXFile vox)
+	{
+		this();
+		VoxToTvf con = new VoxToTvf(this, vox);
+		con.make();
 	}
 	
 	public void write(DataOutputStream stream) throws IOException

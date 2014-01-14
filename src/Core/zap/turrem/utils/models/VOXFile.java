@@ -1,10 +1,9 @@
-package zap.turrem.client.models;
+package zap.turrem.utils.models;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 public class VOXFile
 {
