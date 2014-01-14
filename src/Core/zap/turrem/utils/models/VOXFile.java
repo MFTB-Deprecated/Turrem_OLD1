@@ -53,7 +53,7 @@ public class VOXFile
 		vox.length = readInt(stream);
 		vox.height = readInt(stream);
 		
-		vox.voxels = new byte[vox.width * vox.length * vox.width];
+		vox.voxels = new byte[vox.width * vox.length * vox.height];
 		
 		for (int i = 0; i < vox.voxels.length; i++)
 		{
