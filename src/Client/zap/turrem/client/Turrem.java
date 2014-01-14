@@ -1,10 +1,15 @@
 package zap.turrem.client;
 
 import java.awt.image.BufferedImage;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.zip.GZIPOutputStream;
 
 import javax.imageio.ImageIO;
 
@@ -20,6 +25,8 @@ import zap.turrem.client.states.StateIntro;
 import zap.turrem.client.states.StateMainMenu;
 import zap.turrem.core.loaders.java.JarFileLoader;
 import zap.turrem.utils.graphics.ImgUtils;
+import zap.turrem.utils.models.TVFFile;
+import zap.turrem.utils.models.VOXFile;
 
 public class Turrem
 {
@@ -57,10 +64,41 @@ public class Turrem
 		}
 
 		this.enumstate = IState.EnumClientState.Intro;
+		
+		this.testTVF();
 
 		this.runloop();
 	}
 
+	public void testTVF()
+	{
+		String fni = this.dir + "eekysam.vox";
+		String fno = this.dir + "eekysam.tvf";
+		
+		try
+		{
+			File filein = new File(fni);
+			DataInputStream input = new DataInputStream(new FileInputStream(filein));
+
+			VOXFile vox = VOXFile.read(input);
+
+			input.close();
+
+			File fileout = new File(fno);
+			fileout.createNewFile();
+			DataOutputStream output = new DataOutputStream(new GZIPOutputStream(new FileOutputStream(fileout)));
+
+			TVFFile tvf = new TVFFile(vox);
+			tvf.write(output);
+
+			output.close();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
 	public void runloop()
 	{
 		while (!Display.isCloseRequested())

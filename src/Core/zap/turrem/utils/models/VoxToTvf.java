@@ -119,11 +119,12 @@ public class VoxToTvf
 		}
 		
 		this.tvf.faces = this.faces.toArray(new TVFFile.TVFFace[0]);
+		this.tvf.faceNum = this.tvf.faces.length;
 	}
 	
 	private byte getVox(int x, int y, int z)
 	{
-		if (x < 0 || x >= this.vox.width || y < 0 || y >= this.vox.height || z < 0 || z >= this.vox.length)
+		if (!this.isInGrid(x, y, z, 0))
 		{
 			return (byte) 0xFF;
 		}
