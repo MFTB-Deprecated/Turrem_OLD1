@@ -80,7 +80,7 @@ public class VoxToTvf
 							{
 								TVFFile.TVFFace f = new TVFFile.TVFFace();
 								f.x = (byte) (i & 0xFF);
-								f.y = (byte) (j & 0xFF);
+								f.y = (byte) ((vox.height - j) & 0xFF);
 								f.z = (byte) (k & 0xFF);
 								f.dir = dir.ind;
 								f.color = v;
@@ -103,7 +103,7 @@ public class VoxToTvf
 		Iterator<Short> it = this.usedColors.iterator();
 		
 		this.tvf.colorNum = this.colorCount;
-		this.tvf.colors = new TVFFile.TVFColor[this.usedColors.size()];
+		this.tvf.colors = new TVFFile.TVFColor[this.colorCount];
 		
 		while(it.hasNext())
 		{
@@ -129,7 +129,7 @@ public class VoxToTvf
 			return (byte) 0xFF;
 		}
 		
-		return this.vox.voxels[(((y * this.vox.length) + z) * this.vox.width) + x];
+		return this.vox.voxels[(x * this.vox.length + z) * this.vox.height + y];
 	}
 
 	private void findOutside()
