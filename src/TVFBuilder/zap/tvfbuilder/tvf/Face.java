@@ -4,12 +4,12 @@ public class Face
 {
 	public static enum EnumDir
 	{
-		XUp((byte) 0, (byte) 1, (byte) 0, (byte) 0),
-		XDown((byte) 1, (byte) -1, (byte) 0, (byte) 0),
-		YUp((byte) 2, (byte) 0, (byte) 1, (byte) 0),
-		YDown((byte) 3, (byte) 0, (byte) -1, (byte) 0),
-		ZUp((byte) 4, (byte) 0, (byte) 0, (byte) 1),
-		ZDown((byte) 5, (byte) 0, (byte) 0, (byte) -1);
+		XUp((byte) 1, (byte) 1, (byte) 0, (byte) 0),
+		XDown((byte) 2, (byte) -1, (byte) 0, (byte) 0),
+		YUp((byte) 3, (byte) 0, (byte) 1, (byte) 0),
+		YDown((byte) 4, (byte) 0, (byte) -1, (byte) 0),
+		ZUp((byte) 5, (byte) 0, (byte) 0, (byte) 1),
+		ZDown((byte) 6, (byte) 0, (byte) 0, (byte) -1);
 		
 		public byte ind;
 		

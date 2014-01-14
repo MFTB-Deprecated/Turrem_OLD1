@@ -6,9 +6,6 @@ public class Main
 {
 	public static void main(String[] args)
 	{
-		String fni = "C:/Users/Sam Sartor/Turrem/TVFBuilder/Test VOX/eekysam.vox";
-		String fno = "C:/Users/Sam Sartor/Turrem/TVFBuilder/Test VOX/eekysam.tvf";
-		
-		VoxConverter.convertFile(fni, fno);
+		VoxConverter.convertFile(args[0], args[1]);
 	}
 }
