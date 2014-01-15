@@ -14,14 +14,14 @@ public class VoxToTvf
 		YDown((byte) 4, (byte) 0, (byte) -1, (byte) 0),
 		ZUp((byte) 5, (byte) 0, (byte) 0, (byte) 1),
 		ZDown((byte) 6, (byte) 0, (byte) 0, (byte) -1);
-		
+
 		public byte ind;
-		
+
 		public byte xoff;
 		public byte yoff;
 		public byte zoff;
-		
-		EnumDir(byte ind, byte x, byte y, byte z )
+
+		EnumDir(byte ind, byte x, byte y, byte z)
 		{
 			this.ind = ind;
 			this.xoff = x;
@@ -29,23 +29,20 @@ public class VoxToTvf
 			this.zoff = z;
 		}
 	}
-	
+
 	protected TVFFile tvf;
 	protected VOXFile vox;
-	
+
 	private HashSet<Short> usedColors = new HashSet<Short>();
 	private short colorCount = 0;
 	private ArrayList<TVFFile.TVFFace> faces = new ArrayList<TVFFile.TVFFace>();
-	private boolean[] outside;
-	
+
 	public VoxToTvf(TVFFile tvf, VOXFile vox)
 	{
 		this.tvf = tvf;
 		this.vox = vox;
-		
-		this.outside = new boolean[(this.vox.width + 2) * (this.vox.length + 2) * (this.vox.height + 2)];
 	}
-	
+
 	public TVFFile make()
 	{
 		this.build();
@@ -55,7 +52,6 @@ public class VoxToTvf
 
 	private void build()
 	{
-		this.findOutside();
 
 		EnumDir[] dirs = EnumDir.values();
 
@@ -72,23 +68,20 @@ public class VoxToTvf
 						{
 							EnumDir dir = dirs[d];
 
-							int x = i + dir.xoff;
-							int y = j + dir.yoff;
-							int z = k + dir.zoff;
+							//int x = i + dir.xoff;
+							//int y = j + dir.yoff;
+							//int z = k + dir.zoff;
 
-							if (this.getOut(x, y, z))
+							TVFFile.TVFFace f = new TVFFile.TVFFace();
+							f.x = (byte) (i & 0xFF);
+							f.y = (byte) ((vox.height - j) & 0xFF);
+							f.z = (byte) (k & 0xFF);
+							f.dir = dir.ind;
+							f.color = v;
+							this.faces.add(f);
+							if (this.usedColors.add((short) (v & 0xFF)))
 							{
-								TVFFile.TVFFace f = new TVFFile.TVFFace();
-								f.x = (byte) (i & 0xFF);
-								f.y = (byte) ((vox.height - j) & 0xFF);
-								f.z = (byte) (k & 0xFF);
-								f.dir = dir.ind;
-								f.color = v;
-								this.faces.add(f);
-								if (this.usedColors.add((short) (v & 0xFF)))
-								{
-									this.colorCount++;
-								}
+								this.colorCount++;
 							}
 						}
 					}
@@ -96,16 +89,16 @@ public class VoxToTvf
 			}
 		}
 	}
-	
+
 	private void convert()
-	{		
+	{
 		int i = 0;
 		Iterator<Short> it = this.usedColors.iterator();
-		
+
 		this.tvf.colorNum = this.colorCount;
 		this.tvf.colors = new TVFFile.TVFColor[this.colorCount];
-		
-		while(it.hasNext())
+
+		while (it.hasNext())
 		{
 			short id = it.next();
 			VOXFile.VOXColor c = this.vox.colors[id];
@@ -117,80 +110,13 @@ public class VoxToTvf
 			this.tvf.colors[i] = C;
 			i++;
 		}
-		
+
 		this.tvf.faces = this.faces.toArray(new TVFFile.TVFFace[0]);
 		this.tvf.faceNum = this.tvf.faces.length;
 	}
-	
+
 	private byte getVox(int x, int y, int z)
 	{
-		if (!this.isInGrid(x, y, z, 0))
-		{
-			return (byte) 0xFF;
-		}
-		
 		return this.vox.voxels[(x * this.vox.length + z) * this.vox.height + y];
-	}
-
-	private void findOutside()
-	{
-		this.tickOutside(-1, -1, -1);
-	}
-
-	private void tickOutside(int x, int y, int z)
-	{
-		this.setOut(x, y, z, true);
-
-		EnumDir[] dirs = EnumDir.values();
-
-		for (int i = 0; i < dirs.length; i++)
-		{
-			EnumDir dir = dirs[i];
-
-			int X = x + dir.xoff;
-			int Y = y + dir.yoff;
-			int Z = z + dir.zoff;
-
-			if (this.isInGrid(X, Y, Z, 1))
-			{
-				if (this.getVox(X, Y, Z) == (byte) 0xFF)
-				{
-					if (!this.getOut(X, Y, Z, true))
-					{
-						this.tickOutside(X, Y, Z);
-					}
-				}
-			}
-		}
-	}
-	
-	private boolean isInGrid(int x, int y, int z, int d)
-	{
-		return !(x < 0 - d || x >= this.vox.width + d || y < 0 - d || y >= this.vox.height + d || z < 0 - d || z >= this.vox.length + d);
-	}
-
-	private boolean getOut(int x, int y, int z)
-	{
-		return getOut(x, y, z, true);
-	}
-
-	private boolean getOut(int x, int y, int z, boolean def)
-	{
-		if (!this.isInGrid(x, y, z, 1))
-		{
-			return def;
-		}
-
-		return this.outside[((((y + 1) * this.vox.length) + (z + 1)) * this.vox.width) + (x + 1)];
-	}
-
-	private void setOut(int x, int y, int z, boolean out)
-	{
-		if (!this.isInGrid(x, y, z, 1))
-		{
-			return;
-		}
-
-		this.outside[((((y + 1) * this.vox.length) + (z + 1)) * this.vox.width) + (x + 1)] = out;
 	}
 }

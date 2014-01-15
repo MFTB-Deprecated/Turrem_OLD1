@@ -18,6 +18,7 @@ public class TVFBuffer
 	private int vaoId = 0;
 	private int vboId = 0;
 	private int vbocId = 0;
+	private int vbonId = 0;
 
 	private int vertnum;
 	
@@ -26,6 +27,7 @@ public class TVFBuffer
 		this.vertnum = tvf.faceNum * 4;
 		float[] verts = new float[this.vertnum * 3];
 		float[] colors = new float[this.vertnum * 3];
+		float[] norms = new float[this.vertnum * 3];
 
 		for (int i = 0; i < tvf.faceNum; i++)
 		{
@@ -60,6 +62,28 @@ public class TVFBuffer
 				verts[ind + 0] = (x + foffs[0]) / 20.0F;
 				verts[ind + 1] = (y + foffs[1]) / 20.0F;
 				verts[ind + 2] = (z + foffs[2]) / 20.0F;
+				
+				switch (f.dir & 0xFF)
+				{
+					case 1:
+						norms[ind + 0] = 1.0F;
+						break;
+					case 2:
+						norms[ind + 0] = -1.0F;
+						break;
+					case 3:
+						norms[ind + 1] = 1.0F;
+						break;
+					case 4:
+						norms[ind + 1] = -1.0F;
+						break;
+					case 5:
+						norms[ind + 2] = 1.0F;
+						break;
+					case 6:
+						norms[ind + 2] = -1.0F;
+						break;
+				}
 			}
 		}
 
@@ -70,6 +94,10 @@ public class TVFBuffer
 		FloatBuffer colorsBuffer = BufferUtils.createFloatBuffer(colors.length);
 		colorsBuffer.put(colors);
 		colorsBuffer.flip();
+		
+		FloatBuffer normalsBuffer = BufferUtils.createFloatBuffer(norms.length);
+		normalsBuffer.put(norms);
+		normalsBuffer.flip();
 
 		// Create a new Vertex Array Object in memory and select it (bind)
 		vaoId = GL30.glGenVertexArrays();
@@ -89,6 +117,12 @@ public class TVFBuffer
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, colorsBuffer, GL15.GL_STATIC_DRAW);
 		GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 0, 0);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+		
+		vbonId = GL15.glGenBuffers();
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbonId);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, normalsBuffer, GL15.GL_STATIC_DRAW);
+		GL20.glVertexAttribPointer(2, 3, GL11.GL_FLOAT, false, 0, 0);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 
 		// Deselect (bind to 0) the VAO
 		GL30.glBindVertexArray(0);
@@ -103,6 +137,10 @@ public class TVFBuffer
 		GL11.glEnableClientState(GL11.GL_COLOR_ARRAY);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbocId);
 		GL11.glColorPointer(3, GL11.GL_FLOAT, 0, 0);
+		
+		GL11.glEnableClientState(GL11.GL_NORMAL_ARRAY);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbonId);
+		GL11.glNormalPointer(GL11.GL_FLOAT, 0, 0);
 
 		// If you are not using IBOs:
 		GL11.glDrawArrays(GL11.GL_QUADS, 0, this.vertnum);
