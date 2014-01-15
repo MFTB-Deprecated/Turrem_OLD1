@@ -155,7 +155,7 @@ public class VoxToTvf
 			{
 				if (this.getVox(X, Y, Z) == (byte) 0xFF)
 				{
-					if (!this.getOut(X, Y, Z, false))
+					if (!this.getOut(X, Y, Z, true))
 					{
 						this.tickOutside(X, Y, Z);
 					}
