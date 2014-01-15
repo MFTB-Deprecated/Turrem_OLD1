@@ -43,8 +43,11 @@ public class StateMainMenu implements IState
 
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		GLU.gluPerspective(70.0F, Config.getWidth() / Config.getHeight(), 0.0F, 20.0F);
+		GLU.gluPerspective(70.0F, Config.getWidth() / Config.getHeight(), 1.0F, 20.0F);
 		glMatrixMode(GL_MODELVIEW);
+		
+		glDepthFunc (GL_LEQUAL);
+		glEnable (GL_DEPTH_TEST);     
 
 		this.eekysam = new TVFBuffer();
 		TVFFile tvf = null;
@@ -80,7 +83,7 @@ public class StateMainMenu implements IState
 	public void tick()
 	{
 		GL11.glClearColor(0.0F, 0.0F, 0.0F, 1.0F);
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+		GL11.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		GL11.glPushMatrix();
 		GL11.glRotatef(this.angle, 0.0F, 1.0F, 0.0F);
 		GL11.glTranslated(3.0F * Math.sin(this.angle / 180.0F * Math.PI), -1.0F, -3.0F * Math.cos(this.angle / 180.0F * Math.PI));
