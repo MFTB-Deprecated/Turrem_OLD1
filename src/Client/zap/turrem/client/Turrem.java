@@ -73,9 +73,20 @@ public class Turrem
 
 	public void testTVF()
 	{
-		String fni = this.dir + "eekysam.vox";
-		String fno = this.dir + "eekysam.tvf";
+		String fni = this.dir + "cart.vox";
+		String fno = this.dir + "cart.tvf";
 		
+		this.convertTVF(fni, fno);
+		
+		fni = this.dir + "eekysam.vox";
+		fno = this.dir + "eekysam.tvf";
+		
+		this.convertTVF(fni, fno);
+		
+	}
+	
+	public void convertTVF(String fni, String fno)
+	{
 		try
 		{
 			File filein = new File(fni);
