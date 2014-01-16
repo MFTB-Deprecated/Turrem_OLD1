@@ -18,27 +18,27 @@
 		<link>
 			<name>Tech</name>
 			<type>2</type>
-			<location>C:/Users/Aiden/Documents/GitHub/Turrem/src/Tech</location>
+			<location>C:/Users/Sam Sartor/Turrem/src/Tech</location>
 		</link>
 		<link>
 			<name>assets</name>
 			<type>2</type>
-			<location>C:/Users/Aiden/Documents/GitHub/Turrem/Assets</location>
+			<location>C:/Users/Sam Sartor/Turrem/Assets</location>
 		</link>
 		<link>
 			<name>client</name>
 			<type>2</type>
-			<location>C:/Users/Aiden/Documents/GitHub/Turrem/src/Client</location>
+			<location>C:/Users/Sam Sartor/Turrem/src/Client</location>
 		</link>
 		<link>
 			<name>core</name>
 			<type>2</type>
-			<location>C:/Users/Aiden/Documents/GitHub/Turrem/src/Core</location>
+			<location>C:/Users/Sam Sartor/Turrem/src/Core</location>
 		</link>
 		<link>
 			<name>server</name>
 			<type>2</type>
-			<location>C:/Users/Aiden/Documents/GitHub/Turrem/src/Server</location>
+			<location>C:/Users/Sam Sartor/Turrem/src/Server</location>
 		</link>
 	</linkedResources>
 </projectDescription>

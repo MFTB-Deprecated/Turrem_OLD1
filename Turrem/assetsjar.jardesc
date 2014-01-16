@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="WINDOWS-1252" standalone="no"?>
 <jardesc>
-    <jar path="C:/Users/Aiden/Documents/GitHub/Turrem/bin/assets/assets.jar"/>
+    <jar path="C:/Users/Sam Sartor/Turrem/bin/assets/assets.jar"/>
     <options buildIfNeeded="true" compress="true" descriptionLocation="/Turrem/assetsJat.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>
