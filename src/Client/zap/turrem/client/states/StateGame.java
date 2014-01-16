@@ -175,7 +175,6 @@ public class StateGame implements IState
 	@Override
 	public void tick()
 	{
-		//TEsting
 		int wm = Mouse.getDWheel();
 		if (wm != 0)
 		{
@@ -186,8 +185,8 @@ public class StateGame implements IState
 		}
 		if (Mouse.isButtonDown(0))
 		{
-			this.angley += (Mouse.getX() - this.mouselastx) * 0.5F;
-			this.anglex += (Mouse.getY() - this.mouselasty) * 0.5F;
+			this.angley += (Mouse.getX() - this.mouselastx) * Config.getMouseSpeed();
+			this.anglex += (Mouse.getY() - this.mouselasty) * Config.getMouseSpeed();
 		}
 		if (Keyboard.isKeyDown(Keyboard.KEY_A))
 		{

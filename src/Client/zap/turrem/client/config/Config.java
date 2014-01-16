@@ -5,6 +5,7 @@ public class Config
 	private static int lwjglSyncRate = 60;
 	private static int width = 960;
 	private static int height = 600;
+	private static float mouseSpeed = 0.5F;
 	private static boolean fullscreen = false;
 	private static boolean vsync = true;
 
@@ -88,5 +89,19 @@ public class Config
 	public static void setRefreshed()
 	{
 		Config.isChanged = false;
+	}
+
+	public static final float getMouseSpeed()
+	{
+		return mouseSpeed;
+	}
+
+	public static final void setMouseSpeed(float mouseSpeed)
+	{
+		if (Config.mouseSpeed != mouseSpeed)
+		{
+			Config.mouseSpeed = mouseSpeed;
+			isChanged = true;
+		}
 	}
 }
