@@ -13,11 +13,20 @@ public class TechList
 	private static List<TechItem> techList = new ArrayList<TechItem>();
 	private static HashMap<String, Integer> techIds = new HashMap<String, Integer>();
 
+	/**
+	 * Gets the number of techs in the registry list
+	 * @return The number of techs int this list
+	 */
 	public static int getSize()
 	{
 		return techList.size();
 	}
 
+	/**
+	 * Adds a tech to this list
+	 * @param tech The TechItem to add
+	 * @return The tech's new index
+	 */
 	public static int addTech(TechItem tech)
 	{
 		int id = techList.size();
@@ -84,6 +93,11 @@ public class TechList
 		return null;
 	}
 
+	/**
+	 * Loads ab individual tech class
+	 * @param theClass The tech class
+	 * @return Any errors that occur
+	 */
 	public static LoadErrors loadTechClass(Class<?> theClass)
 	{
 		if (!Tech.class.isAssignableFrom(theClass))
@@ -124,6 +138,11 @@ public class TechList
 		Success;
 	}
 
+	/**
+	 * Loads a tech from the 'static' tech object
+	 * @param tech The tech object
+	 * @return
+	 */
 	public static LoadErrors loadTech(Tech tech)
 	{
 		if (tech != null)
@@ -139,6 +158,9 @@ public class TechList
 		return LoadErrors.TechNull;
 	}
 
+	/**
+	 * Iterates through all registered techs and calls TechItem.loadBranches() on each one
+	 */
 	public static void loadBranches()
 	{
 		for (int i = 0; i < techList.size(); i++)
