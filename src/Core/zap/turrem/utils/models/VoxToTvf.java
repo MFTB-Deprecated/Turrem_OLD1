@@ -52,7 +52,6 @@ public class VoxToTvf
 
 	private void build()
 	{
-
 		EnumDir[] dirs = EnumDir.values();
 
 		for (int i = 0; i < this.vox.width; i++)
@@ -68,20 +67,23 @@ public class VoxToTvf
 						{
 							EnumDir dir = dirs[d];
 
-							//int x = i + dir.xoff;
-							//int y = j + dir.yoff;
-							//int z = k + dir.zoff;
+							int x = i + dir.xoff;
+							int y = j + dir.yoff;
+							int z = k + dir.zoff;
 
-							TVFFile.TVFFace f = new TVFFile.TVFFace();
-							f.x = (byte) (i & 0xFF);
-							f.y = (byte) ((vox.height - j) & 0xFF);
-							f.z = (byte) (k & 0xFF);
-							f.dir = dir.ind;
-							f.color = v;
-							this.faces.add(f);
-							if (this.usedColors.add((short) (v & 0xFF)))
+							if (this.isOutside(x, y, z, 0) || this.getVox(x, y, z) == (byte) 0xFF)
 							{
-								this.colorCount++;
+								TVFFile.TVFFace f = new TVFFile.TVFFace();
+								f.x = (byte) (i & 0xFF);
+								f.y = (byte) ((vox.height - j) & 0xFF);
+								f.z = (byte) (k & 0xFF);
+								f.dir = dir.ind;
+								f.color = v;
+								this.faces.add(f);
+								if (this.usedColors.add((short) (v & 0xFF)))
+								{
+									this.colorCount++;
+								}
 							}
 						}
 					}
@@ -113,6 +115,11 @@ public class VoxToTvf
 
 		this.tvf.faces = this.faces.toArray(new TVFFile.TVFFace[0]);
 		this.tvf.faceNum = this.tvf.faces.length;
+	}
+	
+	private boolean isOutside(int x, int y, int z, int d)
+	{
+		return (x >= this.vox.width + d || x < 0 - d || y >= this.vox.height + d || y < 0 - d || z >= this.vox.length + d || z < 0 - d);
 	}
 
 	private byte getVox(int x, int y, int z)
