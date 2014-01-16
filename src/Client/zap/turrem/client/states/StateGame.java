@@ -38,6 +38,7 @@ import org.lwjgl.util.glu.GLU;
 
 import zap.turrem.client.Turrem;
 import zap.turrem.client.config.Config;
+import zap.turrem.client.render.RenderObject;
 import zap.turrem.client.render.TVFBuffer;
 import zap.turrem.utils.models.TVFFile;
 
@@ -48,8 +49,8 @@ public class StateGame implements IState
 {
 	private Turrem theTurrem;
 
-	private TVFBuffer eekysam;
-	private TVFBuffer cart;
+	private RenderObject eekysam;
+	private RenderObject cart;
 
 	private FloatBuffer lightPosition;
 	private FloatBuffer whiteLight;
@@ -91,7 +92,6 @@ public class StateGame implements IState
 										// define material color
 		glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
 
-		this.eekysam = new TVFBuffer();
 		TVFFile tvf = null;
 
 		try
@@ -112,9 +112,10 @@ public class StateGame implements IState
 			e.printStackTrace();
 		}
 
-		this.eekysam.bindTVF(tvf);
+		TVFBuffer tvfeekysam = new TVFBuffer();
+		this.eekysam = new RenderObject("eekysam", 0);
+		tvfeekysam.bindTVF(tvf, this.eekysam);
 
-		this.cart = new TVFBuffer();
 		tvf = null;
 
 		try
@@ -134,7 +135,9 @@ public class StateGame implements IState
 			e.printStackTrace();
 		}
 
-		this.cart.bindTVF(tvf);
+		TVFBuffer tvfcart = new TVFBuffer();
+		this.cart = new RenderObject("cart", 1);
+		tvfcart.bindTVF(tvf, this.cart);
 	}
 
 	private void initLightArrays()
@@ -163,8 +166,8 @@ public class StateGame implements IState
 		GL11.glPushMatrix();
 		GL11.glRotatef(this.angle, 0.0F, 1.0F, 0.0F);
 		GL11.glTranslated(3.0F * Math.sin(this.angle / 180.0F * Math.PI), -1.0F, -3.0F * Math.cos(this.angle / 180.0F * Math.PI));
-		this.eekysam.render();
-		this.cart.render();
+		this.eekysam.doRender();
+		this.cart.doRender();
 		GL11.glPopMatrix();
 		this.angle += 0.5F;
 	}

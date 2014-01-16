@@ -46,8 +46,9 @@ public class TVFBuffer
 	/**
 	 * Binds a TVF file to a VBO
 	 * @param tvf The TVF file
+	 * @param obj The render object to push to
 	 */
-	public void bindTVF(TVFFile tvf)
+	public void bindTVF(TVFFile tvf, RenderObject obj)
 	{
 		this.vertnum = tvf.faceNum * 4;
 		float[] verts = new float[this.vertnum * 3];
@@ -151,26 +152,27 @@ public class TVFBuffer
 
 		// Deselect (bind to 0) the VAO
 		GL30.glBindVertexArray(0);
+		
+		obj.push(this);
 	}
 
-	/**
-	 * Renders the VBO created by this instance
-	 */
-	public void render()
+	public final int getVboVertsId()
 	{
-		GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboId);
-		GL11.glVertexPointer(3, GL11.GL_FLOAT, 0, 0);
+		return vboId;
+	}
 
-		GL11.glEnableClientState(GL11.GL_COLOR_ARRAY);
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbocId);
-		GL11.glColorPointer(3, GL11.GL_FLOAT, 0, 0);
-		
-		GL11.glEnableClientState(GL11.GL_NORMAL_ARRAY);
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbonId);
-		GL11.glNormalPointer(GL11.GL_FLOAT, 0, 0);
+	public final int getVboColorsId()
+	{
+		return vbocId;
+	}
 
-		// If you are not using IBOs:
-		GL11.glDrawArrays(GL11.GL_QUADS, 0, this.vertnum);
+	public final int getVboNormalsId()
+	{
+		return vbonId;
+	}
+
+	public final int getVertCount()
+	{
+		return vertnum;
 	}
 }
