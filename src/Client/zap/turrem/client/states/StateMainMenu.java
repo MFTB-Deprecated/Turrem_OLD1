@@ -29,12 +29,10 @@ public class StateMainMenu implements IState
 	@Override
 	public void start()
 	{
-
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		glOrtho(0, Config.getWidth(), Config.getHeight(), 0, 1, -1);
 		glMatrixMode(GL_MODELVIEW);
-
 	}
 
 	@Override
