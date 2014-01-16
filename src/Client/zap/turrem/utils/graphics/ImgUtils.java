@@ -9,6 +9,11 @@ public class ImgUtils
 {
 	private static final int BYTES_PER_PIXEL = 4;
 
+	/**
+	 * LWJGL image conversion/storage stuff is done here
+	 * @param image The image as a BufferedImage
+	 * @return The image as a ByteBuffer
+	 */
 	public static ByteBuffer imgToByteBuffer(BufferedImage image)
 	{
 		int[] pixels = new int[image.getWidth() * image.getHeight()];

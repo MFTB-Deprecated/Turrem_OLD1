@@ -6,6 +6,9 @@ import java.util.Iterator;
 
 public class VoxToTvf
 {
+	/**
+	 * Enum for easily using the 6 different faces of a cube
+	 */
 	public static enum EnumDir
 	{
 		XUp((byte) 1, (byte) 1, (byte) 0, (byte) 0),
@@ -37,12 +40,21 @@ public class VoxToTvf
 	private short colorCount = 0;
 	private ArrayList<TVFFile.TVFFace> faces = new ArrayList<TVFFile.TVFFace>();
 
+	/**
+	 * Creates a new converter object
+	 * @param tvf The TVF file to convert to
+	 * @param vox The VOX file to convert from
+	 */
 	public VoxToTvf(TVFFile tvf, VOXFile vox)
 	{
 		this.tvf = tvf;
 		this.vox = vox;
 	}
 
+	/**
+	 * Converts the file
+	 * @return Converted TVF file
+	 */
 	public TVFFile make()
 	{
 		this.build();

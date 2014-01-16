@@ -4,19 +4,42 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+
 public class TVFFile
 {
+	/**
+	 * Magic number
+	 */
 	public byte[] magic;
 
+	/**
+	 * The format's magic number
+	 */
 	public static final byte[] themagic = ("VoxFace").getBytes();
 
+	/**
+	 * Turem verion numbers
+	 */
 	public byte[] turremVersion;
+	
+	/**
+	 * File verion number
+	 */
 	public short fileVersion;
 
+	/**
+	 * Format version number
+	 */
 	public static final int theFileVersion = 3;
 
+	/**
+	 * Number of unique colors
+	 */
 	public short colorNum;
 
+	/**
+	 * List of colors
+	 */
 	public TVFColor[] colors;
 
 	public static class TVFColor
@@ -27,8 +50,14 @@ public class TVFFile
 		public byte b;
 	}
 
+	/**
+	 * Number of dynamic colors
+	 */
 	public short dynamicColorNum;
 
+	/**
+	 * List of dynamic colors
+	 */
 	public TVFDynamicColor[] dynamicColors;
 
 	public static class TVFDynamicColor
@@ -37,8 +66,14 @@ public class TVFFile
 		public String name;
 	}
 
+	/**
+	 * Number of faces
+	 */
 	public int faceNum;
 
+	/**
+	 * List of faces
+	 */
 	public TVFFace[] faces;
 
 	public static class TVFFace
@@ -62,6 +97,10 @@ public class TVFFile
 
 	}
 
+	/**
+	 * Construct TVF file from VOX file
+	 * @param vox The VOX file
+	 */
 	public TVFFile(VOXFile vox)
 	{
 		this();
@@ -69,6 +108,11 @@ public class TVFFile
 		con.make();
 	}
 
+	/**
+	 * Write file
+	 * @param stream The stream to write too (Should use GZIP compression)
+	 * @throws IOException
+	 */
 	public void write(DataOutputStream stream) throws IOException
 	{
 		stream.write(themagic);
@@ -117,6 +161,12 @@ public class TVFFile
 		}
 	}
 
+	/**
+	 * Reads a new TVF file
+	 * @param stream The stream to read from (Should use GZIP compression)
+	 * @return The TVF file that was read (null if file is wrong or is wrong version)
+	 * @throws IOException
+	 */
 	public static TVFFile read(DataInputStream stream) throws IOException
 	{
 		TVFFile tvf = new TVFFile();

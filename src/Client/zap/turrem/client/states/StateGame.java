@@ -41,6 +41,9 @@ import zap.turrem.client.config.Config;
 import zap.turrem.client.render.TVFBuffer;
 import zap.turrem.utils.models.TVFFile;
 
+/**
+ * Should only be used as an intermediary with the actual game objects. Any render code here is temporary and for testing.
+ */
 public class StateGame implements IState
 {
 	private Turrem theTurrem;

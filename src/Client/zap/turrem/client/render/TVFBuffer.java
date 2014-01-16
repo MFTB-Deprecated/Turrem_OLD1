@@ -10,18 +10,43 @@ import org.lwjgl.opengl.GL30;
 
 import zap.turrem.utils.models.TVFFile;
 
+/**
+ * Binds a TVF file to a LWJGL VBO (Vertex Buffer Object) for rendering
+ */
 public class TVFBuffer
 {
+	/**
+	 * A list of vertex offsets to be used when converting faces in the file to vertices in the VBO
+	 */
 	public static final int[][] offs = new int[][] { new int[] { 1, 0, 1 }, new int[] { 0, 0, 1 }, new int[] { 0, 0, 0 }, new int[] { 1, 0, 0 }, new int[] { 1, 1, 1 }, new int[] { 0, 1, 1 }, new int[] { 0, 1, 0 }, new int[] { 1, 1, 0 } };
+	/**
+	 * A list specifing which vericies in offs belong to which faces on a cube
+	 */
 	public static final int[][] offinds = new int[][] { new int[] { 4, 0, 3, 7 }, new int[] { 1, 5, 6, 2 }, new int[] { 4, 7, 6, 5 }, new int[] { 0, 1, 2, 3 }, new int[] { 0, 4, 5, 1 }, new int[] { 2, 6, 7, 3 } };
 
 	private int vaoId = 0;
+	/**
+	 * VBO vertex object id
+	 */
 	private int vboId = 0;
+	/**
+	 * VBO color object id
+	 */
 	private int vbocId = 0;
+	/**
+	 * VBO normal object id
+	 */
 	private int vbonId = 0;
 
+	/**
+	 * Number of verticies in this VBO
+	 */
 	private int vertnum;
 	
+	/**
+	 * Binds a TVF file to a VBO
+	 * @param tvf The TVF file
+	 */
 	public void bindTVF(TVFFile tvf)
 	{
 		this.vertnum = tvf.faceNum * 4;
@@ -128,6 +153,9 @@ public class TVFBuffer
 		GL30.glBindVertexArray(0);
 	}
 
+	/**
+	 * Renders the VBO created by this instance
+	 */
 	public void render()
 	{
 		GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);

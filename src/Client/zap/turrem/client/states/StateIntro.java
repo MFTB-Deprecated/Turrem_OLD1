@@ -1,14 +1,18 @@
 package zap.turrem.client.states;
 
-import static org.lwjgl.opengl.GL11.*;
+import org.lwjgl.opengl.GL11;
+
 import zap.turrem.client.Turrem;
 import zap.turrem.client.config.Config;
 
+/**
+ * Should only be used as an intermediary with the actual game objects. Any render code here is temporary and for testing.
+ */
 public class StateIntro implements IState
 {
 	private Turrem theTurrem;
 
-	public static final int zapLogoTime = 5;
+	public static final int zapLogoTime = 100;
 
 	private int ticks = 0;
 
@@ -20,38 +24,34 @@ public class StateIntro implements IState
 	@Override
 	public void start()
 	{
-		/*
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glOrtho(0, Config.getWidth(), Config.getHeight(), 0, 1, -1);
-		glMatrixMode(GL_MODELVIEW);
-		*/
+		GL11.glMatrixMode(GL11.GL_PROJECTION);
+		GL11.glLoadIdentity();
+		GL11.glOrtho(0, Config.getWidth(), Config.getHeight(), 0, 1, -1);
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 	}
 
 	@Override
 	public void end()
 	{
-		/*
-		glClear(GL_COLOR_BUFFER_BIT);
-		*/
+		
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+		
 	}
 
 	@Override
 	public void tick()
 	{
-		/*
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 
-		glColor3f(1.0f, 1.0f, 1.0f);
-		glBegin(GL_QUADS);
+		GL11.glColor3f(1.0f, 1.0f, 1.0f);
+		GL11.glBegin(GL11.GL_QUADS);
 
-		glVertex2f(0, 0);
-		glVertex2f(0, Config.getHeight());
-		glVertex2f(Config.getWidth(), Config.getHeight());
-		glVertex2f(Config.getWidth(), 0);
+		GL11.glVertex2f(0, 0);
+		GL11.glVertex2f(0, Config.getHeight());
+		GL11.glVertex2f(Config.getWidth(), Config.getHeight());
+		GL11.glVertex2f(Config.getWidth(), 0);
 
-		glEnd();
-		*/
+		GL11.glEnd();
 
 		if (this.ticks++ > zapLogoTime && !this.theTurrem.isLoading())
 		{

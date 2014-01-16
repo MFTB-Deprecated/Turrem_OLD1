@@ -51,6 +51,9 @@ public class Turrem
 		instance = this;
 	}
 
+	/**
+	 * Runs the client
+	 */
 	public void run()
 	{
 		this.updateDisplay();
@@ -71,6 +74,9 @@ public class Turrem
 		this.runloop();
 	}
 
+	/**
+	 * Temporary methoud to test TVF models
+	 */
 	public void testTVF()
 	{
 		String fni = this.dir + "cart.vox";
@@ -85,6 +91,11 @@ public class Turrem
 		
 	}
 	
+	/**
+	 * Temporary methoud to convert TVF files and VOX file
+	 * @param fni Vox file
+	 * @param fno Tvf file
+	 */
 	public void convertTVF(String fni, String fno)
 	{
 		try
@@ -111,6 +122,9 @@ public class Turrem
 		}
 	}
 	
+	/**
+	 * Runs the client game/gui loop
+	 */
 	public void runloop()
 	{
 		while (!Display.isCloseRequested())
@@ -132,6 +146,11 @@ public class Turrem
 		this.shutdown();
 	}
 
+	/**
+	 * All client rendering starts here
+	 * @throws LWJGLException
+	 * @throws IOException
+	 */
 	public void render() throws LWJGLException, IOException
 	{
 		if (Keyboard.isKeyDown(Keyboard.KEY_F11))
@@ -158,6 +177,9 @@ public class Turrem
 		}
 	}
 
+	/**
+	 * Intermediary function to render the intro
+	 */
 	private void renderIntro()
 	{
 		if (this.state instanceof StateIntro)
@@ -175,6 +197,9 @@ public class Turrem
 		}
 	}
 
+	/**
+	 * Intermediary function to render the main menu
+	 */
 	private void renderMenu()
 	{
 		if (this.state instanceof StateMainMenu)
@@ -192,6 +217,9 @@ public class Turrem
 		}
 	}
 
+	/**
+	 * Intermediary function to render the game
+	 */
 	private void renderGame()
 	{
 		if (this.state instanceof StateGame)
@@ -209,12 +237,18 @@ public class Turrem
 		}
 	}
 
+	/**
+	 * Called when the client is shutdown
+	 */
 	public void shutdown()
 	{
 		Display.destroy();
 		System.exit(0);
 	}
 
+	/**
+	 * Update any changed display settings and display mode using settings stored in the Confg class
+	 */
 	public void updateDisplay()
 	{
 		this.setDisplayMode(Config.getWidth(), Config.getHeight(), Config.isFullscreen());
@@ -232,6 +266,12 @@ public class Turrem
 		Config.setRefreshed();
 	}
 
+	/**
+	 * Set the display mode
+	 * @param width Width of the display
+	 * @param height Height of the display
+	 * @param fullscreen Should the display be fullscreen
+	 */
 	public void setDisplayMode(int width, int height, boolean fullscreen)
 	{
 		if ((Display.getDisplayMode().getWidth() == width) && (Display.getDisplayMode().getHeight() == height) && (Display.isFullscreen() == fullscreen))
@@ -292,6 +332,10 @@ public class Turrem
 		}
 	}
 
+	/**
+	 * Loads and sets the turrem icon of the application
+	 * @throws IOException
+	 */
 	public void setIcons() throws IOException
 	{
 		ArrayList<ByteBuffer> icos = new ArrayList<ByteBuffer>();
@@ -319,21 +363,38 @@ public class Turrem
 		Display.setIcon(icos.toArray(new ByteBuffer[0]));
 	}
 
+	/**
+	 * This will hold the game in the intro state or current loading screen if true
+	 * @return Should stay in intro or loading screen
+	 */
 	public boolean isLoading()
 	{
+		//TODO Loading stuff
 		return false;
 	}
 
+	/**
+	 * Sets the current game state to be updated next tick
+	 * @param newstate The new game state to switch to
+	 */
 	public void setState(IState.EnumClientState newstate)
 	{
 		this.enumstate = newstate;
 	}
 
+	/**
+	 * Gets the current session
+	 * @return The current session
+	 */
 	public Session getSession()
 	{
 		return this.session;
 	}
 
+	/**
+	 * Gets the bin/ directory that the game is in
+	 * @return The game's location
+	 */
 	public String getDir()
 	{
 		return this.dir;

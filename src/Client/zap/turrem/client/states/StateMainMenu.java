@@ -3,22 +3,15 @@ package zap.turrem.client.states;
 import static org.lwjgl.opengl.GL11.*;
 
 import java.awt.Color;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.nio.FloatBuffer;
-import java.util.zip.GZIPInputStream;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.GLU;
 
 import zap.turrem.client.Turrem;
 import zap.turrem.client.config.Config;
-import zap.turrem.client.render.TVFBuffer;
-import zap.turrem.utils.models.TVFFile;
 
+/**
+ * Should only be used as an intermediary with the actual game objects. Any render code here is temporary and for testing.
+ */
 public class StateMainMenu implements IState
 {
 	private Turrem theTurrem;
