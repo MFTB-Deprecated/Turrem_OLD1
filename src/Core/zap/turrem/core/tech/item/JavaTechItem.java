@@ -3,6 +3,11 @@ package zap.turrem.core.tech.item;
 import zap.turrem.core.tech.Tech;
 import zap.turrem.core.tech.TechBase;
 
+/**
+ * 
+ * @author Sam Sartor
+ *
+ */
 public class JavaTechItem extends TechItem
 {
 	private Tech tech;

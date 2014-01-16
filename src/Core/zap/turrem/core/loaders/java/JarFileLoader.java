@@ -16,11 +16,20 @@ public class JarFileLoader
 {
 	protected File jarfile;
 
+	/**
+	 * Creates a new class for working with jar file contents
+	 * @param jar The jar file to use
+	 */
 	public JarFileLoader(File jar)
 	{
 		this.jarfile = jar;
 	}
 
+	/**
+	 * Gets an input stream for a file in the jar
+	 * @param path Path to the file inside the jar
+	 * @return InputStream
+	 */
 	public InputStream getFileInJar(String path)
 	{
 		InputStream in = null;
@@ -45,6 +54,11 @@ public class JarFileLoader
 		return in;
 	}
 
+	/**
+	 * Gets the list of all files in the jar
+	 * @return List of file paths
+	 * @throws IOException
+	 */
 	public String[] getFileList() throws IOException
 	{
 		List<String> classNames = new ArrayList<String>();
@@ -69,6 +83,11 @@ public class JarFileLoader
 		return classNames.toArray(new String[0]);
 	}
 
+	/**
+	 * Gets the list of all .class files in the jar
+	 * @return The names of each class (Example: net.foo.Bar)
+	 * @throws IOException
+	 */
 	public String[] getClassList() throws IOException
 	{
 		List<String> classNames = new ArrayList<String>();

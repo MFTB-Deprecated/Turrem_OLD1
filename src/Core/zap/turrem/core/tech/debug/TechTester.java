@@ -9,6 +9,9 @@ import zap.turrem.core.tech.branch.BranchList;
 import zap.turrem.core.tech.list.TechList;
 import zap.turrem.utils.data.IntHistogram;
 
+/**
+ * Util to help debug the tech tree
+ */
 public class TechTester
 {
 	public ArrayList<Integer> techs;
