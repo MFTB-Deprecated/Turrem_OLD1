@@ -64,7 +64,7 @@ public class Turrem
 			e.printStackTrace();
 		}
 
-		this.enumstate = IState.EnumClientState.Intro;
+		this.enumstate = IState.EnumClientState.Menu;
 		
 		this.testTVF();
 
