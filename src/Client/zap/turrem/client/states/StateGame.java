@@ -40,8 +40,8 @@ import org.lwjgl.util.glu.GLU;
 
 import zap.turrem.client.Turrem;
 import zap.turrem.client.config.Config;
-import zap.turrem.client.render.RenderObject;
-import zap.turrem.client.render.TVFBuffer;
+import zap.turrem.client.render.object.RenderObject;
+import zap.turrem.client.render.object.model.TVFBuffer;
 import zap.turrem.utils.models.TVFFile;
 
 /**
@@ -59,7 +59,7 @@ public class StateGame implements IState
 	private FloatBuffer whiteLight;
 	private FloatBuffer lModelAmbient;
 
-	private float angley = 0.0F;
+	private float angley = 45.0F;
 	private float anglex = -20.0F;
 	private float camx = 0.0F;
 	private float camz = 1.0F;

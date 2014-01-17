@@ -1,9 +1,11 @@
-package zap.turrem.client.render;
+package zap.turrem.client.render.object;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 
-public class RenderObject implements IRenderer
+import zap.turrem.client.render.object.model.TVFBuffer;
+
+public class RenderObject implements IRenderObject
 {
 	public final String identifier;
 	public final int index;
@@ -43,5 +45,11 @@ public class RenderObject implements IRenderer
 		GL11.glNormalPointer(GL11.GL_FLOAT, 0, 0);
 
 		GL11.glDrawArrays(GL11.GL_QUADS, 0, this.vertnum);
+	}
+
+	@Override
+	public String getIdentifier()
+	{
+		return this.identifier;
 	}
 }

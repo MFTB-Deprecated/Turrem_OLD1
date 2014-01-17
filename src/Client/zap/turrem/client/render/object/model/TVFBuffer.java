@@ -1,4 +1,4 @@
-package zap.turrem.client.render;
+package zap.turrem.client.render.object.model;
 
 import java.nio.FloatBuffer;
 
@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
+import zap.turrem.client.render.object.RenderObject;
 import zap.turrem.utils.models.TVFFile;
 
 /**

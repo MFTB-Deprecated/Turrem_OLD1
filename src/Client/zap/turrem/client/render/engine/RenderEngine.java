@@ -1,12 +1,15 @@
-package zap.turrem.client.render;
+package zap.turrem.client.render.engine;
 
 import java.util.ArrayList;
 
+import zap.turrem.client.render.object.IRenderObject;
+import zap.turrem.client.render.object.RenderObject;
+import zap.turrem.client.render.object.model.TVFBuffer;
 import zap.turrem.utils.models.TVFFile;
 
 public class RenderEngine
 {
-	private ArrayList<RenderObject> objects = new ArrayList<RenderObject>();
+	private ArrayList<IRenderObject> objects = new ArrayList<IRenderObject>();
 	
 	public RenderObject addObject(String ident)
 	{
@@ -37,7 +40,7 @@ public class RenderEngine
 	{
 		for (int i = 0; i < this.objects.size(); i++)
 		{
-			if (this.objects.get(i).identifier.equals(name))
+			if (this.objects.get(i).getIdentifier().equals(name))
 			{
 				return i;
 			}
@@ -47,6 +50,6 @@ public class RenderEngine
 	
 	public RenderObject getRenderObject(int index)
 	{
-		return this.objects.get(index);
+		return (RenderObject) this.objects.get(index);
 	}
 }
