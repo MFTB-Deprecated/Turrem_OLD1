@@ -6,6 +6,8 @@ import zap.turrem.client.render.object.model.ModelIcon;
 
 public abstract class RenderObjectHolder
 {
+	public final RenderManager myManager;
+	public final int managedAt;
 	private ArrayList<ModelIcon> holder = new ArrayList<ModelIcon>();
 	private boolean lockHolder = false;
 	private int[] donext = new int[0];
@@ -16,33 +18,47 @@ public abstract class RenderObjectHolder
 	private RenderEngine theEngine;
 	private boolean isloaded = false;
 
+	public RenderObjectHolder(RenderManager manager, int index)
+	{
+		this.myManager = manager;
+		this.managedAt = index;
+	}
+
 	private void doLoad()
 	{
-		if (!this.isloaded)
+		if (!this.working)
 		{
-			this.isloaded = true;
-			this.working = true;
-			this.lockHolder = true;
-			this.numloaded = 0;
-			if (this.theEngine == null)
+			if (!this.isloaded)
 			{
-				this.theEngine = new RenderEngine();
-			}
-			this.loaded = new boolean[this.holder.size()];
-			if (this.important != null && !this.important.isEmpty())
-			{
-				this.donext = new int[this.important.size()];
-				for (int i = 0; i < this.donext.length; i++)
+				this.isloaded = true;
+				this.working = true;
+				this.lockHolder = true;
+				this.numloaded = 0;
+				if (this.theEngine == null)
 				{
-					this.donext[i] = this.important.get(i);
+					this.theEngine = new RenderEngine();
 				}
-				this.important.clear();
-			}
-			else
-			{
-				this.makeNext();
+				this.loaded = new boolean[this.holder.size()];
+				if (this.important != null && !this.important.isEmpty())
+				{
+					this.donext = new int[this.important.size()];
+					for (int i = 0; i < this.donext.length; i++)
+					{
+						this.donext[i] = this.important.get(i);
+					}
+					this.important.clear();
+				}
+				else
+				{
+					this.makeNext();
+				}
 			}
 		}
+	}
+
+	public void load()
+	{
+		this.doLoad();
 	}
 
 	public void forceLoad()
@@ -72,6 +88,25 @@ public abstract class RenderObjectHolder
 		this.forceLoad();
 	}
 
+	public boolean handModel(ModelIcon model)
+	{
+		if (this.lockHolder)
+		{
+			return false;
+		}
+		int i = this.holder.size();
+		if (this.holder.add(model))
+		{
+			model.setHolder(this, i);
+		}
+		return true;
+	}
+
+	public void setImportant(ModelIcon model)
+	{
+		this.important.add(model.getHeldIndex());
+	}
+
 	public void tickLoad()
 	{
 		if (this.working)
@@ -79,9 +114,12 @@ public abstract class RenderObjectHolder
 			for (int i = 0; i < this.donext.length; i++)
 			{
 				int j = this.donext[i];
-				this.loaded[j] = true;
-				this.loadObject(this.holder.get(j));
-				this.numloaded++;
+				if (!this.loaded[j])
+				{
+					this.loaded[j] = true;
+					this.loadObject(this.holder.get(j));
+					this.numloaded++;
+				}
 			}
 			if (this.numloaded == this.holder.size())
 			{
@@ -105,11 +143,14 @@ public abstract class RenderObjectHolder
 
 	private void doUnLoad()
 	{
-		if (this.isloaded)
+		if (!this.working)
 		{
-			this.isloaded = false;
-			this.numloaded = 0;
-			this.theEngine.wipeAll();
+			if (this.isloaded)
+			{
+				this.isloaded = false;
+				this.numloaded = 0;
+				this.theEngine.wipeAll();
+			}
 		}
 	}
 }

@@ -130,7 +130,7 @@ public class StateGame implements IState
 		}
 
 		TVFBuffer tvfeekysam = new TVFBuffer();
-		this.eekysam = new RenderObject("eekysam", 0);
+		this.eekysam = new RenderObject(0);
 		tvfeekysam.bindTVF(tvf, this.eekysam);
 
 		tvf = null;
@@ -153,7 +153,7 @@ public class StateGame implements IState
 		}
 
 		TVFBuffer tvfcart = new TVFBuffer();
-		this.cart = new RenderObject("cart", 1);
+		this.cart = new RenderObject( 1);
 		tvfcart.bindTVF(tvf, this.cart);
 	}
 

@@ -8,7 +8,6 @@ import zap.turrem.client.render.object.model.TVFBuffer;
 
 public class RenderObject implements IRenderObject
 {
-	public final String identifier;
 	public final int index;
 	
 	private int verts;
@@ -17,9 +16,8 @@ public class RenderObject implements IRenderObject
 	private int vertnum;
 	private int vao;
 	
-	public RenderObject(String ident, int indx)
+	public RenderObject(int indx)
 	{
-		this.identifier = ident;
 		this.index = indx;
 	}
 	
@@ -48,12 +46,6 @@ public class RenderObject implements IRenderObject
 		GL11.glNormalPointer(GL11.GL_FLOAT, 0, 0);
 
 		GL11.glDrawArrays(GL11.GL_QUADS, 0, this.vertnum);
-	}
-
-	@Override
-	public String getIdentifier()
-	{
-		return this.identifier;
 	}
 	
 	@Override
