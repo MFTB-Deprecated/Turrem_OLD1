@@ -2,6 +2,7 @@ package zap.turrem.client.render.object;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
+import org.lwjgl.opengl.GL30;
 
 import zap.turrem.client.render.object.model.TVFBuffer;
 
@@ -14,6 +15,7 @@ public class RenderObject implements IRenderObject
 	private int normals;
 	private int colors;
 	private int vertnum;
+	private int vao;
 	
 	public RenderObject(String ident, int indx)
 	{
@@ -27,6 +29,7 @@ public class RenderObject implements IRenderObject
 		this.colors = buffer.getVboColorsId();
 		this.normals = buffer.getVboNormalsId();
 		this.vertnum = buffer.getVertCount();
+		this.vao = buffer.getVaoId();
 	}
 	
 	@Override
@@ -51,5 +54,14 @@ public class RenderObject implements IRenderObject
 	public String getIdentifier()
 	{
 		return this.identifier;
+	}
+	
+	@Override
+	public void doDelete()
+	{
+		GL15.glDeleteBuffers(this.verts);
+		GL15.glDeleteBuffers(this.colors);
+		GL15.glDeleteBuffers(this.normals);
+		GL30.glDeleteVertexArrays(this.vao);
 	}
 }

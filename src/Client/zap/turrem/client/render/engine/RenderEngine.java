@@ -52,4 +52,13 @@ public class RenderEngine
 	{
 		return (RenderObject) this.objects.get(index);
 	}
+	
+	public void wipeAll()
+	{
+		for (int i = 0; i < this.objects.size(); i++)
+		{
+			this.objects.get(i).doDelete();
+		}
+		this.objects.clear();
+	}
 }
