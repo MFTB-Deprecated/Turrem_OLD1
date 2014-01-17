@@ -175,4 +175,9 @@ public class TVFBuffer
 	{
 		return vertnum;
 	}
+
+	public final int getVaoId()
+	{
+		return vaoId;
+	}
 }

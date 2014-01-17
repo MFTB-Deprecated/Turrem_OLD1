@@ -60,14 +60,17 @@ public class StateGame implements IState
 	private FloatBuffer lModelAmbient;
 
 	private float angley = 0.0F;
-	private float anglex = 0.0F;
+	private float anglex = -20.0F;
 	private float camx = 0.0F;
 	private float camz = 1.0F;
+	private float dist = 5.0F;
 
 	private int mouselastx;
 	private int mouselasty;
 
 	private float fov = 60.0F;
+	
+	private int boxPointer;
 
 	public StateGame(Turrem turrem)
 	{
@@ -79,7 +82,7 @@ public class StateGame implements IState
 	{
 		this.mouselastx = Mouse.getX();
 		this.mouselasty = Mouse.getY();
-		
+
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		GLU.gluPerspective(fov, Config.getWidth() / Config.getHeight(), 0.1F, 20.0F);
@@ -176,47 +179,53 @@ public class StateGame implements IState
 	public void tick()
 	{
 		int wm = Mouse.getDWheel();
-		if (wm != 0)
-		{
-			fov -= wm * 0.05F;
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-			GLU.gluPerspective(fov, Config.getWidth() / Config.getHeight(), 1.0F, 20.0F);
-		}
-		if (Mouse.isButtonDown(0))
+		if (Mouse.isButtonDown(2))
 		{
 			this.angley += (Mouse.getX() - this.mouselastx) * Config.getMouseSpeed();
 			this.anglex += (Mouse.getY() - this.mouselasty) * Config.getMouseSpeed();
+			if (this.anglex > -10.0F)
+			{
+				this.anglex = -10.0F;
+			}
+			if (this.anglex < -90.0F)
+			{
+				this.anglex = -90.0F;
+			}
+			this.angley %= 360.0F;
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_A))
+		else if (wm != 0)
 		{
-			this.camx += 0.01F * Math.cos(this.angley / 180.0F * 3.14F);
-			this.camz += 0.01F * Math.sin(this.angley / 180.0F * 3.14F);
+			this.dist -= wm * 0.01F;
+			if (this.dist < 2.0F)
+			{
+				this.dist = 2.0F;
+			}
+			if (this.dist > 20.0F)
+			{
+				this.dist = 20.0F;
+			}
 		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_D))
+		if (Mouse.isButtonDown(0))
 		{
-			this.camx -= 0.01F * Math.cos(this.angley / 180.0F * 3.14F);
-			this.camz -= 0.01F * Math.sin(this.angley / 180.0F * 3.14F);
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_W))
-		{
-			this.camz += 0.01F * Math.cos(this.angley / 180.0F * 3.14F);
-			this.camx -= 0.01F * Math.sin(this.angley / 180.0F * 3.14F);
-		}
-		if (Keyboard.isKeyDown(Keyboard.KEY_S))
-		{
-			this.camz -= 0.01F * Math.cos(this.angley / 180.0F * 3.14F);
-			this.camx += 0.01F * Math.sin(this.angley / 180.0F * 3.14F);
+			float dx = (Mouse.getX() - this.mouselastx) * 0.002F * this.dist;
+			float dy = (Mouse.getY() - this.mouselasty) * 0.002F * this.dist;
+			float angrad = this.angley / 180.0F * 3.14F;
+			float cos = (float) Math.cos(angrad);
+			float sin = (float) Math.sin(angrad);
+			this.camx += dx * cos;
+			this.camx += dy * sin;
+			this.camz -= dy * cos;
+			this.camz += dx * sin;
 		}
 		this.mouselastx = Mouse.getX();
 		this.mouselasty = Mouse.getY();
 		GL11.glClearColor(0.5F, 0.5F, 0.5F, 1.0F);
 		GL11.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		GL11.glPushMatrix();
-		GL11.glTranslated(0.0F, -1.0F, -5.0F);
+		GL11.glTranslated(0.0F, 0.0F, -this.dist);
 		GL11.glRotatef(this.anglex, -1.0F, 0.0F, 0.0F);
 		GL11.glRotatef(this.angley, 0.0F, 1.0F, 0.0F);
-		GL11.glTranslated(this.camx, 0.0F, this.camz);
+		GL11.glTranslated(this.camx, -1.0F, this.camz);
 		this.eekysam.doRender();
 		this.cart.doRender();
 		GL11.glPopMatrix();
