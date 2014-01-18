@@ -42,6 +42,7 @@ public class VoxToTvf
 
 	/**
 	 * Creates a new converter object
+	 * 
 	 * @param tvf The TVF file to convert to
 	 * @param vox The VOX file to convert from
 	 */
@@ -53,6 +54,7 @@ public class VoxToTvf
 
 	/**
 	 * Converts the file
+	 * 
 	 * @return Converted TVF file
 	 */
 	public TVFFile make()
@@ -87,7 +89,7 @@ public class VoxToTvf
 							{
 								TVFFile.TVFFace f = new TVFFile.TVFFace();
 								f.x = (byte) (i & 0xFF);
-								f.y = (byte) ((vox.height - j) & 0xFF);
+								f.y = (byte) ((this.vox.height - j) & 0xFF);
 								f.z = (byte) (k & 0xFF);
 								f.dir = dir.ind;
 								f.color = v;
@@ -128,7 +130,7 @@ public class VoxToTvf
 		this.tvf.faces = this.faces.toArray(new TVFFile.TVFFace[0]);
 		this.tvf.faceNum = this.tvf.faces.length;
 	}
-	
+
 	private boolean isOutside(int x, int y, int z, int d)
 	{
 		return (x >= this.vox.width + d || x < 0 - d || y >= this.vox.height + d || y < 0 - d || z >= this.vox.length + d || z < 0 - d);

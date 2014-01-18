@@ -1,10 +1,10 @@
 package tech.turrem.materials.metallurgy.metals;
 
+import branch.turrem.BranchAvailable;
 import tech.turrem.materials.metallurgy.Metallurgy;
 import zap.turrem.core.tech.Tech;
 import zap.turrem.core.tech.TechBase;
 import zap.turrem.core.tech.branch.Branch;
-import branch.turrem.BranchAvailable;
 
 public abstract class Alloy extends Metal
 {

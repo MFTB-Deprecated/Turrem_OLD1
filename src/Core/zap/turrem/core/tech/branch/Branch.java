@@ -18,6 +18,7 @@ public abstract class Branch
 
 	/**
 	 * Gets the indexes of the techs this branch unlocks
+	 * 
 	 * @return List of tech indexes (Array size always 1 for the time being)
 	 */
 	public final int[] getTechs()
@@ -27,6 +28,7 @@ public abstract class Branch
 
 	/**
 	 * Gets the indexes of the techs this branch requires to unlock
+	 * 
 	 * @return List of tech indexes
 	 */
 	public final int[] getRequiredTechs()
@@ -36,6 +38,7 @@ public abstract class Branch
 
 	/**
 	 * Gets the index of this branch in the global branch registry
+	 * 
 	 * @return This branch index (-1 if push() has not been called)
 	 */
 	public int getId()
@@ -45,6 +48,7 @@ public abstract class Branch
 
 	/**
 	 * Constructs a new branch with the tech that the branch unlocks
+	 * 
 	 * @param tech Tech identifier
 	 */
 	public Branch(String tech)
@@ -54,6 +58,7 @@ public abstract class Branch
 
 	/**
 	 * Constructs a new branch with the tech that the branch unlocks
+	 * 
 	 * @param tech TechItem representation
 	 */
 	public Branch(TechItem tech)
@@ -63,6 +68,7 @@ public abstract class Branch
 
 	/**
 	 * Constructs a new branch with the tech that the branch unlocks
+	 * 
 	 * @param tech The tech's class
 	 * @param pass The tech pass
 	 */
@@ -73,6 +79,7 @@ public abstract class Branch
 
 	/**
 	 * Constructs a new branch with the tech that the branch unlocks
+	 * 
 	 * @param tech Static tech class object
 	 * @param pass The tech pass
 	 */
@@ -83,6 +90,7 @@ public abstract class Branch
 
 	/**
 	 * Adds a required tech to the branch
+	 * 
 	 * @param tech Tech index
 	 * @return This branch
 	 */
@@ -100,6 +108,7 @@ public abstract class Branch
 
 	/**
 	 * Adds a required tech to the branch
+	 * 
 	 * @param tech Tech identifier
 	 * @return This branch
 	 */
@@ -110,6 +119,7 @@ public abstract class Branch
 
 	/**
 	 * Adds a required tech to the branch
+	 * 
 	 * @param tech The tech's class
 	 * @param pass The tech pass
 	 * @return This branch

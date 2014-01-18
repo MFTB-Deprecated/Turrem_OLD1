@@ -11,12 +11,14 @@ public abstract class TechItem
 
 	/**
 	 * Gets the tech's string identifier
+	 * 
 	 * @return String identifier
 	 */
 	public abstract String getIdentifier();
 
 	/**
 	 * Gets the human-readable name of the tech
+	 * 
 	 * @return Name
 	 */
 	public abstract String getName();
@@ -46,6 +48,7 @@ public abstract class TechItem
 
 	/**
 	 * Gets the index of this tech in the tech registry
+	 * 
 	 * @return Tech index
 	 */
 	public final int getId()

@@ -10,14 +10,14 @@ import zap.turrem.utils.models.TVFFile;
 public class RenderEngine
 {
 	private ArrayList<IRenderObject> objects = new ArrayList<IRenderObject>();
-	
+
 	public RenderObject addObject()
 	{
 		RenderObject obj = new RenderObject(this.objects.size());
-		objects.add(obj);
+		this.objects.add(obj);
 		return obj;
 	}
-	
+
 	public RenderObject addObject(TVFFile tvf)
 	{
 		RenderObject obj = this.addObject();
@@ -25,17 +25,17 @@ public class RenderEngine
 		buff.bindTVF(tvf, obj);
 		return obj;
 	}
-	
+
 	public void doRenderObject(int index)
 	{
 		this.objects.get(index).doRender();
 	}
-	
+
 	public RenderObject getRenderObject(int index)
 	{
 		return (RenderObject) this.objects.get(index);
 	}
-	
+
 	public void wipeAll()
 	{
 		for (int i = 0; i < this.objects.size(); i++)

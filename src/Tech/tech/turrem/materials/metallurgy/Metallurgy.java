@@ -1,9 +1,9 @@
 package tech.turrem.materials.metallurgy;
 
+import branch.turrem.BranchAvailable;
 import tech.turrem.Fire;
 import tech.turrem.tools.StoneTools;
 import zap.turrem.core.tech.TechBase;
-import branch.turrem.BranchAvailable;
 
 public class Metallurgy extends TechBase
 {

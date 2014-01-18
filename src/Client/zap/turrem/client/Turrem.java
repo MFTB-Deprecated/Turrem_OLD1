@@ -9,15 +9,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import javax.imageio.ImageIO;
 
-import org.lwjgl.LWJGLException;
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+
+import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Keyboard;
 
 import zap.turrem.client.config.Config;
 import zap.turrem.client.states.IState;
@@ -68,7 +68,7 @@ public class Turrem
 		}
 
 		this.enumstate = IState.EnumClientState.Menu;
-		
+
 		this.testTVF();
 
 		this.runloop();
@@ -81,18 +81,19 @@ public class Turrem
 	{
 		String fni = this.dir + "cart.vox";
 		String fno = this.dir + "cart.tvf";
-		
+
 		this.convertTVF(fni, fno);
-		
+
 		fni = this.dir + "eekysam.vox";
 		fno = this.dir + "eekysam.tvf";
-		
+
 		this.convertTVF(fni, fno);
-		
+
 	}
-	
+
 	/**
 	 * Temporary methoud to convert TVF files and VOX file
+	 * 
 	 * @param fni Vox file
 	 * @param fno Tvf file
 	 */
@@ -121,7 +122,7 @@ public class Turrem
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Runs the client game/gui loop
 	 */
@@ -148,6 +149,7 @@ public class Turrem
 
 	/**
 	 * All client rendering starts here
+	 * 
 	 * @throws LWJGLException
 	 * @throws IOException
 	 */
@@ -247,7 +249,8 @@ public class Turrem
 	}
 
 	/**
-	 * Update any changed display settings and display mode using settings stored in the Confg class
+	 * Update any changed display settings and display mode using settings
+	 * stored in the Confg class
 	 */
 	public void updateDisplay()
 	{
@@ -268,6 +271,7 @@ public class Turrem
 
 	/**
 	 * Set the display mode
+	 * 
 	 * @param width Width of the display
 	 * @param height Height of the display
 	 * @param fullscreen Should the display be fullscreen
@@ -334,6 +338,7 @@ public class Turrem
 
 	/**
 	 * Loads and sets the turrem icon of the application
+	 * 
 	 * @throws IOException
 	 */
 	public void setIcons() throws IOException
@@ -364,17 +369,20 @@ public class Turrem
 	}
 
 	/**
-	 * This will hold the game in the intro state or current loading screen if true
+	 * This will hold the game in the intro state or current loading screen if
+	 * true
+	 * 
 	 * @return Should stay in intro or loading screen
 	 */
 	public boolean isLoading()
 	{
-		//TODO Loading stuff
+		// TODO Loading stuff
 		return false;
 	}
 
 	/**
 	 * Sets the current game state to be updated next tick
+	 * 
 	 * @param newstate The new game state to switch to
 	 */
 	public void setState(IState.EnumClientState newstate)
@@ -384,6 +392,7 @@ public class Turrem
 
 	/**
 	 * Gets the current session
+	 * 
 	 * @return The current session
 	 */
 	public Session getSession()
@@ -393,6 +402,7 @@ public class Turrem
 
 	/**
 	 * Gets the bin/ directory that the game is in
+	 * 
 	 * @return The game's location
 	 */
 	public String getDir()

@@ -6,7 +6,8 @@ import zap.turrem.client.Turrem;
 import zap.turrem.client.config.Config;
 
 /**
- * Should only be used as an intermediary with the actual game objects. Any render code here is temporary and for testing.
+ * Should only be used as an intermediary with the actual game objects. Any
+ * render code here is temporary and for testing.
  */
 public class StateIntro implements IState
 {
@@ -33,9 +34,9 @@ public class StateIntro implements IState
 	@Override
 	public void end()
 	{
-		
+
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-		
+
 	}
 
 	@Override

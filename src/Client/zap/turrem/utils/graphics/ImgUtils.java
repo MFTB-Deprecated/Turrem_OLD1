@@ -11,6 +11,7 @@ public class ImgUtils
 
 	/**
 	 * LWJGL image conversion/storage stuff is done here
+	 * 
 	 * @param image The image as a BufferedImage
 	 * @return The image as a ByteBuffer
 	 */

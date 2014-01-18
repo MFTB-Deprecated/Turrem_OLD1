@@ -13,6 +13,7 @@ public class JavaTechItem extends TechItem
 
 	/**
 	 * Constructs a new tech item using the 'static' tech class and pass
+	 * 
 	 * @param tech The class that hold the tech
 	 * @param pass The pass to give the tech class
 	 */

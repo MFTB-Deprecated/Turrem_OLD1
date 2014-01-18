@@ -1,9 +1,9 @@
 package tech.turrem;
 
-import tech.turrem.materials.stone.Flint;
-import zap.turrem.core.tech.TechBase;
 import branch.turrem.BranchActive;
 import branch.turrem.BranchSpontaneous;
+import tech.turrem.materials.stone.Flint;
+import zap.turrem.core.tech.TechBase;
 
 public class Fire extends TechBase
 {

@@ -15,6 +15,7 @@ public class TechList
 
 	/**
 	 * Gets the number of techs in the registry list
+	 * 
 	 * @return The number of techs int this list
 	 */
 	public static int getSize()
@@ -24,6 +25,7 @@ public class TechList
 
 	/**
 	 * Adds a tech to this list
+	 * 
 	 * @param tech The TechItem to add
 	 * @return The tech's new index
 	 */
@@ -95,6 +97,7 @@ public class TechList
 
 	/**
 	 * Loads ab individual tech class
+	 * 
 	 * @param theClass The tech class
 	 * @return Any errors that occur
 	 */
@@ -140,6 +143,7 @@ public class TechList
 
 	/**
 	 * Loads a tech from the 'static' tech object
+	 * 
 	 * @param tech The tech object
 	 * @return
 	 */
@@ -159,7 +163,8 @@ public class TechList
 	}
 
 	/**
-	 * Iterates through all registered techs and calls TechItem.loadBranches() on each one
+	 * Iterates through all registered techs and calls TechItem.loadBranches()
+	 * on each one
 	 */
 	public static void loadBranches()
 	{

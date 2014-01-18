@@ -4,7 +4,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-
 public class TVFFile
 {
 	/**
@@ -21,7 +20,7 @@ public class TVFFile
 	 * Turem verion numbers
 	 */
 	public byte[] turremVersion;
-	
+
 	/**
 	 * File verion number
 	 */
@@ -99,6 +98,7 @@ public class TVFFile
 
 	/**
 	 * Construct TVF file from VOX file
+	 * 
 	 * @param vox The VOX file
 	 */
 	public TVFFile(VOXFile vox)
@@ -110,6 +110,7 @@ public class TVFFile
 
 	/**
 	 * Write file
+	 * 
 	 * @param stream The stream to write too (Should use GZIP compression)
 	 * @throws IOException
 	 */
@@ -163,8 +164,10 @@ public class TVFFile
 
 	/**
 	 * Reads a new TVF file
+	 * 
 	 * @param stream The stream to read from (Should use GZIP compression)
-	 * @return The TVF file that was read (null if file is wrong or is wrong version)
+	 * @return The TVF file that was read (null if file is wrong or is wrong
+	 *         version)
 	 * @throws IOException
 	 */
 	public static TVFFile read(DataInputStream stream) throws IOException
@@ -172,26 +175,26 @@ public class TVFFile
 		TVFFile tvf = new TVFFile();
 
 		tvf.magic = new byte[themagic.length];
-		
+
 		for (int i = 0; i < tvf.magic.length; i++)
 		{
 			tvf.magic[i] = stream.readByte();
 		}
-		
+
 		tvf.turremVersion = new byte[3];
-		
+
 		for (int i = 0; i < tvf.turremVersion.length; i++)
 		{
 			tvf.turremVersion[i] = stream.readByte();
 		}
-		
+
 		tvf.fileVersion = stream.readShort();
-		
+
 		if (tvf.fileVersion != theFileVersion)
 		{
 			return null;
 		}
-		
+
 		tvf.colorNum = stream.readShort();
 		tvf.colors = new TVFColor[tvf.colorNum];
 

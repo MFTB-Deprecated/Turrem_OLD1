@@ -1,11 +1,11 @@
 package tech.turrem.writing;
 
+import branch.turrem.BranchActive;
+import branch.turrem.BranchAvailable;
 import tech.turrem.language.WrittenLanguage;
 import tech.turrem.materials.plant.Fiber;
 import tech.turrem.materials.plant.Glue;
 import zap.turrem.core.tech.TechBase;
-import branch.turrem.BranchActive;
-import branch.turrem.BranchAvailable;
 
 public class Paper extends TechBase
 {

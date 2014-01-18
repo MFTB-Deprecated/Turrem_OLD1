@@ -18,6 +18,7 @@ public class JarFileLoader
 
 	/**
 	 * Creates a new class for working with jar file contents
+	 * 
 	 * @param jar The jar file to use
 	 */
 	public JarFileLoader(File jar)
@@ -27,6 +28,7 @@ public class JarFileLoader
 
 	/**
 	 * Gets an input stream for a file in the jar
+	 * 
 	 * @param path Path to the file inside the jar
 	 * @return InputStream
 	 */
@@ -56,6 +58,7 @@ public class JarFileLoader
 
 	/**
 	 * Gets the list of all files in the jar
+	 * 
 	 * @return List of file paths
 	 * @throws IOException
 	 */
@@ -85,6 +88,7 @@ public class JarFileLoader
 
 	/**
 	 * Gets the list of all .class files in the jar
+	 * 
 	 * @return The names of each class (Example: net.foo.Bar)
 	 * @throws IOException
 	 */

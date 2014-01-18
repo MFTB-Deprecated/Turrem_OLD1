@@ -21,10 +21,10 @@ public class VOXFile
 		byte g;
 		byte b;
 	}
-	
+
 	private VOXFile()
 	{
-		
+
 	}
 
 	public void write(DataOutputStream stream) throws IOException
@@ -32,45 +32,45 @@ public class VOXFile
 		writeInt(stream, this.width);
 		writeInt(stream, this.length);
 		writeInt(stream, this.height);
-		
+
 		stream.write(this.voxels);
-		
+
 		for (int i = 0; i < 256; i++)
 		{
 			VOXColor c = this.colors[i];
-			
+
 			stream.write(c.r & 0xFF);
 			stream.write(c.g & 0xFF);
 			stream.write(c.b & 0xFF);
 		}
 	}
-	
+
 	public static VOXFile read(DataInputStream stream) throws IOException
 	{
 		VOXFile vox = new VOXFile();
-		
+
 		vox.width = readInt(stream);
 		vox.length = readInt(stream);
 		vox.height = readInt(stream);
-		
+
 		vox.voxels = new byte[vox.width * vox.length * vox.height];
-		
+
 		for (int i = 0; i < vox.voxels.length; i++)
 		{
 			vox.voxels[i] = stream.readByte();
 		}
-		
+
 		for (int i = 0; i < 256; i++)
 		{
 			VOXColor c = new VOXColor();
-			
+
 			c.r = stream.readByte();
 			c.g = stream.readByte();
 			c.b = stream.readByte();
-			
+
 			vox.colors[i] = c;
 		}
-		
+
 		return vox;
 	}
 

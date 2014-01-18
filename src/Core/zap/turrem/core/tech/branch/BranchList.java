@@ -12,6 +12,7 @@ public class BranchList
 
 	/**
 	 * Adds a branch to the registry
+	 * 
 	 * @param branch The branch to add
 	 * @return The branch's new index
 	 */
@@ -24,6 +25,7 @@ public class BranchList
 
 	/**
 	 * Gets a branch from the registry using it's index
+	 * 
 	 * @param i Branch index
 	 * @return The branch with that index
 	 */
@@ -34,6 +36,7 @@ public class BranchList
 
 	/**
 	 * Gets the number of branches stored in the registry
+	 * 
 	 * @return Number of branches stored in the registry
 	 */
 	public static int branchCount()

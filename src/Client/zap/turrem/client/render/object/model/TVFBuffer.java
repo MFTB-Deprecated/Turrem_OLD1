@@ -2,11 +2,12 @@ package zap.turrem.client.render.object.model;
 
 import java.nio.FloatBuffer;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
+
+import org.lwjgl.BufferUtils;
 
 import zap.turrem.client.render.object.RenderObject;
 import zap.turrem.utils.models.TVFFile;
@@ -17,7 +18,8 @@ import zap.turrem.utils.models.TVFFile;
 public class TVFBuffer
 {
 	/**
-	 * A list of vertex offsets to be used when converting faces in the file to vertices in the VBO
+	 * A list of vertex offsets to be used when converting faces in the file to
+	 * vertices in the VBO
 	 */
 	public static final int[][] offs = new int[][] { new int[] { 1, 0, 1 }, new int[] { 0, 0, 1 }, new int[] { 0, 0, 0 }, new int[] { 1, 0, 0 }, new int[] { 1, 1, 1 }, new int[] { 0, 1, 1 }, new int[] { 0, 1, 0 }, new int[] { 1, 1, 0 } };
 	/**
@@ -43,9 +45,10 @@ public class TVFBuffer
 	 * Number of verticies in this VBO
 	 */
 	private int vertnum;
-	
+
 	/**
 	 * Binds a TVF file to a VBO
+	 * 
 	 * @param tvf The TVF file
 	 * @param obj The render object to push to
 	 */
@@ -89,7 +92,7 @@ public class TVFBuffer
 				verts[ind + 0] = (x + foffs[0]) / 20.0F;
 				verts[ind + 1] = (y + foffs[1]) / 20.0F;
 				verts[ind + 2] = (z + foffs[2]) / 20.0F;
-				
+
 				switch (f.dir & 0xFF)
 				{
 					case 1:
@@ -121,64 +124,64 @@ public class TVFBuffer
 		FloatBuffer colorsBuffer = BufferUtils.createFloatBuffer(colors.length);
 		colorsBuffer.put(colors);
 		colorsBuffer.flip();
-		
+
 		FloatBuffer normalsBuffer = BufferUtils.createFloatBuffer(norms.length);
 		normalsBuffer.put(norms);
 		normalsBuffer.flip();
 
 		// Create a new Vertex Array Object in memory and select it (bind)
-		vaoId = GL30.glGenVertexArrays();
-		GL30.glBindVertexArray(vaoId);
+		this.vaoId = GL30.glGenVertexArrays();
+		GL30.glBindVertexArray(this.vaoId);
 
 		// Create a new Vertex Buffer Object in memory and select it (bind) -
 		// VERTICES
-		vboId = GL15.glGenBuffers();
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboId);
+		this.vboId = GL15.glGenBuffers();
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.vboId);
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, verticesBuffer, GL15.GL_STATIC_DRAW);
 		GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 
 		// Create a new VBO for the indices and select it (bind) - COLORS
-		vbocId = GL15.glGenBuffers();
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbocId);
+		this.vbocId = GL15.glGenBuffers();
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.vbocId);
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, colorsBuffer, GL15.GL_STATIC_DRAW);
 		GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 0, 0);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
-		
-		vbonId = GL15.glGenBuffers();
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbonId);
+
+		this.vbonId = GL15.glGenBuffers();
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.vbonId);
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, normalsBuffer, GL15.GL_STATIC_DRAW);
 		GL20.glVertexAttribPointer(2, 3, GL11.GL_FLOAT, false, 0, 0);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 
 		// Deselect (bind to 0) the VAO
 		GL30.glBindVertexArray(0);
-		
+
 		obj.push(this);
 	}
 
 	public final int getVboVertsId()
 	{
-		return vboId;
+		return this.vboId;
 	}
 
 	public final int getVboColorsId()
 	{
-		return vbocId;
+		return this.vbocId;
 	}
 
 	public final int getVboNormalsId()
 	{
-		return vbonId;
+		return this.vbonId;
 	}
 
 	public final int getVertCount()
 	{
-		return vertnum;
+		return this.vertnum;
 	}
 
 	public final int getVaoId()
 	{
-		return vaoId;
+		return this.vaoId;
 	}
 }

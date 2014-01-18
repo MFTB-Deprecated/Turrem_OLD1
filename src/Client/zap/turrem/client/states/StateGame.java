@@ -32,11 +32,12 @@ import java.io.FileInputStream;
 import java.nio.FloatBuffer;
 import java.util.zip.GZIPInputStream;
 
-import org.lwjgl.BufferUtils;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
+
 import org.lwjgl.util.glu.GLU;
+
+import org.lwjgl.BufferUtils;
+import org.lwjgl.input.Mouse;
 
 import zap.turrem.client.Turrem;
 import zap.turrem.client.config.Config;
@@ -69,7 +70,7 @@ public class StateGame implements IState
 	private int mouselasty;
 
 	private float fov = 60.0F;
-	
+
 	private int boxPointer;
 
 	public StateGame(Turrem turrem)
@@ -85,22 +86,26 @@ public class StateGame implements IState
 
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		GLU.gluPerspective(fov, Config.getWidth() / Config.getHeight(), 0.1F, 20.0F);
+		GLU.gluPerspective(this.fov, Config.getWidth() / Config.getHeight(), 0.1F, 20.0F);
 		glMatrixMode(GL_MODELVIEW);
 
 		glDepthFunc(GL_LEQUAL);
 		glEnable(GL_DEPTH_TEST);
 
-		initLightArrays();
+		this.initLightArrays();
 		glShadeModel(GL_FLAT);
 
-		glLight(GL_LIGHT0, GL_POSITION, lightPosition); // sets light position
-		glLight(GL_LIGHT0, GL_SPECULAR, whiteLight); // sets specular light to
-														// white
-		glLight(GL_LIGHT0, GL_DIFFUSE, whiteLight); // sets diffuse light to
-													// white
-		glLightModel(GL_LIGHT_MODEL_AMBIENT, lModelAmbient); // global ambient
-																// light
+		glLight(GL_LIGHT0, GL_POSITION, this.lightPosition); // sets light
+																// position
+		glLight(GL_LIGHT0, GL_SPECULAR, this.whiteLight); // sets specular light
+															// to
+															// white
+		glLight(GL_LIGHT0, GL_DIFFUSE, this.whiteLight); // sets diffuse light
+															// to
+		// white
+		glLightModel(GL_LIGHT_MODEL_AMBIENT, this.lModelAmbient); // global
+																	// ambient
+																	// light
 
 		glEnable(GL_LIGHTING); // enables lighting
 		glEnable(GL_LIGHT0); // enables light0
@@ -153,20 +158,20 @@ public class StateGame implements IState
 		}
 
 		TVFBuffer tvfcart = new TVFBuffer();
-		this.cart = new RenderObject( 1);
+		this.cart = new RenderObject(1);
 		tvfcart.bindTVF(tvf, this.cart);
 	}
 
 	private void initLightArrays()
 	{
-		lightPosition = BufferUtils.createFloatBuffer(4);
-		lightPosition.put(5.0f).put(5.0f).put(5.0f).put(0.0f).flip();
+		this.lightPosition = BufferUtils.createFloatBuffer(4);
+		this.lightPosition.put(5.0f).put(5.0f).put(5.0f).put(0.0f).flip();
 
-		whiteLight = BufferUtils.createFloatBuffer(4);
-		whiteLight.put(1.2f).put(1.2f).put(1.2f).put(1.0f).flip();
+		this.whiteLight = BufferUtils.createFloatBuffer(4);
+		this.whiteLight.put(1.2f).put(1.2f).put(1.2f).put(1.0f).flip();
 
-		lModelAmbient = BufferUtils.createFloatBuffer(4);
-		lModelAmbient.put(0.8f).put(0.8f).put(0.8f).put(1.0f).flip();
+		this.lModelAmbient = BufferUtils.createFloatBuffer(4);
+		this.lModelAmbient.put(0.8f).put(0.8f).put(0.8f).put(1.0f).flip();
 	}
 
 	@Override

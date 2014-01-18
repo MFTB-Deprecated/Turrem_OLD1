@@ -1,7 +1,7 @@
 package tech.turrem.math;
 
-import tech.turrem.language.WrittenLanguage;
 import branch.turrem.BranchAvailable;
+import tech.turrem.language.WrittenLanguage;
 
 public class Numerals extends MathmaticalTech
 {

@@ -1,8 +1,8 @@
 package tech.turrem.astronomy;
 
+import branch.turrem.BranchAvailable;
 import tech.turrem.clocks.MechanicalClock;
 import zap.turrem.core.tech.TechBase;
-import branch.turrem.BranchAvailable;
 
 public class AstronomicalClock extends TechBase
 {
