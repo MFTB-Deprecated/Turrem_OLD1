@@ -20,6 +20,7 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 
 import zap.turrem.client.config.Config;
+import zap.turrem.client.render.engine.RenderManager;
 import zap.turrem.client.states.IState;
 import zap.turrem.client.states.StateGame;
 import zap.turrem.client.states.StateIntro;
@@ -38,6 +39,8 @@ public class Turrem
 
 	private IState state;
 	private IState.EnumClientState enumstate;
+	
+	public RenderManager theRender;
 
 	public static Turrem getTurrem()
 	{
@@ -67,6 +70,8 @@ public class Turrem
 			e.printStackTrace();
 		}
 
+		this.theRender = new RenderManager();
+		
 		this.enumstate = IState.EnumClientState.Menu;
 
 		this.testTVF();
@@ -165,6 +170,8 @@ public class Turrem
 			this.updateDisplay();
 		}
 
+		this.loadTick();
+		
 		switch (this.enumstate)
 		{
 			case Intro:
@@ -237,6 +244,11 @@ public class Turrem
 			this.state = new StateGame(this);
 			this.state.start();
 		}
+	}
+	
+	public void loadTick()
+	{
+		this.theRender.tickHolders();
 	}
 
 	/**

@@ -56,4 +56,10 @@ public class RenderObject implements IRenderObject
 		GL15.glDeleteBuffers(this.normals);
 		GL30.glDeleteVertexArrays(this.vao);
 	}
+
+	@Override
+	public int getEngineIndex()
+	{
+		return this.index;
+	}
 }

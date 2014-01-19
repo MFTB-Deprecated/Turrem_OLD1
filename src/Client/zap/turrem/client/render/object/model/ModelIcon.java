@@ -1,12 +1,22 @@
 package zap.turrem.client.render.object.model;
 
-import zap.turrem.client.render.engine.RenderObjectHolder;
+import zap.turrem.client.render.engine.holders.IRenderObjectHolder;
+import zap.turrem.client.render.engine.holders.RenderObjectHolder;
+import zap.turrem.utils.models.TVFFile;
 
 public class ModelIcon
 {
 	private int heldIndex = -1;
-	private RenderObjectHolder holder;
+	public final String source;
+	private IRenderObjectHolder holder;
 	private boolean held = false;
+	private boolean isLoaded = false;
+	private int engineIndex;
+
+	public ModelIcon(String model)
+	{
+		this.source = model;
+	}
 
 	@Override
 	public boolean equals(Object o)
@@ -19,24 +29,26 @@ public class ModelIcon
 		return this.heldIndex;
 	}
 
-	public void setHolder(RenderObjectHolder holder, int index)
+	public void setHolder(IRenderObjectHolder holder, int index)
 	{
 		this.holder = holder;
 		this.heldIndex = index;
 		this.held = true;
 	}
 
-	public RenderObjectHolder getHolder()
+	public IRenderObjectHolder getHolder()
 	{
 		return this.holder;
 	}
 
-	public void loadMeASAP()
+	public void setLoadImportant()
 	{
 		if (this.held)
 		{
-			this.holder.setImportant(this);
-			this.loadMe();
+			if (this.holder instanceof RenderObjectHolder)
+			{
+				((RenderObjectHolder) this.holder).setImportant(this);
+			}
 		}
 	}
 
@@ -46,5 +58,43 @@ public class ModelIcon
 		{
 			this.holder.load();
 		}
+	}
+
+	public void setLoaded()
+	{
+		this.isLoaded = true;
+	}
+
+	public void setUnloaded()
+	{
+		this.isLoaded = false;
+	}
+
+	public boolean isLoaded()
+	{
+		return this.isLoaded;
+	}
+
+	public void setEngineIndex(int x)
+	{
+		this.engineIndex = x;
+	}
+
+	public int getEngineId()
+	{
+		return this.engineIndex;
+	}
+
+	public void render()
+	{
+		if (this.isLoaded)
+		{
+			this.holder.renderObject(this.engineIndex);
+		}
+	}
+	
+	public TVFFile makeTVF()
+	{
+		return null;
 	}
 }

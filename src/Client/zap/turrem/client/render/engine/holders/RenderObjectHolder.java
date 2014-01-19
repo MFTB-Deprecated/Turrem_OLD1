@@ -1,27 +1,32 @@
-package zap.turrem.client.render.engine;
+package zap.turrem.client.render.engine.holders;
 
 import java.util.ArrayList;
 
+import zap.turrem.client.render.engine.RenderEngine;
+import zap.turrem.client.render.engine.RenderManager;
 import zap.turrem.client.render.object.model.ModelIcon;
+import zap.turrem.utils.models.TVFFile;
 
-public abstract class RenderObjectHolder
+public abstract class RenderObjectHolder implements IRenderObjectHolder
 {
 	public final RenderManager myManager;
 	public final int managedAt;
+	public final String managedName;
 	private ArrayList<ModelIcon> holder = new ArrayList<ModelIcon>();
 	private boolean lockHolder = false;
-	private int[] donext = new int[0];
+	protected int[] donext = new int[0];
 	private boolean working = false;
-	private boolean[] loaded;
+	protected boolean[] loaded;
 	private int numloaded = 0;
 	private ArrayList<Integer> important;
 	private RenderEngine theEngine;
 	private boolean isloaded = false;
 
-	public RenderObjectHolder(RenderManager manager, int index)
+	public RenderObjectHolder(RenderManager manager, int index, String name)
 	{
 		this.myManager = manager;
 		this.managedAt = index;
+		this.managedName = name;
 	}
 
 	private void doLoad()
@@ -33,12 +38,14 @@ public abstract class RenderObjectHolder
 				this.isloaded = true;
 				this.working = true;
 				this.lockHolder = true;
+				this.myManager.working++;
 				this.numloaded = 0;
 				if (this.theEngine == null)
 				{
 					this.theEngine = new RenderEngine();
 				}
 				this.loaded = new boolean[this.holder.size()];
+				this.onStartLoad();
 				if (this.important != null && !this.important.isEmpty())
 				{
 					this.donext = new int[this.important.size()];
@@ -56,11 +63,19 @@ public abstract class RenderObjectHolder
 		}
 	}
 
+	@Override
 	public void load()
 	{
 		this.doLoad();
 	}
 
+	@Override
+	public int numHeld()
+	{
+		return this.holder.size();
+	}
+
+	@Override
 	public void forceLoad()
 	{
 		if (!this.isloaded)
@@ -69,6 +84,7 @@ public abstract class RenderObjectHolder
 			this.working = true;
 			this.lockHolder = true;
 			this.numloaded = 0;
+			this.onStartLoad();
 			while (this.numloaded < this.holder.size())
 			{
 				this.loadObject(this.holder.get(this.numloaded));
@@ -76,18 +92,21 @@ public abstract class RenderObjectHolder
 			}
 			this.working = false;
 			this.lockHolder = false;
+			this.onEndLoad();
 		}
 	}
 
+	@Override
 	public void forceReload()
 	{
 		if (this.isloaded)
 		{
-			this.doUnLoad();
+			this.doUnload();
 		}
 		this.forceLoad();
 	}
 
+	@Override
 	public boolean handModel(ModelIcon model)
 	{
 		if (this.lockHolder)
@@ -107,6 +126,7 @@ public abstract class RenderObjectHolder
 		this.important.add(model.getHeldIndex());
 	}
 
+	@Override
 	public void tickLoad()
 	{
 		if (this.working)
@@ -126,6 +146,8 @@ public abstract class RenderObjectHolder
 				this.working = false;
 				this.lockHolder = false;
 				this.loaded = null;
+				this.myManager.working--;
+				this.onEndLoad();
 			}
 			else
 			{
@@ -136,12 +158,40 @@ public abstract class RenderObjectHolder
 
 	protected abstract void makeNext();
 
+	protected abstract void onStartLoad();
+
+	protected abstract void onEndLoad();
+
 	protected void loadObject(ModelIcon icon)
 	{
-
+		TVFFile file = icon.makeTVF();
+		if (file != null)
+		{
+			int rei = this.theEngine.addObject(file).getEngineIndex();
+			icon.setLoaded();
+			icon.setEngineIndex(rei);
+		}
 	}
 
-	private void doUnLoad()
+	@Override
+	public void renderObject(int engineid)
+	{
+		if (this.isloaded)
+		{
+			this.theEngine.doRenderObject(engineid);
+		}
+	}
+
+	@Override
+	public void renderObject(ModelIcon icon)
+	{
+		if (icon.isLoaded())
+		{
+			this.renderObject(icon.getEngineId());
+		}
+	}
+
+	private void doUnload()
 	{
 		if (!this.working)
 		{
@@ -150,7 +200,29 @@ public abstract class RenderObjectHolder
 				this.isloaded = false;
 				this.numloaded = 0;
 				this.theEngine.wipeAll();
+				for (int i = 0; i < this.holder.size(); i++)
+				{
+					this.holder.get(i).setUnloaded();
+				}
 			}
 		}
+	}
+
+	@Override
+	public void unload()
+	{
+		this.doUnload();
+	}
+
+	@Override
+	public String getIdentifier()
+	{
+		return this.managedName;
+	}
+
+	@Override
+	public int getIndex()
+	{
+		return this.managedAt;
 	}
 }
