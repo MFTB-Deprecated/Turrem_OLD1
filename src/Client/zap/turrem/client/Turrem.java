@@ -19,8 +19,6 @@ import zap.turrem.client.config.Config;
 import zap.turrem.client.control.ControlList;
 import zap.turrem.client.render.RenderWorld;
 import zap.turrem.client.render.engine.RenderManager;
-import zap.turrem.client.render.engine.holders.RenderObjectHolderSimple;
-import zap.turrem.client.render.object.model.ModelIcon;
 import zap.turrem.client.states.IState;
 import zap.turrem.client.states.StateGame;
 import zap.turrem.client.states.StateIntro;
