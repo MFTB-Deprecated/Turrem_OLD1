@@ -6,7 +6,7 @@ import org.lwjgl.input.Mouse;
 public class ControlList
 {
 	private IControl[] list;
-	
+
 	private void doListSize()
 	{
 		int size = 0;
@@ -18,7 +18,7 @@ public class ControlList
 		size += Mouse.getButtonCount();
 		this.list = new IControl[size];
 	}
-	
+
 	private void doList()
 	{
 		this.doListSize();
@@ -41,9 +41,35 @@ public class ControlList
 			i++;
 		}
 	}
-	
+
 	public void setup()
 	{
 		this.doList();
+	}
+	
+	public void consoleAll()
+	{
+		for (IControl c : this.list)
+		{
+			System.out.println(c.getControlIdentifier());
+		}
+	}
+
+	public int getControlIndex(String id)
+	{
+		for (int i = 0; i < this.list.length; i++)
+		{
+			IControl c = this.list[i];
+			if (id.equals(c.getControlIdentifier()))
+			{
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	public IControl getControl(int index)
+	{
+		return this.list[index];
 	}
 }

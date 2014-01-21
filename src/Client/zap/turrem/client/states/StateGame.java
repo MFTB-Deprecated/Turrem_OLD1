@@ -26,11 +26,7 @@ import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
 import static org.lwjgl.opengl.GL11.glShadeModel;
 
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.nio.FloatBuffer;
-import java.util.zip.GZIPInputStream;
 
 import org.lwjgl.opengl.GL11;
 
@@ -41,10 +37,7 @@ import org.lwjgl.input.Mouse;
 
 import zap.turrem.client.Turrem;
 import zap.turrem.client.config.Config;
-import zap.turrem.client.render.object.RenderObject;
 import zap.turrem.client.render.object.model.ModelIcon;
-import zap.turrem.client.render.object.model.TVFBuffer;
-import zap.turrem.utils.models.TVFFile;
 
 /**
  * Should only be used as an intermediary with the actual game objects. Any
@@ -52,10 +45,12 @@ import zap.turrem.utils.models.TVFFile;
  */
 public class StateGame implements IState
 {
+	@SuppressWarnings("unused")
 	private Turrem theTurrem;
 
 	public static ModelIcon eekysam;
 	public static ModelIcon cart;
+	public static ModelIcon tree;
 
 	private FloatBuffer lightPosition;
 	private FloatBuffer whiteLight;
@@ -115,6 +110,7 @@ public class StateGame implements IState
 		
 		eekysam.loadMe();
 		cart.loadMe();
+		tree.loadMe();
 	}
 
 	private void initLightArrays()
@@ -186,8 +182,15 @@ public class StateGame implements IState
 		GL11.glRotatef(this.anglex, -1.0F, 0.0F, 0.0F);
 		GL11.glRotatef(this.angley, 0.0F, 1.0F, 0.0F);
 		GL11.glTranslated(this.camx, -1.0F, this.camz);
+		
 		eekysam.render();
 		cart.render();
+		
+		GL11.glTranslated(-4.0F, 0.0F, 1.0F);
+		GL11.glScalef(2.0F, 2.0F, 2.0F);
+		
+		tree.render();
+		
 		GL11.glPopMatrix();
 	}
 }

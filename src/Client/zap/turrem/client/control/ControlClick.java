@@ -50,4 +50,10 @@ public class ControlClick extends ControlBase implements IBoolControl, IDeltaBoo
 	{
 		this.next();
 	}
+
+	@Override
+	public String getControlIdentifier()
+	{
+		return "CLICK_" + Mouse.getButtonName(this.but).toUpperCase();
+	}
 }

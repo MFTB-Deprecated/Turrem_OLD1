@@ -2,6 +2,7 @@ package zap.turrem.client.render.engine;
 
 import java.util.ArrayList;
 
+import zap.turrem.client.asset.AssetLoader;
 import zap.turrem.client.render.engine.holders.IRenderObjectHolder;
 import zap.turrem.client.render.object.model.ModelIcon;
 
@@ -9,7 +10,13 @@ public class RenderManager
 {
 	private ArrayList<IRenderObjectHolder> holders = new ArrayList<IRenderObjectHolder>();
 	public int working = 0;
+	public AssetLoader assets;
 
+	public RenderManager(AssetLoader assets)
+	{
+		this.assets = assets;
+	}
+	
 	private void doTickHolders()
 	{
 		for (int i = 0; i < this.holders.size(); i++)

@@ -13,13 +13,13 @@ public class ControlKey extends ControlBase implements IBoolControl, IDeltaBoolC
 		super(id);
 		this.key = Keyboard.getKeyIndex(key);
 	}
-	
+
 	public ControlKey(int id, int key)
 	{
 		super(id);
 		this.key = key;
 	}
-	
+
 	public String getName()
 	{
 		return Keyboard.getKeyName(this.key);
@@ -60,5 +60,16 @@ public class ControlKey extends ControlBase implements IBoolControl, IDeltaBoolC
 	public void startTick()
 	{
 		this.next();
+	}
+
+	@Override
+	public String getControlIdentifier()
+	{
+		String n = this.getName();
+		if (n != null && !n.isEmpty())
+		{
+			return "KEY_" + n.toUpperCase();
+		}
+		return "KEY_" + this.key;
 	}
 }

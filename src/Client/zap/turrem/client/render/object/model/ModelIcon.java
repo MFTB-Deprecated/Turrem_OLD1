@@ -2,7 +2,7 @@ package zap.turrem.client.render.object.model;
 
 import java.io.IOException;
 
-import zap.turrem.client.Turrem;
+import zap.turrem.client.asset.AssetLoader;
 import zap.turrem.client.render.engine.holders.IRenderObjectHolder;
 import zap.turrem.client.render.engine.holders.RenderObjectHolder;
 import zap.turrem.utils.models.TVFFile;
@@ -101,11 +101,11 @@ public class ModelIcon
 		return this.source;
 	}
 
-	public TVFFile makeTVF()
+	public TVFFile makeTVF(AssetLoader assets)
 	{
 		try
 		{
-			return Turrem.getAssets().loadTVF(this.getName());
+			return assets.loadTVF(this.getName());
 		}
 		catch (IOException e)
 		{

@@ -10,8 +10,8 @@ public abstract class ControlBase implements IControl
 	}
 	
 	@Override
-	public int getControlId()
+	public int getControlIndex()
 	{
-		return 0;
+		return this.id;
 	}
 }

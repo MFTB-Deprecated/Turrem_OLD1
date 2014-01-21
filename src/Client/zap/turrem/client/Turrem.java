@@ -1,15 +1,10 @@
 package zap.turrem.client;
 
 import java.awt.image.BufferedImage;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.zip.GZIPOutputStream;
 
 import javax.imageio.ImageIO;
 
@@ -21,6 +16,7 @@ import org.lwjgl.input.Keyboard;
 
 import zap.turrem.client.asset.AssetLoader;
 import zap.turrem.client.config.Config;
+import zap.turrem.client.control.ControlList;
 import zap.turrem.client.render.engine.RenderManager;
 import zap.turrem.client.render.engine.holders.RenderObjectHolderSimple;
 import zap.turrem.client.render.object.model.ModelIcon;
@@ -28,10 +24,7 @@ import zap.turrem.client.states.IState;
 import zap.turrem.client.states.StateGame;
 import zap.turrem.client.states.StateIntro;
 import zap.turrem.client.states.StateMainMenu;
-import zap.turrem.core.loaders.java.JarFileLoader;
 import zap.turrem.utils.graphics.ImgUtils;
-import zap.turrem.utils.models.TVFFile;
-import zap.turrem.utils.models.VOXFile;
 
 public class Turrem
 {
@@ -39,13 +32,18 @@ public class Turrem
 	private String dir;
 
 	private static Turrem instance;
-	
-	private static AssetLoader assets;
 
 	private IState state;
 	private IState.EnumClientState enumstate;
 	
 	public RenderManager theRender;
+	public ControlList theControlList;
+	public AssetLoader theAssets;
+	
+	public long lastTime;
+	public float fpscounter;
+	
+	public long tickCount = 0;
 
 	public static Turrem getTurrem()
 	{
@@ -57,7 +55,6 @@ public class Turrem
 		this.dir = dir;
 		this.session = session;
 		instance = this;
-		assets = new AssetLoader(this.dir);
 	}
 
 	/**
@@ -76,11 +73,17 @@ public class Turrem
 			e.printStackTrace();
 		}
 
-		this.theRender = new RenderManager();
+		this.theControlList = new ControlList();
+		this.theControlList.setup();
+		this.theControlList.consoleAll();
+		
+		this.theAssets = new AssetLoader(this.dir);
+		//this.theAssets.convertAllVox();
+		
+		this.theRender = new RenderManager(this.theAssets);
 		
 		this.enumstate = IState.EnumClientState.Menu;
-
-		this.assets.convertAllVox();
+		
 		this.test();
 		
 		this.runloop();
@@ -90,8 +93,10 @@ public class Turrem
 	{
 		StateGame.eekysam = new ModelIcon("turrem.entity.human.eekysam");
 		StateGame.cart = new ModelIcon("turrem.entity.vehicle.wooden_cart");
+		StateGame.tree = new ModelIcon("turrem.feature.tree.tree_1");
 		this.theRender.pushIcon(StateGame.eekysam, "pophumans", RenderObjectHolderSimple.class);
 		this.theRender.pushIcon(StateGame.cart, "preindvehicle", RenderObjectHolderSimple.class);
+		this.theRender.pushIcon(StateGame.tree, "trees", RenderObjectHolderSimple.class);
 	}
 
 	/**
@@ -101,6 +106,9 @@ public class Turrem
 	{
 		while (!Display.isCloseRequested())
 		{
+			this.calculateFps();
+			this.tickCount++;
+			
 			try
 			{
 				this.render();
@@ -117,6 +125,16 @@ public class Turrem
 		}
 		this.shutdown();
 	}
+	
+	public void calculateFps()
+	{
+		long ms = System.currentTimeMillis();
+		long dif = ms - this.lastTime;
+		this.lastTime = ms;
+		
+		this.fpscounter *= 0.5F;
+		this.fpscounter += dif * 0.5F;
+	}
 
 	/**
 	 * All client rendering starts here
@@ -126,6 +144,11 @@ public class Turrem
 	 */
 	public void render() throws LWJGLException, IOException
 	{
+		if (this.tickCount % 60 == 0)
+		{
+			System.out.printf("Fps: %.1f%n", 1000.0F / this.fpscounter);
+		}
+		
 		if (Keyboard.isKeyDown(Keyboard.KEY_F11))
 		{
 			Config.setFullscreen(!Config.isFullscreen());
@@ -380,6 +403,6 @@ public class Turrem
 
 	public static AssetLoader getAssets()
 	{
-		return assets;
+		return instance.theAssets;
 	}
 }

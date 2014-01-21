@@ -48,4 +48,10 @@ public class ControlScroll extends ControlBase implements IValueControl, IDeltaV
 	{
 		this.next();
 	}
+
+	@Override
+	public String getControlIdentifier()
+	{
+		return "WHEEL";
+	}
 }
