@@ -42,6 +42,7 @@ import org.lwjgl.input.Mouse;
 import zap.turrem.client.Turrem;
 import zap.turrem.client.config.Config;
 import zap.turrem.client.render.object.RenderObject;
+import zap.turrem.client.render.object.model.ModelIcon;
 import zap.turrem.client.render.object.model.TVFBuffer;
 import zap.turrem.utils.models.TVFFile;
 
@@ -53,8 +54,8 @@ public class StateGame implements IState
 {
 	private Turrem theTurrem;
 
-	private RenderObject eekysam;
-	private RenderObject cart;
+	public static ModelIcon eekysam;
+	public static ModelIcon cart;
 
 	private FloatBuffer lightPosition;
 	private FloatBuffer whiteLight;
@@ -70,8 +71,6 @@ public class StateGame implements IState
 	private int mouselasty;
 
 	private float fov = 60.0F;
-
-	private int boxPointer;
 
 	public StateGame(Turrem turrem)
 	{
@@ -113,53 +112,9 @@ public class StateGame implements IState
 		glEnable(GL_COLOR_MATERIAL); // enables opengl to use glColor3f to
 										// define material color
 		glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
-
-		TVFFile tvf = null;
-
-		try
-		{
-			String fno = this.theTurrem.getDir() + "eekysam.tvf";
-
-			File filein = new File(fno);
-			DataInputStream input;
-
-			input = new DataInputStream(new GZIPInputStream(new FileInputStream(filein)));
-
-			tvf = TVFFile.read(input);
-
-			input.close();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-
-		TVFBuffer tvfeekysam = new TVFBuffer();
-		this.eekysam = new RenderObject(0);
-		tvfeekysam.bindTVF(tvf, this.eekysam);
-
-		tvf = null;
-
-		try
-		{
-			String fno = this.theTurrem.getDir() + "cart.tvf";
-
-			File filein = new File(fno);
-			DataInputStream input;
-			input = new DataInputStream(new GZIPInputStream(new FileInputStream(filein)));
-
-			tvf = TVFFile.read(input);
-
-			input.close();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-
-		TVFBuffer tvfcart = new TVFBuffer();
-		this.cart = new RenderObject(1);
-		tvfcart.bindTVF(tvf, this.cart);
+		
+		eekysam.loadMe();
+		cart.loadMe();
 	}
 
 	private void initLightArrays()
@@ -231,8 +186,8 @@ public class StateGame implements IState
 		GL11.glRotatef(this.anglex, -1.0F, 0.0F, 0.0F);
 		GL11.glRotatef(this.angley, 0.0F, 1.0F, 0.0F);
 		GL11.glTranslated(this.camx, -1.0F, this.camz);
-		this.eekysam.doRender();
-		this.cart.doRender();
+		eekysam.render();
+		cart.render();
 		GL11.glPopMatrix();
 	}
 }

@@ -19,8 +19,11 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 
+import zap.turrem.client.asset.AssetLoader;
 import zap.turrem.client.config.Config;
 import zap.turrem.client.render.engine.RenderManager;
+import zap.turrem.client.render.engine.holders.RenderObjectHolderSimple;
+import zap.turrem.client.render.object.model.ModelIcon;
 import zap.turrem.client.states.IState;
 import zap.turrem.client.states.StateGame;
 import zap.turrem.client.states.StateIntro;
@@ -36,6 +39,8 @@ public class Turrem
 	private String dir;
 
 	private static Turrem instance;
+	
+	private static AssetLoader assets;
 
 	private IState state;
 	private IState.EnumClientState enumstate;
@@ -52,6 +57,7 @@ public class Turrem
 		this.dir = dir;
 		this.session = session;
 		instance = this;
+		assets = new AssetLoader(this.dir);
 	}
 
 	/**
@@ -74,26 +80,17 @@ public class Turrem
 		
 		this.enumstate = IState.EnumClientState.Menu;
 
-		this.testTVF();
-
+		this.test();
+		
 		this.runloop();
 	}
-
-	/**
-	 * Temporary methoud to test TVF models
-	 */
-	public void testTVF()
+	
+	public void test()
 	{
-		String fni = this.dir + "cart.vox";
-		String fno = this.dir + "cart.tvf";
-
-		this.convertTVF(fni, fno);
-
-		fni = this.dir + "eekysam.vox";
-		fno = this.dir + "eekysam.tvf";
-
-		this.convertTVF(fni, fno);
-
+		StateGame.eekysam = new ModelIcon("turrem.entity.human.eekysam");
+		StateGame.cart = new ModelIcon("turrem.entity.vehicle.wooden_cart");
+		this.theRender.pushIcon(StateGame.eekysam, "pophumans", RenderObjectHolderSimple.class);
+		this.theRender.pushIcon(StateGame.cart, "preindvehicle", RenderObjectHolderSimple.class);
 	}
 
 	/**
@@ -357,23 +354,13 @@ public class Turrem
 	{
 		ArrayList<ByteBuffer> icos = new ArrayList<ByteBuffer>();
 
-		JarFileLoader assetloader = new JarFileLoader(new File(this.dir + "assets/" + "assets.jar"));
+		File folder = new File(this.dir + "assets/core/icons/");
 
-		String[] filelist = assetloader.getFileList();
-		ArrayList<String> iconlist = new ArrayList<String>();
+		File[] filelist = folder.listFiles();
 
-		for (int i = 0; i < filelist.length; i++)
+		for (File icon : filelist)
 		{
-			String file = filelist[i];
-			if (file.startsWith("assets/icons/ico") && file.endsWith(".png"))
-			{
-				iconlist.add(file);
-			}
-		}
-
-		for (String icon : iconlist)
-		{
-			BufferedImage img = ImageIO.read(assetloader.getFileInJar(icon));
+			BufferedImage img = ImageIO.read(icon);
 			icos.add(ImgUtils.imgToByteBuffer(img));
 		}
 
@@ -420,5 +407,10 @@ public class Turrem
 	public String getDir()
 	{
 		return this.dir;
+	}
+
+	public static AssetLoader getAssets()
+	{
+		return assets;
 	}
 }
