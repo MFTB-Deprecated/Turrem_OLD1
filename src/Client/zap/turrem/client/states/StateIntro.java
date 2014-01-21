@@ -11,7 +11,7 @@ import zap.turrem.client.config.Config;
  */
 public class StateIntro implements IState
 {
-	private Turrem theTurrem;
+	protected Turrem theTurrem;
 
 	public static final int zapLogoTime = 100;
 

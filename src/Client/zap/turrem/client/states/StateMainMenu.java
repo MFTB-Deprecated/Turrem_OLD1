@@ -27,7 +27,7 @@ import zap.turrem.client.config.Config;
  */
 public class StateMainMenu implements IState
 {
-	private Turrem theTurrem;
+	protected Turrem theTurrem;
 
 	private final float h = 0.62F;
 	private float s = 0.5F;

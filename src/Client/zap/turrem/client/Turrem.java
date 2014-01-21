@@ -17,6 +17,7 @@ import org.lwjgl.input.Keyboard;
 import zap.turrem.client.asset.AssetLoader;
 import zap.turrem.client.config.Config;
 import zap.turrem.client.control.ControlList;
+import zap.turrem.client.render.RenderWorld;
 import zap.turrem.client.render.engine.RenderManager;
 import zap.turrem.client.render.engine.holders.RenderObjectHolderSimple;
 import zap.turrem.client.render.object.model.ModelIcon;
@@ -84,19 +85,7 @@ public class Turrem
 		
 		this.enumstate = IState.EnumClientState.Menu;
 		
-		this.test();
-		
 		this.runloop();
-	}
-	
-	public void test()
-	{
-		StateGame.eekysam = new ModelIcon("turrem.entity.human.eekysam");
-		StateGame.cart = new ModelIcon("turrem.entity.vehicle.wooden_cart");
-		StateGame.tree = new ModelIcon("turrem.feature.tree.tree_1");
-		this.theRender.pushIcon(StateGame.eekysam, "pophumans", RenderObjectHolderSimple.class);
-		this.theRender.pushIcon(StateGame.cart, "preindvehicle", RenderObjectHolderSimple.class);
-		this.theRender.pushIcon(StateGame.tree, "trees", RenderObjectHolderSimple.class);
 	}
 
 	/**
@@ -230,7 +219,7 @@ public class Turrem
 			{
 				this.state.end();
 			}
-			this.state = new StateGame(this);
+			this.state = new StateGame(this, new RenderWorld(this.theRender));
 			this.state.start();
 		}
 	}
