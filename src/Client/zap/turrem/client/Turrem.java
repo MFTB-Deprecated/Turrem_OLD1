@@ -80,6 +80,7 @@ public class Turrem
 		
 		this.enumstate = IState.EnumClientState.Menu;
 
+		this.assets.convertAllVox();
 		this.test();
 		
 		this.runloop();
@@ -91,38 +92,6 @@ public class Turrem
 		StateGame.cart = new ModelIcon("turrem.entity.vehicle.wooden_cart");
 		this.theRender.pushIcon(StateGame.eekysam, "pophumans", RenderObjectHolderSimple.class);
 		this.theRender.pushIcon(StateGame.cart, "preindvehicle", RenderObjectHolderSimple.class);
-	}
-
-	/**
-	 * Temporary methoud to convert TVF files and VOX file
-	 * 
-	 * @param fni Vox file
-	 * @param fno Tvf file
-	 */
-	public void convertTVF(String fni, String fno)
-	{
-		try
-		{
-			File filein = new File(fni);
-			DataInputStream input = new DataInputStream(new FileInputStream(filein));
-
-			VOXFile vox = VOXFile.read(input);
-
-			input.close();
-
-			File fileout = new File(fno);
-			fileout.createNewFile();
-			DataOutputStream output = new DataOutputStream(new GZIPOutputStream(new FileOutputStream(fileout)));
-
-			TVFFile tvf = new TVFFile(vox);
-			tvf.write(output);
-
-			output.close();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
 	}
 
 	/**
