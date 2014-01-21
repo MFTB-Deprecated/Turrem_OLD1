@@ -39,3 +39,4 @@ local.properties
 /bin/run.bat
 *.qmo
 /Models/
+/Logo/
