@@ -1,0 +1,41 @@
+#################
+## Eclipse
+#################
+*.pydevproject
+.project
+.metadata
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
+
+# External tool builders
+.externalToolBuilders/
+
+# Locally stored "Eclipse launch configurations"
+*.launch
+
+# CDT-specific
+.cproject
+
+# PDT-specific
+.buildpath
+.ldf
+
+#############
+## Workspace
+#############
+.gitattributes
+*.jardesc
+/Turrem/
+/Versions/
+/bin/jars/
+/bin/log.txt
+/bin/run.bat
+*.qmo
+/Models/
