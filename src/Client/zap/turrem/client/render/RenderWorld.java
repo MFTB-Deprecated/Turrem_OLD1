@@ -34,7 +34,7 @@ public class RenderWorld
 	
 	public RenderWorld(RenderManager man)
 	{
-		this.models = new ModelIcon[] {new ModelIcon("turrem.entity.human.eekysam"), new ModelIcon("turrem.entity.vehicle.wooden_cart")};
+		this.models = new ModelIcon[] {new ModelIcon("turrem.entity.human.eekysam"), new ModelIcon("turrem.entity.vehicle.wooden_cart"), new ModelIcon("turrem.structure.science.collider.atlas")};
 		
 		for (ModelIcon ico : this.models)
 		{
