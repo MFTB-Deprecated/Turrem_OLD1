@@ -4,7 +4,11 @@ import org.lwjgl.opengl.GL11;
 
 import org.lwjgl.input.Mouse;
 
+import zap.turrem.client.Turrem;
 import zap.turrem.client.config.Config;
+import zap.turrem.client.control.ControlList;
+import zap.turrem.client.control.IBoolControl;
+import zap.turrem.client.control.IDeltaValueControl;
 import zap.turrem.client.render.engine.RenderManager;
 import zap.turrem.client.render.engine.holders.RenderObjectHolderSimple;
 import zap.turrem.client.render.object.model.ModelIcon;
@@ -14,7 +18,7 @@ public class RenderWorld
 	protected float angley = 45.0F;
 	protected float anglex = -20.0F;
 	protected float camx = 0.0F;
-	protected float camz = 1.0F;
+	protected float camz = 0.0F;
 	protected float dist = 5.0F;
 	
 	private int mouselastx;
@@ -23,6 +27,10 @@ public class RenderWorld
 	protected RenderGame theRenderGame;
 	
 	public ModelIcon[] models;
+	
+	private int leftclick;
+	private int midclick;
+	private int wheel;
 	
 	public RenderWorld(RenderManager man)
 	{
@@ -34,6 +42,11 @@ public class RenderWorld
 		}
 		
 		this.models[0].loadMe();
+		
+		Turrem t = Turrem.getTurrem();
+		this.leftclick = t.theControlList.getControlIndex("CLICK_BUTTON0");
+		this.midclick = t.theControlList.getControlIndex("CLICK_BUTTON2");
+		this.wheel = t.theControlList.getControlIndex("WHEEL");
 	}
 	
 	public void render()
@@ -63,8 +76,8 @@ public class RenderWorld
 	
 	public void tickCamera()
 	{
-		int wm = Mouse.getDWheel();
-		if (Mouse.isButtonDown(2))
+		int wm = ((IDeltaValueControl)ControlList.instance().getControl(wheel)).getDelta();
+		if (((IBoolControl)ControlList.instance().getControl(midclick)).getBool())
 		{
 			this.angley += (Mouse.getX() - this.mouselastx) * Config.getMouseSpeed();
 			this.anglex += (Mouse.getY() - this.mouselasty) * Config.getMouseSpeed();
@@ -90,7 +103,7 @@ public class RenderWorld
 				this.dist = 20.0F;
 			}
 		}
-		if (Mouse.isButtonDown(0))
+		if (((IBoolControl)ControlList.instance().getControl(leftclick)).getBool())
 		{
 			float dx = (Mouse.getX() - this.mouselastx) * 0.002F * this.dist;
 			float dy = (Mouse.getY() - this.mouselasty) * 0.002F * this.dist;

@@ -6,6 +6,18 @@ import org.lwjgl.input.Mouse;
 public class ControlList
 {
 	private IControl[] list;
+	
+	private static ControlList instance;
+	
+	public ControlList()
+	{
+		instance = this;
+	}
+	
+	public static ControlList instance()
+	{
+		return instance;
+	}
 
 	private void doListSize()
 	{
@@ -71,5 +83,21 @@ public class ControlList
 	public IControl getControl(int index)
 	{
 		return this.list[index];
+	}
+	
+	public void startTick()
+	{
+		for (IControl c : this.list)
+		{
+			c.startTick();
+		}
+	}
+	
+	public void endTick()
+	{
+		for (IControl c : this.list)
+		{
+			c.endTick();
+		}
 	}
 }

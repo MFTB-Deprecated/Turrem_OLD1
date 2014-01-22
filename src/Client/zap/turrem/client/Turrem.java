@@ -77,7 +77,7 @@ public class Turrem
 		this.theControlList.consoleAll();
 		
 		this.theAssets = new AssetLoader(this.dir);
-		//this.theAssets.convertAllVox();
+		this.theAssets.convertAllVox();
 		
 		this.theRender = new RenderManager(this.theAssets);
 		
@@ -93,6 +93,8 @@ public class Turrem
 	{
 		while (!Display.isCloseRequested())
 		{
+			this.theControlList.startTick();
+			
 			this.calculateFps();
 			this.tickCount++;
 			
@@ -109,6 +111,8 @@ public class Turrem
 
 			Display.update();
 			Display.sync(Config.getLwjglSyncRate());
+			
+			this.theControlList.endTick();
 		}
 		this.shutdown();
 	}
