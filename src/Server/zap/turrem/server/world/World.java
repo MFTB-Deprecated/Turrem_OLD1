@@ -3,24 +3,24 @@ package zap.turrem.server.world;
 import java.util.ArrayList;
 import java.util.List;
 
-import zap.turrem.server.entity.Entity;
+import zap.turrem.server.entity.EntityMP;
 import zap.turrem.server.entity.unit.Unit;
 import zap.turrem.server.realm.RealmMP;
 
 public class World
 {
-	public List<Entity> entityList = new ArrayList<Entity>();
+	public List<EntityMP> entityList = new ArrayList<EntityMP>();
 	public List<RealmMP> realms = new ArrayList<RealmMP>();
 	
 	public void tickEntities()
 	{
-		for (Entity entity : this.entityList)
+		for (EntityMP entity : this.entityList)
 		{
 			entity.onTick();
 		}
 	}
 	
-	public int addEntity(Entity entity)
+	public int addEntity(EntityMP entity)
 	{
 		int i = this.entityList.size();
 		this.entityList.add(entity);
@@ -31,7 +31,7 @@ public class World
 	{
 		int r = realm.getId();
 		List<Unit> ents = new ArrayList<Unit>();
-		for (Entity entity : this.entityList)
+		for (EntityMP entity : this.entityList)
 		{
 			if (entity instanceof Unit)
 			{

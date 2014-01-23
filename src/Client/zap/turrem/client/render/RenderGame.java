@@ -34,6 +34,7 @@ import org.lwjgl.util.glu.GLU;
 import org.lwjgl.BufferUtils;
 
 import zap.turrem.client.config.Config;
+import zap.turrem.client.game.Game;
 
 public class RenderGame
 {
@@ -45,10 +46,13 @@ public class RenderGame
 	
 	private RenderWorld theWorld;
 	
+	public Game theGame;
+	
 	public RenderGame(RenderWorld world)
 	{
 		this.theWorld = world;
 		this.theWorld.setRenderGame(this);
+		this.theGame = new Game();
 	}
 	
 	public void start()

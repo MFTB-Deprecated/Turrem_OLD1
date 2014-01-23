@@ -1,10 +1,10 @@
 package zap.turrem.server.entity.unit;
 
-import zap.turrem.server.entity.Entity;
+import zap.turrem.server.entity.EntityMP;
 import zap.turrem.server.realm.RealmMP;
 import zap.turrem.server.world.World;
 
-public class Unit extends Entity
+public class Unit extends EntityMP
 {
 	protected RealmMP thisRealm;
 	

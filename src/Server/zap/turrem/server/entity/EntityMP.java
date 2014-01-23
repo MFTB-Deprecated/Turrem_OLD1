@@ -1,8 +1,9 @@
 package zap.turrem.server.entity;
 
+import zap.turrem.core.entity.Entity;
 import zap.turrem.server.world.World;
 
-public abstract class Entity
+public abstract class EntityMP extends Entity
 {
 	protected double posX;
 	protected double posY;
@@ -16,8 +17,9 @@ public abstract class Entity
 	
 	protected int id;
 	
-	public Entity(World world)
+	public EntityMP(World world)
 	{
+		super();
 		this.theWorld = world;
 		this.id = this.theWorld.addEntity(this);
 	}
