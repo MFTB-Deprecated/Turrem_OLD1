@@ -26,6 +26,7 @@ public abstract class EntityMP extends Entity
 	
 	public void onTick()
 	{
+		super.onTick();
 		this.age++;
 		this.onEntityTick();
 	}
@@ -35,11 +36,12 @@ public abstract class EntityMP extends Entity
 		
 	}
 	
-	public void setPosition(float x, float y, float z)
+	public void setPosition(double x, double y, double z)
 	{
 		this.posX = x;
 		this.posY = y;
 		this.posZ = z;
+		super.setPosition(x, y, z);
 	}
 
 	public final int getId()
