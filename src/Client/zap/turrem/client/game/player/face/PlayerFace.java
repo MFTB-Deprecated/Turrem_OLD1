@@ -1,4 +1,4 @@
-package zap.turrem.client.face;
+package zap.turrem.client.game.player.face;
 
 import org.lwjgl.input.Mouse;
 
@@ -19,6 +19,12 @@ public class PlayerFace
 	public PlayerFace()
 	{
 		
+	}
+	
+	public void reset()
+	{
+		this.mouselastx = Mouse.getX();
+		this.mouselasty = Mouse.getY();
 	}
 	
 	public void tickCamera()

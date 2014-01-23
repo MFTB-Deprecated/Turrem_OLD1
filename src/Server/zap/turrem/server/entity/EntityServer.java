@@ -1,7 +1,7 @@
 package zap.turrem.server.entity;
 
 import zap.turrem.core.entity.Entity;
-import zap.turrem.server.world.World;
+import zap.turrem.server.world.WorldServer;
 
 public abstract class EntityServer extends Entity
 {
@@ -13,11 +13,11 @@ public abstract class EntityServer extends Entity
 	
 	protected long age;
 	
-	protected World theWorld;
+	protected WorldServer theWorld;
 	
 	protected int id;
 	
-	public EntityServer(World world)
+	public EntityServer(WorldServer world)
 	{
 		super();
 		this.theWorld = world;

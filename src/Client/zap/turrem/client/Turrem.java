@@ -16,8 +16,6 @@ import org.lwjgl.input.Keyboard;
 
 import zap.turrem.client.asset.AssetLoader;
 import zap.turrem.client.config.Config;
-import zap.turrem.client.control.ControlList;
-import zap.turrem.client.render.RenderWorld;
 import zap.turrem.client.render.engine.RenderManager;
 import zap.turrem.client.states.IState;
 import zap.turrem.client.states.StateGame;
@@ -36,8 +34,6 @@ public class Turrem
 	private IState.EnumClientState enumstate;
 	
 	public RenderManager theRender;
-	@Deprecated
-	public ControlList theControlList;
 	public AssetLoader theAssets;
 	
 	public long lastTime;
@@ -72,10 +68,6 @@ public class Turrem
 		{
 			e.printStackTrace();
 		}
-
-		//this.theControlList = new ControlList();
-		//this.theControlList.setup();
-		//this.theControlList.consoleAll();
 		
 		this.theAssets = new AssetLoader(this.dir);
 		this.theAssets.convertAllVox();
@@ -93,9 +85,7 @@ public class Turrem
 	public void runloop()
 	{
 		while (!Display.isCloseRequested())
-		{
-			//this.theControlList.startTick();
-			
+		{		
 			this.calculateFps();
 			this.tickCount++;
 			
@@ -112,8 +102,6 @@ public class Turrem
 
 			Display.update();
 			Display.sync(Config.getLwjglSyncRate());
-			
-			//this.theControlList.endTick();
 		}
 		this.shutdown();
 	}
@@ -222,7 +210,7 @@ public class Turrem
 			{
 				this.state.end();
 			}
-			this.state = new StateGame(this, new RenderWorld(this.theRender));
+			this.state = new StateGame(this);
 			this.state.start();
 		}
 	}
@@ -359,7 +347,6 @@ public class Turrem
 	 */
 	public boolean isLoading()
 	{
-		// TODO Loading stuff
 		return false;
 	}
 

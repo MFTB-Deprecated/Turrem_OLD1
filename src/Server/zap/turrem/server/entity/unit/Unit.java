@@ -2,13 +2,13 @@ package zap.turrem.server.entity.unit;
 
 import zap.turrem.server.entity.EntityServer;
 import zap.turrem.server.realm.RealmServer;
-import zap.turrem.server.world.World;
+import zap.turrem.server.world.WorldServer;
 
 public class Unit extends EntityServer
 {
 	protected RealmServer thisRealm;
 	
-	public Unit(World world)
+	public Unit(WorldServer world)
 	{
 		super(world);
 	}

@@ -4,12 +4,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 import zap.turrem.client.game.entity.EntityClient;
+import zap.turrem.client.render.RenderWorld;
 
-public class World
+public class WorldClient
 {
 	public List<EntityClient> entityList = new ArrayList<EntityClient>();
 	public List<RealmClient> realms = new ArrayList<RealmClient>();
 	
+	public RenderWorld theRender;
+	
+	public WorldClient(RenderWorld render)
+	{
+		this.theRender = render;
+	}
+
+	public void tickWorld()
+	{
+		this.tickEntities();
+	}
+
 	public void tickEntities()
 	{
 		for (int i = 0; i < this.entityList.size(); i++)
@@ -25,7 +38,15 @@ public class World
 			}
 		}
 	}
-	
+
+	public void onlyTickEntities()
+	{
+		for (EntityClient e : this.entityList)
+		{
+			e.onTick();
+		}
+	}
+
 	public void cleanEntities()
 	{
 		for (int i = 0; i < this.entityList.size(); i++)
@@ -36,5 +57,10 @@ public class World
 				this.entityList.remove(i--);
 			}
 		}
+	}
+	
+	public void render()
+	{
+		this.theRender.render();
 	}
 }

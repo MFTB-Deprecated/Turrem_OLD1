@@ -1,8 +1,7 @@
 package zap.turrem.client.states;
 
 import zap.turrem.client.Turrem;
-import zap.turrem.client.render.RenderGame;
-import zap.turrem.client.render.RenderWorld;
+import zap.turrem.client.game.Game;
 
 /**
  * Should only be used as an intermediary with the actual game objects. Any
@@ -12,29 +11,30 @@ public class StateGame implements IState
 {
 	protected Turrem theTurrem;
 	
-	public RenderGame render;
+	public Game theGame;
 
-	public StateGame(Turrem turrem, RenderWorld world)
+	public StateGame(Turrem turrem)
 	{
 		this.theTurrem = turrem;
-		this.render = new RenderGame(world);
 	}
 
 	@Override
 	public void start()
 	{
-		this.render.start();
+		this.theGame = new Game(this.theTurrem);
+		this.theGame.onStart();
 	}
 
 	@Override
 	public void end()
 	{
-		this.render.end();
+		this.theGame.theRender.end();
 	}
 
 	@Override
 	public void tick()
 	{
-		this.render.tick();
+		this.theGame.tickGame();
+		this.theGame.render();
 	}
 }

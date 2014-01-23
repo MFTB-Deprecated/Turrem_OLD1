@@ -44,15 +44,11 @@ public class RenderGame
 	
 	protected float fov = 60.0F;
 	
-	private RenderWorld theWorld;
-	
 	public Game theGame;
 	
-	public RenderGame(RenderWorld world)
+	public RenderGame(Game game)
 	{
-		this.theWorld = world;
-		this.theWorld.setRenderGame(this);
-		this.theGame = new Game();
+		this.theGame = game;
 	}
 	
 	public void start()
@@ -97,13 +93,13 @@ public class RenderGame
 		this.lModelAmbient.put(0.8f).put(0.8f).put(0.8f).put(1.0f).flip();
 	}
 	
-	public void tick()
+	public void render()
 	{
 		GL11.glClearColor(0.5F, 0.5F, 0.5F, 1.0F);
 		GL11.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		GL11.glPushMatrix();
 		
-		this.theWorld.render();
+		this.theGame.renderWorld();
 		
 		GL11.glPopMatrix();
 	}

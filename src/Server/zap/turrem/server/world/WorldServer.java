@@ -8,7 +8,7 @@ import zap.turrem.server.entity.unit.Unit;
 import zap.turrem.server.realm.RealmServer;
 import zap.turrem.utils.geo.Box;
 
-public class World
+public class WorldServer
 {
 	public List<EntityServer> entityList = new ArrayList<EntityServer>();
 	public List<RealmServer> realms = new ArrayList<RealmServer>();
