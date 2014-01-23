@@ -36,6 +36,7 @@ public class Turrem
 	private IState.EnumClientState enumstate;
 	
 	public RenderManager theRender;
+	@Deprecated
 	public ControlList theControlList;
 	public AssetLoader theAssets;
 	
@@ -72,9 +73,9 @@ public class Turrem
 			e.printStackTrace();
 		}
 
-		this.theControlList = new ControlList();
-		this.theControlList.setup();
-		this.theControlList.consoleAll();
+		//this.theControlList = new ControlList();
+		//this.theControlList.setup();
+		//this.theControlList.consoleAll();
 		
 		this.theAssets = new AssetLoader(this.dir);
 		this.theAssets.convertAllVox();
@@ -93,7 +94,7 @@ public class Turrem
 	{
 		while (!Display.isCloseRequested())
 		{
-			this.theControlList.startTick();
+			//this.theControlList.startTick();
 			
 			this.calculateFps();
 			this.tickCount++;
@@ -112,7 +113,7 @@ public class Turrem
 			Display.update();
 			Display.sync(Config.getLwjglSyncRate());
 			
-			this.theControlList.endTick();
+			//this.theControlList.endTick();
 		}
 		this.shutdown();
 	}

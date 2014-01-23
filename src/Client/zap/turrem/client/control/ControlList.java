@@ -3,6 +3,7 @@ package zap.turrem.client.control;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
+@Deprecated
 public class ControlList
 {
 	private IControl[] list;
