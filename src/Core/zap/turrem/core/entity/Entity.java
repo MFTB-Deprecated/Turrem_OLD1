@@ -29,4 +29,9 @@ public abstract class Entity
 	{
 		
 	}
+
+	public Box getBoundingBox()
+	{
+		return this.boundingBox;
+	}
 }

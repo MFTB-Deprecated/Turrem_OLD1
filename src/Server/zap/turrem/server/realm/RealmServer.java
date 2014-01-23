@@ -8,14 +8,14 @@ import zap.turrem.core.realm.Realm;
 import zap.turrem.server.entity.unit.Unit;
 import zap.turrem.server.world.World;
 
-public class RealmMP extends Realm
+public class RealmServer extends Realm
 {
 	protected World theWorld;
 	protected int id;
 	
 	protected List<Integer> units = new ArrayList<Integer>();
 	
-	public RealmMP(Player thePlayer, World world)
+	public RealmServer(Player thePlayer, World world)
 	{
 		super(thePlayer);
 		this.theWorld = world;
