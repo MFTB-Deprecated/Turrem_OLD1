@@ -4,35 +4,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import zap.turrem.utils.geo.EnumDir;
+
 public class VoxToTvf
 {
-	/**
-	 * Enum for easily using the 6 different faces of a cube
-	 */
-	public static enum EnumDir
-	{
-		XUp((byte) 1, (byte) 1, (byte) 0, (byte) 0),
-		XDown((byte) 2, (byte) -1, (byte) 0, (byte) 0),
-		YUp((byte) 4, (byte) 0, (byte) 1, (byte) 0),
-		YDown((byte) 3, (byte) 0, (byte) -1, (byte) 0),
-		ZUp((byte) 5, (byte) 0, (byte) 0, (byte) 1),
-		ZDown((byte) 6, (byte) 0, (byte) 0, (byte) -1);
-
-		public byte ind;
-
-		public byte xoff;
-		public byte yoff;
-		public byte zoff;
-
-		EnumDir(byte ind, byte x, byte y, byte z)
-		{
-			this.ind = ind;
-			this.xoff = x;
-			this.yoff = y;
-			this.zoff = z;
-		}
-	}
-
 	protected TVFFile tvf;
 	protected VOXFile vox;
 
@@ -89,7 +64,7 @@ public class VoxToTvf
 							{
 								TVFFile.TVFFace f = new TVFFile.TVFFace();
 								f.x = (byte) (i & 0xFF);
-								f.y = (byte) ((this.vox.height - j) & 0xFF);
+								f.y = (byte) (j & 0xFF);
 								f.z = (byte) (k & 0xFF);
 								f.dir = dir.ind;
 								f.color = v;
@@ -138,6 +113,6 @@ public class VoxToTvf
 
 	private byte getVox(int x, int y, int z)
 	{
-		return this.vox.voxels[(x * this.vox.length + z) * this.vox.height + y];
+		return this.vox.voxels[(x * this.vox.length + z) * this.vox.height + (this.vox.height - y - 1)];
 	}
 }

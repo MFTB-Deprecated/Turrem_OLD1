@@ -1,6 +1,6 @@
 package zap.turrem.core.entity;
 
-import zap.turrem.utils.box.Box;
+import zap.turrem.utils.geo.Box;
 
 public abstract class Entity
 {
