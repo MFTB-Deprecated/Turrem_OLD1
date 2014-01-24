@@ -1,6 +1,8 @@
 package zap.turrem.client.game;
 
+import units.turrem.Eekysam;
 import zap.turrem.client.Turrem;
+import zap.turrem.client.game.entity.EntityClient;
 import zap.turrem.client.game.player.face.PlayerFace;
 import zap.turrem.client.render.RenderGame;
 import zap.turrem.client.render.RenderWorld;
@@ -27,6 +29,8 @@ public class Game
 	{
 		this.theRender.start();
 		this.face.reset();
+		
+		(new EntityClient(new Eekysam())).push(this.theWorld, this.theTurrem.theRender);
 	}
 	
 	public void tickGame()

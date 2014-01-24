@@ -1,6 +1,9 @@
 package zap.turrem.client.game.entity;
 
+import zap.turrem.client.game.WorldClient;
+import zap.turrem.client.render.engine.RenderManager;
 import zap.turrem.core.entity.Entity;
+import zap.turrem.core.entity.article.EntityArticle;
 import zap.turrem.utils.geo.Point;
 
 public class EntityClient extends Entity
@@ -8,9 +11,9 @@ public class EntityClient extends Entity
 	public boolean isDead = false;
 	public boolean isAppear = true;
 
-	protected double posX;
-	protected double posY;
-	protected double posZ;
+	public double posX;
+	public double posY;
+	public double posZ;
 
 	public float motionX;
 	public float motionY;
@@ -18,7 +21,25 @@ public class EntityClient extends Entity
 	public int stop;
 	public int progress;
 	private boolean inMotion;
+	
+	public EntityArticle article;
 
+	public EntityClient(EntityArticle article)
+	{
+		this.article = article;
+	}
+	
+	public void push(WorldClient world, RenderManager man)
+	{
+		this.article.loadAssets(man);
+		world.entityList.add(this);
+	}
+	
+	public void render()
+	{
+		this.article.draw(this);
+	}
+	
 	public void disappear()
 	{
 		this.isAppear = false;
@@ -32,6 +53,7 @@ public class EntityClient extends Entity
 	public void onTick()
 	{
 		super.onTick();
+		this.article.clientTick(this);
 	}
 
 	public void doMotion()

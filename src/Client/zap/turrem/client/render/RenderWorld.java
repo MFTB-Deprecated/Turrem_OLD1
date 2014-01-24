@@ -6,6 +6,7 @@ import org.lwjgl.util.glu.GLU;
 
 import zap.turrem.client.game.Game;
 import zap.turrem.client.game.WorldClient;
+import zap.turrem.client.game.entity.EntityClient;
 import zap.turrem.client.game.player.face.PlayerFace;
 import zap.turrem.client.render.engine.RenderManager;
 import zap.turrem.client.render.engine.holders.RenderObjectHolderSimple;
@@ -16,25 +17,15 @@ public class RenderWorld
 {
 	protected Game theGame;
 
-	public ModelIcon[] models;
-	
 	public ModelIcon cursor;
 
 	public RenderWorld(RenderManager man, Game game)
 	{
 		this.theGame = game;
-		this.models = new ModelIcon[] { new ModelIcon("turrem.entity.human.eekysam"), new ModelIcon("turrem.entity.vehicle.wooden_cart"), new ModelIcon("turrem.structure.science.collider.atlas") };
 		
 		this.cursor = new ModelIcon("turrem.interface.3dcursor");
 		man.pushIcon(this.cursor, "interface", RenderObjectHolderSimple.class);
 		this.cursor.loadMe();
-		
-		for (ModelIcon ico : this.models)
-		{
-			man.pushIcon(ico, "testrenders", RenderObjectHolderSimple.class);
-		}
-
-		this.models[0].loadMe();
 	}
 
 	public void render()
@@ -64,9 +55,9 @@ public class RenderWorld
 
 	public void doRender()
 	{
-		for (ModelIcon ico : this.models)
+		for (EntityClient ent : this.theGame.theWorld.entityList)
 		{
-			ico.render();
+			ent.render();
 		}
 	}
 
