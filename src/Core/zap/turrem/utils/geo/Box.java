@@ -147,6 +147,11 @@ public class Box
     	return box1.intersectsWith(box2);
     }
     
+    public BoxPin calculateIntercept(Ray ray)
+    {
+    	return this.calculateIntercept(ray.start, ray.end);
+    }
+    
     public BoxPin calculateIntercept(Point point1, Point point2)
     {
         Point xdown = Point.getIntermediateWithXValue(point1, point2, this.minX);

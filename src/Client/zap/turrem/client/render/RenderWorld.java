@@ -1,7 +1,5 @@
 package zap.turrem.client.render;
 
-import org.lwjgl.opengl.GL11;
-
 import org.lwjgl.util.glu.GLU;
 
 import zap.turrem.client.game.Game;
@@ -42,6 +40,7 @@ public class RenderWorld
 
 		this.doRender();
 	}
+	
 	public void doRender()
 	{
 		for (ModelIcon ico : this.models)
