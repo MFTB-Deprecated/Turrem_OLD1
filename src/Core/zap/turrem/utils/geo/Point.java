@@ -11,7 +11,7 @@ public class Point
 		return new Point(x, y, z);
 	}
 
-	private Point(double x, double y, double z)
+	protected Point(double x, double y, double z)
 	{
 		this.xCoord = x;
 		this.yCoord = y;

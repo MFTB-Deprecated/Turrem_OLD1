@@ -22,7 +22,7 @@ public abstract class Entity
 	
 	public void setBox(double xmin, double xmax, double ymin, double ymax, double zmin, double zmax)
 	{
-		this.boundingBox.setBounds(xmin, ymin, zmin, xmax, ymax, zmax);
+		this.boundingBox.setBoundsThis(xmin, ymin, zmin, xmax, ymax, zmax);
 	}
 	
 	public void onTick()

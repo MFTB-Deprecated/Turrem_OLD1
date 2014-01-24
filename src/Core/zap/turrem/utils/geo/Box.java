@@ -24,7 +24,7 @@ public class Box
     	this.maxZ = maxZ;
     }
     
-    public Box setBounds(double minX, double minY, double minZ, double maxX, double maxY, double maxZ)
+    public Box setBoundsThis(double minX, double minY, double minZ, double maxX, double maxY, double maxZ)
     {
     	this.minX = minX;
     	this.minY = minY;
@@ -33,6 +33,103 @@ public class Box
     	this.maxY = maxY;
     	this.maxZ = maxZ;
     	return this;
+    }
+    
+    public Box setBounds(double minX, double minY, double minZ, double maxX, double maxY, double maxZ)
+    {
+    	return this.duplicate().setBoundsThis(minX, minY, minZ, maxX, maxY, maxZ);
+    }
+    
+    public Box duplicate()
+    {
+    	return new Box(this.minX, this.minY, this.minZ, this.maxX, this.maxY, this.maxZ);
+    }
+    
+    public Box expandThis(float size)
+    {
+    	this.maxX += size;
+    	this.maxY += size;
+    	this.maxZ += size;
+       	this.minX -= size;
+    	this.minY -= size;
+    	this.minZ -= size;
+    	return this;
+    }
+    
+    public Box expand(float size)
+    {
+    	return this.duplicate().expandThis(size);
+    }
+    
+    public Box growThis(float x, float y, float z)
+    {
+    	if (x > 0)
+    	{
+    		this.maxX += x;
+    	}
+    	else
+    	{
+    		this.minX += x;
+    	}
+    	if (y > 0)
+    	{
+    		this.maxY += y;
+    	}
+    	else
+    	{
+    		this.minY += y;
+    	}
+    	if (z > 0)
+    	{
+    		this.maxZ += z;
+    	}
+    	else
+    	{
+    		this.minZ += z;
+    	}
+    	return this;
+    }
+    
+    public Box grow(float x, float y, float z)
+    {
+    	return this.duplicate().growThis(x, y, z);
+    }
+    
+    public Box eatThis(Point p)
+    {
+    	double x = p.xCoord;
+    	if (x < this.minX)
+    	{
+    		this.minX = x;
+    	}
+    	if (x > this.maxX)
+    	{
+    		this.maxX = x;
+    	}
+    	double y = p.yCoord;
+    	if (y < this.minY)
+    	{
+    		this.minY = y;
+    	}
+    	if (y > this.maxY)
+    	{
+    		this.maxY = y;
+    	}
+    	double z = p.zCoord;
+    	if (z < this.minZ)
+    	{
+    		this.minZ = z;
+    	}
+    	if (z > this.maxZ)
+    	{
+    		this.maxZ = z;
+    	}
+    	return this;
+    }
+    
+    public Box eat(Point p)
+    {
+    	return this.duplicate().eatThis(p);
     }
     
     public boolean isPointInside(Point point)

@@ -3,6 +3,7 @@ package zap.turrem.client.game.player.face;
 import org.lwjgl.input.Mouse;
 
 import zap.turrem.client.config.Config;
+import zap.turrem.utils.geo.Point;
 
 public class PlayerFace
 {
@@ -16,9 +17,33 @@ public class PlayerFace
 	private int mouselastx;
 	private int mouselasty;
 	
+	public static float reachDistance = 20.0F;
+	
 	public PlayerFace()
 	{
 		
+	}
+	
+	public Point getLookEnd(float length)
+	{
+		float yawrad = this.camYaw / 180.0F * 3.14F;
+		float pitchrad = this.camPitch / 180.0F * 3.14F;
+		double vs = Math.cos(pitchrad);
+		double x = this.camX;
+		double y = this.camY;
+		double z = this.camZ;
+		x -= length * Math.sin(yawrad) * vs;
+		z += length * Math.cos(yawrad) * vs;
+		y -= length * Math.sin(pitchrad);
+		return Point.getPoint(x, y, z);
+	}
+	
+	public Point getLookStart()
+	{
+		double x = this.camX;
+		double y = this.camY;
+		double z = this.camZ;
+		return Point.getPoint(x, y, z);
 	}
 	
 	public void reset()

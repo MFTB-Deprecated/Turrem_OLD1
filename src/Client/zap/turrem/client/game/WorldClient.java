@@ -5,6 +5,7 @@ import java.util.List;
 
 import zap.turrem.client.game.entity.EntityClient;
 import zap.turrem.client.render.RenderWorld;
+import zap.turrem.utils.geo.Box;
 
 public class WorldClient
 {
@@ -62,5 +63,18 @@ public class WorldClient
 	public void render()
 	{
 		this.theRender.render();
+	}
+	
+	public List<EntityClient> getEntitiesHit(Box box)
+	{
+		List<EntityClient> hit = new ArrayList<EntityClient>();
+		for (EntityClient e : this.entityList)
+		{
+			if (box.intersectsWith(e.getBoundingBox()))
+			{
+				hit.add(e);
+			}
+		}
+		return hit;
 	}
 }
