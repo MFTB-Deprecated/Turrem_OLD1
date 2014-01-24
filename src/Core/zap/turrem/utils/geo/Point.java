@@ -92,6 +92,11 @@ public class Point
 		}
 	}
 	
+	public static Point addVector(Point point, Vector vector)
+	{
+		return new Point(point.xCoord + vector.xpart, point.yCoord + vector.ypart, point.zCoord + vector.zpart);
+	}
+	
 	public static Point getIntermediateWithYValue(Point p1, Point p2, double yval)
 	{
 		double x = p2.xCoord - p1.xCoord;

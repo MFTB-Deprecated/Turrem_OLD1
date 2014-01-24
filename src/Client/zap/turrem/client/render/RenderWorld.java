@@ -1,5 +1,7 @@
 package zap.turrem.client.render;
 
+import org.lwjgl.opengl.GL11;
+
 import org.lwjgl.util.glu.GLU;
 
 import zap.turrem.client.game.Game;
@@ -39,8 +41,23 @@ public class RenderWorld
 		GLU.gluLookAt((float) loc.xCoord, (float) loc.yCoord,(float)  loc.zCoord, (float) foc.xCoord, (float) foc.yCoord, (float) foc.zCoord, 0.0F, 1.0F, 0.0F);
 
 		this.doRender();
+
+		Point targ = f.getRay(PlayerFace.reachDistance).end;
+		this.renderTarget(targ.xCoord, targ.yCoord, targ.zCoord);
 	}
-	
+
+	public void renderTarget(double x, double y, double z)
+	{
+		GL11.glColor3f(1.0f, 0.0f, 0.0f);
+
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glVertex3d(x, y, z);
+		GL11.glVertex3d(x + 0.1F, y, z);
+		GL11.glVertex3d(x + 0.1F, y + 0.1F, z);
+		GL11.glVertex3d(x, y + 0.1F, z);
+		GL11.glEnd();
+	}
+
 	public void doRender()
 	{
 		for (ModelIcon ico : this.models)

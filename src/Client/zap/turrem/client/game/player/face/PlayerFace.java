@@ -5,6 +5,7 @@ import org.lwjgl.input.Mouse;
 import zap.turrem.client.config.Config;
 import zap.turrem.utils.geo.Point;
 import zap.turrem.utils.geo.Ray;
+import zap.turrem.utils.geo.Vector;
 
 public class PlayerFace
 {
@@ -18,7 +19,10 @@ public class PlayerFace
 	private int mouselastx;
 	private int mouselasty;
 
-	public static float reachDistance = 20.0F;
+	public static float reachDistance = 5.0F;
+	public static float fovy = 60.0F;
+	public static float znear = 0.1F;
+	public static float aspect;
 
 	public PlayerFace()
 	{
@@ -36,17 +40,58 @@ public class PlayerFace
 	{
 		return this.camFocus;
 	}
-	
+
 	public Point getLocation()
 	{
 		return this.camLoc;
 	}
-	
+
 	public Ray getRay(float length)
 	{
-		Ray ray = Ray.getRay(this.getLocation(), this.getFocus());
+		Ray ray = Ray.getRay(this.getLocation(), Point.addVector(this.getLocation(), this.pickMouse()));
 		ray.setLength(length);
 		return ray;
+	}
+
+	public Vector pickMouse()
+	{
+		float mousex = Mouse.getX();
+		float mousey = Mouse.getY();
+
+		Vector view = Vector.getVector(this.camLoc, this.camFocus);
+		view.normalize();
+
+		Vector h = Vector.cross(view, Vector.getVector(0.0F, 1.0F, 0.0F));
+		h.normalize();
+
+		Vector v = Vector.cross(h, view);
+		v.normalize();
+
+		float rad = fovy * 3.1415F / 180.0F;
+		float vLength = (float) (Math.tan(rad / 2) * znear);
+		float hLength = vLength * aspect;
+
+		v.scale(vLength);
+		h.scale(hLength);
+		
+		int width = Config.getWidth();
+		int height = Config.getHeight();
+		
+		mousex -= (width / 2.0F);
+		mousey -= (height / 2.0F);
+		
+		mousex /= (width / 2.0F);
+		mousey /= (height / 2.0F);
+		
+		float clipx = h.xpart * mousex + v.xpart * mousey;
+		float clipy = h.ypart * mousex + v.ypart * mousey;
+		float clipz = h.zpart * mousex + v.zpart * mousey;
+		
+		Point clip = Point.getPoint(clipx, clipy, clipz);
+		
+		Vector pick = Vector.getVector(this.camLoc, clip);
+		pick.normalize();
+		return pick;
 	}
 
 	public void tickCamera()

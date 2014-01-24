@@ -35,14 +35,13 @@ import org.lwjgl.BufferUtils;
 
 import zap.turrem.client.config.Config;
 import zap.turrem.client.game.Game;
+import zap.turrem.client.game.player.face.PlayerFace;
 
 public class RenderGame
 {
 	private FloatBuffer lightPosition;
 	private FloatBuffer whiteLight;
 	private FloatBuffer lModelAmbient;
-	
-	protected float fov = 60.0F;
 	
 	public Game theGame;
 	
@@ -55,7 +54,8 @@ public class RenderGame
 	{
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		GLU.gluPerspective(this.fov, Config.getWidth() / Config.getHeight(), 0.1F, 20.0F);
+		PlayerFace.aspect = (float) Config.getWidth() / (float) Config.getHeight();
+		GLU.gluPerspective(PlayerFace.fovy, PlayerFace.aspect, PlayerFace.znear, 20.0F);
 		glMatrixMode(GL_MODELVIEW);
 
 		glDepthFunc(GL_LEQUAL);
