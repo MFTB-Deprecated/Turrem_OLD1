@@ -10,6 +10,12 @@ public class Ray
 		return new Ray(start, end);
 	}
 	
+	public static Ray getRay(Point start, Vector vector)
+	{
+		Point end = Point.addVector(start, vector);
+		return new Ray(start, end);
+	}
+	
 	private Ray(Point p1, Point p2)
 	{
 		this.start = p1;

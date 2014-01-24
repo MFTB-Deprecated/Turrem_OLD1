@@ -17,12 +17,18 @@ public class RenderWorld
 	protected Game theGame;
 
 	public ModelIcon[] models;
+	
+	public ModelIcon cursor;
 
 	public RenderWorld(RenderManager man, Game game)
 	{
 		this.theGame = game;
 		this.models = new ModelIcon[] { new ModelIcon("turrem.entity.human.eekysam"), new ModelIcon("turrem.entity.vehicle.wooden_cart"), new ModelIcon("turrem.structure.science.collider.atlas") };
-
+		
+		this.cursor = new ModelIcon("turrem.interface.3dcursor");
+		man.pushIcon(this.cursor, "interface", RenderObjectHolderSimple.class);
+		this.cursor.loadMe();
+		
 		for (ModelIcon ico : this.models)
 		{
 			man.pushIcon(ico, "testrenders", RenderObjectHolderSimple.class);
@@ -42,20 +48,18 @@ public class RenderWorld
 
 		this.doRender();
 
-		Point targ = f.getRay(PlayerFace.reachDistance).end;
+		Point targ = f.mouseRay.end;
 		this.renderTarget(targ.xCoord, targ.yCoord, targ.zCoord);
 	}
 
 	public void renderTarget(double x, double y, double z)
 	{
-		GL11.glColor3f(1.0f, 0.0f, 0.0f);
-
-		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glVertex3d(x, y, z);
-		GL11.glVertex3d(x + 0.1F, y, z);
-		GL11.glVertex3d(x + 0.1F, y + 0.1F, z);
-		GL11.glVertex3d(x, y + 0.1F, z);
-		GL11.glEnd();
+		GL11.glPushMatrix();
+		GL11.glTranslated(x, y, z);
+		float off = 0.5F / 4.0F;
+		GL11.glTranslated(-off, -off, -off);
+		this.cursor.render();
+		GL11.glPopMatrix();
 	}
 
 	public void doRender()

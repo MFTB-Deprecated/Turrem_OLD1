@@ -92,6 +92,13 @@ public class Point
 		}
 	}
 	
+	public void addPoint(Point p)
+	{
+		this.xCoord += p.xCoord;
+		this.yCoord += p.yCoord;
+		this.zCoord += p.zCoord;
+	}
+	
 	public static Point addVector(Point point, Vector vector)
 	{
 		return new Point(point.xCoord + vector.xpart, point.yCoord + vector.ypart, point.zCoord + vector.zpart);

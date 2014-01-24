@@ -70,7 +70,7 @@ public class Turrem
 		}
 		
 		this.theAssets = new AssetLoader(this.dir);
-		this.theAssets.convertAllVox();
+		//this.theAssets.convertAllVox();
 		
 		this.theRender = new RenderManager(this.theAssets);
 		

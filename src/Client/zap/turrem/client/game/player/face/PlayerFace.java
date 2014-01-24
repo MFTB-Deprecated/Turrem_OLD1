@@ -23,6 +23,8 @@ public class PlayerFace
 	public static float fovy = 60.0F;
 	public static float znear = 0.1F;
 	public static float aspect;
+	
+	public Ray mouseRay;
 
 	public PlayerFace()
 	{
@@ -46,14 +48,14 @@ public class PlayerFace
 		return this.camLoc;
 	}
 
-	public Ray getRay(float length)
+	private Ray getRay(float length)
 	{
-		Ray ray = Ray.getRay(this.getLocation(), Point.addVector(this.getLocation(), this.pickMouse()));
+		Ray ray = this.pickMouse();
 		ray.setLength(length);
 		return ray;
 	}
 
-	public Vector pickMouse()
+	private Ray pickMouse()
 	{
 		float mousex = Mouse.getX();
 		float mousey = Mouse.getY();
@@ -83,15 +85,12 @@ public class PlayerFace
 		mousex /= (width / 2.0F);
 		mousey /= (height / 2.0F);
 		
-		float clipx = h.xpart * mousex + v.xpart * mousey;
-		float clipy = h.ypart * mousex + v.ypart * mousey;
-		float clipz = h.zpart * mousex + v.zpart * mousey;
+		double clipx = this.camLoc.xCoord + view.xpart * znear + h.xpart * mousex + v.xpart * mousey;
+		double clipy = this.camLoc.yCoord + view.ypart * znear + h.ypart * mousex + v.ypart * mousey;
+		double clipz = this.camLoc.zCoord + view.zpart * znear + h.zpart * mousex + v.zpart * mousey;
 		
 		Point clip = Point.getPoint(clipx, clipy, clipz);
-		
-		Vector pick = Vector.getVector(this.camLoc, clip);
-		pick.normalize();
-		return pick;
+		return Ray.getRay(this.camLoc, clip);
 	}
 
 	public void tickCamera()
@@ -141,6 +140,8 @@ public class PlayerFace
 		this.doFocus();
 		this.mouselastx = Mouse.getX();
 		this.mouselasty = Mouse.getY();
+		
+		this.mouseRay = this.getRay(reachDistance);
 	}
 
 	public void doFocus()
