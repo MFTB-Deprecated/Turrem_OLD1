@@ -11,7 +11,7 @@ public class Point
 		return new Point(x, y, z);
 	}
 
-	protected Point(double x, double y, double z)
+	private Point(double x, double y, double z)
 	{
 		this.xCoord = x;
 		this.yCoord = y;
@@ -24,6 +24,13 @@ public class Point
 		this.yCoord = y;
 		this.zCoord = z;
 		return this;
+	}
+	
+	public void moveDelta(double dx, double dy, double dz)
+	{
+		this.xCoord += dx;
+		this.yCoord += dy;
+		this.zCoord += dz;
 	}
 
 	public double squareDistanceOrigin()
@@ -128,5 +135,24 @@ public class Point
 		double z = p2.zCoord - p1.zCoord;
 
 		return new Point(p1.xCoord + x * slide, p1.yCoord + y * slide, p1.zCoord + z * slide);
+	}
+	
+	public static Point getSlideWithLength(Point p1, Point p2, double length)
+	{
+		double x = p2.xCoord - p1.xCoord;
+		double y = p2.yCoord - p1.yCoord;
+		double z = p2.zCoord - p1.zCoord;
+
+		double l = distance(p1, p2);
+		
+		if (l < 1E-7D)
+		{
+			return null;
+		}
+		else
+		{
+			double weight = length / l;
+			return new Point(p1.xCoord + x * weight, p1.yCoord + y * weight, p1.zCoord + z * weight);
+		}
 	}
 }

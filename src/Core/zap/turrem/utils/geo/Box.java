@@ -45,7 +45,7 @@ public class Box
     	return new Box(this.minX, this.minY, this.minZ, this.maxX, this.maxY, this.maxZ);
     }
     
-    public Box expandThis(float size)
+    public Box expand(float size)
     {
     	this.maxX += size;
     	this.maxY += size;
@@ -56,12 +56,7 @@ public class Box
     	return this;
     }
     
-    public Box expand(float size)
-    {
-    	return this.duplicate().expandThis(size);
-    }
-    
-    public Box growThis(float x, float y, float z)
+    public Box grow(float x, float y, float z)
     {
     	if (x > 0)
     	{
@@ -90,12 +85,7 @@ public class Box
     	return this;
     }
     
-    public Box grow(float x, float y, float z)
-    {
-    	return this.duplicate().growThis(x, y, z);
-    }
-    
-    public Box eatThis(Point p)
+    public Box eat(Point p)
     {
     	double x = p.xCoord;
     	if (x < this.minX)
@@ -125,11 +115,6 @@ public class Box
     		this.maxZ = z;
     	}
     	return this;
-    }
-    
-    public Box eat(Point p)
-    {
-    	return this.duplicate().eatThis(p);
     }
     
     public boolean isPointInside(Point point)

@@ -4,68 +4,65 @@ import org.lwjgl.input.Mouse;
 
 import zap.turrem.client.config.Config;
 import zap.turrem.utils.geo.Point;
+import zap.turrem.utils.geo.Ray;
 
 public class PlayerFace
 {
-	protected float camPitch = -20.0F;
+	protected float camPitch = 20.0F;
 	protected float camYaw = 45.0F;
-	protected float camX = 0.0F;
-	protected float camY = -1.0F;
-	protected float camZ = 0.0F;
 	protected float camDist = 5.0F;
-	
+
+	protected Point camFocus;
+	protected Point camLoc;
+
 	private int mouselastx;
 	private int mouselasty;
-	
+
 	public static float reachDistance = 20.0F;
-	
+
 	public PlayerFace()
 	{
-		
+		this.camFocus = Point.getPoint(0.0D, 0.0D, 0.0D);
+		this.camLoc = Point.getPoint(0.0D, 0.0D, 0.0D);
 	}
-	
-	public Point getLookEnd(float length)
-	{
-		float yawrad = this.camYaw / 180.0F * 3.14F;
-		float pitchrad = this.camPitch / 180.0F * 3.14F;
-		double vs = Math.cos(pitchrad);
-		double x = this.camX;
-		double y = this.camY;
-		double z = this.camZ;
-		x -= length * Math.sin(yawrad) * vs;
-		z += length * Math.cos(yawrad) * vs;
-		y -= length * Math.sin(pitchrad);
-		return Point.getPoint(x, y, z);
-	}
-	
-	public Point getLookStart()
-	{
-		double x = this.camX;
-		double y = this.camY;
-		double z = this.camZ;
-		return Point.getPoint(x, y, z);
-	}
-	
+
 	public void reset()
 	{
 		this.mouselastx = Mouse.getX();
 		this.mouselasty = Mouse.getY();
 	}
+
+	public Point getFocus()
+	{
+		return this.camFocus;
+	}
 	
+	public Point getLocation()
+	{
+		return this.camLoc;
+	}
+	
+	public Ray getRay(float length)
+	{
+		Ray ray = Ray.getRay(this.getLocation(), this.getFocus());
+		ray.setLength(length);
+		return ray;
+	}
+
 	public void tickCamera()
 	{
 		int wm = Mouse.getDWheel();
 		if (Mouse.isButtonDown(2))
 		{
-			this.camYaw += (Mouse.getX() - this.mouselastx) * Config.getMouseSpeed();
-			this.camPitch += (Mouse.getY() - this.mouselasty) * Config.getMouseSpeed();
-			if (this.camPitch > -10.0F)
+			this.camYaw -= (Mouse.getX() - this.mouselastx) * Config.getMouseSpeed();
+			this.camPitch -= (Mouse.getY() - this.mouselasty) * Config.getMouseSpeed();
+			if (this.camPitch < 10.0F)
 			{
-				this.camPitch = -10.0F;
+				this.camPitch = 10.0F;
 			}
-			if (this.camPitch < -90.0F)
+			if (this.camPitch > 90.0F)
 			{
-				this.camPitch = -90.0F;
+				this.camPitch = 90.0F;
 			}
 			this.camYaw %= 360.0F;
 		}
@@ -88,13 +85,36 @@ public class PlayerFace
 			float angrad = this.camYaw / 180.0F * 3.14F;
 			float cos = (float) Math.cos(angrad);
 			float sin = (float) Math.sin(angrad);
-			this.camX += dx * cos;
-			this.camX += dy * sin;
-			this.camZ -= dy * cos;
-			this.camZ += dx * sin;
+			double dX = 0.0D;
+			double dZ = 0.0D;
+			dX -= dx * cos;
+			dX += dy * sin;
+			dZ += dy * cos;
+			dZ += dx * sin;
+			this.camFocus.moveDelta(dX, 0.0D, dZ);
 		}
+		this.doFocus();
 		this.mouselastx = Mouse.getX();
 		this.mouselasty = Mouse.getY();
+	}
+
+	public void doFocus()
+	{
+		float yawrad = this.camYaw / 180.0F * 3.14F;
+		float pitchrad = this.camPitch / 180.0F * 3.14F;
+
+		double scalev = Math.cos(pitchrad);
+
+		double dx = this.camDist * Math.sin(yawrad) * scalev;
+		double dz = this.camDist * Math.cos(yawrad) * scalev;
+
+		double dy = this.camDist * Math.sin(pitchrad);
+
+		dx += this.camFocus.xCoord;
+		dy += this.camFocus.yCoord;
+		dz += this.camFocus.zCoord;
+
+		this.camLoc.setPoint(dx, dy, dz);
 	}
 
 	public final float getCamPitch()
@@ -115,36 +135,6 @@ public class PlayerFace
 	public final void setCamYaw(float camYaw)
 	{
 		this.camYaw = camYaw;
-	}
-
-	public final float getCamX()
-	{
-		return camX;
-	}
-
-	public final void setCamX(float camX)
-	{
-		this.camX = camX;
-	}
-
-	public final float getCamY()
-	{
-		return camY;
-	}
-
-	public final void setCamY(float camY)
-	{
-		this.camY = camY;
-	}
-
-	public final float getCamZ()
-	{
-		return camZ;
-	}
-
-	public final void setCamZ(float camZ)
-	{
-		this.camZ = camZ;
 	}
 
 	public final float getCamDist()

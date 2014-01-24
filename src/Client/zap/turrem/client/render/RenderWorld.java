@@ -2,6 +2,8 @@ package zap.turrem.client.render;
 
 import org.lwjgl.opengl.GL11;
 
+import org.lwjgl.util.glu.GLU;
+
 import zap.turrem.client.game.Game;
 import zap.turrem.client.game.WorldClient;
 import zap.turrem.client.game.player.face.PlayerFace;
@@ -32,29 +34,14 @@ public class RenderWorld
 	public void render()
 	{
 		PlayerFace f = this.getFace();
-		GL11.glTranslated(0.0F, 0.0F, -f.getCamDist());
-		GL11.glRotatef(f.getCamPitch(), -1.0F, 0.0F, 0.0F);
-		GL11.glRotatef(f.getCamYaw(), 0.0F, 1.0F, 0.0F);
-		GL11.glTranslated(f.getCamX(), f.getCamY(), f.getCamZ());
+		
+		Point foc = f.getFocus();
+		Point loc = f.getLocation();
+		
+		GLU.gluLookAt((float) loc.xCoord, (float) loc.yCoord,(float)  loc.zCoord, (float) foc.xCoord, (float) foc.yCoord, (float) foc.zCoord, 0.0F, 1.0F, 0.0F);
 
 		this.doRender();
-
-		Point targ = f.getLookEnd(2.0F);
-		this.renderTarget(-targ.xCoord, -targ.yCoord, -targ.zCoord);
 	}
-
-	public void renderTarget(double x, double y, double z)
-	{
-		GL11.glColor3f(1.0f, 0.0f, 0.0f);
-
-		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glVertex3d(x, y, z);
-		GL11.glVertex3d(x + 0.1F, y, z);
-		GL11.glVertex3d(x + 0.1F, y + 0.1F, z);
-		GL11.glVertex3d(x, y + 0.1F, z);
-		GL11.glEnd();
-	}
-
 	public void doRender()
 	{
 		for (ModelIcon ico : this.models)
