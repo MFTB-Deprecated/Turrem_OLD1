@@ -9,7 +9,7 @@ import zap.turrem.utils.geo.Vector;
 
 public class PlayerFace
 {
-	protected float camPitch = 20.0F;
+	protected float camPitch = 60.0F;
 	protected float camYaw = 45.0F;
 	protected float camDist = 5.0F;
 
@@ -19,7 +19,7 @@ public class PlayerFace
 	private int mouselastx;
 	private int mouselasty;
 
-	public static float reachDistance = 8.0F;
+	public static float reachDistance = 16.0F;
 	public static float fovy = 60.0F;
 	public static float znear = 1.0F;
 	public static float aspect;
