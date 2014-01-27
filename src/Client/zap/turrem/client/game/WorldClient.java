@@ -18,6 +18,8 @@ public class WorldClient
 	public RenderWorld theRender;
 	
 	public Game theGame;
+
+	public Point moveTo = null;
 	
 	public WorldClient(RenderWorld render, Game game)
 	{
@@ -43,7 +45,12 @@ public class WorldClient
 			{
 				e.onTick();
 			}
+			if (e.isSelected() && this.moveTo != null)
+			{
+				e.setMotion(e.getLocation(), this.moveTo, 100);
+			}
 		}
+		this.moveTo = null;
 	}
 
 	public void onlyTickEntities()

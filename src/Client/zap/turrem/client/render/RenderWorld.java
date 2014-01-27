@@ -4,6 +4,11 @@ import org.lwjgl.opengl.GL11;
 
 import org.lwjgl.util.glu.GLU;
 
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+
+import units.turrem.Eekysam;
+import zap.turrem.client.Turrem;
 import zap.turrem.client.game.Game;
 import zap.turrem.client.game.WorldClient;
 import zap.turrem.client.game.entity.EntityClient;
@@ -19,10 +24,12 @@ public class RenderWorld
 
 	public ModelIcon cursor;
 
+	public boolean canplace = true;
+
 	public RenderWorld(RenderManager man, Game game)
 	{
 		this.theGame = game;
-		
+
 		this.cursor = new ModelIcon("turrem.interface.3dcursor");
 		man.pushIcon(this.cursor, "interface", RenderObjectHolderSimple.class);
 		this.cursor.loadMe();
@@ -31,11 +38,11 @@ public class RenderWorld
 	public void render()
 	{
 		PlayerFace f = this.getFace();
-		
+
 		Point foc = f.getFocus();
 		Point loc = f.getLocation();
-		
-		GLU.gluLookAt((float) loc.xCoord, (float) loc.yCoord,(float)  loc.zCoord, (float) foc.xCoord, (float) foc.yCoord, (float) foc.zCoord, 0.0F, 1.0F, 0.0F);
+
+		GLU.gluLookAt((float) loc.xCoord, (float) loc.yCoord, (float) loc.zCoord, (float) foc.xCoord, (float) foc.yCoord, (float) foc.zCoord, 0.0F, 1.0F, 0.0F);
 
 		this.doRender();
 
@@ -63,6 +70,46 @@ public class RenderWorld
 		if (picked != null)
 		{
 			picked.drawBox(0.0F, 0.0F, 1.0F);
+			if (Mouse.isButtonDown(0))
+			{
+				picked.setSelected(true);
+			}
+		}
+		else
+		{
+			if (Mouse.isButtonDown(1))
+			{
+				Point g = this.getFace().getPickGround();
+				if (g != null)
+				{
+					g.yCoord = 0.0D;
+				}
+				this.theGame.theWorld.moveTo = g;
+			}
+			if (Mouse.isButtonDown(0))
+			{
+				EntityClient.deselect = true;
+			}
+		}
+		if (Keyboard.isKeyDown(Keyboard.KEY_S))
+		{
+			if (this.canplace)
+			{
+				Point g = this.getFace().getPickGround();
+				if (g != null)
+				{
+					g.yCoord = 0.0D;
+					EntityClient ent = new EntityClient(new Eekysam());
+					ent.push(this.theGame.theWorld, Turrem.getTurrem().theRender);
+					ent.setPosition(g.xCoord, g.yCoord, g.zCoord);
+				}
+
+			}
+			this.canplace = false;
+		}
+		else
+		{
+			this.canplace = true;
 		}
 	}
 

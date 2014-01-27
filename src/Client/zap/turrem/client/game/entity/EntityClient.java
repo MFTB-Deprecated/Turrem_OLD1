@@ -26,6 +26,10 @@ public class EntityClient extends Entity
 	private boolean inMotion;
 
 	public EntityArticle article;
+	
+	private boolean selected = false;
+	public static boolean deselect = true;
+	public static int numselected = 0;
 
 	public EntityClient(EntityArticle article)
 	{
@@ -48,6 +52,29 @@ public class EntityClient extends Entity
 		{
 			this.drawBox(0.0F, 0.0F, 0.0F);
 		}
+		if (this.isSelected())
+		{
+			this.drawBox(1.0F, 0.8F, 0.0F);
+		}
+	}
+	
+	public boolean isSelected()
+	{
+		return this.selected;
+	}
+	
+	public void setSelected(boolean sel)
+	{
+		this.selected = sel;
+		if (sel)
+		{
+			deselect = false;
+			numselected++;
+		}
+		else
+		{
+			numselected--;
+		}
 	}
 
 	public void disappear()
@@ -62,6 +89,11 @@ public class EntityClient extends Entity
 
 	public void onTick()
 	{
+		if (deselect)
+		{
+			this.selected = false;
+			numselected = 0;
+		}
 		super.onTick();
 		this.article.clientTick(this);
 		this.doMotion();
