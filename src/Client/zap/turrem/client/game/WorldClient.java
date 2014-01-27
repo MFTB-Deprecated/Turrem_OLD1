@@ -6,6 +6,9 @@ import java.util.List;
 import zap.turrem.client.game.entity.EntityClient;
 import zap.turrem.client.render.RenderWorld;
 import zap.turrem.utils.geo.Box;
+import zap.turrem.utils.geo.BoxPin;
+import zap.turrem.utils.geo.Point;
+import zap.turrem.utils.geo.Ray;
 
 public class WorldClient
 {
@@ -14,9 +17,12 @@ public class WorldClient
 	
 	public RenderWorld theRender;
 	
-	public WorldClient(RenderWorld render)
+	public Game theGame;
+	
+	public WorldClient(RenderWorld render, Game game)
 	{
 		this.theRender = render;
+		this.theGame = game;
 	}
 
 	public void tickWorld()
@@ -63,6 +69,28 @@ public class WorldClient
 	public void render()
 	{
 		this.theRender.render();
+	}
+	
+	public EntityClient getEntityPicked()
+	{
+		Ray r = this.theGame.face.getPickRay();
+		List<EntityClient> ents = this.getEntitiesHit(r.getBox());
+		EntityClient returne = null;
+		float dist = (float) r.getLengthSqr();
+		for (EntityClient e : ents)
+		{
+			BoxPin pin = e.getBoundingBox().calculateIntercept(r);
+			if (pin != null)
+			{
+				float d = (float) Point.squareDistance(r.start, pin.location);
+				if (d < dist)
+				{
+					dist = d;
+					returne = e;
+				}
+			}
+		}
+		return returne;
 	}
 	
 	public List<EntityClient> getEntitiesHit(Box box)

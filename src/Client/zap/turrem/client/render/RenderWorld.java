@@ -59,6 +59,11 @@ public class RenderWorld
 		{
 			ent.render();
 		}
+		EntityClient picked = this.theGame.theWorld.getEntityPicked();
+		if (picked != null)
+		{
+			picked.drawBox(0.0F, 0.0F, 1.0F);
+		}
 	}
 
 	protected PlayerFace getFace()

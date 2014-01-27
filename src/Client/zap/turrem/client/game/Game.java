@@ -21,7 +21,7 @@ public class Game
 	{
 		this.face = new PlayerFace();
 		this.theTurrem = turrem;
-		this.theWorld = new WorldClient(new RenderWorld(turrem.theRender, this));
+		this.theWorld = new WorldClient(new RenderWorld(turrem.theRender, this), this);
 		this.theRender = new RenderGame(this);
 	}
 	

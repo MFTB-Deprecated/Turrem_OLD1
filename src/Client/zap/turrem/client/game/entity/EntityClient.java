@@ -46,7 +46,7 @@ public class EntityClient extends Entity
 		
 		if (Config.drawBounds)
 		{
-			this.drawBox();
+			this.drawBox(0.0F, 0.0F, 0.0F);
 		}
 	}
 
@@ -124,13 +124,13 @@ public class EntityClient extends Entity
 		this.setPosition(p.xCoord, p.yCoord, p.zCoord);
 	}
 
-	public void drawBox()
+	public void drawBox(float r, float g, float b)
 	{
 		GL11.glPushMatrix();
 		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glColor3f(0.0F, 0.0F, 0.0F);
+		GL11.glColor3f(r, g, b);
 		GL11.glBegin(GL11.GL_QUADS);
 		
 		float xmax = (float) this.boundingBox.maxX;
