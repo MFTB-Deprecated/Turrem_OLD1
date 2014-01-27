@@ -21,6 +21,10 @@ public class EntityClient extends Entity implements IEntityClient, IEntityGlidin
 	public double posX;
 	public double posY;
 	public double posZ;
+	
+	public double oldX;
+	public double oldY;
+	public double oldZ;
 
 	public float motionX;
 	public float motionY;
@@ -32,6 +36,8 @@ public class EntityClient extends Entity implements IEntityClient, IEntityGlidin
 	public EntityArticle article;
 	
 	public final long uid;
+	
+	public WorldClient theWorld;
 	
 	public EntityClient(EntityArticle article)
 	{
@@ -45,11 +51,16 @@ public class EntityClient extends Entity implements IEntityClient, IEntityGlidin
 		this.article.loadAssets(man);
 		world.entityList.add(this);
 		this.setPosition(this.posX, this.posY, this.posZ);
+		this.theWorld = world;
 	}
 
 	public void render()
 	{
+		GL11.glPushMatrix();
+		GL11.glTranslated(this.posX, this.posY, this.posZ);
+		GL11.glRotatef(this.rotation * 90, 0.0F, 1.0F, 0.0F);
 		this.article.draw(this);
+		GL11.glPopMatrix();
 		
 		if (Config.drawBounds)
 		{
@@ -69,9 +80,21 @@ public class EntityClient extends Entity implements IEntityClient, IEntityGlidin
 
 	public void onTick()
 	{
+		this.oldX = this.posX;
+		this.oldY = this.posY;
+		this.oldZ = this.posZ;
 		super.onTick();
 		this.article.clientTick(this);
 		this.doMotion();
+		this.setPosition(this.posX, this.posY, this.posZ);
+		if (this.theWorld.getEntitiesHit(this.getBoundingBox()).size() > 1)
+		{
+			this.posX = this.oldX;
+			this.posY = this.oldY;
+			this.posZ = this.oldZ;
+			this.setPosition(this.posX, this.posY, this.posZ);
+			this.cancelMotion();
+		}
 	}
 
 	public void doMotion()
@@ -84,7 +107,6 @@ public class EntityClient extends Entity implements IEntityClient, IEntityGlidin
 				this.posX += this.motionX;
 				this.posY += this.motionY;
 				this.posZ += this.motionZ;
-				this.setPosition(this.posX, this.posY, this.posZ);
 			}
 			else
 			{

@@ -14,7 +14,7 @@ public class Eekysam extends EntityArticle
 	@Override
 	public void draw(EntityClient entity)
 	{
-		this.drawAnIcon(entity.posX, entity.posY, entity.posZ, eekysam);
+		this.drawAnIcon(-0.3125F, 0.0F, -0.25F, eekysam);
 	}
 
 	@Override
@@ -37,6 +37,6 @@ public class Eekysam extends EntityArticle
 	@Override
 	public Box updateBounds()
 	{
-		return Box.getBox(0.0D, 0.0D, 0.0D, 0.625D, 2.0D, 0.5D);
+		return Box.getBox(-0.3125D, 0.0D, -0.25F, 0.3125D, 2.0D, 0.25F);
 	}
 }

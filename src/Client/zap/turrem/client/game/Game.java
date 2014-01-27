@@ -1,5 +1,7 @@
 package zap.turrem.client.game;
 
+import java.util.Random;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
@@ -12,6 +14,7 @@ import zap.turrem.client.game.player.face.PlayerFace;
 import zap.turrem.client.game.select.SelectionEventAdd;
 import zap.turrem.client.game.select.SelectionEventReplace;
 import zap.turrem.client.render.RenderGame;
+import zap.turrem.utils.geo.Box;
 import zap.turrem.utils.geo.Point;
 import zap.turrem.utils.geo.Ray;
 
@@ -26,20 +29,21 @@ public class Game
 
 	protected Ray pickRay;
 
+	private Random rand;
+
 	public Game(Turrem turrem)
 	{
 		this.face = new PlayerFace();
 		this.theTurrem = turrem;
 		this.theWorld = new WorldClient(this);
 		this.theRender = new RenderGame(this);
+		this.rand = new Random();
 	}
 
 	public void onStart()
 	{
 		this.theRender.start();
 		this.face.reset();
-
-		(new EntitySelectable(new Eekysam())).push(this.theWorld, this.theTurrem.theRender);
 	}
 
 	public void updateGL()
@@ -96,20 +100,28 @@ public class Game
 			}
 			if (Mouse.getEventButton() == 1)
 			{
-				Ray r = this.getPickRay().duplicate();
-				if (r.end.yCoord < r.start.yCoord)
+				EntityClient picked = this.theWorld.getEntityPicked();
+				if (picked != null)
 				{
-					Point p = Point.getSlideWithYValue(r.start, r.end, 0.0F);
-					(new OperationMove(p)).push(this.theWorld);
+					picked.rotation++;
+					picked.rotation %= 4;
 				}
-
+				else
+				{
+					Ray r = this.getPickRay().duplicate();
+					if (r.end.yCoord < r.start.yCoord)
+					{
+						Point p = Point.getSlideWithYValue(r.start, r.end, 0.0F);
+						(new OperationMove(p)).push(this.theWorld);
+					}
+				}
 			}
 		}
 	}
 
 	public void keyEvent()
 	{
-		if (!Keyboard.isRepeatEvent())
+		if (Keyboard.getEventKeyState())
 		{
 			if (Keyboard.getEventKey() == Keyboard.KEY_S)
 			{
@@ -118,8 +130,15 @@ public class Game
 				{
 					Point p = Point.getSlideWithYValue(r.start, r.end, 0.0F);
 					EntityClient me = (new EntitySelectable(new Eekysam()));
-					me.push(this.theWorld, this.theTurrem.theRender);
+					me.rotation = (short) this.rand.nextInt(4);
 					me.setPosition(p);
+					me.push(this.theWorld, this.theTurrem.theRender);
+					me.onTick();
+					Box b = me.getBoundingBox();
+					if (this.theWorld.getEntitiesHit(b).size() > 1)
+					{
+						me.kill();
+					}
 				}
 			}
 		}
