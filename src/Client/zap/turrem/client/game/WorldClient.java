@@ -60,7 +60,14 @@ public class WorldClient
 					EntityClient ent = new EntityClient(new Eekysam());
 					ent.push(this.theGame.theWorld, Turrem.getTurrem().theRender);
 					ent.setPosition(g.xCoord, g.yCoord, g.zCoord);
-					this.spawntimer = 80;
+					this.spawntimer = 20;
+				}
+			}
+			if (Keyboard.getEventKey() == Keyboard.KEY_K)
+			{
+				if (this.picked != null)
+				{
+					this.picked.kill();
 				}
 			}
 		}

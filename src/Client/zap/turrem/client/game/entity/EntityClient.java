@@ -26,7 +26,7 @@ public class EntityClient extends Entity
 	private boolean inMotion;
 
 	public EntityArticle article;
-	
+
 	private boolean selected = false;
 	public static boolean deselect = true;
 	public static int numselected = 0;
@@ -47,34 +47,40 @@ public class EntityClient extends Entity
 	public void render()
 	{
 		this.article.draw(this);
-		
-		if (Config.drawBounds)
-		{
-			this.drawBox(0.0F, 0.0F, 0.0F);
-		}
+
 		if (this.isSelected())
 		{
 			this.drawBox(1.0F, 0.8F, 0.0F);
 		}
+		else if (Config.drawBounds)
+		{
+			this.drawBox(0.0F, 0.0F, 0.0F);
+		}
 	}
-	
+
 	public boolean isSelected()
 	{
 		return this.selected;
 	}
-	
+
 	public void setSelected(boolean sel)
 	{
-		this.selected = sel;
 		if (sel)
 		{
 			deselect = false;
-			numselected++;
+			if (!this.selected)
+			{
+				numselected++;
+			}
 		}
 		else
 		{
-			numselected--;
+			if (this.selected)
+			{
+				numselected--;
+			}
 		}
+		this.selected = sel;
 	}
 
 	public void disappear()
@@ -85,6 +91,11 @@ public class EntityClient extends Entity
 	public void kill()
 	{
 		this.isDead = true;
+		if (this.selected)
+		{
+			this.selected = false;
+			numselected--;
+		}
 	}
 
 	public void onTick()
@@ -164,7 +175,7 @@ public class EntityClient extends Entity
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glColor3f(r, g, b);
 		GL11.glBegin(GL11.GL_QUADS);
-		
+
 		float xmax = (float) this.boundingBox.maxX;
 		float ymax = (float) this.boundingBox.maxY;
 		float zmax = (float) this.boundingBox.maxZ;
