@@ -42,10 +42,7 @@ public class StateMainMenu implements IState
 	@Override
 	public void start()
 	{
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glOrtho(0, Config.getWidth(), Config.getHeight(), 0, 1, -1);
-		glMatrixMode(GL_MODELVIEW);
+
 	}
 
 	@Override
@@ -75,10 +72,29 @@ public class StateMainMenu implements IState
 		glVertex2f(Config.getWidth(), 0);
 
 		glEnd();
+	}
 
-		if (Mouse.isInsideWindow() && Mouse.isButtonDown(0))
+	@Override
+	public void updateGL()
+	{
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(0, Config.getWidth(), Config.getHeight(), 0, 1, -1);
+		glMatrixMode(GL_MODELVIEW);
+	}
+
+	@Override
+	public void mouseEvent()
+	{
+		if (Mouse.isInsideWindow() && Mouse.getEventButton() == 0)
 		{
 			this.theTurrem.setState(EnumClientState.Game);
 		}
+	}
+
+	@Override
+	public void keyEvent()
+	{
+		
 	}
 }

@@ -37,4 +37,22 @@ public class StateGame implements IState
 		this.theGame.tickGame();
 		this.theGame.render();
 	}
+
+	@Override
+	public void updateGL()
+	{
+		this.theGame.updateGL();
+	}
+
+	@Override
+	public void mouseEvent()
+	{
+		this.theGame.mouseEvent();
+	}
+
+	@Override
+	public void keyEvent()
+	{
+		this.theGame.keyEvent();
+	}
 }

@@ -13,7 +13,7 @@ public class StateIntro implements IState
 {
 	protected Turrem theTurrem;
 
-	public static final int zapLogoTime = 100;
+	public static final int zapLogoTime = 0;
 
 	private int ticks = 0;
 
@@ -25,18 +25,13 @@ public class StateIntro implements IState
 	@Override
 	public void start()
 	{
-		GL11.glMatrixMode(GL11.GL_PROJECTION);
-		GL11.glLoadIdentity();
-		GL11.glOrtho(0, Config.getWidth(), Config.getHeight(), 0, 1, -1);
-		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+
 	}
 
 	@Override
 	public void end()
 	{
-
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 	}
 
 	@Override
@@ -58,5 +53,24 @@ public class StateIntro implements IState
 		{
 			this.theTurrem.setState(EnumClientState.Menu);
 		}
+	}
+
+	@Override
+	public void updateGL()
+	{
+		GL11.glMatrixMode(GL11.GL_PROJECTION);
+		GL11.glLoadIdentity();
+		GL11.glOrtho(0, Config.getWidth(), Config.getHeight(), 0, 1, -1);
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+	}
+
+	@Override
+	public void mouseEvent()
+	{
+	}
+
+	@Override
+	public void keyEvent()
+	{
 	}
 }

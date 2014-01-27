@@ -3,13 +3,10 @@ package zap.turrem.client.game;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-
-import units.turrem.Eekysam;
-import zap.turrem.client.Turrem;
 import zap.turrem.client.game.entity.EntityClient;
-import zap.turrem.client.render.RenderWorld;
+import zap.turrem.client.game.entity.IEntitySelectable;
+import zap.turrem.client.game.operation.Operation;
+import zap.turrem.client.game.select.SelectionEvent;
 import zap.turrem.utils.geo.Box;
 import zap.turrem.utils.geo.BoxPin;
 import zap.turrem.utils.geo.Point;
@@ -19,84 +16,30 @@ public class WorldClient
 {
 	public List<EntityClient> entityList = new ArrayList<EntityClient>();
 	public List<RealmClient> realms = new ArrayList<RealmClient>();
-	
-	public RenderWorld theRender;
-	
-	public Game theGame;
 
-	public Point moveTo = null;
+	public List<SelectionEvent> selectionEvents = new ArrayList<SelectionEvent>();
+	public List<Operation> operations = new ArrayList<Operation>();
+
+	public Game theGame;
 	
-	public EntityClient picked = null;
-	
-	private int spawntimer = 0;
-	
-	public WorldClient(RenderWorld render, Game game)
+	private EntityClient pickedEntity = null;
+
+	public WorldClient(Game game)
 	{
-		this.theRender = render;
 		this.theGame = game;
+	}
+	
+	public EntityClient getEntityPicked()
+	{
+		return this.pickedEntity;
 	}
 
 	public void tickWorld()
 	{
-		this.tickKeys();
 		this.tickEntities();
-		this.picked = this.getEntityPicked();
+		this.pickedEntity = this.calculateEntityPicked();
 	}
 	
-	public void tickKeys()
-	{
-		if (this.spawntimer > 0)
-		{
-			this.spawntimer--;
-		}
-		while (Keyboard.next())
-		{
-			if (Keyboard.getEventKey() == Keyboard.KEY_S && this.spawntimer == 0)
-			{
-				Point g = this.theGame.face.getPickGround();
-				if (g != null)
-				{
-					g.yCoord = 0.0D;
-					EntityClient ent = new EntityClient(new Eekysam());
-					ent.push(this.theGame.theWorld, Turrem.getTurrem().theRender);
-					ent.setPosition(g.xCoord, g.yCoord, g.zCoord);
-					this.spawntimer = 20;
-				}
-			}
-			if (Keyboard.getEventKey() == Keyboard.KEY_K)
-			{
-				if (this.picked != null)
-				{
-					this.picked.kill();
-				}
-			}
-		}
-		while (Mouse.next())
-		{
-			int b = Mouse.getEventButton();
-			if (b == 0)
-			{
-				if (this.picked != null)
-				{
-					this.picked.setSelected(true);
-				}
-				else
-				{
-					EntityClient.deselect = true;
-				}
-			}
-			if (b == 1)
-			{
-				Point g = this.theGame.face.getPickGround();
-				if (g != null)
-				{
-					g.yCoord = 0.0D;
-				}
-				this.theGame.theWorld.moveTo = g;
-			}
-		}
-	}
-
 	public void tickEntities()
 	{
 		for (int i = 0; i < this.entityList.size(); i++)
@@ -110,43 +53,39 @@ public class WorldClient
 			{
 				e.onTick();
 			}
-			if (e.isSelected() && this.moveTo != null)
+
+			if (e instanceof IEntitySelectable)
 			{
-				e.setMotion(e.getLocation(), this.moveTo, 100);
-				this.moveTo.xCoord += e.getBoundingBox().getXLength();
+				IEntitySelectable es = (IEntitySelectable) e;
+				for (SelectionEvent sel : this.selectionEvents)
+				{
+					es.runSelect(sel);
+				}
+				if (es.isSelected())
+				{
+					for (Operation op : this.operations)
+					{
+						es.doOperation(op);
+					}
+				}
 			}
 		}
-		this.moveTo = null;
+
+		this.selectionEvents.clear();
+		this.operations.clear();
 	}
 
-	public void onlyTickEntities()
+	public void render()
 	{
 		for (EntityClient e : this.entityList)
 		{
-			e.onTick();
+			e.render();
 		}
 	}
 
-	public void cleanEntities()
+	public EntityClient calculateEntityPicked()
 	{
-		for (int i = 0; i < this.entityList.size(); i++)
-		{
-			EntityClient e = this.entityList.get(i);
-			if (e.isDead || !e.isAppear)
-			{
-				this.entityList.remove(i--);
-			}
-		}
-	}
-	
-	public void render()
-	{
-		this.theRender.render();
-	}
-	
-	private EntityClient getEntityPicked()
-	{
-		Ray r = this.theGame.face.getPickRay();
+		Ray r = this.theGame.getPickRay();
 		List<EntityClient> ents = this.getEntitiesHit(r.getBox());
 		EntityClient returne = null;
 		float dist = (float) r.getLengthSqr();
@@ -165,7 +104,7 @@ public class WorldClient
 		}
 		return returne;
 	}
-	
+
 	public List<EntityClient> getEntitiesHit(Box box)
 	{
 		List<EntityClient> hit = new ArrayList<EntityClient>();

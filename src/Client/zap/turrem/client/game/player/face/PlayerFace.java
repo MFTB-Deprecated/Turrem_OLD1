@@ -1,5 +1,7 @@
 package zap.turrem.client.game.player.face;
 
+import org.lwjgl.util.glu.GLU;
+
 import org.lwjgl.input.Mouse;
 
 import zap.turrem.client.config.Config;
@@ -18,19 +20,42 @@ public class PlayerFace
 
 	private int mouselastx;
 	private int mouselasty;
-
-	public static float reachDistance = 16.0F;
-	public static float fovy = 60.0F;
-	public static float znear = 1.0F;
-	public static float aspect;
-
-	private Ray mouseRay;
-	private Point groundPoint = null;
+	private float aspect;
+	private float znear = 1.0F;
+	private float fovy = 60.0F;
 
 	public PlayerFace()
 	{
 		this.camFocus = Point.getPoint(0.0D, 1.0D, 0.0D);
 		this.camLoc = Point.getPoint(0.0D, 0.0D, 0.0D);
+		this.updatePars();
+	}
+
+	public void updatePars()
+	{
+		float width = Config.getWidth();
+		float height = Config.getHeight();
+		this.aspect = width / height;
+	}
+
+	public float getFOVY()
+	{
+		return this.fovy;
+	}
+
+	public float getZNear()
+	{
+		return this.znear;
+	}
+
+	public float getAspect()
+	{
+		return this.aspect;
+	}
+
+	public void doGLULook()
+	{
+		GLU.gluLookAt((float) this.camLoc.xCoord, (float) this.camLoc.yCoord, (float) this.camLoc.zCoord, (float) this.camFocus.xCoord, (float) this.camFocus.yCoord, (float) this.camFocus.zCoord, 0.0F, 1.0F, 0.0F);
 	}
 
 	public void reset()
@@ -49,17 +74,7 @@ public class PlayerFace
 		return this.camLoc;
 	}
 
-	public Ray getPickRay()
-	{
-		return this.mouseRay.duplicate();
-	}
-
-	public Point getPickGround()
-	{
-		return this.groundPoint;
-	}
-
-	private Ray pickMouse()
+	public Ray pickMouse()
 	{
 		float mousex = Mouse.getX();
 		float mousey = Mouse.getY();
@@ -144,34 +159,6 @@ public class PlayerFace
 		this.doFocus();
 		this.mouselastx = Mouse.getX();
 		this.mouselasty = Mouse.getY();
-
-		this.mouseRay = this.pickMouse().setLength(reachDistance);
-		Ray ground = this.clampToY(this.mouseRay.duplicate(), 1.0F);
-		if (ground != null)
-		{
-			this.groundPoint = ground.end;
-		}
-		else
-		{
-			this.groundPoint = null;
-		}
-
-	}
-
-	private Ray clampToY(Ray ray, double y)
-	{
-		Point p1 = ray.start;
-		Point p2 = ray.end;
-		if (p1.yCoord > p2.yCoord)
-		{
-			Point p3 = Point.getSlideWithYValue(p1, p2, y);
-			if (p3 != null)
-			{
-				ray.end = p3;
-			}
-			return ray;
-		}
-		return null;
 	}
 
 	public void doFocus()

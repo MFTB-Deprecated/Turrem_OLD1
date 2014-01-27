@@ -4,13 +4,17 @@ import org.lwjgl.opengl.GL11;
 
 import zap.turrem.client.config.Config;
 import zap.turrem.client.game.WorldClient;
+import zap.turrem.client.game.operation.Operation;
+import zap.turrem.client.game.operation.OperationMove;
 import zap.turrem.client.render.engine.RenderManager;
 import zap.turrem.core.entity.Entity;
 import zap.turrem.core.entity.article.EntityArticle;
 import zap.turrem.utils.geo.Point;
 
-public class EntityClient extends Entity
+public class EntityClient extends Entity implements IEntityClient, IEntityGliding
 {
+	public static long nextUID = 0;
+	
 	public boolean isDead = false;
 	public boolean isAppear = true;
 
@@ -26,14 +30,13 @@ public class EntityClient extends Entity
 	private boolean inMotion;
 
 	public EntityArticle article;
-
-	private boolean selected = false;
-	public static boolean deselect = true;
-	public static int numselected = 0;
-
+	
+	public final long uid;
+	
 	public EntityClient(EntityArticle article)
 	{
 		this.article = article;
+		this.uid = nextUID++;
 	}
 
 	public void push(WorldClient world, RenderManager man)
@@ -47,42 +50,13 @@ public class EntityClient extends Entity
 	public void render()
 	{
 		this.article.draw(this);
-
-		if (this.isSelected())
-		{
-			this.drawBox(1.0F, 0.8F, 0.0F);
-		}
-		else if (Config.drawBounds)
+		
+		if (Config.drawBounds)
 		{
 			this.drawBox(0.0F, 0.0F, 0.0F);
 		}
 	}
-
-	public boolean isSelected()
-	{
-		return this.selected;
-	}
-
-	public void setSelected(boolean sel)
-	{
-		if (sel)
-		{
-			deselect = false;
-			if (!this.selected)
-			{
-				numselected++;
-			}
-		}
-		else
-		{
-			if (this.selected)
-			{
-				numselected--;
-			}
-		}
-		this.selected = sel;
-	}
-
+	
 	public void disappear()
 	{
 		this.isAppear = false;
@@ -91,20 +65,10 @@ public class EntityClient extends Entity
 	public void kill()
 	{
 		this.isDead = true;
-		if (this.selected)
-		{
-			this.selected = false;
-			numselected--;
-		}
 	}
 
 	public void onTick()
 	{
-		if (deselect)
-		{
-			this.selected = false;
-			numselected = 0;
-		}
 		super.onTick();
 		this.article.clientTick(this);
 		this.doMotion();
@@ -126,6 +90,16 @@ public class EntityClient extends Entity
 			{
 				this.cancelMotion();
 			}
+		}
+	}
+	
+	public void doOperation(Operation operation)
+	{
+		if (operation instanceof OperationMove)
+		{
+			OperationMove move = (OperationMove) operation;
+			Point s = this.getLocation();
+			this.setMotion(s, move.end, (int) Point.distance(s, move.end) * 20); 
 		}
 	}
 

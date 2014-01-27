@@ -13,6 +13,7 @@ import org.lwjgl.opengl.DisplayMode;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 
 import zap.turrem.client.asset.AssetLoader;
 import zap.turrem.client.config.Config;
@@ -32,14 +33,9 @@ public class Turrem
 
 	private IState state;
 	private IState.EnumClientState enumstate;
-	
+
 	public RenderManager theRender;
 	public AssetLoader theAssets;
-	
-	public long lastTime;
-	public float fpscounter;
-	
-	public long tickCount = 0;
 
 	public static Turrem getTurrem()
 	{
@@ -68,14 +64,12 @@ public class Turrem
 		{
 			e.printStackTrace();
 		}
-		
+
 		this.theAssets = new AssetLoader(this.dir);
-		//this.theAssets.convertAllVox();
-		
 		this.theRender = new RenderManager(this.theAssets);
-		
+
 		this.enumstate = IState.EnumClientState.Menu;
-		
+
 		this.runloop();
 	}
 
@@ -85,13 +79,11 @@ public class Turrem
 	public void runloop()
 	{
 		while (!Display.isCloseRequested())
-		{		
-			this.calculateFps();
-			this.tickCount++;
-			
+		{
 			try
 			{
 				this.render();
+				this.doInputEvents();
 			}
 			catch (Exception e)
 			{
@@ -105,16 +97,6 @@ public class Turrem
 		}
 		this.shutdown();
 	}
-	
-	public void calculateFps()
-	{
-		long ms = System.currentTimeMillis();
-		long dif = ms - this.lastTime;
-		this.lastTime = ms;
-		
-		this.fpscounter *= 0.5F;
-		this.fpscounter += dif * 0.5F;
-	}
 
 	/**
 	 * All client rendering starts here
@@ -124,23 +106,8 @@ public class Turrem
 	 */
 	public void render() throws LWJGLException, IOException
 	{
-		if (this.tickCount % 60 == 0)
-		{
-			System.out.printf("Fps: %.1f%n", 1000.0F / this.fpscounter);
-		}
-		
-		if (Keyboard.isKeyDown(Keyboard.KEY_F11))
-		{
-			Config.setFullscreen(!Config.isFullscreen());
-		}
-
-		if (Config.isChanged())
-		{
-			this.updateDisplay();
-		}
-
 		this.loadTick();
-		
+
 		switch (this.enumstate)
 		{
 			case Intro:
@@ -152,6 +119,18 @@ public class Turrem
 			case Game:
 				this.renderGame();
 				break;
+		}
+	}
+	
+	private void doInputEvents()
+	{
+		while (Mouse.next())
+		{
+			this.state.mouseEvent();
+		}
+		while (Keyboard.next())
+		{
+			this.state.keyEvent();;
 		}
 	}
 
@@ -172,6 +151,7 @@ public class Turrem
 			}
 			this.state = new StateIntro(this);
 			this.state.start();
+			this.state.updateGL();
 		}
 	}
 
@@ -192,6 +172,7 @@ public class Turrem
 			}
 			this.state = new StateMainMenu(this);
 			this.state.start();
+			this.state.updateGL();
 		}
 	}
 
@@ -212,9 +193,10 @@ public class Turrem
 			}
 			this.state = new StateGame(this);
 			this.state.start();
+			this.state.updateGL();
 		}
 	}
-	
+
 	public void loadTick()
 	{
 		this.theRender.tickHolders();
@@ -247,7 +229,10 @@ public class Turrem
 			e.printStackTrace();
 		}
 
-		Config.setRefreshed();
+		if (this.state != null)
+		{
+			this.state.updateGL();
+		}
 	}
 
 	/**
