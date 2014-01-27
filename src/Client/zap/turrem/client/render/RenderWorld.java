@@ -39,7 +39,7 @@ public class RenderWorld
 
 		this.doRender();
 
-		Point targ = f.mouseRay.end;
+		Point targ = f.getPickRay().end;
 		this.renderTarget(targ.xCoord, targ.yCoord, targ.zCoord);
 	}
 

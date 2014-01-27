@@ -88,7 +88,7 @@ public class Vector
 	 * @param a Vector A
 	 * @param b Vector B
 	 * @return A • B
-	 * @code x1x2 + y1y2 + z1z2
+	 * @code x₁x₂ + y₁y₂ + z₁z₂
 	 */
 	public static float dot(Vector a, Vector b)
 	{

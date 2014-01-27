@@ -8,7 +8,9 @@ public class Config
 	private static float mouseSpeed = 0.5F;
 	private static boolean fullscreen = false;
 	private static boolean vsync = true;
-
+	
+	public static boolean drawBounds = true;
+	
 	private static boolean isChanged = false;
 
 	public static final int getLwjglSyncRate()

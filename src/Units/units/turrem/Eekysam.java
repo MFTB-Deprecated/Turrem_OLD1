@@ -5,6 +5,7 @@ import zap.turrem.client.render.engine.RenderManager;
 import zap.turrem.client.render.engine.holders.RenderObjectHolderSimple;
 import zap.turrem.client.render.object.model.ModelIcon;
 import zap.turrem.core.entity.article.EntityArticle;
+import zap.turrem.utils.geo.Box;
 
 public class Eekysam extends EntityArticle
 {
@@ -31,5 +32,11 @@ public class Eekysam extends EntityArticle
 	{
 		man.pushIcon(eekysam, "testrenders", RenderObjectHolderSimple.class);
 		eekysam.loadMe();
+	}
+
+	@Override
+	public Box updateBounds()
+	{
+		return Box.getBox(0.0D, 0.0D, 0.0D, 0.625D, 2.0D, 0.5D);
 	}
 }

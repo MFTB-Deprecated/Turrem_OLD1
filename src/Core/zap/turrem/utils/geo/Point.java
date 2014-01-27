@@ -184,4 +184,9 @@ public class Point
 			return new Point(p1.xCoord + x * weight, p1.yCoord + y * weight, p1.zCoord + z * weight);
 		}
 	}
+	
+	public Point duplicate()
+	{
+		return new Point(this.xCoord, this.yCoord, this.zCoord);
+	}
 }

@@ -264,4 +264,19 @@ public class Box
             return new BoxPin(this, dir, pin);
         }
     }
+    
+    public double getXLength()
+    {
+    	return this.maxX - this.minX;
+    }
+    
+    public double getYLength()
+    {
+    	return this.maxY - this.minY;
+    }
+    
+    public double getZLength()
+    {
+    	return this.maxZ - this.minZ;
+    }
 }

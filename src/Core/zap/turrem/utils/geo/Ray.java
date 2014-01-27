@@ -38,4 +38,9 @@ public class Ray
 	{
 		return Box.getBox(this.start.xCoord, this.start.yCoord, this.start.zCoord, this.start.xCoord, this.start.yCoord, this.start.zCoord).eat(this.end);
 	}
+	
+	public Ray duplicate()
+	{
+		return new Ray(this.start.duplicate(), this.end.duplicate());
+	}
 }

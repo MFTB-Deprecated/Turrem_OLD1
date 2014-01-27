@@ -24,7 +24,8 @@ public class PlayerFace
 	public static float znear = 1.0F;
 	public static float aspect;
 
-	public Ray mouseRay;
+	private Ray mouseRay;
+	private Point groundPoint = null;
 
 	public PlayerFace()
 	{
@@ -48,21 +49,14 @@ public class PlayerFace
 		return this.camLoc;
 	}
 
-	private Ray getRay(float length)
+	public Ray getPickRay()
 	{
-		Ray ray = this.pickMouse();
-		Point p1 = ray.start;
-		Point p2 = ray.end;
-		ray.setLength(length);
-		if (p1.yCoord > p2.yCoord)
-		{
-			Point p3 = Point.getSlideWithYValue(p1, p2, 1.0D);
-			if (p3 != null)
-			{
-				ray.end = p3;
-			}
-		}
-		return ray;
+		return this.mouseRay.duplicate();
+	}
+
+	public Point getPickGround()
+	{
+		return this.groundPoint;
 	}
 
 	private Ray pickMouse()
@@ -151,7 +145,33 @@ public class PlayerFace
 		this.mouselastx = Mouse.getX();
 		this.mouselasty = Mouse.getY();
 
-		this.mouseRay = this.getRay(reachDistance);
+		this.mouseRay = this.pickMouse().setLength(reachDistance);
+		Ray ground = this.clampToY(this.mouseRay.duplicate(), 1.0F);
+		if (ground != null)
+		{
+			this.groundPoint = ground.end;
+		}
+		else
+		{
+			this.groundPoint = null;
+		}
+
+	}
+
+	private Ray clampToY(Ray ray, double y)
+	{
+		Point p1 = ray.start;
+		Point p2 = ray.end;
+		if (p1.yCoord > p2.yCoord)
+		{
+			Point p3 = Point.getSlideWithYValue(p1, p2, y);
+			if (p3 != null)
+			{
+				ray.end = p3;
+			}
+			return ray;
+		}
+		return null;
 	}
 
 	public void doFocus()

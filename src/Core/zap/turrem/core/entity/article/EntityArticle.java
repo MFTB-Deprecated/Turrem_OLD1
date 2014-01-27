@@ -5,6 +5,7 @@ import org.lwjgl.opengl.GL11;
 import zap.turrem.client.game.entity.EntityClient;
 import zap.turrem.client.render.engine.RenderManager;
 import zap.turrem.client.render.object.model.ModelIcon;
+import zap.turrem.utils.geo.Box;
 
 public abstract class EntityArticle
 {
@@ -34,4 +35,6 @@ public abstract class EntityArticle
 	}
 	
 	public abstract void loadAssets(RenderManager man);
+	
+	public abstract Box updateBounds();
 }
