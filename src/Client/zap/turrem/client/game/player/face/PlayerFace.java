@@ -19,16 +19,16 @@ public class PlayerFace
 	private int mouselastx;
 	private int mouselasty;
 
-	public static float reachDistance = 5.0F;
+	public static float reachDistance = 8.0F;
 	public static float fovy = 60.0F;
-	public static float znear = 0.1F;
+	public static float znear = 1.0F;
 	public static float aspect;
-	
+
 	public Ray mouseRay;
 
 	public PlayerFace()
 	{
-		this.camFocus = Point.getPoint(0.0D, 0.0D, 0.0D);
+		this.camFocus = Point.getPoint(0.0D, 1.0D, 0.0D);
 		this.camLoc = Point.getPoint(0.0D, 0.0D, 0.0D);
 	}
 
@@ -51,7 +51,17 @@ public class PlayerFace
 	private Ray getRay(float length)
 	{
 		Ray ray = this.pickMouse();
+		Point p1 = ray.start;
+		Point p2 = ray.end;
 		ray.setLength(length);
+		if (p1.yCoord > p2.yCoord)
+		{
+			Point p3 = Point.getSlideWithYValue(p1, p2, 1.0D);
+			if (p3 != null)
+			{
+				ray.end = p3;
+			}
+		}
 		return ray;
 	}
 
@@ -75,20 +85,20 @@ public class PlayerFace
 
 		v.scale(vLength);
 		h.scale(hLength);
-		
+
 		int width = Config.getWidth();
 		int height = Config.getHeight();
-		
+
 		mousex -= (width / 2.0F);
 		mousey -= (height / 2.0F);
-		
+
 		mousex /= (width / 2.0F);
 		mousey /= (height / 2.0F);
-		
+
 		double clipx = this.camLoc.xCoord + view.xpart * znear + h.xpart * mousex + v.xpart * mousey;
 		double clipy = this.camLoc.yCoord + view.ypart * znear + h.ypart * mousex + v.ypart * mousey;
 		double clipz = this.camLoc.zCoord + view.zpart * znear + h.zpart * mousex + v.zpart * mousey;
-		
+
 		Point clip = Point.getPoint(clipx, clipy, clipz);
 		return Ray.getRay(this.camLoc, clip);
 	}
@@ -112,7 +122,7 @@ public class PlayerFace
 		}
 		else if (wm != 0)
 		{
-			this.camDist -= wm * 0.01F;
+			this.camDist -= wm * 0.003F;
 			if (this.camDist < 2.0F)
 			{
 				this.camDist = 2.0F;
@@ -140,7 +150,7 @@ public class PlayerFace
 		this.doFocus();
 		this.mouselastx = Mouse.getX();
 		this.mouselasty = Mouse.getY();
-		
+
 		this.mouseRay = this.getRay(reachDistance);
 	}
 

@@ -60,6 +60,17 @@ public class Vector
 		this.zpart *= scale;
 	}
 	
+	/**
+	 * Cross Product of A and B
+	 * <p>
+	 * <li>Finds a vector that is 90° to two other vectors</li>
+	 * <li>Finds a the normal vector of a plane defined by two other vectors</li>
+	 * </p>
+	 * @param a Vector A
+	 * @param b Vector B
+	 * @return A × B
+	 * @code [y₁z₂ - z₁y₂ , z₁x₂ - x₁z₂ , x₁y₂ - y₁x₂]
+	 */
 	public static Vector cross(Vector a, Vector b)
 	{
 		float x = a.ypart * b.zpart - a.zpart * b.ypart;
@@ -67,5 +78,81 @@ public class Vector
 		float z = a.xpart * b.ypart - a.ypart * b.xpart;
 		
 		return new Vector(x, y, z);
+	}
+	
+	/**
+	 * Dot Product of A and B
+	 * <p>
+	 * <li>God knows what is does, but it is useful</li>
+	 * </p>
+	 * @param a Vector A
+	 * @param b Vector B
+	 * @return A • B
+	 * @code x1x2 + y1y2 + z1z2
+	 */
+	public static float dot(Vector a, Vector b)
+	{
+		return a.xpart * b.xpart + a.ypart * b.ypart + a.zpart * b.zpart;
+	}
+	
+	/**
+	 * Cos of the angle between A and B
+	 * @param a Vector A
+	 * @param b Vector B
+	 * @return cos(θ)
+	 * @code (A • B) / (|A| * |B|)
+	 */
+	public static float cosTheta(Vector a, Vector b)
+	{
+		float num = dot(a, b);
+		float den = (float) Math.sqrt(a.magnitudeSqr() * b.magnitudeSqr());
+		return num / den;
+	}
+	
+	/**
+	 * The angle between two vectors
+	 * @param a Vector A
+	 * @param b Vector B
+	 * @return θ
+	 * @code cos⁻¹((A • B) / (|A| * |B|))
+	 */
+	public static float theta(Vector a, Vector b)
+	{
+		return (float) Math.acos(cosTheta(a, b));
+	}
+	
+	/**
+	 * The length of vector A when projected onto this vector
+	 * <p>
+	 * <li> The length of the bottom of a triangle with vector A as the hypotonuse and with the bottom along this vector</p>
+	 * <li> The length of the shadow cast by vector A onto this vector from a light source 90° to this vector</p>
+	 * </P>
+	 * @param a Vector A
+	 * @return |A| * cos(θ)
+	 * @code (A • this) / |this|
+	 */
+	public float scalarProjection(Vector a)
+	{
+		return dot(a, this) / this.magnitude();
+	}
+	
+	/**
+	 * The length if you want to sound pretentious
+	 * @return |this|
+	 * @code √(x * x + y * y + z * z)
+	 */
+	public float magnitude()
+	{
+		return (float) Math.sqrt(this.magnitudeSqr());
+	}
+	
+	/**
+	 * The length squared if you want to sound pretentious and not use square roots
+	 * @return |this|²
+	 * @code x * x + y * y + z * z
+	 */
+	public float magnitudeSqr()
+	{
+		return this.xpart * this.xpart + this.ypart * this.ypart + this.zpart * this.zpart;
 	}
 } 

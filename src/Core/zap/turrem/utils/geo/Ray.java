@@ -29,6 +29,11 @@ public class Ray
 		return this;
 	}
 	
+	public double getLengthSqr()
+	{
+		return Point.squareDistance(this.start, this.end);
+	}
+	
 	public Box getBox()
 	{
 		return Box.getBox(this.start.xCoord, this.start.yCoord, this.start.zCoord, this.start.xCoord, this.start.yCoord, this.start.zCoord).eat(this.end);

@@ -1,7 +1,5 @@
 package units.turrem;
 
-import org.lwjgl.opengl.GL11;
-
 import zap.turrem.client.game.entity.EntityClient;
 import zap.turrem.client.render.engine.RenderManager;
 import zap.turrem.client.render.engine.holders.RenderObjectHolderSimple;

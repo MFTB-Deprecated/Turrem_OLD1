@@ -89,9 +89,9 @@ public class TVFBuffer
 
 				int[] foffs = offs[foffinds[j]];
 
-				verts[ind + 0] = (x + foffs[0]) / 20.0F;
-				verts[ind + 1] = (y + foffs[1]) / 20.0F;
-				verts[ind + 2] = (z + foffs[2]) / 20.0F;
+				verts[ind + 0] = (x + foffs[0]) / 16.0F;
+				verts[ind + 1] = (y + foffs[1]) / 16.0F;
+				verts[ind + 2] = (z + foffs[2]) / 16.0F;
 
 				switch (f.dir & 0xFF)
 				{

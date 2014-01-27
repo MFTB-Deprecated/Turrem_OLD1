@@ -55,7 +55,7 @@ public class RenderGame
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		PlayerFace.aspect = (float) Config.getWidth() / (float) Config.getHeight();
-		GLU.gluPerspective(PlayerFace.fovy, PlayerFace.aspect, PlayerFace.znear, 20.0F);
+		GLU.gluPerspective(PlayerFace.fovy, PlayerFace.aspect, PlayerFace.znear, 64.0F);
 		glMatrixMode(GL_MODELVIEW);
 
 		glDepthFunc(GL_LEQUAL);

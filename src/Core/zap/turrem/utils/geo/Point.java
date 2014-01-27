@@ -120,6 +120,23 @@ public class Point
 			return weight >= 0.0D && weight <= 1.0D ? new Point(p1.xCoord + x * weight, p1.yCoord + y * weight, p1.zCoord + z * weight) : null;
 		}
 	}
+	
+	public static Point getSlideWithYValue(Point p1, Point p2, double yval)
+	{
+		double x = p2.xCoord - p1.xCoord;
+		double y = p2.yCoord - p1.yCoord;
+		double z = p2.zCoord - p1.zCoord;
+
+		if (y * y < 1E-7D)
+		{
+			return null;
+		}
+		else
+		{
+			double weight = (yval - p1.yCoord) / y;
+			return new Point(p1.xCoord + x * weight, p1.yCoord + y * weight, p1.zCoord + z * weight);
+		}
+	}
 
 	
 	public static Point getIntermediateWithZValue(Point p1, Point p2, double zval)
