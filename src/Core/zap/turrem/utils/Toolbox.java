@@ -50,4 +50,22 @@ public class Toolbox
 
 		return lines.toArray(new String[0]);
 	}
+	
+	public static String getFloat(float f, int d)
+	{
+		String num = "" + (int) f;
+		if (d > 0)
+		{
+			num += ".";
+		}
+		float frac = f - (int) f;
+		float dec = 1.0F;
+		for (int i = 0; i < d; i++)
+		{
+			dec *= 10.0F;
+			int deg = ((int) (frac * dec)) % 10;
+			num += deg;
+		}
+		return num;
+	}
 }

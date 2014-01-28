@@ -2,15 +2,20 @@ package zap.turrem.client.render;
 
 import org.lwjgl.opengl.GL11;
 
+import java.io.File;
+import java.io.IOException;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.util.glu.GLU;
 
 import org.lwjgl.BufferUtils;
 
+import zap.turrem.client.Turrem;
 import zap.turrem.client.config.Config;
 import zap.turrem.client.game.Game;
 import zap.turrem.client.game.player.face.PlayerFace;
+import zap.turrem.client.render.font.Font;
+import zap.turrem.client.render.font.FontRender;
 
 public class RenderGame
 {
@@ -19,6 +24,8 @@ public class RenderGame
 	private FloatBuffer lModelAmbient;
 
 	public Game theGame;
+	
+	public FontRender testFont;
 
 	public RenderGame(Game game)
 	{
@@ -27,7 +34,17 @@ public class RenderGame
 
 	public void start()
 	{
-
+		Font font = new Font("basic");
+		try
+		{
+			font.loadTextureFile(new File(Turrem.getTurrem().getDir() + "assets/core/fonts/basic.png"));
+			font.push();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		this.testFont = new FontRender(font);
 	}
 
 	public void doPerspective(PlayerFace face)
@@ -50,6 +67,7 @@ public class RenderGame
 		GL11.glOrtho(0, Config.getWidth(), Config.getHeight(), 0, 1, -1);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
 	}
 
 	public void doLighting()
@@ -95,6 +113,13 @@ public class RenderGame
 		this.doPerspective(this.theGame.getFace());
 		this.theGame.renderWorld();
 
+		GL11.glPopMatrix();
+
+		GL11.glPushMatrix();
+		
+		this.doOrtho();
+		this.theGame.renderIngameGui();
+		
 		GL11.glPopMatrix();
 	}
 }

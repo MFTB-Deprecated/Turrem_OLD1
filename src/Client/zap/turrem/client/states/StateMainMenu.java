@@ -15,11 +15,15 @@ import static org.lwjgl.opengl.GL11.glOrtho;
 import static org.lwjgl.opengl.GL11.glVertex2f;
 
 import java.awt.Color;
+import java.io.File;
+import java.io.IOException;
 
 import org.lwjgl.input.Mouse;
 
 import zap.turrem.client.Turrem;
 import zap.turrem.client.config.Config;
+import zap.turrem.client.render.font.Font;
+import zap.turrem.client.render.font.FontRender;
 
 /**
  * Should only be used as an intermediary with the actual game objects. Any
@@ -34,6 +38,8 @@ public class StateMainMenu implements IState
 	private float b = 0.5F;
 	private int t = 0;
 
+	public FontRender testFont;
+
 	public StateMainMenu(Turrem turrem)
 	{
 		this.theTurrem = turrem;
@@ -42,13 +48,23 @@ public class StateMainMenu implements IState
 	@Override
 	public void start()
 	{
-
+		Font font = new Font("basicintro");
+		try
+		{
+			font.loadTextureFile(new File(Turrem.getTurrem().getDir() + "assets/core/fonts/basic.png"));
+			font.push();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		this.testFont = new FontRender(font);
 	}
 
 	@Override
 	public void end()
 	{
-
+		this.testFont.theFont.unload();
 	}
 
 	@Override
@@ -72,6 +88,8 @@ public class StateMainMenu implements IState
 		glVertex2f(Config.getWidth(), 0);
 
 		glEnd();
+
+		this.testFont.renderTextCentered("- Press any Key -", Config.getWidth() / 2, Config.getHeight() / 2, 50.0F);
 	}
 
 	@Override
@@ -86,7 +104,7 @@ public class StateMainMenu implements IState
 	@Override
 	public void mouseEvent()
 	{
-		if (Mouse.isInsideWindow() && Mouse.getEventButton() == 0)
+		if (Mouse.getEventButton() != -1)
 		{
 			this.theTurrem.setState(EnumClientState.Game);
 		}
@@ -95,6 +113,6 @@ public class StateMainMenu implements IState
 	@Override
 	public void keyEvent()
 	{
-		
+		this.theTurrem.setState(EnumClientState.Game);
 	}
 }

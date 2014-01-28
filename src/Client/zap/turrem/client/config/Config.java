@@ -10,6 +10,7 @@ public class Config
 	private static boolean vsync = true;
 	
 	public static boolean drawBounds = false;
+	public static boolean debugInfo = true;
 	
 	private static boolean isChanged = false;
 
