@@ -68,7 +68,7 @@ public class Turrem
 		this.theAssets = new AssetLoader(this.dir);
 		this.theRender = new RenderManager(this.theAssets);
 
-		this.enumstate = IState.EnumClientState.Menu;
+		this.enumstate = IState.EnumClientState.Intro;
 		
 		this.runloop();
 	}

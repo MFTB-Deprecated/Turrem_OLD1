@@ -163,7 +163,7 @@ public class Game
 		FontRender font = this.theRender.testFont;
 		if (Config.debugInfo)
 		{
-			font.renderText("\'S\' - Create new entity at cursor\n\'L-Click\' - Select entity\n\'Ctrl + L-Click\' - Add selection\n\'R-Click\' - Move selected entities\n\'L-Click & Drag\' - Pan camera\n\'M-Click & Drag\' - Orbit camera\n\'Scroll\' - Zoom\n\'F3\' - Toggle this info", 10.0F, 10.0F, 20.0F);
+			font.renderText("\'S\' - Create new entity at cursor\n\'L-Click\' - Select entity\n\'Ctrl + L-Click\' - Add selection\n\'R-Click\' - Move selected entities\n\'R-Click Entity\' - Rotate entity\n\'L-Click & Drag\' - Pan camera\n\'M-Click & Drag\' - Orbit camera\n\'Scroll\' - Zoom\n\'F3\' - Toggle this info", 10.0F, 10.0F, 20.0F);
 			String fps = Toolbox.getFloat(this.fpsstore, 1);
 			font.renderText("FPS: " + fps, Config.getWidth() - 100.0F, 10.0F, 20.0F);
 		}
