@@ -14,7 +14,6 @@ import zap.turrem.client.game.player.face.PlayerFace;
 import zap.turrem.client.game.select.SelectionEventAdd;
 import zap.turrem.client.game.select.SelectionEventReplace;
 import zap.turrem.client.render.RenderGame;
-import zap.turrem.utils.geo.Box;
 import zap.turrem.utils.geo.Point;
 import zap.turrem.utils.geo.Ray;
 
@@ -133,12 +132,6 @@ public class Game
 					me.rotation = (short) this.rand.nextInt(4);
 					me.setPosition(p);
 					me.push(this.theWorld, this.theTurrem.theRender);
-					me.onTick();
-					Box b = me.getBoundingBox();
-					if (this.theWorld.getEntitiesHit(b).size() > 1)
-					{
-						me.kill();
-					}
 				}
 			}
 		}

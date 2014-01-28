@@ -117,4 +117,18 @@ public class WorldClient
 		}
 		return hit;
 	}
+	
+	public List<EntityClient> getEntitiesHit(Box box, EntityClient exclude)
+	{
+		List<EntityClient> hit = new ArrayList<EntityClient>();
+		long skip = exclude.uid;
+		for (EntityClient e : this.entityList)
+		{
+			if (e.uid != skip && box.intersectsWith(e.getBoundingBox()))
+			{
+				hit.add(e);
+			}
+		}
+		return hit;
+	}
 }

@@ -1,5 +1,7 @@
 package zap.turrem.client.game.entity;
 
+import java.util.List;
+
 import org.lwjgl.opengl.GL11;
 
 import zap.turrem.client.config.Config;
@@ -10,9 +12,12 @@ import zap.turrem.client.render.engine.RenderManager;
 import zap.turrem.core.entity.Entity;
 import zap.turrem.core.entity.article.EntityArticle;
 import zap.turrem.utils.geo.Point;
+import zap.turrem.utils.geo.Ray;
 
 public class EntityClient extends Entity implements IEntityClient, IEntityGliding
 {
+	public static float bounce = 1.01F;
+	
 	public static long nextUID = 0;
 	
 	public boolean isDead = false;
@@ -87,13 +92,12 @@ public class EntityClient extends Entity implements IEntityClient, IEntityGlidin
 		this.article.clientTick(this);
 		this.doMotion();
 		this.setPosition(this.posX, this.posY, this.posZ);
-		if (this.theWorld.getEntitiesHit(this.getBoundingBox()).size() > 1)
+		List<EntityClient> hits = this.theWorld.getEntitiesHit(this.getBoundingBox(), this);
+		for (EntityClient hit : hits)
 		{
-			this.posX = this.oldX;
-			this.posY = this.oldY;
-			this.posZ = this.oldZ;
-			this.setPosition(this.posX, this.posY, this.posZ);
-			this.cancelMotion();
+			Ray ray = Ray.getRay(hit.getLocation(), this.getLocation());
+			ray.extendScale(bounce);
+			this.setPosition(ray.end);
 		}
 	}
 
@@ -214,5 +218,15 @@ public class EntityClient extends Entity implements IEntityClient, IEntityGlidin
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glPopMatrix();
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (obj instanceof EntityClient)
+		{
+			return ((EntityClient) obj).uid == this.uid;
+		}
+		return false;
 	}
 }

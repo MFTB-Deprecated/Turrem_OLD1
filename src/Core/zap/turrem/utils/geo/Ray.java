@@ -43,4 +43,10 @@ public class Ray
 	{
 		return new Ray(this.start.duplicate(), this.end.duplicate());
 	}
+	
+	public Ray extendScale(float scale)
+	{
+		this.end = Point.getSlide(this.start, this.end, scale);
+		return this;
+	}
 }
