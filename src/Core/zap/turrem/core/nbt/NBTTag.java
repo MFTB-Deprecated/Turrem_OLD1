@@ -94,8 +94,12 @@ public abstract class NBTTag
 				return new NBTByteArray(name);
 			case 8:
 				return new NBTString(name);
+			case 9:
+				return new NBTList(name);
 			case 10:
 				return new NBTCompound(name);
+			case 11:
+				return new NBTIntArray(name);
 			default:
 				return null;
 		}

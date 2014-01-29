@@ -2,6 +2,7 @@ package zap.turrem.core.nbt;
 
 import java.io.DataInput;
 import java.io.DataOutput;
+import java.io.EOFException;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -23,6 +24,32 @@ public class NBTCompound extends NBTTag
 	public byte getId()
 	{
 		return 10;
+	}
+
+	public void writeAsRoot(DataOutput dataoutput) throws IOException
+	{
+		for (NBTTag tag : this.payload.values())
+		{
+			tag.write(dataoutput);
+		}
+	}
+
+	public static NBTCompound readAsRoot(DataInput datainput) throws IOException
+	{
+		NBTCompound compound = new NBTCompound();
+		while (true)
+		{
+			NBTTag tag;
+			try
+			{
+				tag = NBTTag.read(datainput, 0);
+			}
+			catch (EOFException e)
+			{
+				return compound;
+			}
+			compound.payload.put(tag.getName(), tag);
+		}
 	}
 
 	@Override
@@ -94,7 +121,7 @@ public class NBTCompound extends NBTTag
 		}
 		return 0;
 	}
-	
+
 	public void setBool(String name, boolean tag)
 	{
 		NBTByte b = new NBTByte(name);
@@ -111,7 +138,7 @@ public class NBTCompound extends NBTTag
 		}
 		return false;
 	}
-	
+
 	public void setShort(String name, short tag)
 	{
 		NBTShort nbt = new NBTShort(name);
@@ -128,7 +155,7 @@ public class NBTCompound extends NBTTag
 		}
 		return 0;
 	}
-	
+
 	public void setInt(String name, int tag)
 	{
 		NBTInt nbt = new NBTInt(name);
@@ -145,7 +172,7 @@ public class NBTCompound extends NBTTag
 		}
 		return 0;
 	}
-	
+
 	public void setLong(String name, long tag)
 	{
 		NBTLong nbt = new NBTLong(name);
@@ -162,7 +189,7 @@ public class NBTCompound extends NBTTag
 		}
 		return 0;
 	}
-	
+
 	public void setFloat(String name, float tag)
 	{
 		NBTFloat nbt = new NBTFloat(name);
@@ -179,7 +206,7 @@ public class NBTCompound extends NBTTag
 		}
 		return Float.NaN;
 	}
-	
+
 	public void setDouble(String name, double tag)
 	{
 		NBTDouble nbt = new NBTDouble(name);
@@ -195,5 +222,71 @@ public class NBTCompound extends NBTTag
 			return ((NBTDouble) tag).getDouble();
 		}
 		return Double.NaN;
+	}
+
+	public void setByteArray(String name, byte[] tag)
+	{
+		NBTByteArray nbt = new NBTByteArray(name);
+		nbt.setBytes(tag);
+		this.setTag(nbt);
+	}
+
+	public byte[] getByteArray(String name)
+	{
+		NBTTag tag = this.getTag(name);
+		if (tag != null && tag instanceof NBTByteArray)
+		{
+			return ((NBTByteArray) tag).getBytes();
+		}
+		return new byte[0];
+	}
+
+	public void setIntArray(String name, int[] tag)
+	{
+		NBTIntArray nbt = new NBTIntArray(name);
+		nbt.setInts(tag);
+		this.setTag(nbt);
+	}
+
+	public int[] getIntArray(String name)
+	{
+		NBTTag tag = this.getTag(name);
+		if (tag != null && tag instanceof NBTIntArray)
+		{
+			return ((NBTIntArray) tag).getInts();
+		}
+		return new int[0];
+	}
+
+	public void setCompound(String name, NBTCompound tag)
+	{
+		tag.setName(name);
+		this.setTag(tag);
+	}
+
+	public NBTCompound getCompound(String name)
+	{
+		NBTTag tag = this.getTag(name);
+		if (tag != null && tag instanceof NBTCompound)
+		{
+			return (NBTCompound) tag;
+		}
+		return null;
+	}
+
+	public void setList(String name, NBTList tag)
+	{
+		tag.setName(name);
+		this.setTag(tag);
+	}
+
+	public NBTList getList(String name)
+	{
+		NBTTag tag = this.getTag(name);
+		if (tag != null && tag instanceof NBTList)
+		{
+			return (NBTList) tag;
+		}
+		return null;
 	}
 }
