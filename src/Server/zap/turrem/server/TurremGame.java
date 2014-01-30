@@ -113,7 +113,6 @@ public class TurremGame implements ITurremGame
 
 	public void doLoadTech()
 	{
-
 		File thejar = new File(this.theTurrem.getDir() + "jars/" + "tech.jar");
 		JarFileLoader techloader = new JarFileLoader(thejar);
 
