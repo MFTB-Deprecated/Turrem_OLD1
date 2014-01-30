@@ -1,10 +1,10 @@
-package zap.turrem.server.network;
+package zap.turrem.core.network;
 
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.util.ReferenceCountUtil;
 
-public class ServerChannel extends ChannelHandlerAdapter
+public class BasicChannel extends ChannelHandlerAdapter
 {
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg)
