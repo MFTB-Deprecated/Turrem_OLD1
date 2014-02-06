@@ -1,6 +1,6 @@
 package zap.turrem.client.game.operation;
 
-import zap.turrem.client.game.WorldClient;
+import zap.turrem.client.game.world.WorldClient;
 
 public abstract class Operation
 {

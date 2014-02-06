@@ -5,9 +5,9 @@ import java.util.List;
 import org.lwjgl.opengl.GL11;
 
 import zap.turrem.client.config.Config;
-import zap.turrem.client.game.WorldClient;
 import zap.turrem.client.game.operation.Operation;
 import zap.turrem.client.game.operation.OperationMove;
+import zap.turrem.client.game.world.WorldClient;
 import zap.turrem.client.render.engine.RenderManager;
 import zap.turrem.core.entity.Entity;
 import zap.turrem.core.entity.article.EntityArticle;

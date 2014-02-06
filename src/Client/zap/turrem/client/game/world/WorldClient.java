@@ -1,8 +1,10 @@
-package zap.turrem.client.game;
+package zap.turrem.client.game.world;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import zap.turrem.client.game.Game;
+import zap.turrem.client.game.RealmClient;
 import zap.turrem.client.game.entity.EntityClient;
 import zap.turrem.client.game.entity.IEntitySelectable;
 import zap.turrem.client.game.operation.Operation;

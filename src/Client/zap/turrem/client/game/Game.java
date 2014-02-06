@@ -14,6 +14,7 @@ import zap.turrem.client.game.operation.OperationMove;
 import zap.turrem.client.game.player.face.PlayerFace;
 import zap.turrem.client.game.select.SelectionEventAdd;
 import zap.turrem.client.game.select.SelectionEventReplace;
+import zap.turrem.client.game.world.WorldClient;
 import zap.turrem.client.render.RenderGame;
 import zap.turrem.client.render.font.FontRender;
 import zap.turrem.utils.Toolbox;

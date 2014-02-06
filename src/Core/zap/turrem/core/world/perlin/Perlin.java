@@ -1,6 +1,5 @@
 package zap.turrem.core.world.perlin;
 
-//TODO How will this be used?
 public abstract class Perlin
 {
 	protected PerlinWorld world;
