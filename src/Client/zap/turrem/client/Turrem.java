@@ -2,6 +2,7 @@ package zap.turrem.client;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -17,6 +18,7 @@ import org.lwjgl.input.Mouse;
 
 import zap.turrem.client.asset.AssetLoader;
 import zap.turrem.client.config.Config;
+import zap.turrem.client.game.world.WorldTerrain;
 import zap.turrem.client.render.engine.RenderManager;
 import zap.turrem.client.states.IState;
 import zap.turrem.client.states.StateGame;
@@ -65,6 +67,20 @@ public class Turrem
 			e.printStackTrace();
 		}
 
+		WorldTerrain ter = new WorldTerrain(42L);
+		ter.generate();
+		
+		try
+		{
+			File f = new File(this.dir + "tertest.png");
+			f.createNewFile();
+			ImageIO.write(ter.renderTest(0, 0, 32, 32), "png", new FileOutputStream(f));
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		
 		this.theAssets = new AssetLoader(this.dir);
 		this.theRender = new RenderManager(this.theAssets);
 

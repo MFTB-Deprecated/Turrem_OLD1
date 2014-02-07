@@ -8,17 +8,32 @@ public class TerrainLayer extends Perlin
 	private int numlayers;
 	private float mod;
 	
+	private float sumscale;
+	
 	public TerrainLayer(long seed, int num, float mod)
 	{
 		this.seed = seed;
 		this.numlayers = num;
 		this.mod = mod;
+		this.calcMax();
 	}
 	
 	@Override
 	public long getSeed()
 	{
 		return this.seed;
+	}
+	
+	private void calcMax()
+	{
+		float mult = 1.0F;
+		float sum = 0.0F;
+		for (int i = 0; i < this.numlayers; i++)
+		{
+			mult *= this.mod;
+			sum += mult;
+		}
+		this.sumscale = sum;
 	}
 
 	@Override
@@ -29,7 +44,7 @@ public class TerrainLayer extends Perlin
 		{
 			mult *= this.mod;
 		}
-		return mult;
+		return mult / this.sumscale;
 	}
 
 	@Override
