@@ -1,14 +1,18 @@
 package zap.turrem.client.render.engine;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import zap.turrem.client.asset.AssetLoader;
 import zap.turrem.client.render.engine.holders.IRenderObjectHolder;
 import zap.turrem.client.render.object.model.ModelIcon;
+import zap.turrem.client.render.texture.ITextureObject;
+import zap.turrem.client.render.texture.TextureObject;
 
 public class RenderManager
 {
 	private ArrayList<IRenderObjectHolder> holders = new ArrayList<IRenderObjectHolder>();
+	private HashMap<String, ITextureObject> textures = new HashMap<String, ITextureObject>();
 	public int working = 0;
 	public AssetLoader assets;
 
@@ -16,6 +20,18 @@ public class RenderManager
 	{
 		this.assets = assets;
 	}
+	
+	public ITextureObject addTexture(String name)
+	{
+		if (!this.textures.containsKey(name))
+		{
+			TextureObject txt = new TextureObject(name);
+			this.textures.put(name, txt);
+		}
+
+		return this.textures.get(name);
+	}
+
 	
 	private void doTickHolders()
 	{

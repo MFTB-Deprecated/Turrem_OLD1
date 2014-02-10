@@ -1,5 +1,6 @@
 package zap.turrem.client.asset;
 
+import java.awt.image.BufferedImage;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
@@ -8,6 +9,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+
+import javax.imageio.ImageIO;
 
 import zap.turrem.utils.StopTimer;
 import zap.turrem.utils.Toolbox;
@@ -33,6 +36,12 @@ public class AssetLoader
 		input = new DataInputStream(new GZIPInputStream(new FileInputStream(filein)));
 
 		return TVFFile.read(input);
+	}
+	
+	public BufferedImage loadTexture(String name) throws IOException
+	{
+		String dir = this.bin + "/assets/" + name.replaceAll("\\.", "/") + ".png";
+		return ImageIO.read(new File(dir));
 	}
 
 	public void convertAllVox()
