@@ -80,22 +80,26 @@ public class WorldClient
 	}
 
 	public void render()
-	{
-		GL11.glColor3f(0.05F, 0.2F, 0.05F);
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glVertex3f(-10.0F, 0.0F, -10.0F);
-		GL11.glVertex3f(-10.0F, 0.0F, 10.0F);
-		GL11.glVertex3f(10.0F, 0.0F, 10.0F);
-		GL11.glVertex3f(10.0F, 0.0F, -10.0F);
-		GL11.glColor3f(1.0F, 1.0F, 1.0F);
-		GL11.glEnd();
-		GL11.glEnable(GL11.GL_LIGHTING);
-		
+	{		
 		for (EntityClient e : this.entityList)
 		{
 			e.render();
 		}
+		
+		GL11.glPushMatrix();
+		GL11.glColor3f(0.5F, 0.5F, 0.5F);
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glNormal3f(0.0F, 1.0F, 0.0F);
+		GL11.glVertex3f(-10.0F, 0.0F, -10.0F);
+		GL11.glNormal3f(0.0F, 1.0F, 0.0F);
+		GL11.glVertex3f(-10.0F, 0.0F, 10.0F);
+		GL11.glNormal3f(0.0F, 1.0F, 0.0F);
+		GL11.glVertex3f(10.0F, 0.0F, 10.0F);
+		GL11.glNormal3f(0.0F, 1.0F, 0.0F);
+		GL11.glVertex3f(10.0F, 0.0F, -10.0F);
+		GL11.glEnd();
+		GL11.glColor3f(1.0F, 1.0F, 1.0F);
+		GL11.glPopMatrix();
 	}
 
 	public EntityClient calculateEntityPicked()

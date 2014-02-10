@@ -19,6 +19,7 @@ public class RenderGame
 {
 	private FloatBuffer lightPosition;
 	private FloatBuffer whiteLight;
+	private FloatBuffer specLight;
 	private FloatBuffer lModelAmbient;
 
 	public Game theGame;
@@ -48,6 +49,7 @@ public class RenderGame
 		GLU.gluPerspective(face.getFOVY(), face.getAspect(), face.getZNear(), 64.0F);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 
+		GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_NICEST);
 		GL11.glDepthFunc(GL11.GL_LEQUAL);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 
@@ -69,10 +71,10 @@ public class RenderGame
 	public void doLighting()
 	{
 		this.initLightArrays();
-		GL11.glShadeModel(GL11.GL_FLAT);
+		GL11.glShadeModel(GL11.GL_SMOOTH);
 
 		GL11.glLight(GL11.GL_LIGHT0, GL11.GL_POSITION, this.lightPosition);
-		GL11.glLight(GL11.GL_LIGHT0, GL11.GL_SPECULAR, this.whiteLight);
+		GL11.glLight(GL11.GL_LIGHT0, GL11.GL_SPECULAR, this.specLight);
 		GL11.glLight(GL11.GL_LIGHT0, GL11.GL_DIFFUSE, this.whiteLight);
 		GL11.glLightModel(GL11.GL_LIGHT_MODEL_AMBIENT, this.lModelAmbient);
 
@@ -94,7 +96,10 @@ public class RenderGame
 		this.lightPosition.put(5.0f).put(10.0f).put(5.0f).put(0.0f).flip();
 
 		this.whiteLight = BufferUtils.createFloatBuffer(4);
-		this.whiteLight.put(1.2f).put(1.2f).put(1.2f).put(1.0f).flip();
+		this.whiteLight.put(1.8f).put(1.8f).put(1.8f).put(1.0f).flip();
+
+		this.specLight = BufferUtils.createFloatBuffer(4);
+		this.specLight.put(0.0f).put(0.0f).put(0.0f).put(1.0f).flip();
 
 		this.lModelAmbient = BufferUtils.createFloatBuffer(4);
 		this.lModelAmbient.put(0.4f).put(0.4f).put(0.4f).put(1.0f).flip();
