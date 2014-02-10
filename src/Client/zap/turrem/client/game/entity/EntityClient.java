@@ -16,7 +16,7 @@ import zap.turrem.utils.geo.Ray;
 
 public class EntityClient extends Entity implements IEntityClient, IEntityGliding
 {
-	public static float bounce = 1.01F;
+	public float bounce = 1.01F;
 	
 	public static long nextUID = 0;
 	

@@ -31,6 +31,7 @@ public class WorldClient
 	public WorldClient(Game game)
 	{
 		this.theGame = game;
+
 	}
 
 	public EntityClient getEntityPicked()
@@ -84,7 +85,7 @@ public class WorldClient
 		for (EntityClient e : this.entityList)
 		{
 			e.render();
-		}
+		}		
 		
 		GL11.glPushMatrix();
 		GL11.glColor3f(0.5F, 0.5F, 0.5F);

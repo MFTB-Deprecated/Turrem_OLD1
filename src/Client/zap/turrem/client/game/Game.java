@@ -8,6 +8,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import units.turrem.Eekysam;
+import units.turrem.Hut;
 import zap.turrem.client.Turrem;
 import zap.turrem.client.config.Config;
 import zap.turrem.client.game.entity.EntityClient;
@@ -57,6 +58,10 @@ public class Game
 		this.testframe.loadAssets(this.theTurrem.theRender);
 		this.theRender.start();
 		this.face.reset();
+		
+		EntityClient me = (new EntityClient(new Hut()));
+		me.setPosition(-5.0F, 0.0F, 5.0F);
+		me.push(this.theWorld, this.theTurrem.theRender);
 	}
 
 	public void updateGL()
