@@ -62,6 +62,8 @@ public class RenderGame
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+		GL11.glColor3f(1.0F, 1.0F, 1.0F);
 	}
 
 	public void doLighting()
@@ -89,18 +91,18 @@ public class RenderGame
 	private void initLightArrays()
 	{
 		this.lightPosition = BufferUtils.createFloatBuffer(4);
-		this.lightPosition.put(5.0f).put(5.0f).put(5.0f).put(0.0f).flip();
+		this.lightPosition.put(5.0f).put(10.0f).put(5.0f).put(0.0f).flip();
 
 		this.whiteLight = BufferUtils.createFloatBuffer(4);
-		this.whiteLight.put(2.2f).put(2.2f).put(2.2f).put(1.0f).flip();
+		this.whiteLight.put(1.2f).put(1.2f).put(1.2f).put(1.0f).flip();
 
 		this.lModelAmbient = BufferUtils.createFloatBuffer(4);
-		this.lModelAmbient.put(1.2f).put(1.2f).put(1.2f).put(1.0f).flip();
+		this.lModelAmbient.put(0.4f).put(0.4f).put(0.4f).put(1.0f).flip();
 	}
 
 	public void render()
 	{
-		GL11.glClearColor(0.9F, 0.9F, 0.9F, 1.0F);
+		GL11.glClearColor(0.18F, 0.18F, 0.23F, 1.0F);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		GL11.glPushMatrix();
 

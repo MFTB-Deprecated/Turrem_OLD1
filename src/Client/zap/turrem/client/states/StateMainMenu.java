@@ -80,7 +80,9 @@ public class StateMainMenu implements IState
 
 		glEnd();
 
+		glColor3f(0.0F, 0.0F, 0.0F);
 		this.testFont.renderTextCentered("- Press any Key -", Config.getWidth() / 2, Config.getHeight() / 2, 50.0F);
+		glColor3f(1.0F, 1.0F, 1.0F);
 	}
 
 	@Override

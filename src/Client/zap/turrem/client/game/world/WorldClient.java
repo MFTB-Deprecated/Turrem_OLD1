@@ -3,6 +3,8 @@ package zap.turrem.client.game.world;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.opengl.GL11;
+
 import zap.turrem.client.game.Game;
 import zap.turrem.client.game.RealmClient;
 import zap.turrem.client.game.entity.EntityClient;
@@ -23,14 +25,14 @@ public class WorldClient
 	public List<Operation> operations = new ArrayList<Operation>();
 
 	public Game theGame;
-	
+
 	private EntityClient pickedEntity = null;
 
 	public WorldClient(Game game)
 	{
 		this.theGame = game;
 	}
-	
+
 	public EntityClient getEntityPicked()
 	{
 		return this.pickedEntity;
@@ -41,7 +43,7 @@ public class WorldClient
 		this.tickEntities();
 		this.pickedEntity = this.calculateEntityPicked();
 	}
-	
+
 	public void tickEntities()
 	{
 		for (int i = 0; i < this.entityList.size(); i++)
@@ -79,6 +81,17 @@ public class WorldClient
 
 	public void render()
 	{
+		GL11.glColor3f(0.05F, 0.2F, 0.05F);
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glVertex3f(-10.0F, 0.0F, -10.0F);
+		GL11.glVertex3f(-10.0F, 0.0F, 10.0F);
+		GL11.glVertex3f(10.0F, 0.0F, 10.0F);
+		GL11.glVertex3f(10.0F, 0.0F, -10.0F);
+		GL11.glColor3f(1.0F, 1.0F, 1.0F);
+		GL11.glEnd();
+		GL11.glEnable(GL11.GL_LIGHTING);
+		
 		for (EntityClient e : this.entityList)
 		{
 			e.render();
@@ -119,7 +132,7 @@ public class WorldClient
 		}
 		return hit;
 	}
-	
+
 	public List<EntityClient> getEntitiesHit(Box box, EntityClient exclude)
 	{
 		List<EntityClient> hit = new ArrayList<EntityClient>();

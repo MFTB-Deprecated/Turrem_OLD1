@@ -2,6 +2,8 @@ package zap.turrem.client.game;
 
 import java.util.Random;
 
+import org.lwjgl.opengl.GL11;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
@@ -15,6 +17,7 @@ import zap.turrem.client.game.player.face.PlayerFace;
 import zap.turrem.client.game.select.SelectionEventAdd;
 import zap.turrem.client.game.select.SelectionEventReplace;
 import zap.turrem.client.game.world.WorldClient;
+import zap.turrem.client.gui.GuiFrame;
 import zap.turrem.client.render.RenderGame;
 import zap.turrem.client.render.font.FontRender;
 import zap.turrem.utils.Toolbox;
@@ -36,6 +39,8 @@ public class Game
 
 	private float fpsstore = 0.0F;
 	private long lastTickTime;
+	
+	GuiFrame testframe = new GuiFrame();
 
 	public Game(Turrem turrem)
 	{
@@ -49,6 +54,7 @@ public class Game
 
 	public void onStart()
 	{
+		this.testframe.loadAssets(this.theTurrem.theRender);
 		this.theRender.start();
 		this.face.reset();
 	}
@@ -161,10 +167,15 @@ public class Game
 
 	public void renderIngameGui()
 	{
+		GL11.glPushMatrix();
+		GL11.glScalef(2.0F, 2.0F, 2.0F);
+		this.testframe.renderEdge(false, false, 50, 300, 2);
+		GL11.glPopMatrix();
+		
 		FontRender font = this.theRender.testFont;
 		if (Config.debugInfo)
 		{
-			font.renderText("\'S\' - Create new entity at cursor\n\'L-Click\' - Select entity\n\'Ctrl + L-Click\' - Add selection\n\'R-Click\' - Move selected entities\n\'R-Click Entity\' - Rotate entity\n\'L-Click & Drag\' - Pan camera\n\'M-Click & Drag\' - Orbit camera\n\'Scroll\' - Zoom\n\'F3\' - Toggle this info", 10.0F, 10.0F, 20.0F);
+			font.renderText("\'S\' - Create new entity at cursor\n\'L-Click\' - Select entity\n\'Ctrl + L-Click\' - Add selection\n\'R-Click\' - Move selected entities\n\'R-Click Entity\' - Rotate entity\n\'L-Click & Drag\' - Pan camera\n\'M-Click & Drag\' - Orbit camera\n\'Scroll\' - Zoom\n\'F3\' - Toggle this info", 120.0F, 10.0F, 20.0F);
 			String fps = Toolbox.getFloat(this.fpsstore, 1);
 			font.renderText("FPS: " + fps, Config.getWidth() - 100.0F, 10.0F, 20.0F);
 		}
