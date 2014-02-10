@@ -86,6 +86,8 @@ public class Turrem
 
 		this.enumstate = IState.EnumClientState.Intro;
 		
+		this.theAssets.convertAllVox();
+		
 		this.runloop();
 	}
 
