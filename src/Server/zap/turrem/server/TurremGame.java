@@ -89,6 +89,16 @@ public class TurremGame implements ITurremGame
 
 				System.out.printf("Average: %.1f%n", this.techtests.getHist(t.getId()).getAverage());
 			}
+			
+			System.out.println("\n--Tech List--\n");
+			
+			int size = TechList.getSize();
+			
+			for (int i = 0; i < size; i++)
+			{
+				TechItem item = TechList.get(i);
+				System.out.println(item.getIdentifier() + "\t[" + item.getName() + "]");
+			}
 		}
 	}
 

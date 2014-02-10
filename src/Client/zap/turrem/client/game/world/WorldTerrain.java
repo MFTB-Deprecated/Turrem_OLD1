@@ -53,7 +53,7 @@ public class WorldTerrain
 				{
 					for (short j = 0; j < 16; j++)
 					{
-						float alt = chunk.ajustSurface(i, j, 1.0F, 0.5F, 1.0F);
+						float alt = chunk.ajustSurface(i, j, 1.0F, 0.5F, 0.0F);
 						int r = 0;
 						int g = 0;
 						int b = 0;
@@ -68,16 +68,16 @@ public class WorldTerrain
 							}
 							else
 							{
-								r = (int) (alt * 64) + 128;
+								r = (int) (alt * 64) + 48;
 								g = (int) (alt * 64) + 128;
-								b = (int) (alt * 64) + 128;
+								b = (int) (alt * 64) + 48;
 							}
 						}
 						else
 						{
 							r = (int) ((1.0F + alt) * 0);
 							g = (int) ((1.0F + alt) * 0);
-							b = (int) ((1.0F + alt) * 128) + 128;
+							b = (int) ((1.0F + alt) * 128) + 32;
 						}
 						Color c = new Color(r, g, b);
 						img.setRGB(i + ci * 16, j + cj * 16, c.getRGB());
