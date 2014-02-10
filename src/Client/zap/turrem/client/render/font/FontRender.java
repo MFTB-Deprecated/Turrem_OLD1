@@ -1,7 +1,6 @@
 package zap.turrem.client.render.font;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
 
 public class FontRender
 {
@@ -15,21 +14,14 @@ public class FontRender
 
 	private void start()
 	{
-		GL11.glPushMatrix();
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.theFont.getTextureId());
+		this.theFont.start();
 		GL11.glBegin(GL11.GL_QUADS);
 	}
 
 	private void end()
 	{
 		GL11.glEnd();
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
-		GL11.glDisable(GL11.GL_BLEND);
-		GL11.glPopMatrix();
+		this.theFont.end();
 	}
 
 	public void renderText(String text, float x, float y, float size)

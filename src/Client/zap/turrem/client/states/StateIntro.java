@@ -1,19 +1,10 @@
 package zap.turrem.client.states;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-
-import javax.imageio.ImageIO;
-
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL30;
 
 import zap.turrem.client.Turrem;
 import zap.turrem.client.config.Config;
-import zap.turrem.utils.graphics.ImgUtils;
+import zap.turrem.client.render.texture.TextureIcon;
 
 /**
  * Should only be used as an intermediary with the actual game objects. Any
@@ -27,13 +18,7 @@ public class StateIntro implements IState
 
 	private int ticks = 0;
 
-	private int width;
-
-	private int height;
-
-	private float aspect;
-
-	private int textureId;
+	private TextureIcon zaplogo = new TextureIcon("core.misc.ZapCloud");
 
 	public StateIntro(Turrem turrem)
 	{
@@ -43,40 +28,13 @@ public class StateIntro implements IState
 	@Override
 	public void start()
 	{
-		BufferedImage img = null;
-		try
-		{
-			img = ImageIO.read(new File(this.theTurrem.getDir() + "assets/core/misc/ZapCloud.png"));
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-		if (img != null)
-		{
-			this.width = img.getWidth();
-			this.height = img.getHeight();
-			this.aspect = (float) this.width / (float) this.height;
-			ByteBuffer bytes = ImgUtils.imgToByteBuffer(img);
-
-			int texId = GL11.glGenTextures();
-			GL13.glActiveTexture(GL13.GL_TEXTURE0);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texId);
-
-			GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
-
-			GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, this.width, this.height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, bytes);
-			GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
-			
-			this.textureId = texId;
-		}
+		this.zaplogo.load(this.theTurrem.theRender);
 	}
 
 	@Override
 	public void end()
 	{
-		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		GL11.glDeleteTextures(this.textureId);
+		this.zaplogo.unload();
 	}
 
 	@Override
@@ -106,15 +64,15 @@ public class StateIntro implements IState
 	{
 		int w;
 		int h;
-		if (Config.getWidth() < Config.getHeight() * this.aspect)
+		if (Config.getWidth() < Config.getHeight() * this.zaplogo.getAspect())
 		{
 			w = Config.getWidth();
-			h = (int) (w / this.aspect);
+			h = (int) (w / this.zaplogo.getAspect());
 		}
 		else
 		{
 			h = Config.getHeight();
-			w = (int) (h * this.aspect);
+			w = (int) (h * this.zaplogo.getAspect());
 		}
 		
 		int x = Config.getWidth() / 2 - w / 2;
@@ -130,12 +88,7 @@ public class StateIntro implements IState
 		float I = 1.0F;
 		float J = 1.0F;
 		
-		GL11.glPushMatrix();
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.textureId);
+		this.zaplogo.start();
 		GL11.glBegin(GL11.GL_QUADS);
 		
 		GL11.glTexCoord2f(i, j);
@@ -151,9 +104,7 @@ public class StateIntro implements IState
 		GL11.glVertex2f(X, y);
 		
 		GL11.glEnd();
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
-		GL11.glDisable(GL11.GL_BLEND);
-		GL11.glPopMatrix();
+		this.zaplogo.end();
 	}
 
 	@Override

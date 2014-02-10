@@ -1,22 +1,13 @@
 package zap.turrem.client.render.font;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-
-import javax.imageio.ImageIO;
-
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GL30;
-
-import zap.turrem.utils.graphics.ImgUtils;
+import zap.turrem.client.render.engine.RenderManager;
+import zap.turrem.client.render.texture.TextureIcon;
 
 public class Font
 {
 	protected float aspect;
-	protected int textureId;
+	
+	protected TextureIcon ico;
 	
 	public int width;
 	public int height;
@@ -28,25 +19,13 @@ public class Font
 		this.name = name;
 	}
 
-	public int loadTextureFile(File fontfile) throws IOException
+	public void loadTexture(String texture, RenderManager manager)
 	{
-		BufferedImage img = ImageIO.read(fontfile);
-		this.width = img.getWidth();
-		this.height = img.getHeight();
-		this.aspect = (float) this.width / (float) this.height;
-		ByteBuffer bytes = ImgUtils.imgToByteBuffer(img);
-
-		int texId = GL11.glGenTextures();
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texId);
-
-		GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
-
-		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, this.width, this.height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, bytes);
-		GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
-		
-		this.textureId = texId;
-		return this.textureId;
+		this.ico = new TextureIcon(texture);
+		this.ico.load(manager);
+		this.aspect = this.ico.getAspect();
+		this.height = this.ico.getHeight();
+		this.width = this.ico.getWidth();
 	}
 	
 	public void push()
@@ -56,16 +35,30 @@ public class Font
 	
 	public void unload()
 	{
-		GL11.glDeleteTextures(this.textureId);
+		if (this.ico != null)
+		{
+			this.ico.unload();
+		}
 	}
 
 	public final float getAspect()
 	{
 		return aspect;
 	}
-
-	public final int getTextureId()
+	
+	public void start()
 	{
-		return textureId;
+		if (this.ico != null)
+		{
+			this.ico.start();
+		}
+	}
+
+	public void end()
+	{
+		if (this.ico != null)
+		{
+			this.ico.end();
+		}
 	}
 }

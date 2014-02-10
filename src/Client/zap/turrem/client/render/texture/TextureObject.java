@@ -73,16 +73,19 @@ public class TextureObject implements ITextureObject
 		return this.name;
 	}
 
+	@Override
 	public final int getWidth()
 	{
 		return width;
 	}
 
+	@Override
 	public final int getHeight()
 	{
 		return height;
 	}
 
+	@Override
 	public final float getAspect()
 	{
 		return aspect;

@@ -37,31 +37,31 @@ public class AssetLoader
 
 		return TVFFile.read(input);
 	}
-	
+
 	public BufferedImage loadTexture(String name) throws IOException
 	{
 		String dir = this.bin + "/assets/" + name.replaceAll("\\.", "/") + ".png";
 		return ImageIO.read(new File(dir));
 	}
 
-	public void convertAllVox()
+	public void convertAllVox(boolean overwrite)
 	{
 		System.out.println("Converting all VOX files...this may take awhile");
 
 		StopTimer timer = new StopTimer();
 		timer.start();
-		
+
 		String dir = this.bin + "/assets/";
 		File folder = new File(dir);
-		int num = this.convertVoxFolder(folder);
-		
+		int num = this.convertVoxFolder(folder, overwrite);
+
 		timer.pause();
 		String time = Toolbox.getFloat((float) timer.getTotalmili(), 2);
-		
+
 		System.out.println("Converted " + num + " VOX files to TVF files in " + time + "ms");
 	}
 
-	private int convertVoxFolder(File folder)
+	private int convertVoxFolder(File folder, boolean overwrite)
 	{
 		int count = 0;
 
@@ -71,7 +71,7 @@ public class AssetLoader
 		{
 			if (file.isDirectory())
 			{
-				count += this.convertVoxFolder(file);
+				count += this.convertVoxFolder(file, overwrite);
 			}
 			if (file.isFile())
 			{
@@ -80,9 +80,13 @@ public class AssetLoader
 				String type = name.substring(dot + 1);
 				if ("vox".equals(type))
 				{
-					if (this.convertVox(file))
+					File tvfex = new File(name.substring(0, dot) + ".tvf");
+					if (!tvfex.exists() || overwrite)
 					{
-						count++;
+						if (this.convertVox(file))
+						{
+							count++;
+						}
 					}
 				}
 			}

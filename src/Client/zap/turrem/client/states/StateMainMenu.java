@@ -15,8 +15,6 @@ import static org.lwjgl.opengl.GL11.glOrtho;
 import static org.lwjgl.opengl.GL11.glVertex2f;
 
 import java.awt.Color;
-import java.io.File;
-import java.io.IOException;
 
 import org.lwjgl.input.Mouse;
 
@@ -49,15 +47,8 @@ public class StateMainMenu implements IState
 	public void start()
 	{
 		Font font = new Font("basicintro");
-		try
-		{
-			font.loadTextureFile(new File(Turrem.getTurrem().getDir() + "assets/core/fonts/basic.png"));
-			font.push();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+		font.loadTexture("core.fonts.basic", this.theTurrem.theRender);
+		font.push();
 		this.testFont = new FontRender(font);
 	}
 

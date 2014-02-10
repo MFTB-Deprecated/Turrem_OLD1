@@ -42,7 +42,7 @@ public class Game
 		this.face = new PlayerFace();
 		this.theTurrem = turrem;
 		this.theWorld = new WorldClient(this);
-		this.theRender = new RenderGame(this);
+		this.theRender = new RenderGame(this, this.theTurrem.theRender);
 		this.rand = new Random();
 		this.lastTickTime = System.currentTimeMillis();
 	}

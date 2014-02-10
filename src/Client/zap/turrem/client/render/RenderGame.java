@@ -2,18 +2,16 @@ package zap.turrem.client.render;
 
 import org.lwjgl.opengl.GL11;
 
-import java.io.File;
-import java.io.IOException;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.util.glu.GLU;
 
 import org.lwjgl.BufferUtils;
 
-import zap.turrem.client.Turrem;
 import zap.turrem.client.config.Config;
 import zap.turrem.client.game.Game;
 import zap.turrem.client.game.player.face.PlayerFace;
+import zap.turrem.client.render.engine.RenderManager;
 import zap.turrem.client.render.font.Font;
 import zap.turrem.client.render.font.FontRender;
 
@@ -24,26 +22,22 @@ public class RenderGame
 	private FloatBuffer lModelAmbient;
 
 	public Game theGame;
-	
+
 	public FontRender testFont;
 
-	public RenderGame(Game game)
+	public RenderManager theManager;
+
+	public RenderGame(Game game, RenderManager manager)
 	{
 		this.theGame = game;
+		this.theManager = manager;
 	}
 
 	public void start()
 	{
 		Font font = new Font("basic");
-		try
-		{
-			font.loadTextureFile(new File(Turrem.getTurrem().getDir() + "assets/core/fonts/basic.png"));
-			font.push();
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
+		font.loadTexture("core.fonts.basic", this.theManager);
+		font.push();
 		this.testFont = new FontRender(font);
 	}
 
@@ -116,10 +110,10 @@ public class RenderGame
 		GL11.glPopMatrix();
 
 		GL11.glPushMatrix();
-		
+
 		this.doOrtho();
 		this.theGame.renderIngameGui();
-		
+
 		GL11.glPopMatrix();
 	}
 }

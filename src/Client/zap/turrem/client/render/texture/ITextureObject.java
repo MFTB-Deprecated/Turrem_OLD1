@@ -13,4 +13,10 @@ public interface ITextureObject
 	void start();
 
 	void end();
+
+	float getAspect();
+
+	int getHeight();
+
+	int getWidth();
 }
