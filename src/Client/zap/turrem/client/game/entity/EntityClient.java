@@ -64,6 +64,8 @@ public class EntityClient extends Entity implements IEntityClient, IEntityGlidin
 		GL11.glPushMatrix();
 		GL11.glTranslated(this.posX, this.posY, this.posZ);
 		GL11.glRotatef(this.rotation * 90, 0.0F, 1.0F, 0.0F);
+		GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glPolygonMode(GL11.GL_FRONT, GL11.GL_FILL);
 		this.article.draw(this);
 		GL11.glPopMatrix();
 		
@@ -171,6 +173,7 @@ public class EntityClient extends Entity implements IEntityClient, IEntityGlidin
 	public void drawBox(float r, float g, float b)
 	{
 		GL11.glPushMatrix();
+		GL11.glDisable(GL11.GL_CULL_FACE);
 		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_LIGHTING);
@@ -217,6 +220,7 @@ public class EntityClient extends Entity implements IEntityClient, IEntityGlidin
 		GL11.glEnd();
 		GL11.glPolygonMode(GL11.GL_FRONT, GL11.GL_FILL);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glColor3f(1.0F, 1.0F, 1.0F);
 		GL11.glPopMatrix();

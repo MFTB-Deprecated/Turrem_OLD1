@@ -8,16 +8,60 @@ import zap.turrem.client.render.texture.TextureIcon;
 public class GuiFrame
 {
 	public TextureIcon edge = new TextureIcon("core.gui.guiedge");
+	public TextureIcon back = new TextureIcon("core.gui.guiback");
 
 	public void render()
 	{
 
 	}
 
-	public void renderEdge(boolean dir, boolean side, int width, int height, int type)
+	
+	public void renderBack(int width, int height)
+	{
+		this.back.start();
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+		
+		int w = width - 6;
+		int h = height - 6;
+		
+		for (int i = 0; i <= w / 32; i++)
+		{
+			for (int j = 0; j <= h / 32; j++)
+			{
+				float W = (w - i * 32);
+				if (W > 32)
+				{
+					W = 32;
+				}
+				float X = i * 32;
+				float H = (h - j * 32);
+				if (H > 32)
+				{
+					H = 32;
+				}
+				float Y = j * 32;
+				
+				GL11.glTexCoord2f(0.0F / 32.0F, 0.0F / 32.0F);
+				GL11.glVertex2f(X + 3, Y + 3);
+				GL11.glTexCoord2f(0.0F / 32.0F, H / 32.0F);
+				GL11.glVertex2f(X + 3, Y + H + 3);
+				GL11.glTexCoord2f(W / 32.0F, 0.0F / 32.0F);
+				GL11.glVertex2f(X + W + 3, Y + H + 3);
+				GL11.glTexCoord2f(W / 32.0F, H / 32.0F);
+				GL11.glVertex2f(X + W + 3, Y + 3);
+			}
+		}
+		
+		GL11.glEnd();
+		this.back.end();
+	}
+	
+	public void renderEdge(int width, int height, int type)
 	{
 		this.edge.start();
 		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
 
 		int w = width - 12;
 		int h = height - 12;
@@ -150,5 +194,6 @@ public class GuiFrame
 	public void loadAssets(RenderManager manager)
 	{
 		this.edge.load(manager);
+		this.back.load(manager);
 	}
 }

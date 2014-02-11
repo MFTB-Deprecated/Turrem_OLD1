@@ -20,7 +20,7 @@ public class Eekysam extends EntityArticle
 	@Override
 	public void clientTick(EntityClient entity)
 	{
-		entity.bounce = 0.0F;
+		
 	}
 
 	@Override

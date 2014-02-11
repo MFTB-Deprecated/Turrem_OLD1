@@ -26,6 +26,7 @@ public class Hut extends EntityArticle
 	public void clientTick(EntityClient entity)
 	{
 		entity.rotation = 0;
+		entity.bounce = 1.0F;
 	}
 
 	@Override

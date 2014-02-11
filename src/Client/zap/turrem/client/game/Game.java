@@ -129,7 +129,7 @@ public class Game
 			if (Mouse.getEventButton() == 1)
 			{
 				EntityClient picked = this.theWorld.getEntityPicked();
-				if (picked != null)
+				if (picked != null && picked instanceof EntitySelectable)
 				{
 					picked.rotation++;
 					picked.rotation %= 4;
@@ -172,17 +172,24 @@ public class Game
 
 	public void renderIngameGui()
 	{
+		GL11.glDisable(GL11.GL_CULL_FACE);
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GL11.glDisable(GL11.GL_LIGHTING);
+		
 		GL11.glPushMatrix();
 		GL11.glScalef(2.0F, 2.0F, 2.0F);
-		this.testframe.renderEdge(false, false, 50, 300, 2);
+		this.testframe.renderBack(50, 300);
+		this.testframe.renderEdge(50, 300, 2);
 		GL11.glPopMatrix();
 		
 		FontRender font = this.theRender.testFont;
 		if (Config.debugInfo)
 		{
+			GL11.glColor3f(0.0F, 0.0F, 0.0F);
 			font.renderText("\'S\' - Create new entity at cursor\n\'L-Click\' - Select entity\n\'Ctrl + L-Click\' - Add selection\n\'R-Click\' - Move selected entities\n\'R-Click Entity\' - Rotate entity\n\'L-Click & Drag\' - Pan camera\n\'M-Click & Drag\' - Orbit camera\n\'Scroll\' - Zoom\n\'F3\' - Toggle this info", 120.0F, 10.0F, 20.0F);
 			String fps = Toolbox.getFloat(this.fpsstore, 1);
 			font.renderText("FPS: " + fps, Config.getWidth() - 100.0F, 10.0F, 20.0F);
+			GL11.glColor3f(1.0F, 1.0F, 1.0F);
 		}
 	}
 }
