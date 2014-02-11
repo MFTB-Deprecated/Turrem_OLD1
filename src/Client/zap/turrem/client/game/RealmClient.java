@@ -47,10 +47,10 @@ public class RealmClient extends Realm
 			{
 				gained.add(TechList.get(b.getTechs()[0]));
 			}
-			else if (b.random())
-			{
-				gained.add(TechList.get(b.getTechs()[0]));
-			}
+			//else if (b.random() && this.rand.nextInt(1000) == 0)
+			//{
+			//	gained.add(TechList.get(b.getTechs()[0]));
+			//}
 		}		
 		for (TechItem tech : gained)
 		{

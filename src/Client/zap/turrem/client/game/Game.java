@@ -169,16 +169,27 @@ public class Game
 		{
 			if (Mouse.getEventButton() == 0)
 			{
-				EntityClient picked = this.theWorld.getEntityPicked();
-				if (picked != null)
+				if (Mouse.getEventX() > 160)
 				{
-					if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL))
+					EntityClient picked = this.theWorld.getEntityPicked();
+					if (picked != null)
 					{
-						(new SelectionEventAdd(picked.uid)).push(this.theWorld);
+						if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL))
+						{
+							(new SelectionEventAdd(picked.uid)).push(this.theWorld);
+						}
+						else
+						{
+							(new SelectionEventReplace(picked.uid)).push(this.theWorld);
+						}
 					}
-					else
+				}
+				else
+				{
+					int tech = ((Config.getHeight() - Mouse.getEventY()) - 29) / 58;
+					if (tech < this.myRealm.branches.size() && tech > 0)
 					{
-						(new SelectionEventReplace(picked.uid)).push(this.theWorld);
+						this.myRealm.gainTech(TechList.get(BranchList.get(this.myRealm.branches.get(tech)).getTechs()[0]), false);
 					}
 				}
 			}
@@ -229,7 +240,7 @@ public class Game
 	public void renderIngameGui()
 	{
 		FontRender font = this.theRender.testFont;
-		
+
 		GL11.glDisable(GL11.GL_CULL_FACE);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_LIGHTING);
@@ -241,18 +252,23 @@ public class Game
 		GL11.glPopMatrix();
 
 		int ticox = 64;
-		int ticoy = 8;
+		int ticoy = 30;
+		
+		GL11.glColor3f(0.0F, 0.0F, 0.0F);
+		font.renderTextCentered("Available Techs:", ticox + 16, 8, 20);
+		GL11.glColor3f(1.0F, 1.0F, 1.0F);
+		
 		for (int bid : this.myRealm.branches)
 		{
 			TechItem tech = TechList.get(BranchList.get(bid).getTechs()[0]);
-			
+
 			TextureIcon techico = this.techicons[tech.getId()];
-			
+
 			GL11.glPushMatrix();
 			techico.start();
 			GL11.glBegin(GL11.GL_QUADS);
 			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
-			
+
 			GL11.glTexCoord2f(0.0F, 0.0F);
 			GL11.glVertex2f(ticox + 0, ticoy + 0);
 			GL11.glTexCoord2f(0.0F, 1.0F);
@@ -261,15 +277,15 @@ public class Game
 			GL11.glVertex2f(ticox + 32, ticoy + 32);
 			GL11.glTexCoord2f(1.0F, 0.0F);
 			GL11.glVertex2f(ticox + 32, ticoy + 0);
-			
+
 			GL11.glEnd();
 			techico.end();
 			GL11.glPopMatrix();
-			
+
 			GL11.glColor3f(0.0F, 0.0F, 0.0F);
 			font.renderTextCentered(tech.getName(), ticox + 16, ticoy + 36, 20);
 			GL11.glColor3f(1.0F, 1.0F, 1.0F);
-			
+
 			ticoy += 58;
 		}
 
