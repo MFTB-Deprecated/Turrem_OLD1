@@ -187,7 +187,7 @@ public class Game
 				else
 				{
 					int tech = ((Config.getHeight() - Mouse.getEventY()) - 29) / 58;
-					if (tech < this.myRealm.branches.size() && tech > 0)
+					if (tech < this.myRealm.branches.size() && tech >= 0)
 					{
 						this.myRealm.gainTech(TechList.get(BranchList.get(this.myRealm.branches.get(tech)).getTechs()[0]), false);
 					}
@@ -287,6 +287,14 @@ public class Game
 			GL11.glColor3f(1.0F, 1.0F, 1.0F);
 
 			ticoy += 58;
+			
+			if (ticoy > 600 - 24 - 58)
+			{
+				GL11.glColor3f(0.0F, 0.0F, 0.0F);
+				font.renderTextCentered("...More...", ticox + 16, 600 - 24, 20);
+				GL11.glColor3f(1.0F, 1.0F, 1.0F);
+				break;
+			}
 		}
 
 		if (Config.debugInfo)
