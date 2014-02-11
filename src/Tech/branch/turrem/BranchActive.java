@@ -30,4 +30,16 @@ public class BranchActive extends Branch
 	{
 		super(tech, pass);
 	}
+
+	@Override
+	public boolean sudden()
+	{
+		return false;
+	}
+
+	@Override
+	public boolean random()
+	{
+		return true;
+	}
 }

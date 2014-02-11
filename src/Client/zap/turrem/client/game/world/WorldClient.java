@@ -43,6 +43,11 @@ public class WorldClient
 	{
 		this.tickEntities();
 		this.pickedEntity = this.calculateEntityPicked();
+		
+		for (RealmClient realm : this.realms)
+		{
+			realm.tickTechs();
+		}
 	}
 
 	public void tickEntities()

@@ -29,4 +29,16 @@ public class BranchStarting extends Branch
 	{
 		super(tech, pass);
 	}
+
+	@Override
+	public boolean sudden()
+	{
+		return true;
+	}
+
+	@Override
+	public boolean random()
+	{
+		return false;
+	}
 }

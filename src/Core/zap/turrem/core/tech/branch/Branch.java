@@ -136,4 +136,8 @@ public abstract class Branch
 	{
 		this.id = BranchList.addBranch(this);
 	}
+	
+	public abstract boolean sudden();
+	
+	public abstract boolean random();
 }
