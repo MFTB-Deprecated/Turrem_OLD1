@@ -48,7 +48,7 @@ public class Game
 	private float fpsstore = 0.0F;
 	private long lastTickTime;
 
-	GuiFrame testframe = new GuiFrame();
+	GuiFrame testframe = new GuiFrame(160, 600, true, true, 0, "turrem.gui.frames.plain", 2.0F);
 
 	public RealmClient myRealm;
 
@@ -64,7 +64,7 @@ public class Game
 
 	public void onStart()
 	{
-		this.testframe.loadAssets(this.theTurrem.theRender);
+		this.testframe.onStart(this.theTurrem.theRender);
 		this.theRender.start();
 		this.face.reset();
 
@@ -246,9 +246,7 @@ public class Game
 		GL11.glDisable(GL11.GL_LIGHTING);
 
 		GL11.glPushMatrix();
-		GL11.glScalef(2.0F, 2.0F, 2.0F);
-		this.testframe.renderBack(80, 300);
-		this.testframe.renderEdge(80, 300, 2);
+		this.testframe.render();
 		GL11.glPopMatrix();
 
 		int ticox = 64;

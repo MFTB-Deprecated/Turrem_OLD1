@@ -5,195 +5,187 @@ import org.lwjgl.opengl.GL11;
 import zap.turrem.client.render.engine.RenderManager;
 import zap.turrem.client.render.texture.TextureIcon;
 
-public class GuiFrame
+public class GuiFrame extends GuiElement
 {
-	public TextureIcon edge = new TextureIcon("core.gui.guiedge");
-	public TextureIcon back = new TextureIcon("core.gui.guiback");
+	private TextureIcon front;
+	private TextureIcon back;
 
-	public void render()
+	private boolean hasback;
+	private boolean backin;
+	private int edge;
+	private String texture;
+	
+	private float scale;
+
+	public GuiFrame(int width, int height, boolean hasback, boolean backin, int edge, String texture, float scale)
 	{
+		this.width = width;
+		this.height = height;
+		this.hasback = hasback;
+		this.backin = backin;
+		this.edge = edge;
+		this.texture = texture;
+		this.scale = scale;
 
+		this.front = new TextureIcon(this.texture);
+		if (this.hasback)
+		{
+			this.back = new TextureIcon(this.texture + "_bk");
+		}
 	}
 
-	
-	public void renderBack(int width, int height)
+	public void renderBack()
 	{
 		this.back.start();
 		GL11.glBegin(GL11.GL_QUADS);
 		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+
+		float s = 16 * this.scale;
+		float es = 3 * this.scale;
 		
-		int w = width - 6;
-		int h = height - 6;
+		float w = width - es * 2;
+		float h = height - es * 2;
 		
-		for (int i = 0; i <= w / 32; i++)
+		for (int i = 0; i <= w / s; i++)
 		{
-			for (int j = 0; j <= h / 32; j++)
+			for (int j = 0; j <= h / s; j++)
 			{
-				float W = (w - i * 32);
-				if (W > 32)
+				float W = (w - i * s);
+				if (W > s)
 				{
-					W = 32;
+					W = s;
 				}
-				float X = i * 32;
-				float H = (h - j * 32);
-				if (H > 32)
+				float X = i * s;
+				float H = (h - j * s);
+				if (H > s)
 				{
-					H = 32;
+					H = s;
 				}
-				float Y = j * 32;
-				
-				GL11.glTexCoord2f(0.0F / 32.0F, 0.0F / 32.0F);
-				GL11.glVertex2f(X + 3, Y + 3);
-				GL11.glTexCoord2f(0.0F / 32.0F, H / 32.0F);
-				GL11.glVertex2f(X + 3, Y + H + 3);
-				GL11.glTexCoord2f(W / 32.0F, 0.0F / 32.0F);
-				GL11.glVertex2f(X + W + 3, Y + H + 3);
-				GL11.glTexCoord2f(W / 32.0F, H / 32.0F);
-				GL11.glVertex2f(X + W + 3, Y + 3);
+				float Y = j * s;
+
+				this.drawTexture(es + X, es + Y, W, H, 0, 0, W / s, H / s, 0, false, false);
 			}
 		}
-		
+
 		GL11.glEnd();
 		this.back.end();
 	}
-	
-	public void renderEdge(int width, int height, int type)
+
+	private void renderEdge()
 	{
-		this.edge.start();
+		this.front.start();
 		GL11.glBegin(GL11.GL_QUADS);
 		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
 
-		int w = width - 12;
-		int h = height - 12;
+		float s = 6 * this.scale;
+		
+		float w = this.width - s * 2;
+		float h = this.height - s * 2;
+		
+		float bl = 20 * this.scale;
 		
 		int tx;
-		tx = type;
-		for (int i = 0; i <= h / 20; i++)
+		tx = this.edge;
+		for (int i = 0; i <= h / bl; i++)
 		{
-			float H = (h - i * 20);
-			if (H > 20)
+			float H = (h - i * bl);
+			if (H > bl)
 			{
-				H = 20;
+				H = bl;
 			}
-			float Y = i * 20;
-			
-			GL11.glTexCoord2f((0.0F + tx * 6) / 24.0F, 6.0F / 32.0F);
-			GL11.glVertex2f(0, Y + 6);
-			GL11.glTexCoord2f((0.0F + tx * 6) / 24.0F, 26.0F / 32.0F);
-			GL11.glVertex2f(0, Y + H + 6);
-			GL11.glTexCoord2f((6.0F + tx * 6) / 24.0F, 26.0F / 32.0F);
-			GL11.glVertex2f(6, Y + H + 6);
-			GL11.glTexCoord2f((6.0F + tx * 6) / 24.0F, 6.0F / 32.0F);
-			GL11.glVertex2f(6, Y + 6);
+			float Y = i * bl;
+
+			this.drawTexture(0, Y + s, s, H, tx / 4.0F, 6 / 32.0F, 6 / 24.0F, 20 / 32.0F, 0, false, false);
 		}
-		
-		tx = type;
-		GL11.glTexCoord2f((0.0F + tx * 6) / 24.0F, 0.0F / 32.0F);
-		GL11.glVertex2f(0, 0);
-		GL11.glTexCoord2f((6.0F + tx * 6) / 24.0F, 0.0F / 32.0F);
-		GL11.glVertex2f(6, 0);
-		GL11.glTexCoord2f((6.0F + tx * 6) / 24.0F, 6.0F / 32.0F);
-		GL11.glVertex2f(6, 6);
-		GL11.glTexCoord2f((0.0F + tx * 6) / 24.0F, 6.0F / 32.0F);
-		GL11.glVertex2f(0, 6);
-		
-		tx = type;
-		for (int i = 0; i <= w / 20; i++)
+
+		tx = edge;
+		this.drawTexture(0, 0, s, s, tx / 4.0F, 0, 6 / 24.0F, 6 / 32.0F, 0, false, false);
+
+		tx = edge;
+		for (int i = 0; i <= w / bl; i++)
 		{
-			float W = (w - i * 20);
-			if (W > 20)
+			float W = (w - i * bl);
+			if (W > bl)
 			{
-				W = 20;
+				W = bl;
 			}
-			float X = i * 20;
-			
-			GL11.glTexCoord2f((0.0F + tx * 6) / 24.0F, 6.0F / 32.0F);
-			GL11.glVertex2f(X + 6, 0);
-			GL11.glTexCoord2f((0.0F + tx * 6) / 24.0F, 26.0F / 32.0F);
-			GL11.glVertex2f(X + W + 6, 0);
-			GL11.glTexCoord2f((6.0F + tx * 6) / 24.0F, 26.0F / 32.0F);
-			GL11.glVertex2f(X + W + 6, 6);
-			GL11.glTexCoord2f((6.0F + tx * 6) / 24.0F, 6.0F / 32.0F);
-			GL11.glVertex2f(X + 6, 6);
+			float X = i * bl;
+
+			this.drawTexture(X + s, 0, W, s, tx / 4.0F, 6 / 32.0F, 6 / 24.0F, 20 / 32.0F, 1, false, false);
 		}
-		
-		tx = type ;
-		GL11.glTexCoord2f((0.0F + tx * 6) / 24.0F, 32.0F / 32.0F);
-		GL11.glVertex2f(0, height - 0);
-		GL11.glTexCoord2f((6.0F + tx * 6) / 24.0F, 32.0F / 32.0F);
-		GL11.glVertex2f(6, height - 0);
-		GL11.glTexCoord2f((6.0F + tx * 6) / 24.0F, 26.0F / 32.0F);
-		GL11.glVertex2f(6, height - 6);
-		GL11.glTexCoord2f((0.0F + tx * 6) / 24.0F, 26.0F / 32.0F);
-		GL11.glVertex2f(0, height - 6);
-		
-		tx = (type + 2) % 4;
-		GL11.glTexCoord2f((0.0F + tx * 6) / 24.0F, 32.0F / 32.0F);
-		GL11.glVertex2f(width - 0, 0);
-		GL11.glTexCoord2f((6.0F + tx * 6) / 24.0F, 32.0F / 32.0F);
-		GL11.glVertex2f(width - 6, 0);
-		GL11.glTexCoord2f((6.0F + tx * 6) / 24.0F, 26.0F / 32.0F);
-		GL11.glVertex2f(width - 6, 6);
-		GL11.glTexCoord2f((0.0F + tx * 6) / 24.0F, 26.0F / 32.0F);
-		GL11.glVertex2f(width - 0, 6);
-		
-		tx = (type + 2) % 4;
-		for (int i = 0; i <= h / 20; i++)
+
+		tx = (edge + 2) % 4;;
+		this.drawTexture(0, this.height, s, -s, tx / 4.0F, 26 / 32.0F, 6 / 24.0F, 6 / 32.0F, 1, false, false);
+
+		tx = edge;
+		this.drawTexture(this.width, 0, -s, s, tx / 4.0F, 26 / 32.0F, 6 / 24.0F, 6 / 32.0F, 1, false, false);
+
+		tx = (edge + 2) % 4;
+		for (int i = 0; i <= h / bl; i++)
 		{
-			float H = (h - i * 20);
-			if (H > 20)
+			float H = (h - i * bl);
+			if (H > bl)
 			{
-				H = 20;
+				H = bl;
 			}
-			float Y = i * 20;
-			
-			GL11.glTexCoord2f((0.0F + tx * 6) / 24.0F, 6.0F / 32.0F);
-			GL11.glVertex2f(width - 0, Y + 6);
-			GL11.glTexCoord2f((0.0F + tx * 6) / 24.0F, 26.0F / 32.0F);
-			GL11.glVertex2f(width - 0, Y + H + 6);
-			GL11.glTexCoord2f((6.0F + tx * 6) / 24.0F, 26.0F / 32.0F);
-			GL11.glVertex2f(width - 6, Y + H + 6);
-			GL11.glTexCoord2f((6.0F + tx * 6) / 24.0F, 6.0F / 32.0F);
-			GL11.glVertex2f(width - 6, Y + 6);
+			float Y = i * bl;
+
+			this.drawTexture(this.width, Y + s, -s, H, tx / 4.0F, 6 / 32.0F, 6 / 24.0F, 20 / 32.0F, 0, false, false);
 		}
-		
-		tx = (type + 2) % 4;
-		GL11.glTexCoord2f((0.0F + tx * 6) / 24.0F, 0.0F / 32.0F);
-		GL11.glVertex2f(width - 0, height - 0);
-		GL11.glTexCoord2f((6.0F + tx * 6) / 24.0F, 0.0F / 32.0F);
-		GL11.glVertex2f(width - 6, height - 0);
-		GL11.glTexCoord2f((6.0F + tx * 6) / 24.0F, 6.0F / 32.0F);
-		GL11.glVertex2f(width - 6, height - 6);
-		GL11.glTexCoord2f((0.0F + tx * 6) / 24.0F, 6.0F / 32.0F);
-		GL11.glVertex2f(width - 0, height - 6);
-		
-		tx = (type + 2) % 4;
-		for (int i = 0; i <= w / 20; i++)
+
+		tx = (edge + 2) % 4;
+		this.drawTexture(this.width, this.height, -s, -s, tx / 4.0F, 0, 6 / 24.0F, 6 / 32.0F, 0, false, false);
+
+		tx = (edge + 2) % 4;
+		for (int i = 0; i <= w / bl; i++)
 		{
-			float W = (w - i * 20);
-			if (W > 20)
+			float W = (w - i * bl);
+			if (W > bl)
 			{
-				W = 20;
+				W = bl;
 			}
-			float X = i * 20;
-			
-			GL11.glTexCoord2f((0.0F + tx * 6) / 24.0F, 6.0F / 32.0F);
-			GL11.glVertex2f(X + 6, height);
-			GL11.glTexCoord2f((0.0F + tx * 6) / 24.0F, 26.0F / 32.0F);
-			GL11.glVertex2f(X + W + 6, height);
-			GL11.glTexCoord2f((6.0F + tx * 6) / 24.0F, 26.0F / 32.0F);
-			GL11.glVertex2f(X + W + 6, height - 6);
-			GL11.glTexCoord2f((6.0F + tx * 6) / 24.0F, 6.0F / 32.0F);
-			GL11.glVertex2f(X + 6, height - 6);
+			float X = i * bl;
+
+			this.drawTexture(X + s, this.height, W, -s, tx / 4.0F, 6 / 32.0F, 6 / 24.0F, 20 / 32.0F, 1, false, false);
 		}
-		
+
 		GL11.glEnd();
-		this.edge.end();
+		this.front.end();
 	}
 
-	public void loadAssets(RenderManager manager)
+	@Override
+	public boolean mouseEvent()
 	{
-		this.edge.load(manager);
-		this.back.load(manager);
+		return false;
+	}
+
+	@Override
+	public boolean keyEvent()
+	{
+		return false;
+	}
+
+	@Override
+	public void onStart(RenderManager manager)
+	{
+		this.front.load(manager);
+		if (this.back != null)
+		{
+			this.back.load(manager);
+		}
+	}
+
+	@Override
+	public void render()
+	{
+		if (this.hasback)
+		{
+			if (this.backin)
+			{
+				this.renderBack();
+			}
+		}
+		
+		this.renderEdge();
 	}
 }
