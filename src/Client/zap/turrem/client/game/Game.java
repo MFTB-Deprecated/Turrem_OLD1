@@ -20,6 +20,7 @@ import zap.turrem.client.game.select.SelectionEventAdd;
 import zap.turrem.client.game.select.SelectionEventReplace;
 import zap.turrem.client.game.world.WorldClient;
 import zap.turrem.client.gui.GuiFrame;
+import zap.turrem.client.gui.GuiTextTip;
 import zap.turrem.client.render.RenderGame;
 import zap.turrem.client.render.font.FontRender;
 import zap.turrem.client.render.texture.TextureIcon;
@@ -51,6 +52,11 @@ public class Game
 	GuiFrame testframe = new GuiFrame(160, 600, true, true, 0, "turrem.gui.frames.plain", 2.0F);
 
 	public RealmClient myRealm;
+	
+	public GuiTextTip techtip;
+	
+	private int minty = 24;
+	private int mintx = 8;
 
 	public Game(Turrem turrem)
 	{
@@ -118,6 +124,9 @@ public class Game
 				this.techicons[i] = nulltech;
 			}
 		}
+		
+		this.techtip = new GuiTextTip(this.theRender.testFont, "null", 20.0F);
+		this.techtip.onStart(this.theTurrem.theRender);
 	}
 
 	public void updateGL()
@@ -186,10 +195,10 @@ public class Game
 				}
 				else
 				{
-					int tech = ((Config.getHeight() - Mouse.getEventY()) - 29) / 58;
-					if (tech < this.myRealm.branches.size() && tech >= 0)
+					TechItem mouset = this.getTechAtPos(Mouse.getX(), 600 - Mouse.getY());
+					if (mouset != null)
 					{
-						this.myRealm.gainTech(TechList.get(BranchList.get(this.myRealm.branches.get(tech)).getTechs()[0]), false);
+						this.myRealm.gainTech(mouset, false);
 					}
 				}
 			}
@@ -240,6 +249,17 @@ public class Game
 	public void renderIngameGui()
 	{
 		FontRender font = this.theRender.testFont;
+		
+		if (Config.debugInfo)
+		{
+			GL11.glColor3f(0.0F, 0.0F, 0.0F);
+			font.renderText("\'S\' - Create new entity at cursor\n\'L-Click\' - Select entity\n\'Ctrl + L-Click\' - Add selection\n\'R-Click\' - Move selected entities\n\'R-Click Entity\' - Rotate entity\n\'L-Click & Drag\' - Pan camera\n\'M-Click & Drag\' - Orbit camera\n\'Scroll\' - Zoom\n\'F3\' - Toggle this info", 170.0F, 10.0F, 20.0F);
+			String fps = Toolbox.getFloat(this.fpsstore, 1);
+			font.renderText("FPS: " + fps, Config.getWidth() - 100.0F, 10.0F, 20.0F);
+			GL11.glColor3f(1.0F, 1.0F, 1.0F);
+		}
+		
+		this.techtip.setPos(Mouse.getX(), Config.getHeight() - Mouse.getY());
 
 		GL11.glDisable(GL11.GL_CULL_FACE);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -249,12 +269,12 @@ public class Game
 		this.testframe.render();
 		GL11.glPopMatrix();
 
-		int ticox = 64;
-		int ticoy = 30;
-		
 		GL11.glColor3f(0.0F, 0.0F, 0.0F);
-		font.renderTextCentered("Available Techs:", ticox + 16, 8, 20);
+		font.renderTextCentered("Available Techs:", 80, 8, 20.0F);
 		GL11.glColor3f(1.0F, 1.0F, 1.0F);
+		
+		int x = mintx;
+		int y = minty;
 		
 		for (int bid : this.myRealm.branches)
 		{
@@ -268,40 +288,62 @@ public class Game
 			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
 
 			GL11.glTexCoord2f(0.0F, 0.0F);
-			GL11.glVertex2f(ticox + 0, ticoy + 0);
+			GL11.glVertex2f(x + 8, y + 8);
 			GL11.glTexCoord2f(0.0F, 1.0F);
-			GL11.glVertex2f(ticox + 0, ticoy + 32);
+			GL11.glVertex2f(x + 8, y + 40);
 			GL11.glTexCoord2f(1.0F, 1.0F);
-			GL11.glVertex2f(ticox + 32, ticoy + 32);
+			GL11.glVertex2f(x + 40, y + 40);
 			GL11.glTexCoord2f(1.0F, 0.0F);
-			GL11.glVertex2f(ticox + 32, ticoy + 0);
+			GL11.glVertex2f(x + 40, y + 8);
+			
+			x += 48;
+			
+			if (x >= 144 + mintx)
+			{
+				x = mintx;
+				y += 48;
+			}
+			
+			if (y >= 576 + minty)
+			{
+				break;
+			}
 
 			GL11.glEnd();
 			techico.end();
 			GL11.glPopMatrix();
 
-			GL11.glColor3f(0.0F, 0.0F, 0.0F);
-			font.renderTextCentered(tech.getName(), ticox + 16, ticoy + 36, 20);
-			GL11.glColor3f(1.0F, 1.0F, 1.0F);
-
-			ticoy += 58;
+			TechItem mouset = this.getTechAtPos(Mouse.getX(), 600 - Mouse.getY());
 			
-			if (ticoy > 600 - 24 - 58)
+			if (mouset != null)
 			{
-				GL11.glColor3f(0.0F, 0.0F, 0.0F);
-				font.renderTextCentered("...More...", ticox + 16, 600 - 24, 20);
-				GL11.glColor3f(1.0F, 1.0F, 1.0F);
-				break;
+				this.techtip.setText(mouset.getName());
+				this.techtip.render();
 			}
 		}
-
-		if (Config.debugInfo)
+	}
+	
+	public TechItem getTechAtPos(int x, int y)
+	{
+		x -= this.mintx;
+		y -= this.minty;
+		if (x < 0 || y < 0)
 		{
-			GL11.glColor3f(0.0F, 0.0F, 0.0F);
-			font.renderText("\'S\' - Create new entity at cursor\n\'L-Click\' - Select entity\n\'Ctrl + L-Click\' - Add selection\n\'R-Click\' - Move selected entities\n\'R-Click Entity\' - Rotate entity\n\'L-Click & Drag\' - Pan camera\n\'M-Click & Drag\' - Orbit camera\n\'Scroll\' - Zoom\n\'F3\' - Toggle this info", 170.0F, 10.0F, 20.0F);
-			String fps = Toolbox.getFloat(this.fpsstore, 1);
-			font.renderText("FPS: " + fps, Config.getWidth() - 100.0F, 10.0F, 20.0F);
-			GL11.glColor3f(1.0F, 1.0F, 1.0F);
+			return null;
 		}
+		if (x >= 144)
+		{
+			return null;
+		}
+		if (y >= 576)
+		{
+			return null;
+		}
+		int i = (x / 48) + (y / 48) * 3;
+		if (i < this.myRealm.branches.size() && i >= 0)
+		{
+			return TechList.get(BranchList.get(this.myRealm.branches.get(i)).getTechs()[0]);
+		}
+		return null;
 	}
 }
