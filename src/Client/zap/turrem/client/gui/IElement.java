@@ -13,9 +13,7 @@ public interface IElement
 	
 	public void render();
 	
-	public boolean mouseEvent();
-	
-	public boolean keyEvent();
-	
 	public void setPos(int x, int y);
+	
+	public void setSize(int width, int height);
 }

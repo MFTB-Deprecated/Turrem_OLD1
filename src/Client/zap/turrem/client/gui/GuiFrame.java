@@ -154,18 +154,6 @@ public class GuiFrame extends GuiElement
 	}
 
 	@Override
-	public boolean mouseEvent()
-	{
-		return false;
-	}
-
-	@Override
-	public boolean keyEvent()
-	{
-		return false;
-	}
-
-	@Override
 	public void onStart(RenderManager manager)
 	{
 		this.front.load(manager);

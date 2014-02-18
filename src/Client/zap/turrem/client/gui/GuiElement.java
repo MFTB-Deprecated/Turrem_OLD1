@@ -4,10 +4,10 @@ import org.lwjgl.opengl.GL11;
 
 public abstract class GuiElement implements IElement
 {
-	public int xpos;
-	public int ypos;
-	public int width;
-	public int height;
+	protected int xpos;
+	protected int ypos;
+	protected int width;
+	protected int height;
 
 	protected void drawTexture(float x, float y, float w, float h, float u, float v, float tw, float th, int rot, boolean flipx, boolean flipy)
 	{
@@ -86,13 +86,15 @@ public abstract class GuiElement implements IElement
 		return this.height;
 	}
 
-	public abstract boolean mouseEvent();
-
-	public abstract boolean keyEvent();
-
 	public void setPos(int x, int y)
 	{
 		this.xpos = x;
 		this.ypos = y;
+	}
+	
+	public void setSize(int width, int height)
+	{
+		this.width = width;
+		this.height = height;
 	}
 }
