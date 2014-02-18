@@ -174,4 +174,9 @@ public class TechList
 			item.loadBranches();
 		}
 	}
+
+	public static List<TechItem> getTechList()
+	{
+		return techList;
+	}
 }

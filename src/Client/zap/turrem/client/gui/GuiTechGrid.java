@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL11;
 
 import org.lwjgl.input.Mouse;
 
+import zap.turrem.client.config.Config;
 import zap.turrem.client.render.engine.RenderManager;
 import zap.turrem.client.render.font.FontRender;
 import zap.turrem.client.render.texture.TextureIcon;
@@ -87,6 +88,7 @@ public class GuiTechGrid extends GuiElement implements IInteractable
 		}
 
 		this.techtip = new GuiTextTip(this.font, "null", 20.0F);
+		this.techtip.setTextColor(1.0F, 1.0F, 1.0F);
 		this.techtip.onStart(manager);
 	}
 
@@ -96,24 +98,25 @@ public class GuiTechGrid extends GuiElement implements IInteractable
 		GL11.glDisable(GL11.GL_CULL_FACE);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_LIGHTING);
-		
-		int x  = 0;
+
+		int x = 0;
 		int y = 0;
 		int full = this.tilesize + this.tileedge * 2;
-		
+
 		int i = 0;
 		int j = 0;
 		int a = this.tileedge;
 		int b = this.tileedge + this.tilesize;
+		GL11.glPushMatrix();
+
+		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
 		for (TechItem tech : this.grid)
 		{
 			TextureIcon techico = techicons[tech.getId()];
 
-			GL11.glPushMatrix();
 			techico.start();
-			GL11.glBegin(GL11.GL_QUADS);
-			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
 
+			GL11.glBegin(GL11.GL_QUADS);
 			GL11.glTexCoord2f(0.0F, 0.0F);
 			GL11.glVertex2f(x + a, y + a);
 			GL11.glTexCoord2f(0.0F, 1.0F);
@@ -122,35 +125,36 @@ public class GuiTechGrid extends GuiElement implements IInteractable
 			GL11.glVertex2f(x + b, y + b);
 			GL11.glTexCoord2f(1.0F, 0.0F);
 			GL11.glVertex2f(x + b, y + a);
-			
+			GL11.glEnd();
+
 			x += full;
 			i++;
-			
-			if (i < this.gridw)
+
+			if (i > this.gridw)
 			{
 				x = 0;
 				y += full;
 				j++;
 				i = 0;
 			}
-			
+
 			if (j >= this.gridh)
 			{
 				break;
 			}
 
-			GL11.glEnd();
 			techico.end();
-			GL11.glPopMatrix();
 		}
 
+		GL11.glPopMatrix();
+
 		int mx = Mouse.getX();
-		int my = Mouse.getX();
-		
+		int my = Config.getHeight() - Mouse.getY();
+
 		TechItem mouset = this.getTechAtPos(mx - this.xpos, my - this.ypos);
-		
+
 		this.techtip.setPos(mx, my);
-		
+
 		if (mouset != null)
 		{
 			this.techtip.setText(mouset.getName());
@@ -176,10 +180,10 @@ public class GuiTechGrid extends GuiElement implements IInteractable
 		}
 		return false;
 	}
-	
+
 	public void mouseEventTech(TechItem item, int gridIndex)
 	{
-		
+
 	}
 
 	@Override

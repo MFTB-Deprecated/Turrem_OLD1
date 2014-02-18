@@ -1,5 +1,6 @@
 package zap.turrem.client.game;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import org.lwjgl.opengl.GL11;
@@ -19,8 +20,11 @@ import zap.turrem.client.game.player.face.PlayerFace;
 import zap.turrem.client.game.select.SelectionEventAdd;
 import zap.turrem.client.game.select.SelectionEventReplace;
 import zap.turrem.client.game.world.WorldClient;
+import zap.turrem.client.gui.GuiTechGrid;
 import zap.turrem.client.render.RenderGame;
 import zap.turrem.client.render.font.FontRender;
+import zap.turrem.core.tech.item.TechItem;
+import zap.turrem.core.tech.list.TechList;
 import zap.turrem.utils.Toolbox;
 import zap.turrem.utils.geo.Point;
 import zap.turrem.utils.geo.Ray;
@@ -42,6 +46,8 @@ public class Game
 	private long lastTickTime;
 
 	public RealmClient myRealm;
+	
+	public GuiTechGrid techs;
 
 	public Game(Turrem turrem)
 	{
@@ -65,6 +71,9 @@ public class Game
 		this.myRealm = new RealmClient(new PlayerClient());
 		this.theWorld.realms.add(this.myRealm);
 		this.myRealm.onStart();
+		
+		this.techs = new GuiTechGrid(this.theRender.testFont, 40, 8, 10, 10, 20, 20);
+		this.techs.onStart(this.theRender.theManager);
 	}
 
 	public void updateGL()
@@ -87,6 +96,8 @@ public class Game
 			this.fpsstore *= 0.9F;
 			this.fpsstore += fs * 0.1F;
 		}
+		
+		this.techs.grid = (ArrayList<TechItem>) TechList.getTechList();
 	}
 
 	public void render()
@@ -185,6 +196,8 @@ public class Game
 			font.renderText("FPS: " + fps, Config.getWidth() - 100.0F, 10.0F, 20.0F);
 			GL11.glColor3f(1.0F, 1.0F, 1.0F);
 		}
+		
+		this.techs.render();
 	}
 
 }
