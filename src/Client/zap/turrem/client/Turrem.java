@@ -74,14 +74,14 @@ public class Turrem
 			e.printStackTrace();
 		}
 
-		WorldTerrain ter = new WorldTerrain(42L);
+		WorldTerrain ter = new WorldTerrain(15L);
 		ter.generate();
 		
 		try
 		{
 			File f = new File(this.dir + "tertest.png");
 			f.createNewFile();
-			ImageIO.write(ter.renderTest(0, 0, 32, 32), "png", new FileOutputStream(f));
+			ImageIO.write(ter.renderTest(0, 0, 16, 16), "png", new FileOutputStream(f));
 		}
 		catch (Exception e)
 		{

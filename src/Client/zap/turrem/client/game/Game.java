@@ -197,7 +197,7 @@ public class Game
 			GL11.glColor3f(1.0F, 1.0F, 1.0F);
 		}
 		
-		this.techs.render();
+		//this.techs.render();
 	}
 
 }

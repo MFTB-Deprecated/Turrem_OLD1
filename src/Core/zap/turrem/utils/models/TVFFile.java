@@ -107,6 +107,15 @@ public class TVFFile
 		VoxToTvf con = new VoxToTvf(this, vox);
 		con.make();
 	}
+	
+	public TVFFile(TVFFace[] faces, TVFColor[] colors)
+	{
+		this();
+		this.faceNum = faces.length;
+		this.faces = faces;
+		this.colorNum = (short) colors.length;
+		this.colors = colors;
+	}
 
 	/**
 	 * Write file

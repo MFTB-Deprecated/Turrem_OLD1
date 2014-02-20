@@ -11,6 +11,7 @@ import zap.turrem.client.game.entity.EntityClient;
 import zap.turrem.client.game.entity.IEntitySelectable;
 import zap.turrem.client.game.operation.Operation;
 import zap.turrem.client.game.select.SelectionEvent;
+import zap.turrem.client.render.engine.RenderEngine;
 import zap.turrem.utils.geo.Box;
 import zap.turrem.utils.geo.BoxPin;
 import zap.turrem.utils.geo.Point;
@@ -27,11 +28,27 @@ public class WorldClient
 	public Game theGame;
 
 	private EntityClient pickedEntity = null;
+	
+	public WorldTerrain terrain;
+	
+	public RenderEngine terrainRender;
+	
+	public ArrayList<ModelChunk> chunkmodels = new ArrayList<ModelChunk>();
 
 	public WorldClient(Game game)
 	{
 		this.theGame = game;
-
+		this.terrain = new WorldTerrain(15L);
+		this.terrain.generate();
+		this.terrainRender = new RenderEngine();
+		
+		for (int i = 0; i <= 16; i++)
+		{
+			for (int j = 0; j <= 16; j++)
+			{
+				this.chunkmodels.add(new ModelChunk(this.terrain.getChunk(i, j), 1.0F, 0.5F, 16, i, j, this.terrainRender));
+			}
+		}
 	}
 
 	public EntityClient getEntityPicked()
@@ -93,6 +110,14 @@ public class WorldClient
 		}		
 		
 		GL11.glPushMatrix();
+		for (ModelChunk c : this.chunkmodels)
+		{
+			c.render();
+		}
+		GL11.glPopMatrix();
+		
+		/**
+		GL11.glPushMatrix();
 		GL11.glColor3f(0.5F, 0.5F, 0.5F);
 		GL11.glBegin(GL11.GL_QUADS);
 		GL11.glNormal3f(0.0F, 1.0F, 0.0F);
@@ -106,6 +131,7 @@ public class WorldClient
 		GL11.glEnd();
 		GL11.glColor3f(1.0F, 1.0F, 1.0F);
 		GL11.glPopMatrix();
+		**/
 	}
 
 	public EntityClient calculateEntityPicked()
