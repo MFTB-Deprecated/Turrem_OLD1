@@ -42,18 +42,21 @@ public class ModelChunk
 		GL11.glTranslatef(-this.chunkX, 0.0F, -this.chunkY);
 	}
 	
-	protected int getH(int max, int x, int y)
-	{
-		return this.getH(max, (short) x, (short) y);
-	}
-	
-	protected int getH(int max, short x, short y)
+	protected float getfH(short x, short y)
 	{
 		if (x < 0 || x >= 16 || y < 0 || y >= 16)
 		{
+			return Float.NaN;
+		}
+		return this.terc.ajustSurface(x, y, this.peak, this.sea, 0.0F);
+	}
+	
+	protected int getH(int max, int x, int y, float h)
+	{
+		if (Float.isNaN(h))
+		{
 			return 0;
 		}
-		float h  = this.terc.ajustSurface(x, y, this.peak, this.sea, 0.0F);
 		int H = (int) (max * h);
 		if (H < 0)
 		{
@@ -62,12 +65,22 @@ public class ModelChunk
 		return H;
 	}
 	
+	protected int getH(int max, int x, int y)
+	{
+		return this.getH(max, (short) x, (short) y);
+	}
+	
+	protected int getH(int max, short x, short y)
+	{
+		return this.getH(max, x, y, this.getfH(x, y));
+	}
+	
 	protected TVFFile makeTVF()
 	{
 		TVFColor green = new TVFColor();
 		green.id = 0x00;
 		green.r = (byte) 0x0F;
-		green.g = (byte) 0x8F;
+		green.g = (byte) 0x5F;
 		green.b = (byte) 0x0F;
 		
 		TVFColor blue = new TVFColor();
@@ -84,8 +97,9 @@ public class ModelChunk
 			for (int j = 0; j < 16; j++)
 			{
 				byte color = (byte) 0x00;
-				int H = this.getH(this.height, i, j);
-				if (H == 0)
+				float h = this.getfH((short)i, (short)j);
+				int H = this.getH(this.height, i, j, h);
+				if (h < 0.0F)
 				{
 					color = (byte) 0x01;
 				}

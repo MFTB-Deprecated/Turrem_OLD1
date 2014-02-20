@@ -73,7 +73,15 @@ public class PerlinWorld implements IPerlinGroup
 			}
 		}
 		int xind = chunkx / this.layersize;
+		if (chunkx < 0)
+		{
+			xind--;
+		}
 		int yind = chunky / this.layersize;
+		if (chunky < 0)
+		{
+			yind--;
+		}
 		float u = chunkx / (float) this.layersize - xind;
 		float v = chunky / (float) this.layersize - yind;
 		IPerlinLayer l = this.makeLayer(xind, yind);

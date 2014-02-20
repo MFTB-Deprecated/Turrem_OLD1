@@ -81,7 +81,7 @@ public class Turrem
 		{
 			File f = new File(this.dir + "tertest.png");
 			f.createNewFile();
-			ImageIO.write(ter.renderTest(0, 0, 16, 16), "png", new FileOutputStream(f));
+			ImageIO.write(ter.renderTest(-8, -8, 16, 16), "png", new FileOutputStream(f));
 		}
 		catch (Exception e)
 		{
