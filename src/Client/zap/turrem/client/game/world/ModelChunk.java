@@ -37,9 +37,11 @@ public class ModelChunk
 	
 	public void render()
 	{
+		GL11.glPushMatrix();
+		GL11.glScalef(3.2F, 3.2F, 3.2F);
 		GL11.glTranslatef(this.chunkX, 0.0F, this.chunkY);
 		this.render.doRender();
-		GL11.glTranslatef(-this.chunkX, 0.0F, -this.chunkY);
+		GL11.glPopMatrix();
 	}
 	
 	protected float getfH(short x, short y)
@@ -79,15 +81,15 @@ public class ModelChunk
 	{
 		TVFColor green = new TVFColor();
 		green.id = 0x00;
-		green.r = (byte) 0x0F;
-		green.g = (byte) 0x5F;
-		green.b = (byte) 0x0F;
+		green.r = (byte) 0x30;
+		green.g = (byte) 0x64;
+		green.b = (byte) 0x34;
 		
 		TVFColor blue = new TVFColor();
 		blue.id = 0x01;
-		blue.r = (byte) 0x1F;
-		blue.g = (byte) 0x1F;
-		blue.b = (byte) 0xCF;
+		blue.r = (byte) 0x24;
+		blue.g = (byte) 0x4A;
+		blue.b = (byte) 0xBE;
 		
 		TVFColor[] colors = new TVFColor[] {green, blue};
 		

@@ -13,7 +13,7 @@ public class PlayerFace
 {
 	protected float camPitch = 60.0F;
 	protected float camYaw = 45.0F;
-	protected float camDist = 5.0F;
+	protected float camDist = 15.0F;
 
 	protected Point camFocus;
 	protected Point camLoc;
@@ -132,13 +132,13 @@ public class PlayerFace
 		else if (wm != 0)
 		{
 			this.camDist -= wm * 0.003F;
-			if (this.camDist < 2.0F)
+			if (this.camDist < 5.0F)
 			{
-				this.camDist = 2.0F;
+				this.camDist = 5.0F;
 			}
-			if (this.camDist > 20.0F)
+			if (this.camDist > 40.0F)
 			{
-				this.camDist = 20.0F;
+				this.camDist = 40.0F;
 			}
 		}
 		if (Mouse.isButtonDown(0))

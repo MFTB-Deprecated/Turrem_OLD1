@@ -17,7 +17,6 @@ public class Hut extends EntityArticle
 	public void draw(EntityClient entity)
 	{
 		GL11.glPushMatrix();
-		GL11.glScalef(3.2F, 3.2F, 3.2F);
 		this.drawAnIcon(-0.468F, 0.0F, -0.468F, hut);
 		GL11.glPopMatrix();
 	}
@@ -44,6 +43,6 @@ public class Hut extends EntityArticle
 	@Override
 	public Box updateBounds()
 	{
-		return Box.getBox(-1.5D, 0.0D, -1.5D, 3.5D, 4.0D, 3.5D);
+		return Box.getBox(-0.5D, 0.0D, -0.5D, 1.0D, 1.25D, 1.0D);
 	}
 }

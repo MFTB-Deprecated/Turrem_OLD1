@@ -48,12 +48,9 @@ public class RenderGame
 		GL11.glLoadIdentity();
 		GLU.gluPerspective(face.getFOVY(), face.getAspect(), face.getZNear(), 64.0F);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-
 		GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_NICEST);
 		GL11.glDepthFunc(GL11.GL_LEQUAL);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
-
-		this.doLighting();
 	}
 
 	public void doOrtho()
@@ -64,6 +61,7 @@ public class RenderGame
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		GL11.glEnable(GL11.GL_NORMALIZE);
 		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
 		GL11.glColor3f(1.0F, 1.0F, 1.0F);
 	}
@@ -78,11 +76,20 @@ public class RenderGame
 		GL11.glLight(GL11.GL_LIGHT0, GL11.GL_DIFFUSE, this.whiteLight);
 		GL11.glLightModel(GL11.GL_LIGHT_MODEL_AMBIENT, this.lModelAmbient);
 
-		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glEnable(GL11.GL_LIGHT0);
 
-		GL11.glEnable(GL11.GL_COLOR_MATERIAL);
-		GL11.glColorMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT_AND_DIFFUSE);
+		if (this.theGame != null)
+		{
+			if (this.theGame.mat)
+			{
+				GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+				GL11.glColorMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT_AND_DIFFUSE);
+			}
+			else
+			{
+				GL11.glDisable(GL11.GL_COLOR_MATERIAL);
+			}
+		}
 	}
 
 	public void end()
@@ -93,16 +100,16 @@ public class RenderGame
 	private void initLightArrays()
 	{
 		this.lightPosition = BufferUtils.createFloatBuffer(4);
-		this.lightPosition.put(5.0f).put(10.0f).put(5.0f).put(0.0f).flip();
+		this.lightPosition.put(8.0f).put(10.0f).put(5.0f).put(0.0f).flip();
 
 		this.whiteLight = BufferUtils.createFloatBuffer(4);
-		this.whiteLight.put(2.0f).put(2.0f).put(2.0f).put(1.0f).flip();
+		this.whiteLight.put(0.5f).put(0.5f).put(0.5f).put(1.0f).flip();
 
 		this.specLight = BufferUtils.createFloatBuffer(4);
-		this.specLight.put(0.0f).put(0.0f).put(0.0f).put(1.0f).flip();
+		this.specLight.put(0.1f).put(0.1f).put(0.1f).put(1.0f).flip();
 
 		this.lModelAmbient = BufferUtils.createFloatBuffer(4);
-		this.lModelAmbient.put(0.8f).put(0.8f).put(0.8f).put(1.0f).flip();
+		this.lModelAmbient.put(0.5f).put(0.5f).put(0.5f).put(1.5f).flip();
 	}
 
 	public void render()
