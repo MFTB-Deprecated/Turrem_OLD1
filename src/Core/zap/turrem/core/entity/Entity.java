@@ -1,78 +1,160 @@
 package zap.turrem.core.entity;
 
+import org.lwjgl.opengl.GL11;
+
+import zap.turrem.client.config.Config;
+import zap.turrem.client.game.entity.IEntityClient;
+import zap.turrem.client.game.world.WorldClient;
+import zap.turrem.client.render.engine.RenderManager;
+import zap.turrem.core.entity.article.EntityArticle;
 import zap.turrem.utils.geo.Box;
+import zap.turrem.utils.geo.Point;
 
-public abstract class Entity
+public class Entity implements IEntityClient
 {
-	protected Box boundingBox;
+	public static long nextUID = 0;
+	
+	public boolean isDead = false;
+	public boolean isAppear = true;
 
-	public float width;
-	public float length;
-	public float height;
+	public double posX;
+	public double posY;
+	public double posZ;
+	
+	public EntityArticle article;
+	
+	public final long uid;
+	
+	public WorldClient theWorld;
 
-	public float offx;
-	public float offy;
-	public float offz;
-
-	public short rotation = 0;
-
-	public Entity()
+	public int rotation;
+	public float yawangle = 0.0F;
+	
+	public Entity(EntityArticle article)
 	{
-		this.boundingBox = Box.getBox(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
-	}
-
-	public void setPosition(double x, double y, double z)
-	{
-		float w;
-		float l;
-		float ox;
-		float oz;
-		float h = this.height;
-		float oy = this.offy;
-		if (this.rotation % 2 == 0)
-		{
-			w = this.width;
-			l = this.length;
-			ox = this.offx;
-			oz = this.offz;
-		}
-		else
-		{
-			l = this.width;
-			w = this.length;
-			oz = this.offx;
-			ox = this.offz;
-		}
-		if (this.rotation % 4 > 1)
-		{
-			ox = -ox - w;
-			oz = -oz - l;
-		}
-		this.setBox(x + ox, x + ox + w, y + oy, y + oy + h, z + oz, z + oz + l);
-	}
-
-	public void setBox(double xmin, double xmax, double ymin, double ymax, double zmin, double zmax)
-	{
-		this.boundingBox.setBoundsThis(xmin, ymin, zmin, xmax, ymax, zmax);
+		this.article = article;
+		this.uid = nextUID++;
 	}
 	
-	public void setBounds(Box box)
+	public Box getBounds()
 	{
-		this.width = (float) box.getXLength();
-		this.height = (float) box.getYLength();
-		this.length = (float) box.getZLength();
-		this.offx = (float) box.minX;
-		this.offy = (float) box.minY;
-		this.offz = (float) box.minZ;
+		return this.article.updateBounds().moveNew(this.posX, this.posY, this.posZ);
+	}
+
+	public void push(WorldClient world, RenderManager man)
+	{
+		this.article.loadAssets(man);
+		world.entityList.add(this);
+		this.setPosition(this.posX, this.posY, this.posZ);
+		this.theWorld = world;
+	}
+
+	public void render()
+	{
+		GL11.glPushMatrix();
+		GL11.glTranslated(this.posX, this.posY, this.posZ);
+		GL11.glRotatef(this.rotation * 90 + this.yawangle, 0.0F, 1.0F, 0.0F);
+		this.article.draw(this);
+		GL11.glPopMatrix();
+		
+		if (Config.drawBounds)
+		{
+			this.drawBox(0.0F, 0.0F, 0.0F);
+		}
+	}
+	
+	public void disappear()
+	{
+		this.isAppear = false;
+	}
+
+	public void kill()
+	{
+		this.isDead = true;
 	}
 
 	public void onTick()
 	{
-
+		this.article.tick(this);
+	}
+	
+	public Point getLocation()
+	{
+		return Point.getPoint(this.posX, this.posY, this.posZ);
+	}
+	
+	public void setPosition(double x, double y, double z)
+	{
+		this.posX = x;
+		this.posY = y;
+		this.posZ = z;
 	}
 
-	public Box getBoundingBox()
+	public void setPosition(Point p)
 	{
-		return this.boundingBox;
+		this.setPosition(p.xCoord, p.yCoord, p.zCoord);
+	}
+
+	public void drawBox(float r, float g, float b)
+	{
+		GL11.glPushMatrix();
+		GL11.glDisable(GL11.GL_CULL_FACE);
+		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glColor3f(r, g, b);
+		GL11.glBegin(GL11.GL_QUADS);
+
+		Box box = this.getBounds();
+		
+		float xmax = (float) box.maxX;
+		float ymax = (float) box.maxY;
+		float zmax = (float) box.maxZ;
+		float xmin = (float) box.minX;
+		float ymin = (float) box.minY;
+		float zmin = (float) box.minZ;
+
+		GL11.glVertex3f(xmax, ymax, zmin);
+		GL11.glVertex3f(xmin, ymax, zmin);
+		GL11.glVertex3f(xmin, ymax, zmax);
+		GL11.glVertex3f(xmax, ymax, zmax);
+
+		GL11.glVertex3f(xmax, ymin, zmax);
+		GL11.glVertex3f(xmin, ymin, zmax);
+		GL11.glVertex3f(xmin, ymin, zmin);
+		GL11.glVertex3f(xmax, ymin, zmin);
+
+		GL11.glVertex3f(xmax, ymax, zmax);
+		GL11.glVertex3f(xmin, ymax, zmax);
+		GL11.glVertex3f(xmin, ymin, zmax);
+		GL11.glVertex3f(xmax, ymin, zmax);
+
+		GL11.glVertex3f(xmax, ymin, zmin);
+		GL11.glVertex3f(xmin, ymin, zmin);
+		GL11.glVertex3f(xmin, ymax, zmin);
+		GL11.glVertex3f(xmax, ymax, zmin);
+
+		GL11.glVertex3f(xmin, ymax, zmax);
+		GL11.glVertex3f(xmin, ymax, zmin);
+		GL11.glVertex3f(xmin, ymin, zmin);
+		GL11.glVertex3f(xmin, ymin, zmax);
+
+		GL11.glVertex3f(xmax, ymax, zmin);
+		GL11.glVertex3f(xmax, ymax, zmax);
+		GL11.glVertex3f(xmax, ymin, zmax);
+		GL11.glVertex3f(xmax, ymin, zmin);
+
+		GL11.glEnd();
+		GL11.glPopMatrix();
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (obj instanceof Entity)
+		{
+			return ((Entity) obj).uid == this.uid;
+		}
+		return false;
 	}
 }

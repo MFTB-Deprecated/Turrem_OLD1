@@ -6,23 +6,18 @@ import java.util.Random;
 import org.lwjgl.opengl.GL11;
 
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 
 import units.turrem.Eekysam;
 import units.turrem.Hut;
 import zap.turrem.client.Turrem;
 import zap.turrem.client.config.Config;
-import zap.turrem.client.game.entity.EntityClient;
-import zap.turrem.client.game.entity.EntitySelectable;
-import zap.turrem.client.game.operation.OperationMove;
 import zap.turrem.client.game.player.PlayerClient;
 import zap.turrem.client.game.player.face.PlayerFace;
-import zap.turrem.client.game.select.SelectionEventAdd;
-import zap.turrem.client.game.select.SelectionEventReplace;
 import zap.turrem.client.game.world.WorldClient;
 import zap.turrem.client.gui.GuiTechGrid;
 import zap.turrem.client.render.RenderGame;
 import zap.turrem.client.render.font.FontRender;
+import zap.turrem.core.entity.Entity;
 import zap.turrem.core.tech.item.TechItem;
 import zap.turrem.core.tech.list.TechList;
 import zap.turrem.utils.Toolbox;
@@ -66,7 +61,7 @@ public class Game
 		this.theRender.start();
 		this.face.reset();
 
-		EntityClient me = (new EntityClient(new Hut()));
+		Entity me = (new Entity(new Hut()));
 		me.setPosition(-8.0F, 0.6F, -12.0F);
 		me.push(this.theWorld, this.theTurrem.theRender);
 
@@ -126,42 +121,7 @@ public class Game
 
 	public void mouseEvent()
 	{
-		if (!Mouse.getEventButtonState())
-		{
-			if (Mouse.getEventButton() == 0)
-			{
-				EntityClient picked = this.theWorld.getEntityPicked();
-				if (picked != null)
-				{
-					if (Keyboard.isKeyDown(Keyboard.KEY_LCONTROL))
-					{
-						(new SelectionEventAdd(picked.uid)).push(this.theWorld);
-					}
-					else
-					{
-						(new SelectionEventReplace(picked.uid)).push(this.theWorld);
-					}
-				}
-			}
-			if (Mouse.getEventButton() == 1)
-			{
-				EntityClient picked = this.theWorld.getEntityPicked();
-				if (picked != null && picked instanceof EntitySelectable)
-				{
-					picked.rotation++;
-					picked.rotation %= 4;
-				}
-				else
-				{
-					Ray r = this.getPickRay().duplicate();
-					if (r.end.yCoord < r.start.yCoord)
-					{
-						Point p = Point.getSlideWithYValue(r.start, r.end, 0.0F);
-						(new OperationMove(p)).push(this.theWorld);
-					}
-				}
-			}
-		}
+		
 	}
 
 	public void keyEvent()
@@ -174,7 +134,7 @@ public class Game
 				if (r.end.yCoord < r.start.yCoord)
 				{
 					Point p = Point.getSlideWithYValue(r.start, r.end, 0.0F);
-					EntityClient me = (new EntitySelectable(new Eekysam()));
+					Entity me = (new Entity(new Eekysam()));
 					me.rotation = (short) this.rand.nextInt(4);
 					me.setPosition(p);
 					me.push(this.theWorld, this.theTurrem.theRender);

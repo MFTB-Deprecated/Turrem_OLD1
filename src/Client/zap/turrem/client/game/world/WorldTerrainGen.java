@@ -3,7 +3,7 @@ package zap.turrem.client.game.world;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 
-public class WorldTerrain
+public class WorldTerrainGen
 {
 	public long seed;
 
@@ -14,7 +14,7 @@ public class WorldTerrain
 	public TerrainLayer heat;
 	public TerrainLayer humid;
 
-	public WorldTerrain(long seed)
+	public WorldTerrainGen(long seed)
 	{
 		this.seed = seed;
 	}
@@ -34,9 +34,9 @@ public class WorldTerrain
 		this.humid.makeWorld();
 	}
 
-	public TerrainChunk getChunk(int x, int y)
+	public TerrainGenChunk getChunk(int x, int y)
 	{
-		return new TerrainChunk(this.surface.getChunk(x, y), this.water.getChunk(x, y), this.dry.getChunk(x, y), this.heat.getChunk(x, y), this.humid.getChunk(x, y));
+		return new TerrainGenChunk(this.surface.getChunk(x, y), this.water.getChunk(x, y), this.dry.getChunk(x, y), this.heat.getChunk(x, y), this.humid.getChunk(x, y));
 	}
 
 	public BufferedImage renderTest(int x, int y, int w, int h)
@@ -47,7 +47,7 @@ public class WorldTerrain
 		{
 			for (int cj = 0; cj < h; cj++)
 			{
-				TerrainChunk chunk = this.getChunk(x + ci, y + cj);
+				TerrainGenChunk chunk = this.getChunk(x + ci, y + cj);
 				
 				for (short i = 0; i < 16; i++)
 				{

@@ -1,9 +1,9 @@
 package zap.turrem.server.entity;
 
-import zap.turrem.core.entity.Entity;
+import zap.turrem.core.entity.EntityFrame;
 import zap.turrem.server.world.WorldServer;
 
-public abstract class EntityServer extends Entity
+public abstract class EntityServer extends EntityFrame
 {
 	protected double posX;
 	protected double posY;

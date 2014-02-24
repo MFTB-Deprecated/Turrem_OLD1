@@ -12,7 +12,7 @@ import zap.turrem.utils.models.TVFFile.TVFColor;
 
 public class ModelChunk
 {
-	private TerrainChunk terc;
+	private TerrainGenChunk terc;
 	private float peak;
 	private float sea;
 	
@@ -23,7 +23,7 @@ public class ModelChunk
 	
 	public RenderObject render;
 	
-	public ModelChunk(TerrainChunk chunk, float peak, float sea, int height, int cx, int cy, RenderEngine engine)
+	public ModelChunk(TerrainGenChunk chunk, float peak, float sea, int height, int cx, int cy, RenderEngine engine)
 	{
 		this.terc = chunk;
 		this.peak = peak;

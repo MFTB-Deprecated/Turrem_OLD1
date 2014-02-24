@@ -21,7 +21,7 @@ import org.lwjgl.input.Mouse;
 
 import zap.turrem.client.asset.AssetLoader;
 import zap.turrem.client.config.Config;
-import zap.turrem.client.game.world.WorldTerrain;
+import zap.turrem.client.game.world.WorldTerrainGen;
 import zap.turrem.client.render.engine.RenderManager;
 import zap.turrem.client.states.IState;
 import zap.turrem.client.states.StateGame;
@@ -74,7 +74,7 @@ public class Turrem
 			e.printStackTrace();
 		}
 
-		WorldTerrain ter = new WorldTerrain(15L);
+		WorldTerrainGen ter = new WorldTerrainGen(15L);
 		ter.generate();
 		
 		try

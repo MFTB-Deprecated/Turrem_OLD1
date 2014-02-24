@@ -2,9 +2,9 @@ package zap.turrem.core.entity.article;
 
 import org.lwjgl.opengl.GL11;
 
-import zap.turrem.client.game.entity.EntityClient;
 import zap.turrem.client.render.engine.RenderManager;
 import zap.turrem.client.render.object.model.ModelIcon;
+import zap.turrem.core.entity.Entity;
 import zap.turrem.utils.geo.Box;
 
 public abstract class EntityArticle
@@ -23,11 +23,9 @@ public abstract class EntityArticle
 		GL11.glTranslated(-x, -y, -z);
 	}
 	
-	public abstract void draw(EntityClient entity);
+	public abstract void draw(Entity entity);
 	
-	public abstract void clientTick(EntityClient entity);
-	
-	public abstract void serverTick(EntityClient entity);
+	public abstract void tick(Entity entity);
 	
 	public String getIdentifier()
 	{

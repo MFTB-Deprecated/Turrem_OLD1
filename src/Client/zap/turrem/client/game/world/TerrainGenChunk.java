@@ -1,6 +1,6 @@
 package zap.turrem.client.game.world;
 
-public class TerrainChunk
+public class TerrainGenChunk
 {
 	public float[] surface;
 	public float[] water;
@@ -9,7 +9,7 @@ public class TerrainChunk
 	public float[] heat;
 	public float[] humid;
 
-	public TerrainChunk(float[] surface, float[] water, float[] dry, float[] heat, float[] humid)
+	public TerrainGenChunk(float[] surface, float[] water, float[] dry, float[] heat, float[] humid)
 	{
 		this.surface = surface;
 		this.water = water;

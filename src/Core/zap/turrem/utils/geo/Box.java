@@ -147,6 +147,22 @@ public class Box
     	return box1.intersectsWith(box2);
     }
     
+    public Box moveThis(double x, double y, double z)
+    {
+    	this.maxX += x;
+    	this.maxY += y;
+    	this.maxZ += z;
+    	this.minX += x;
+    	this.minY += y;
+    	this.minZ += z;
+    	return this;
+    }
+    
+    public Box moveNew(double x, double y, double z)
+    {
+    	return this.duplicate().moveThis(x, y, z);
+    }
+    
     public BoxPin calculateIntercept(Ray ray)
     {
     	return this.calculateIntercept(ray.start, ray.end);

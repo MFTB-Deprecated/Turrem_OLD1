@@ -7,11 +7,8 @@ import org.lwjgl.opengl.GL11;
 
 import zap.turrem.client.game.Game;
 import zap.turrem.client.game.RealmClient;
-import zap.turrem.client.game.entity.EntityClient;
-import zap.turrem.client.game.entity.IEntitySelectable;
-import zap.turrem.client.game.operation.Operation;
-import zap.turrem.client.game.select.SelectionEvent;
 import zap.turrem.client.render.engine.RenderEngine;
+import zap.turrem.core.entity.Entity;
 import zap.turrem.utils.geo.Box;
 import zap.turrem.utils.geo.BoxPin;
 import zap.turrem.utils.geo.Point;
@@ -19,17 +16,14 @@ import zap.turrem.utils.geo.Ray;
 
 public class WorldClient
 {
-	public List<EntityClient> entityList = new ArrayList<EntityClient>();
+	public List<Entity> entityList = new ArrayList<Entity>();
 	public List<RealmClient> realms = new ArrayList<RealmClient>();
-
-	public List<SelectionEvent> selectionEvents = new ArrayList<SelectionEvent>();
-	public List<Operation> operations = new ArrayList<Operation>();
 
 	public Game theGame;
 
-	private EntityClient pickedEntity = null;
+	private Entity pickedEntity = null;
 	
-	public WorldTerrain terrain;
+	public WorldTerrainGen terrain;
 	
 	public RenderEngine terrainRender;
 	
@@ -38,7 +32,7 @@ public class WorldClient
 	public WorldClient(Game game)
 	{
 		this.theGame = game;
-		this.terrain = new WorldTerrain(15L);
+		this.terrain = new WorldTerrainGen(15L);
 		this.terrain.generate();
 		this.terrainRender = new RenderEngine();
 		
@@ -51,7 +45,7 @@ public class WorldClient
 		}
 	}
 
-	public EntityClient getEntityPicked()
+	public Entity getEntityPicked()
 	{
 		return this.pickedEntity;
 	}
@@ -71,7 +65,7 @@ public class WorldClient
 	{
 		for (int i = 0; i < this.entityList.size(); i++)
 		{
-			EntityClient e = this.entityList.get(i);
+			Entity e = this.entityList.get(i);
 			if (e.isDead || !e.isAppear)
 			{
 				this.entityList.remove(i--);
@@ -80,31 +74,12 @@ public class WorldClient
 			{
 				e.onTick();
 			}
-
-			if (e instanceof IEntitySelectable)
-			{
-				IEntitySelectable es = (IEntitySelectable) e;
-				for (SelectionEvent sel : this.selectionEvents)
-				{
-					es.runSelect(sel);
-				}
-				if (es.isSelected())
-				{
-					for (Operation op : this.operations)
-					{
-						es.doOperation(op);
-					}
-				}
-			}
 		}
-
-		this.selectionEvents.clear();
-		this.operations.clear();
 	}
 
 	public void render()
 	{		
-		for (EntityClient e : this.entityList)
+		for (Entity e : this.entityList)
 		{
 			e.render();
 		}		
@@ -134,15 +109,15 @@ public class WorldClient
 		**/
 	}
 
-	public EntityClient calculateEntityPicked()
+	public Entity calculateEntityPicked()
 	{
 		Ray r = this.theGame.getPickRay();
-		List<EntityClient> ents = this.getEntitiesHit(r.getBox());
-		EntityClient returne = null;
+		List<Entity> ents = this.getEntitiesHit(r.getBox());
+		Entity returne = null;
 		float dist = (float) r.getLengthSqr();
-		for (EntityClient e : ents)
+		for (Entity e : ents)
 		{
-			BoxPin pin = e.getBoundingBox().calculateIntercept(r);
+			BoxPin pin = e.getBounds().calculateIntercept(r);
 			if (pin != null)
 			{
 				float d = (float) Point.squareDistance(r.start, pin.location);
@@ -156,12 +131,12 @@ public class WorldClient
 		return returne;
 	}
 
-	public List<EntityClient> getEntitiesHit(Box box)
+	public List<Entity> getEntitiesHit(Box box)
 	{
-		List<EntityClient> hit = new ArrayList<EntityClient>();
-		for (EntityClient e : this.entityList)
+		List<Entity> hit = new ArrayList<Entity>();
+		for (Entity e : this.entityList)
 		{
-			if (box.intersectsWith(e.getBoundingBox()))
+			if (box.intersectsWith(e.getBounds()))
 			{
 				hit.add(e);
 			}
@@ -169,13 +144,13 @@ public class WorldClient
 		return hit;
 	}
 
-	public List<EntityClient> getEntitiesHit(Box box, EntityClient exclude)
+	public List<Entity> getEntitiesHit(Box box, Entity exclude)
 	{
-		List<EntityClient> hit = new ArrayList<EntityClient>();
+		List<Entity> hit = new ArrayList<Entity>();
 		long skip = exclude.uid;
-		for (EntityClient e : this.entityList)
+		for (Entity e : this.entityList)
 		{
-			if (e.uid != skip && box.intersectsWith(e.getBoundingBox()))
+			if (e.uid != skip && box.intersectsWith(e.getBounds()))
 			{
 				hit.add(e);
 			}
