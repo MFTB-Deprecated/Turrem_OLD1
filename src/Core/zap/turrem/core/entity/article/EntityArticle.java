@@ -35,4 +35,8 @@ public abstract class EntityArticle
 	public abstract void loadAssets(RenderManager man);
 	
 	public abstract Box updateBounds();
+	
+	public abstract void keyEvent(boolean me, Entity entity);
+	
+	public abstract void mouseEvent(boolean me, Entity entity);
 }

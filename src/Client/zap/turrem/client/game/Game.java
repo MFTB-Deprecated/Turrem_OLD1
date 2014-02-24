@@ -41,9 +41,9 @@ public class Game
 	private long lastTickTime;
 
 	public RealmClient myRealm;
-	
+
 	public GuiTechGrid techs;
-	
+
 	public boolean mat = true;
 
 	public Game(Turrem turrem)
@@ -68,7 +68,7 @@ public class Game
 		this.myRealm = new RealmClient(new PlayerClient());
 		this.theWorld.realms.add(this.myRealm);
 		this.myRealm.onStart();
-		
+
 		this.techs = new GuiTechGrid(this.theRender.testFont, 40, 8, 10, 10, 20, 20);
 		this.techs.onStart(this.theRender.theManager);
 	}
@@ -93,7 +93,7 @@ public class Game
 			this.fpsstore *= 0.9F;
 			this.fpsstore += fs * 0.1F;
 		}
-		
+
 		this.techs.grid = (ArrayList<TechItem>) TechList.getTechList();
 	}
 
@@ -121,23 +121,27 @@ public class Game
 
 	public void mouseEvent()
 	{
-		
+		this.theWorld.doMouseEvent();
 	}
 
 	public void keyEvent()
 	{
+		this.theWorld.doKeyEvent();
 		if (Keyboard.getEventKeyState())
 		{
 			if (Keyboard.getEventKey() == Keyboard.KEY_S)
 			{
-				Ray r = this.getPickRay().duplicate();
-				if (r.end.yCoord < r.start.yCoord)
+				if (this.theWorld.getEntityPicked() == null)
 				{
-					Point p = Point.getSlideWithYValue(r.start, r.end, 0.0F);
-					Entity me = (new Entity(new Eekysam()));
-					me.rotation = (short) this.rand.nextInt(4);
-					me.setPosition(p);
-					me.push(this.theWorld, this.theTurrem.theRender);
+					Ray r = this.getPickRay().duplicate();
+					if (r.end.yCoord < r.start.yCoord)
+					{
+						Point p = Point.getSlideWithYValue(r.start, r.end, 0.0F);
+						Entity me = (new Entity(new Eekysam()));
+						me.rotation = (short) this.rand.nextInt(4);
+						me.setPosition(p);
+						me.push(this.theWorld, this.theTurrem.theRender);
+					}
 				}
 			}
 			if (Keyboard.getEventKey() == Keyboard.KEY_F3)
@@ -163,8 +167,8 @@ public class Game
 			font.renderText("FPS: " + fps, Config.getWidth() - 100.0F, 10.0F, 20.0F);
 			GL11.glColor3f(1.0F, 1.0F, 1.0F);
 		}
-		
-		//this.techs.render();
+
+		// this.techs.render();
 	}
 
 }

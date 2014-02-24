@@ -36,5 +36,18 @@ public class Hut extends ArticleBuilding
 	@Override
 	public void tick(Entity entity)
 	{
+		super.tick(entity);
+	}
+
+	@Override
+	public void keyEvent(boolean me, Entity entity)
+	{
+		super.keyEvent(me, entity);
+	}
+
+	@Override
+	public void mouseEvent(boolean me, Entity entity)
+	{
+		super.mouseEvent(me, entity);
 	}
 }

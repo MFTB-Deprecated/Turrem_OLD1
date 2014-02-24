@@ -1,5 +1,7 @@
 package units.turrem;
 
+import org.lwjgl.input.Keyboard;
+
 import zap.turrem.client.render.engine.RenderManager;
 import zap.turrem.client.render.engine.holders.RenderObjectHolderSimple;
 import zap.turrem.client.render.object.model.ModelIcon;
@@ -32,6 +34,52 @@ public class Eekysam extends EntityArticle
 
 	@Override
 	public void tick(Entity entity)
+	{
+	}
+
+	@Override
+	public void keyEvent(boolean me, Entity entity)
+	{
+		if (me)
+		{
+			if (!Keyboard.isRepeatEvent() && Keyboard.getEventKeyState())
+			{
+				int k = Keyboard.getEventKey();
+				double d = entity.theWorld.scaleWorld(1);
+				if (k == Keyboard.KEY_W)
+				{
+					entity.move(d, 0.0D, 0.0D);
+				}
+				if (k == Keyboard.KEY_S)
+				{
+					entity.move(-d, 0.0D, 0.0D);
+				}
+				if (k == Keyboard.KEY_A)
+				{
+					entity.move(0.0D, 0.0D, -d);
+				}
+				if (k == Keyboard.KEY_D)
+				{
+					entity.move(0.0D, 0.0D, d);
+				}
+				if (k == Keyboard.KEY_Q)
+				{
+					entity.move(0.0D, -d, 0.0D);
+				}
+				if (k == Keyboard.KEY_E)
+				{
+					entity.move(0.0D, d, 0.0D);
+				}
+				if (k == Keyboard.KEY_DELETE)
+				{
+					entity.kill();
+				}
+			}
+		}
+	}
+
+	@Override
+	public void mouseEvent(boolean me, Entity entity)
 	{
 	}
 }

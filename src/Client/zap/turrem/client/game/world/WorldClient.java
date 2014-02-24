@@ -44,7 +44,33 @@ public class WorldClient
 			}
 		}
 	}
-
+	
+	public void doKeyEvent()
+	{
+		for (Entity e : this.entityList)
+		{
+			e.keyEvent(this.getEntityPicked() != null ? e.uid == this.getEntityPicked().uid : false);
+		}
+	}
+	
+	public void doMouseEvent()
+	{
+		for (Entity e : this.entityList)
+		{
+			e.mouseEvent(this.getEntityPicked() != null ? e.uid == this.getEntityPicked().uid : false);
+		}
+	}
+	
+	public int getHeight(int x, int y)
+	{
+		return 1;
+	}
+	
+	public double scaleWorld(int x)
+	{
+		return (x / 16.0D) * 3.2D;
+	}
+	
 	public Entity getEntityPicked()
 	{
 		return this.pickedEntity;

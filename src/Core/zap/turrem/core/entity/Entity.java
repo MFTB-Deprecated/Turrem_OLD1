@@ -49,6 +49,16 @@ public class Entity implements IEntityClient
 		this.theWorld = world;
 	}
 
+	public void keyEvent(boolean me)
+	{
+		this.article.keyEvent(me, this);
+	}
+	
+	public void mouseEvent(boolean me)
+	{
+		this.article.mouseEvent(me, this);
+	}
+	
 	public void render()
 	{
 		GL11.glPushMatrix();
@@ -81,6 +91,11 @@ public class Entity implements IEntityClient
 	public Point getLocation()
 	{
 		return Point.getPoint(this.posX, this.posY, this.posZ);
+	}
+	
+	public void move(double dx, double dy, double dz)
+	{
+		this.setPosition(this.posX + dx, this.posY + dy, this.posZ + dz);
 	}
 	
 	public void setPosition(double x, double y, double z)
