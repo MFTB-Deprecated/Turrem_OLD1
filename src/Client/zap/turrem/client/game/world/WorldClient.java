@@ -22,12 +22,14 @@ public class WorldClient
 	public Game theGame;
 
 	private Entity pickedEntity = null;
-	
+
 	public WorldTerrainGen terrain;
-	
+
 	public RenderEngine terrainRender;
-	
-	public ArrayList<ModelChunk> chunkmodels = new ArrayList<ModelChunk>();
+
+	public ArrayList<Chunk> chunks = new ArrayList<Chunk>();
+
+	public float rendercount = 0.0F;
 
 	public WorldClient(Game game)
 	{
@@ -35,16 +37,18 @@ public class WorldClient
 		this.terrain = new WorldTerrainGen(15L);
 		this.terrain.generate();
 		this.terrainRender = new RenderEngine();
-		
+
 		for (int i = -8; i < 8; i++)
 		{
 			for (int j = -8; j < 8; j++)
 			{
-				this.chunkmodels.add(new ModelChunk(this.terrain.getChunk(i, j), 1.0F, 0.5F, 16, i, j, this.terrainRender));
+				Chunk c = new Chunk(i, j, this.terrain.getChunk(i, j));
+				this.chunks.add(c);
+				c.loadModel(this.terrainRender);
 			}
 		}
 	}
-	
+
 	public void doKeyEvent()
 	{
 		for (Entity e : this.entityList)
@@ -52,7 +56,7 @@ public class WorldClient
 			e.keyEvent(this.getEntityPicked() != null ? e.uid == this.getEntityPicked().uid : false);
 		}
 	}
-	
+
 	public void doMouseEvent()
 	{
 		for (Entity e : this.entityList)
@@ -60,17 +64,39 @@ public class WorldClient
 			e.mouseEvent(this.getEntityPicked() != null ? e.uid == this.getEntityPicked().uid : false);
 		}
 	}
-	
+
 	public int getHeight(int x, int y)
 	{
-		return 1;
+		Chunk c = this.getChunk(x >> 4, y >> 4);
+		if (c != null)
+		{
+			return c.getHeight(x & 15, y & 15);
+		}
+		return 0;
 	}
-	
+
+	public Chunk getChunk(int cx, int cy)
+	{
+		for (Chunk c : this.chunks)
+		{
+			if (c.chunkx == cx && c.chunky == cy)
+			{
+				return c;
+			}
+		}
+		return null;
+	}
+
+	public int unScaleWorld(double x)
+	{
+		return (int) ((x / 3.2D) * 16.0D);
+	}
+
 	public double scaleWorld(int x)
 	{
 		return (x / 16.0D) * 3.2D;
 	}
-	
+
 	public Entity getEntityPicked()
 	{
 		return this.pickedEntity;
@@ -78,9 +104,10 @@ public class WorldClient
 
 	public void tickWorld()
 	{
+		this.rendercount += 0.05F;
 		this.tickEntities();
 		this.pickedEntity = this.calculateEntityPicked();
-		
+
 		for (RealmClient realm : this.realms)
 		{
 			realm.tickTechs();
@@ -104,35 +131,30 @@ public class WorldClient
 	}
 
 	public void render()
-	{		
+	{
+		GL11.glPushMatrix();
+		for (Chunk c : this.chunks)
+		{
+			c.renderChunk();
+		}
+		GL11.glPopMatrix();
+		GL11.glPushMatrix();
 		for (Entity e : this.entityList)
 		{
 			e.render();
-		}		
-		
-		GL11.glPushMatrix();
-		for (ModelChunk c : this.chunkmodels)
-		{
-			c.render();
 		}
 		GL11.glPopMatrix();
-		
+
 		/**
-		GL11.glPushMatrix();
-		GL11.glColor3f(0.5F, 0.5F, 0.5F);
-		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glNormal3f(0.0F, 1.0F, 0.0F);
-		GL11.glVertex3f(-10.0F, 0.0F, -10.0F);
-		GL11.glNormal3f(0.0F, 1.0F, 0.0F);
-		GL11.glVertex3f(-10.0F, 0.0F, 10.0F);
-		GL11.glNormal3f(0.0F, 1.0F, 0.0F);
-		GL11.glVertex3f(10.0F, 0.0F, 10.0F);
-		GL11.glNormal3f(0.0F, 1.0F, 0.0F);
-		GL11.glVertex3f(10.0F, 0.0F, -10.0F);
-		GL11.glEnd();
-		GL11.glColor3f(1.0F, 1.0F, 1.0F);
-		GL11.glPopMatrix();
-		**/
+		 * GL11.glPushMatrix(); GL11.glColor3f(0.5F, 0.5F, 0.5F);
+		 * GL11.glBegin(GL11.GL_QUADS); GL11.glNormal3f(0.0F, 1.0F, 0.0F);
+		 * GL11.glVertex3f(-10.0F, 0.0F, -10.0F); GL11.glNormal3f(0.0F, 1.0F,
+		 * 0.0F); GL11.glVertex3f(-10.0F, 0.0F, 10.0F); GL11.glNormal3f(0.0F,
+		 * 1.0F, 0.0F); GL11.glVertex3f(10.0F, 0.0F, 10.0F);
+		 * GL11.glNormal3f(0.0F, 1.0F, 0.0F); GL11.glVertex3f(10.0F, 0.0F,
+		 * -10.0F); GL11.glEnd(); GL11.glColor3f(1.0F, 1.0F, 1.0F);
+		 * GL11.glPopMatrix();
+		 **/
 	}
 
 	public Entity calculateEntityPicked()

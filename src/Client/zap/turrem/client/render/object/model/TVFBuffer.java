@@ -52,7 +52,7 @@ public class TVFBuffer
 	 * @param tvf The TVF file
 	 * @param obj The render object to push to
 	 */
-	public void bindTVF(TVFFile tvf, RenderObject obj)
+	public void bindTVF(TVFFile tvf, RenderObject obj, float scale)
 	{
 		this.vertnum = tvf.faceNum * 4;
 		float[] verts = new float[this.vertnum * 3];
@@ -92,6 +92,9 @@ public class TVFBuffer
 				verts[ind + 0] = (x + foffs[0]) / 16.0F;
 				verts[ind + 1] = (y + foffs[1]) / 16.0F;
 				verts[ind + 2] = (z + foffs[2]) / 16.0F;
+				verts[ind + 0] *= scale;
+				verts[ind + 1] *= scale;
+				verts[ind + 2] *= scale;
 
 				switch (f.dir & 0xFF)
 				{

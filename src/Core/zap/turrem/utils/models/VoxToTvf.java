@@ -95,9 +95,9 @@ public class VoxToTvf
 			VOXFile.VOXColor c = this.vox.colors[id];
 			TVFFile.TVFColor C = new TVFFile.TVFColor();
 			C.id = (byte) (id & 0xFF);
-			C.r = c.r;
-			C.g = c.g;
-			C.b = c.b;
+			C.r = (byte) (c.r << 2);
+			C.g = (byte) (c.g << 2);
+			C.b = (byte) (c.b << 2);
 			this.tvf.colors[i] = C;
 			i++;
 		}

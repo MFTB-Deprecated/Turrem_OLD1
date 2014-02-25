@@ -10,7 +10,7 @@ import zap.turrem.utils.geo.Box;
 
 public class Hut extends ArticleBuilding
 {
-	public ModelIcon hut = new ModelIcon("turrem.structure.house.hut_1");
+	public ModelIcon hut = new ModelIcon("turrem.structure.house.hut_1", 1.0F);
 	
 	@Override
 	public void draw(Entity entity)

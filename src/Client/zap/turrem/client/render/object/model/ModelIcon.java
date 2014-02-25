@@ -15,10 +15,12 @@ public class ModelIcon
 	private boolean held = false;
 	private boolean isLoaded = false;
 	private int engineIndex;
+	public float scale;
 
-	public ModelIcon(String model)
+	public ModelIcon(String model, float scale)
 	{
 		this.source = model;
+		this.scale = scale;
 	}
 
 	@Override

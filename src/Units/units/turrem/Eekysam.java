@@ -11,12 +11,12 @@ import zap.turrem.utils.geo.Box;
 
 public class Eekysam extends EntityArticle
 {
-	static ModelIcon eekysam = new ModelIcon("turrem.entity.human.eekysam");
+	static ModelIcon eekysam = new ModelIcon("turrem.entity.human.eekysam",  0.35F);
 
 	@Override
 	public void draw(Entity entity)
 	{
-		this.drawAnIcon(-0.3125F, 0.0F, -0.25F, eekysam);
+		this.drawAnIcon(-0.3125F * 0.35F, 0.0F, -0.25F * 0.35F, eekysam);
 	}
 
 	@Override
@@ -29,12 +29,13 @@ public class Eekysam extends EntityArticle
 	@Override
 	public Box updateBounds()
 	{
-		return Box.getBox(-0.3125D, 0.0D, -0.25F, 0.3125D, 2.0D, 0.25F);
+		return Box.getBox(-0.3125D * 0.35F, 0.0D, -0.25F * 0.35F, 0.3125D * 0.35F, 2.0D * 0.35F, 0.25F * 0.35F);
 	}
 
 	@Override
 	public void tick(Entity entity)
 	{
+		entity.setPosition(entity.posX, entity.theWorld.scaleWorld(entity.theWorld.getHeight(entity.theWorld.unScaleWorld(entity.posX), entity.theWorld.unScaleWorld(entity.posZ)) + 1), entity.posZ);
 	}
 
 	@Override
@@ -61,14 +62,6 @@ public class Eekysam extends EntityArticle
 				if (k == Keyboard.KEY_D)
 				{
 					entity.move(0.0D, 0.0D, d);
-				}
-				if (k == Keyboard.KEY_Q)
-				{
-					entity.move(0.0D, -d, 0.0D);
-				}
-				if (k == Keyboard.KEY_E)
-				{
-					entity.move(0.0D, d, 0.0D);
 				}
 				if (k == Keyboard.KEY_DELETE)
 				{

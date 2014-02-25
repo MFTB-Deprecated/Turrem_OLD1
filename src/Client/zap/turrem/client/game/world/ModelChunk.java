@@ -6,114 +6,84 @@ import org.lwjgl.opengl.GL11;
 
 import zap.turrem.client.render.engine.RenderEngine;
 import zap.turrem.client.render.object.RenderObject;
+import zap.turrem.utils.graphics.RgbConvert;
 import zap.turrem.utils.models.TVFFile;
 import zap.turrem.utils.models.TVFFile.TVFFace;
 import zap.turrem.utils.models.TVFFile.TVFColor;
 
 public class ModelChunk
 {
-	private TerrainGenChunk terc;
-	private float peak;
-	private float sea;
-	
-	private int height;
+	private Chunk terc;
 	
 	public final int chunkX;
 	public final int chunkY;
 	
 	public RenderObject render;
 	
-	public ModelChunk(TerrainGenChunk chunk, float peak, float sea, int height, int cx, int cy, RenderEngine engine)
+	public ModelChunk(Chunk chunk, RenderEngine engine)
 	{
 		this.terc = chunk;
-		this.peak = peak;
-		this.sea = sea;
-		this.height = height;
-		this.chunkX = cx;
-		this.chunkY = cy;
+		this.chunkX = chunk.chunkx;
+		this.chunkY = chunk.chunky;
 		
-		this.render = engine.addObject(this.makeTVF());
+		this.render = engine.addObject(this.makeTVF(), 3.2F);
 	}
 	
 	public void render()
 	{
 		GL11.glPushMatrix();
-		GL11.glScalef(3.2F, 3.2F, 3.2F);
-		GL11.glTranslatef(this.chunkX, 0.0F, this.chunkY);
+		GL11.glTranslatef(this.chunkX * 3.2F, 0.0F, this.chunkY * 3.2F);
 		this.render.doRender();
 		GL11.glPopMatrix();
 	}
 	
-	protected float getfH(short x, short y)
-	{
-		if (x < 0 || x >= 16 || y < 0 || y >= 16)
-		{
-			return Float.NaN;
-		}
-		return this.terc.ajustSurface(x, y, this.peak, this.sea, 0.0F);
-	}
-	
-	protected int getH(int max, int x, int y, float h)
-	{
-		if (Float.isNaN(h))
-		{
-			return 0;
-		}
-		int H = (int) (max * h);
-		if (H < 0)
-		{
-			H = 0;
-		}
-		return H;
-	}
-	
-	protected int getH(int max, int x, int y)
-	{
-		return this.getH(max, (short) x, (short) y);
-	}
-	
-	protected int getH(int max, short x, short y)
-	{
-		return this.getH(max, x, y, this.getfH(x, y));
-	}
 	
 	protected TVFFile makeTVF()
 	{
-		TVFColor green = new TVFColor();
-		green.id = 0x00;
-		green.r = (byte) 0x30;
-		green.g = (byte) 0x64;
-		green.b = (byte) 0x34;
-		
-		TVFColor blue = new TVFColor();
-		blue.id = 0x01;
-		blue.r = (byte) 0x24;
-		blue.g = (byte) 0x4A;
-		blue.b = (byte) 0xBE;
-		
-		TVFColor[] colors = new TVFColor[] {green, blue};
-		
+		ArrayList<Integer> usedColors = new ArrayList<Integer>();
 		ArrayList<TVFFace> faces = new ArrayList<TVFFace>();
 		for (int i = 0; i < 16; i++)
 		{
 			for (int j = 0; j < 16; j++)
 			{
-				byte color = (byte) 0x00;
-				float h = this.getfH((short)i, (short)j);
-				int H = this.getH(this.height, i, j, h);
-				if (h < 0.0F)
+				int color = this.terc.getColor(i, j);
+				int id = usedColors.indexOf(color);
+				if (id == -1)
 				{
-					color = (byte) 0x01;
+					id = usedColors.size();
+					usedColors.add(color);
 				}
-				this.makeSpire(this.getH(this.height, i + 1, j), this.getH(this.height, i - 1, j), this.getH(this.height, i, j + 1), this.getH(this.height, i, j - 1), H, color, i, j, faces);
+				int H = this.getH(i, j);
+				this.makeSpire(this.getH(i + 1, j), this.getH(i - 1, j), this.getH(i, j + 1), this.getH(i, j - 1), H, (byte) id, i, j, faces);
 			}
 		}
 		
 		TVFFace[] far = new TVFFace[faces.size()];
 		far = faces.toArray(far);
+		
+		TVFColor[] colors = new TVFColor[usedColors.size()];
+		for (int i = 0; i < usedColors.size(); i++)
+		{
+			int c = usedColors.get(i);
+			TVFColor tvfc = new TVFColor();
+			tvfc.id = (byte) i;
+			tvfc.r = (byte) (RgbConvert.getRed(c) & 0xFF);
+			tvfc.g = (byte) (RgbConvert.getGreen(c) & 0xFF);
+			tvfc.b = (byte) (RgbConvert.getBlue(c) & 0xFF);
+			colors[i] = tvfc;
+		}
 		return new TVFFile(far, colors);
 	}
 	
+	private int getH(int i, int j)
+	{
+		if (i < 0 || j < 0 || i >= 16 || j >= 16)
+		{
+			return 0;
+		}
+		return this.terc.getHeight(i, j);
+	}
+
 	private void makeSpire(int hxu, int hxd, int hzu, int hzd, int h, byte color, int x, int z, ArrayList<TVFFace> faces)
 	{
 		TVFFace top = new TVFFace();

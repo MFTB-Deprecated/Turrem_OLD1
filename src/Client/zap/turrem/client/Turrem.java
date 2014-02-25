@@ -62,7 +62,7 @@ public class Turrem
 	 * Runs the client
 	 */
 	public void run()
-	{
+	{		
 		this.updateDisplay();
 
 		try
