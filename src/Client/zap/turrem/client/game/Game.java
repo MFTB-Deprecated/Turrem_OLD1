@@ -1,27 +1,19 @@
 package zap.turrem.client.game;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import org.lwjgl.opengl.GL11;
 
 import org.lwjgl.input.Keyboard;
 
-import units.turrem.Eekysam;
-import units.turrem.Hut;
 import zap.turrem.client.Turrem;
 import zap.turrem.client.config.Config;
 import zap.turrem.client.game.player.PlayerClient;
 import zap.turrem.client.game.player.face.PlayerFace;
 import zap.turrem.client.game.world.WorldClient;
-import zap.turrem.client.gui.GuiTechGrid;
 import zap.turrem.client.render.RenderGame;
 import zap.turrem.client.render.font.FontRender;
-import zap.turrem.core.entity.Entity;
-import zap.turrem.core.tech.item.TechItem;
-import zap.turrem.core.tech.list.TechList;
 import zap.turrem.utils.Toolbox;
-import zap.turrem.utils.geo.Point;
 import zap.turrem.utils.geo.Ray;
 
 public class Game
@@ -35,14 +27,12 @@ public class Game
 
 	protected Ray pickRay;
 
-	private Random rand;
+	protected Random rand;
 
 	private float fpsstore = 0.0F;
 	private long lastTickTime;
 
 	public RealmClient myRealm;
-
-	public GuiTechGrid techs;
 
 	public boolean mat = true;
 
@@ -61,16 +51,9 @@ public class Game
 		this.theRender.start();
 		this.face.reset();
 
-		Entity me = (new Entity(new Hut()));
-		me.setPosition(-8.0F, 0.6F, -12.0F);
-		me.push(this.theWorld, this.theTurrem.theRender);
-
 		this.myRealm = new RealmClient(new PlayerClient());
 		this.theWorld.realms.add(this.myRealm);
 		this.myRealm.onStart();
-
-		this.techs = new GuiTechGrid(this.theRender.testFont, 40, 8, 10, 10, 20, 20);
-		this.techs.onStart(this.theRender.theManager);
 	}
 
 	public void updateGL()
@@ -93,8 +76,6 @@ public class Game
 			this.fpsstore *= 0.9F;
 			this.fpsstore += fs * 0.1F;
 		}
-
-		this.techs.grid = (ArrayList<TechItem>) TechList.getTechList();
 	}
 
 	public void render()
@@ -129,21 +110,6 @@ public class Game
 		this.theWorld.doKeyEvent();
 		if (Keyboard.getEventKeyState())
 		{
-			if (Keyboard.getEventKey() == Keyboard.KEY_S)
-			{
-				if (this.theWorld.getEntityPicked() == null)
-				{
-					Ray r = this.getPickRay().duplicate();
-					if (r.end.yCoord < r.start.yCoord)
-					{
-						Point p = Point.getSlideWithYValue(r.start, r.end, 0.0F);
-						Entity me = (new Entity(new Eekysam()));
-						me.rotation = (short) this.rand.nextInt(4);
-						me.setPosition(p);
-						me.push(this.theWorld, this.theTurrem.theRender);
-					}
-				}
-			}
 			if (Keyboard.getEventKey() == Keyboard.KEY_F3)
 			{
 				Config.debugInfo = !Config.debugInfo;

@@ -2,12 +2,9 @@ package zap.turrem.client.game.world;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import org.lwjgl.opengl.GL11;
 
-import units.turrem.foliage.Tree;
-import units.core.EntityStanding;
 import zap.turrem.client.Turrem;
 import zap.turrem.client.game.Game;
 import zap.turrem.client.game.RealmClient;
@@ -49,21 +46,6 @@ public class WorldClient
 				Chunk c = new Chunk(i, j, this.terrain.getChunk(i, j));
 				this.chunks.add(c);
 				c.loadModel(this.terrainRender);
-			}
-		}
-		
-		Random r = new Random(42L);
-		int n = r.nextInt(32) + 16;
-		for (int i = 0; i < n; i++)
-		{
-			int x = r.nextInt(256) - 128;
-			int z = r.nextInt(256) - 128;
-			int y = this.getHeight(x, z);
-			if (y > 0)
-			{
-				Entity me = (new EntityStanding(new Tree()));
-				me.setPosition(this.scaleWorld(x), this.scaleWorld(y + 1), this.scaleWorld(z));
-				me.push(this, turrem.theRender);
 			}
 		}
 	}
@@ -129,7 +111,7 @@ public class WorldClient
 
 		for (RealmClient realm : this.realms)
 		{
-			realm.tickTechs();
+			realm.onTick();
 		}
 	}
 
