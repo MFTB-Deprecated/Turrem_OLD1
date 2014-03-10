@@ -26,7 +26,7 @@ public class ModelChunk
 		this.chunkX = chunk.chunkx;
 		this.chunkY = chunk.chunky;
 		
-		this.render = engine.addObject(this.makeTVF(), 3.2F);
+		this.render = engine.addObject(this.makeTVF(), 5.0F, 0.0F, 0.0F, 0.0F);
 	}
 	
 	public void render()

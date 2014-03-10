@@ -18,11 +18,11 @@ public class RenderEngine
 		return obj;
 	}
 
-	public RenderObject addObject(TVFFile tvf, float scale)
+	public RenderObject addObject(TVFFile tvf, float scale, float x, float y, float z)
 	{
 		RenderObject obj = this.addObject();
 		TVFBuffer buff = new TVFBuffer();
-		buff.bindTVF(tvf, obj, scale);
+		buff.bindTVF(tvf, obj, scale, x, y, z);
 		return obj;
 	}
 

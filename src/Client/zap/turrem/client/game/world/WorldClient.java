@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
+import turrem.Citizen;
 import zap.turrem.client.Turrem;
 import zap.turrem.client.game.Game;
 import zap.turrem.client.game.RealmClient;
@@ -17,6 +18,8 @@ import zap.turrem.utils.geo.Ray;
 
 public class WorldClient
 {
+	private int viewage = 0;
+	
 	public List<Entity> entityList = new ArrayList<Entity>();
 	public List<RealmClient> realms = new ArrayList<RealmClient>();
 
@@ -48,6 +51,10 @@ public class WorldClient
 				c.loadModel(this.terrainRender);
 			}
 		}
+		
+		Citizen e = new Citizen();
+		e.setPosition(0.0F, 1.0F, 0.0F);
+		e.push(this, turrem.theRender);
 	}
 
 	public void doKeyEvent()
@@ -105,6 +112,7 @@ public class WorldClient
 
 	public void tickWorld()
 	{
+		this.viewage++;
 		this.rendercount += 0.05F;
 		this.tickEntities();
 		this.pickedEntity = this.calculateEntityPicked();
@@ -205,5 +213,10 @@ public class WorldClient
 			}
 		}
 		return hit;
+	}
+
+	public final int getViewage()
+	{
+		return viewage;
 	}
 }

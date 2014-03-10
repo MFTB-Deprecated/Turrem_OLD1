@@ -6,44 +6,46 @@ import zap.turrem.client.config.Config;
 import zap.turrem.client.game.entity.IEntityClient;
 import zap.turrem.client.game.world.WorldClient;
 import zap.turrem.client.render.engine.RenderManager;
-import zap.turrem.core.entity.article.EntityArticle;
+import zap.turrem.client.render.object.model.ModelIcon;
 import zap.turrem.utils.geo.Box;
 import zap.turrem.utils.geo.Point;
 
-public class Entity implements IEntityClient
+public abstract class Entity implements IEntityClient
 {
 	public static long nextUID = 0;
-	
+
 	public boolean isDead = false;
 	public boolean isAppear = true;
 
 	public double posX;
 	public double posY;
 	public double posZ;
-	
-	public EntityArticle article;
-	
+
 	public final long uid;
-	
+
 	public WorldClient theWorld;
 
 	public int rotation;
 	public float yawangle = 0.0F;
-	
-	public Entity(EntityArticle article)
+
+	public Entity()
 	{
-		this.article = article;
 		this.uid = nextUID++;
 	}
-	
+
 	public Box getBounds()
 	{
-		return this.article.updateBounds().moveNew(this.posX, this.posY, this.posZ);
+		Box b = this.updateBounds();
+		if (b != null)
+		{
+			return b.moveNew(this.posX, this.posY, this.posZ);
+		}
+		return Box.getBox(-0.5F, 0.0F, -0.5F, 0.5F, 1.0F, 0.5F).moveThis(this.posX, this.posY, this.posZ);
 	}
 
 	public void push(WorldClient world, RenderManager man)
 	{
-		this.article.loadAssets(man);
+		this.loadAssets(man);
 		world.entityList.add(this);
 		this.setPosition(this.posX, this.posY, this.posZ);
 		this.theWorld = world;
@@ -51,28 +53,35 @@ public class Entity implements IEntityClient
 
 	public void keyEvent(boolean me)
 	{
-		this.article.keyEvent(me, this);
+
 	}
-	
+
 	public void mouseEvent(boolean me)
 	{
-		this.article.mouseEvent(me, this);
+
 	}
-	
+
+	public void loadAssets(RenderManager man)
+	{
+		
+	}
+
+	public abstract Box updateBounds();
+
 	public void render()
 	{
 		GL11.glPushMatrix();
 		GL11.glTranslated(this.posX, this.posY, this.posZ);
 		GL11.glRotatef(this.rotation * 90 + this.yawangle, 0.0F, 1.0F, 0.0F);
-		this.article.draw(this);
+		this.renderEntity();
 		GL11.glPopMatrix();
-		
+
 		if (Config.drawBounds)
 		{
 			this.drawBox(0.0F, 0.0F, 0.0F);
 		}
 	}
-	
+
 	public void disappear()
 	{
 		this.isAppear = false;
@@ -85,19 +94,19 @@ public class Entity implements IEntityClient
 
 	public void onTick()
 	{
-		this.article.tick(this);
+
 	}
-	
+
 	public Point getLocation()
 	{
 		return Point.getPoint(this.posX, this.posY, this.posZ);
 	}
-	
+
 	public void move(double dx, double dy, double dz)
 	{
 		this.setPosition(this.posX + dx, this.posY + dy, this.posZ + dz);
 	}
-	
+
 	public void setPosition(double x, double y, double z)
 	{
 		this.posX = x;
@@ -121,7 +130,7 @@ public class Entity implements IEntityClient
 		GL11.glBegin(GL11.GL_QUADS);
 
 		Box box = this.getBounds();
-		
+
 		float xmax = (float) box.maxX;
 		float ymax = (float) box.maxY;
 		float zmax = (float) box.maxZ;
@@ -162,7 +171,7 @@ public class Entity implements IEntityClient
 		GL11.glEnd();
 		GL11.glPopMatrix();
 	}
-	
+
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -171,5 +180,21 @@ public class Entity implements IEntityClient
 			return ((Entity) obj).uid == this.uid;
 		}
 		return false;
+	}
+
+	protected abstract void renderEntity();
+
+	protected void drawAnIcon(float x, float y, float z, ModelIcon icon)
+	{
+		GL11.glTranslatef(x, y, z);
+		icon.render();
+		GL11.glTranslatef(-x, -y, -z);
+	}
+
+	protected void drawAnIcon(double x, double y, double z, ModelIcon icon)
+	{
+		GL11.glTranslated(x, y, z);
+		icon.render();
+		GL11.glTranslated(-x, -y, -z);
 	}
 }

@@ -16,11 +16,22 @@ public class ModelIcon
 	private boolean isLoaded = false;
 	private int engineIndex;
 	public float scale;
+	public float xoff = 0.0F;
+	public float yoff = 0.0F;
+	public float zoff = 0.0F;
 
 	public ModelIcon(String model, float scale)
 	{
 		this.source = model;
 		this.scale = scale;
+	}
+	
+	public ModelIcon(String model, float scale, float xoff, float yoff, float zoff)
+	{
+		this(model, scale);
+		this.xoff = xoff;
+		this.yoff = yoff;
+		this.zoff = zoff;
 	}
 
 	@Override

@@ -167,7 +167,7 @@ public abstract class RenderObjectHolder implements IRenderObjectHolder
 		TVFFile file = icon.makeTVF(this.myManager.assets);
 		if (file != null)
 		{
-			int rei = this.theEngine.addObject(file, icon.scale).getEngineIndex();
+			int rei = this.theEngine.addObject(file, icon.scale, icon.xoff, icon.yoff, icon.zoff).getEngineIndex();
 			icon.setLoaded();
 			icon.setEngineIndex(rei);
 		}
