@@ -4,16 +4,23 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import zap.turrem.client.config.Config;
+import zap.turrem.utils.ao.AORay;
+import zap.turrem.utils.ao.Urchin;
 import zap.turrem.utils.geo.EnumDir;
 
 public class VoxToTvf
 {
+	protected static Urchin urchin = new Urchin(Config.tvfOcclusionRaySize, Config.tvfOcclusionRays);
+
 	protected TVFFile tvf;
 	protected VOXFile vox;
 
 	private HashSet<Short> usedColors = new HashSet<Short>();
 	private short colorCount = 0;
 	private ArrayList<TVFFile.TVFFace> faces = new ArrayList<TVFFile.TVFFace>();
+
+	private final boolean doao;
 
 	/**
 	 * Creates a new converter object
@@ -25,6 +32,7 @@ public class VoxToTvf
 	{
 		this.tvf = tvf;
 		this.vox = vox;
+		this.doao = Config.useTvfRayOcclusion;
 	}
 
 	/**
@@ -68,6 +76,17 @@ public class VoxToTvf
 								f.z = (byte) (k & 0xFF);
 								f.dir = dir.ind;
 								f.color = v;
+								if (this.doao)
+								{
+									float ao = this.getAO(urchin, i, j, k, dir);
+									ao *= 2;
+									if (ao > 1)
+									{
+										ao = 1;
+									}
+									byte bl = (byte) (ao * 255);
+									f.light = new byte[] { bl, bl, bl, bl };
+								}
 								this.faces.add(f);
 								if (this.usedColors.add((short) (v & 0xFF)))
 								{
@@ -78,6 +97,72 @@ public class VoxToTvf
 					}
 				}
 			}
+		}
+	}
+
+	public float getAO(Urchin urchin, int x, int y, int z, EnumDir dir)
+	{
+		float ao = 0.0F;
+		for (int i = 0; i < urchin.rays.length; i++)
+		{
+			boolean hit = false;
+			AORay r = urchin.rays[i];
+			for (int j = 0; j < r.points.length; j++)
+			{
+				int px = r.points[j].x + x;
+				int py = r.points[j].y + y;
+				int pz = r.points[j].z + z;
+				if (px >= this.vox.width || px < 0 || py >= this.vox.height || py < 0 || pz >= this.vox.length || pz < 0)
+				{
+					break;
+				}
+				else if (this.getVox(px, py, pz) != (byte) 0xFF)
+				{
+					hit = true;
+					break;
+				}
+			}
+			if (!hit)
+			{
+				switch (dir)
+				{
+					case XUp:
+						ao += r.xd;
+						break;
+					case XDown:
+						ao += r.xu;
+						break;
+					case YUp:
+						ao += r.yd;
+						break;
+					case YDown:
+						ao += r.yu;
+						break;
+					case ZUp:
+						ao += r.zd;
+						break;
+					case ZDown:
+						ao += r.zu;
+						break;
+				}
+			}
+		}
+		switch (dir)
+		{
+			case XUp:
+				return ao / urchin.xd;
+			case XDown:
+				return ao / urchin.xu;
+			case YUp:
+				return ao / urchin.yd;
+			case YDown:
+				return ao / urchin.yu;
+			case ZUp:
+				return ao / urchin.zd;
+			case ZDown:
+				return ao / urchin.zu;
+			default:
+				return 0;
 		}
 	}
 
@@ -104,6 +189,11 @@ public class VoxToTvf
 
 		this.tvf.faces = this.faces.toArray(new TVFFile.TVFFace[0]);
 		this.tvf.faceNum = this.tvf.faces.length;
+
+		if (this.doao)
+		{
+			this.tvf.prelit = 2;
+		}
 	}
 
 	private boolean isOutside(int x, int y, int z, int d)

@@ -180,7 +180,8 @@ public class TVFFile
 			}
 			else if (this.prelit == 2)
 			{
-				stream.write((f.light[0] & 0xFF + f.light[1] & 0xFF + f.light[2] & 0xFF + f.light[3] & 0xFF) / 4);
+				int lit = ((f.light[0] & 0xFF) + (f.light[1] & 0xFF) + (f.light[2] & 0xFF) + (f.light[3] & 0xFF)) / 4;
+				stream.write(lit);
 			}
 		}
 	}

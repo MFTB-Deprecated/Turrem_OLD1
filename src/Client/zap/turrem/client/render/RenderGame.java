@@ -99,7 +99,7 @@ public class RenderGame
 	private void initLightArrays()
 	{
 		this.lightPosition = BufferUtils.createFloatBuffer(4);
-		this.lightPosition.put(8.0f).put(10.0f).put(5.0f).put(0.0f).flip();
+		this.lightPosition.put(5.0f).put(10.0f).put(8.0f).put(0.0f).flip();
 
 		this.whiteLight = BufferUtils.createFloatBuffer(4);
 		this.whiteLight.put(0.5f).put(0.5f).put(0.5f).put(1.0f).flip();

@@ -4,10 +4,10 @@ public class AORay
 {
 	public static class Offset
 	{
-		float depth;
-		int x;
-		int y;
-		int z;
+		public float depth;
+		public int x;
+		public int y;
+		public int z;
 	}
 	
 	public Offset[] points;
@@ -64,8 +64,8 @@ public class AORay
 				cz = zi;
 				Offset o = new Offset();
 				o.x = xi;
-				o.y = xi;
-				o.z = xi;
+				o.y = yi;
+				o.z = zi;
 				o.depth = d;
 				this.points[i] = o;
 				i++;

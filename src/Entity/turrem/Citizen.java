@@ -1,11 +1,15 @@
 package turrem;
 
 import zap.turrem.client.render.engine.RenderManager;
+import zap.turrem.client.render.engine.holders.RenderObjectHolderSimple;
+import zap.turrem.client.render.object.model.ModelIcon;
 import zap.turrem.core.entity.UnitLearn;
 import zap.turrem.utils.geo.Box;
 
 public class Citizen extends UnitLearn
 {
+	private ModelIcon house = new ModelIcon("turrem.structure.science.collider.atlas", 16.0F, 0.0F, 0.0F, 0.0F);
+	
 	public Citizen()
 	{
 		super();
@@ -15,6 +19,8 @@ public class Citizen extends UnitLearn
 	public void loadAssets(RenderManager man)
 	{
 		super.loadAssets(man);
+		man.pushIcon(house, "building", RenderObjectHolderSimple.class);
+		this.house.loadMe();
 	}
 
 	@Override
@@ -26,6 +32,7 @@ public class Citizen extends UnitLearn
 	@Override
 	protected void renderEntity()
 	{
+		house.render();
 	}
 
 	@Override

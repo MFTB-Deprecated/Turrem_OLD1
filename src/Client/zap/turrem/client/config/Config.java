@@ -15,8 +15,8 @@ public class Config
 	public static boolean convertAllVox = true;
 	
 	public static boolean useTvfRayOcclusion = true;
-	public static short tvfOcclusionRays = 1024;
-	public static short tvfOcclusionRaySize = 64;
+	public static short tvfOcclusionRays = 128;
+	public static short tvfOcclusionRaySize = 32;
 	
 	private static boolean isChanged = false;
 
