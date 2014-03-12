@@ -1,5 +1,7 @@
 package zap.turrem.utils.geo;
 
+import zap.turrem.utils.Toolbox;
+
 public class Point
 {
 	public double xCoord;
@@ -188,5 +190,11 @@ public class Point
 	public Point duplicate()
 	{
 		return new Point(this.xCoord, this.yCoord, this.zCoord);
+	}
+	
+	public String toString()
+	{
+		return "(" + Toolbox.getFloat((float) this.xCoord, 2) + ", " + Toolbox.getFloat((float) this.yCoord, 2) + ", " + Toolbox.getFloat((float) this.zCoord, 2) + ")";
+		
 	}
 }

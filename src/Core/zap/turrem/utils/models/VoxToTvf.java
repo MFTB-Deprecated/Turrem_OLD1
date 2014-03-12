@@ -11,7 +11,7 @@ import zap.turrem.utils.geo.EnumDir;
 
 public class VoxToTvf
 {
-	protected static Urchin urchin = new Urchin(Config.tvfOcclusionRaySize, Config.tvfOcclusionRays);
+	protected static Urchin urchin = Config.useTvfRayOcclusion ? new Urchin(Config.tvfOcclusionRaySize, Config.tvfOcclusionRays) : null;
 
 	protected TVFFile tvf;
 	protected VOXFile vox;

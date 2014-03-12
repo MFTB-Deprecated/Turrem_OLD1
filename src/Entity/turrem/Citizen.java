@@ -8,7 +8,7 @@ import zap.turrem.utils.geo.Box;
 
 public class Citizen extends UnitLearn
 {
-	private ModelIcon house = new ModelIcon("turrem.structure.science.collider.atlas", 16.0F, 0.0F, 0.0F, 0.0F);
+	private ModelIcon person = new ModelIcon("turrem.entity.human.cave", 16.0F, 5.0F, 0.0F, 4.0F);
 	
 	public Citizen()
 	{
@@ -19,20 +19,20 @@ public class Citizen extends UnitLearn
 	public void loadAssets(RenderManager man)
 	{
 		super.loadAssets(man);
-		man.pushIcon(house, "building", RenderObjectHolderSimple.class);
-		this.house.loadMe();
+		man.pushIcon(person, "people", RenderObjectHolderSimple.class);
+		this.person.loadMe();
 	}
 
 	@Override
 	public Box updateBounds()
 	{
-		return null;
+		return Box.getBox(-1, 0.0F, -1, 1, 2.0F, 1);
 	}
 
 	@Override
 	protected void renderEntity()
 	{
-		house.render();
+		person.render();
 	}
 
 	@Override

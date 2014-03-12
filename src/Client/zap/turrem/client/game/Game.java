@@ -35,6 +35,8 @@ public class Game
 	public RealmClient myRealm;
 
 	public boolean mat = true;
+	public int starting = 2;
+	public final boolean defaultmat = false;
 
 	public Game(Turrem turrem)
 	{
@@ -81,6 +83,14 @@ public class Game
 	public void render()
 	{
 		this.theRender.render();
+		if (this.starting > 0)
+		{
+			if (this.starting == 1)
+			{
+				this.mat = this.defaultmat;
+			}
+			this.starting--;
+		}
 	}
 
 	public void renderWorld()
@@ -128,7 +138,7 @@ public class Game
 		if (Config.debugInfo)
 		{
 			GL11.glColor3f(1.0F, 1.0F, 1.0F);
-			font.renderText("\'S\' - Create new entity at cursor\n\'T\' - Toggle material\n\'L-Click & Drag\' - Pan camera\n\'M-Click & Drag\' - Orbit camera\n\'Scroll\' - Zoom\n\'F3\' - Toggle this info", 20.0F, 10.0F, 20.0F);
+			font.renderText("\'T\' - Toggle material\n\'L-Click & Drag\' - Pan camera\n\'M-Click & Drag\' - Orbit camera\n\'Scroll\' - Zoom\n\'F3\' - Toggle this info", 20.0F, 10.0F, 20.0F);
 			String fps = Toolbox.getFloat(this.fpsstore, 1);
 			font.renderText("FPS: " + fps, Config.getWidth() - 100.0F, 10.0F, 20.0F);
 			GL11.glColor3f(1.0F, 1.0F, 1.0F);

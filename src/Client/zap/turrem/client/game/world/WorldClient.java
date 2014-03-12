@@ -53,7 +53,7 @@ public class WorldClient
 		}
 		
 		Citizen e = new Citizen();
-		e.setPosition(0.0F, 1.0F, 0.0F);
+		e.setPosition(0.0F, this.scaleWorld(1), 0.0F);
 		e.push(this, turrem.theRender);
 	}
 

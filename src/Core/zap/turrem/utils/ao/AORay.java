@@ -21,7 +21,7 @@ public class AORay
 	
 	public AORay(float x, float y, float z, int size, float inc)
 	{
-		float l = (float) Math.sqrt(x * x + y * y + z * z);
+		float l = (float)  Math.sqrt(x * x + y * y + z * z);
 		x /= l;
 		y /= l;
 		z /= l;

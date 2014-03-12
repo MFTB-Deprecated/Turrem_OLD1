@@ -26,8 +26,9 @@ public class PlayerFace
 
 	public PlayerFace()
 	{
-		this.camFocus = Point.getPoint(0.0D, 1.0D, 0.0D);
-		this.camLoc = Point.getPoint(0.0D, 0.0D, 0.0D);
+		this.camFocus = Point.getPoint(0.0D, 1.0D, 1.0D);
+		this.camLoc = Point.getPoint(3.0D, 5.3D, 4.5D);
+		this.reverseFocus();
 		this.updatePars();
 	}
 
@@ -159,6 +160,25 @@ public class PlayerFace
 		this.doFocus();
 		this.mouselastx = Mouse.getX();
 		this.mouselasty = Mouse.getY();
+	}
+	
+	public void reverseFocus()
+	{
+		double dx = this.camLoc.xCoord - this.camFocus.xCoord;
+		double dy = this.camLoc.yCoord - this.camFocus.yCoord;
+		double dz = this.camLoc.zCoord - this.camFocus.zCoord;
+		double dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+		this.camDist = (float) dist;
+		dx /= this.camDist;
+		dy /= this.camDist;
+		dz /= this.camDist;
+		float pitchrad = (float) Math.asin(dy);
+		this.camPitch = (pitchrad / 3.14F) * 180.0F;
+		double scalev = Math.cos(pitchrad);
+		dx /= scalev;
+		dz /= scalev;
+		float yawrad = (float) Math.asin(dx);
+		this.camYaw = (yawrad / 3.14F) * 180.0F;
 	}
 
 	public void doFocus()

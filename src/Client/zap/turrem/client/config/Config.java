@@ -12,12 +12,12 @@ public class Config
 	public static boolean drawBounds = true;
 	public static boolean debugInfo = true;
 	
-	public static boolean convertAllVox = false;
+	public final static boolean convertAllVox = false;
 	
-	public static boolean useTvfRayOcclusion = false;
-	public static boolean useNeighborOcclusion = true;
-	public static short tvfOcclusionRays = 128;
-	public static short tvfOcclusionRaySize = 32;
+	public final static boolean useTvfRayOcclusion = false;
+	public final static boolean useNeighborOcclusion = true;
+	public final static short tvfOcclusionRays = 128;
+	public final static short tvfOcclusionRaySize = 32;
 	
 	private static boolean isChanged = false;
 
