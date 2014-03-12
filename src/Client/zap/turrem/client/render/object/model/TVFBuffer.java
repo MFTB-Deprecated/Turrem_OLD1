@@ -93,25 +93,26 @@ public class TVFBuffer
 				verts[ind + 1] = (y + foffs[1] - yo) / scale;
 				verts[ind + 2] = (z + foffs[2] - zo) / scale;
 
+				float length = f.light[j] / 255.0F;
 				switch (f.dir & 0xFF)
 				{
 					case 1:
-						norms[ind + 0] = 1.0F;
+						norms[ind + 0] = length;
 						break;
 					case 2:
-						norms[ind + 0] = -1.0F;
+						norms[ind + 0] = -length;
 						break;
 					case 3:
-						norms[ind + 1] = 1.0F;
+						norms[ind + 1] = length;
 						break;
 					case 4:
-						norms[ind + 1] = -1.0F;
+						norms[ind + 1] = -length;
 						break;
 					case 5:
-						norms[ind + 2] = 1.0F;
+						norms[ind + 2] = length;
 						break;
 					case 6:
-						norms[ind + 2] = -1.0F;
+						norms[ind + 2] = -length;
 						break;
 				}
 			}

@@ -29,7 +29,9 @@ public class TVFFile
 	/**
 	 * Format version number
 	 */
-	public static final int theFileVersion = 3;
+	public static final int theFileVersion = 4;
+
+	public byte prelit;
 
 	/**
 	 * Number of unique colors
@@ -83,6 +85,8 @@ public class TVFFile
 		public byte dir;
 		public byte color;
 
+		public byte[] light = new byte[] { (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF };
+
 		public static byte Dir_XUp = (byte) 0x01;
 		public static byte Dir_XDown = (byte) 0x02;
 		public static byte Dir_YUp = (byte) 0x03;
@@ -107,7 +111,7 @@ public class TVFFile
 		VoxToTvf con = new VoxToTvf(this, vox);
 		con.make();
 	}
-	
+
 	public TVFFile(TVFFace[] faces, TVFColor[] colors)
 	{
 		this();
@@ -131,6 +135,7 @@ public class TVFFile
 		stream.write(0);
 		stream.writeShort(theFileVersion);
 
+		stream.write(this.prelit & 0xFF);
 		stream.writeShort(this.colorNum);
 
 		for (int i = 0; i < this.colorNum; i++)
@@ -168,6 +173,15 @@ public class TVFFile
 			stream.write(f.z & 0xFF);
 			stream.write(f.dir & 0xFF);
 			stream.write(f.color & 0xFF);
+
+			if (this.prelit == 1)
+			{
+				stream.writeShort(((f.light[0] & 0xF0) << 8) | ((f.light[1] & 0xF0) << 4) | ((f.light[2] & 0xF0) << 0) | ((f.light[3] & 0xF0) >> 4));
+			}
+			else if (this.prelit == 2)
+			{
+				stream.write((f.light[0] & 0xFF + f.light[1] & 0xFF + f.light[2] & 0xFF + f.light[3] & 0xFF) / 4);
+			}
 		}
 	}
 
@@ -203,6 +217,8 @@ public class TVFFile
 		{
 			return null;
 		}
+
+		tvf.prelit = stream.readByte();
 
 		tvf.colorNum = stream.readShort();
 		tvf.colors = new TVFColor[tvf.colorNum];
@@ -246,6 +262,22 @@ public class TVFFile
 			f.z = stream.readByte();
 			f.dir = stream.readByte();
 			f.color = stream.readByte();
+			if (tvf.prelit == 1)
+			{
+				short lit = stream.readShort();
+				f.light[0] = (byte) ((lit >> 12) & 0x0F);
+				f.light[1] = (byte) ((lit >> 8) & 0x0F);
+				f.light[2] = (byte) ((lit >> 4) & 0x0F);
+				f.light[3] = (byte) ((lit >> 0) & 0x0F);
+			}
+			else if (tvf.prelit == 2)
+			{
+				byte lit = stream.readByte();
+				f.light[0] = lit;
+				f.light[1] = lit;
+				f.light[2] = lit;
+				f.light[3] = lit;
+			}
 
 			tvf.faces[i] = f;
 		}

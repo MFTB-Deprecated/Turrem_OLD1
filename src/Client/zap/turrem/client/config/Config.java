@@ -12,6 +12,12 @@ public class Config
 	public static boolean drawBounds = true;
 	public static boolean debugInfo = true;
 	
+	public static boolean convertAllVox = true;
+	
+	public static boolean useTvfRayOcclusion = true;
+	public static short tvfOcclusionRays = 1024;
+	public static short tvfOcclusionRaySize = 64;
+	
 	private static boolean isChanged = false;
 
 	public static final int getLwjglSyncRate()
