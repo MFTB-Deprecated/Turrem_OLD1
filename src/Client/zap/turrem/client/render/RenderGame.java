@@ -102,13 +102,13 @@ public class RenderGame
 		this.lightPosition.put(5.0f).put(10.0f).put(8.0f).put(0.0f).flip();
 
 		this.whiteLight = BufferUtils.createFloatBuffer(4);
-		this.whiteLight.put(0.5f).put(0.5f).put(0.5f).put(1.0f).flip();
+		this.whiteLight.put(0.5f).put(0.5f).put(0.5f).put(0.75f).flip();
 
 		this.specLight = BufferUtils.createFloatBuffer(4);
 		this.specLight.put(0.1f).put(0.1f).put(0.1f).put(1.0f).flip();
 
 		this.lModelAmbient = BufferUtils.createFloatBuffer(4);
-		this.lModelAmbient.put(0.5f).put(0.5f).put(0.5f).put(1.5f).flip();
+		this.lModelAmbient.put(0.5f).put(0.5f).put(0.5f).put(1.75f).flip();
 	}
 
 	public void render()

@@ -7,9 +7,7 @@ import org.lwjgl.opengl.GL11;
 import zap.turrem.client.config.Config;
 import zap.turrem.client.render.engine.RenderEngine;
 import zap.turrem.client.render.object.RenderObject;
-import zap.turrem.utils.ao.AORay;
-import zap.turrem.utils.ao.Urchin;
-import zap.turrem.utils.geo.EnumDir;
+import zap.turrem.client.render.object.model.TVFBuffer;
 import zap.turrem.utils.graphics.RgbConvert;
 import zap.turrem.utils.models.TVFFile;
 import zap.turrem.utils.models.TVFFile.TVFFace;
@@ -17,8 +15,7 @@ import zap.turrem.utils.models.TVFFile.TVFColor;
 
 public class ModelChunk
 {
-	protected static Urchin urchin = new Urchin(Config.tvfOcclusionRaySize, Config.tvfOcclusionRays);
-	private final boolean doao;
+	private final boolean doNeiAO;
 
 	private Chunk terc;
 
@@ -32,7 +29,7 @@ public class ModelChunk
 		this.terc = chunk;
 		this.chunkX = chunk.chunkx;
 		this.chunkY = chunk.chunky;
-		this.doao = Config.useTvfRayOcclusion;
+		this.doNeiAO = Config.useNeighborOcclusion;
 		this.render = engine.addObject(this.makeTVF(), 5.0F, 0.0F, 0.0F, 0.0F);
 	}
 
@@ -79,9 +76,9 @@ public class ModelChunk
 			colors[i] = tvfc;
 		}
 		TVFFile tvf = new TVFFile(far, colors);
-		if (this.doao)
+		if (this.doNeiAO)
 		{
-			tvf.prelit = 2;
+			tvf.prelit = 1;
 		}
 		return tvf;
 	}
@@ -103,16 +100,16 @@ public class ModelChunk
 		top.x = (byte) (x & 0xFF);
 		top.z = (byte) (z & 0xFF);
 		top.y = (byte) (h & 0xFF);
-		if (this.doao)
+		if (this.doNeiAO)
 		{
-			float ao = this.getAO(urchin, x, h, z, EnumDir.YUp);
-			ao *= 2;
-			if (ao > 1)
+			int[] vinds = TVFBuffer.offinds[TVFFace.Dir_YUp];
+			byte[] aos = new byte[4];
+			for (int i = 0; i < 4; i++)
 			{
-				ao = 1;
+				float ao = (this.getVertexAO(x, z, TVFBuffer.offs[vinds[i]], h) + 2) / 5.0F;
+				aos[i] = (byte) (ao * 255);
 			}
-			byte bl = (byte) (ao * 255);
-			top.light = new byte[] { bl, bl, bl, bl };
+			top.light = aos;
 		}
 		faces.add(top);
 
@@ -124,17 +121,6 @@ public class ModelChunk
 			side.x = (byte) (x & 0xFF);
 			side.z = (byte) (z & 0xFF);
 			side.y = (byte) (i & 0xFF);
-			if (this.doao)
-			{
-				float ao = this.getAO(urchin, x, i, z, EnumDir.XUp);
-				ao *= 2;
-				if (ao > 1)
-				{
-					ao = 1;
-				}
-				byte bl = (byte) (ao * 255);
-				side.light = new byte[] { bl, bl, bl, bl };
-			}
 			faces.add(side);
 		}
 
@@ -146,17 +132,6 @@ public class ModelChunk
 			side.x = (byte) (x & 0xFF);
 			side.z = (byte) (z & 0xFF);
 			side.y = (byte) (i & 0xFF);
-			if (this.doao)
-			{
-				float ao = this.getAO(urchin, x, i, z, EnumDir.ZUp);
-				ao *= 2;
-				if (ao > 1)
-				{
-					ao = 1;
-				}
-				byte bl = (byte) (ao * 255);
-				side.light = new byte[] { bl, bl, bl, bl };
-			}
 			faces.add(side);
 		}
 
@@ -168,17 +143,6 @@ public class ModelChunk
 			side.x = (byte) (x & 0xFF);
 			side.z = (byte) (z & 0xFF);
 			side.y = (byte) (i & 0xFF);
-			if (this.doao)
-			{
-				float ao = this.getAO(urchin, x, i, z, EnumDir.XDown);
-				ao *= 2;
-				if (ao > 1)
-				{
-					ao = 1;
-				}
-				byte bl = (byte) (ao * 255);
-				side.light = new byte[] { bl, bl, bl, bl };
-			}
 			faces.add(side);
 		}
 
@@ -190,84 +154,21 @@ public class ModelChunk
 			side.x = (byte) (x & 0xFF);
 			side.z = (byte) (z & 0xFF);
 			side.y = (byte) (i & 0xFF);
-			if (this.doao)
-			{
-				float ao = this.getAO(urchin, x, i, z, EnumDir.ZDown);
-				ao *= 2;
-				if (ao > 1)
-				{
-					ao = 1;
-				}
-				byte bl = (byte) (ao * 255);
-				side.light = new byte[] { bl, bl, bl, bl };
-			}
 			faces.add(side);
 		}
 	}
-
-	public float getAO(Urchin urchin, int x, int y, int z, EnumDir dir)
+	
+	public float getVertexAO(int x, int z, int[] verts, int h)
 	{
-		float ao = 0.0F;
-		for (int i = 0; i < urchin.rays.length; i++)
+		return this.getVertexAO(this.getH(x, z + verts[0] * 2 - 1) > h, this.getH(x + verts[2] * 2 - 1, z) > h, this.getH(x + verts[2] * 2 - 1, z + verts[0] * 2 - 1) > h);
+	}
+
+	public float getVertexAO(boolean side1, boolean side2, boolean corner)
+	{
+		if (side1 && side2)
 		{
-			boolean hit = false;
-			AORay r = urchin.rays[i];
-			for (int j = 0; j < r.points.length; j++)
-			{
-				int px = r.points[j].x + x;
-				int py = r.points[j].y + y;
-				int pz = r.points[j].z + z;
-				if (px >= 16 || px < 0 || py >= 32 || py < 0 || pz >= 16 || pz < 0)
-				{
-					break;
-				}
-				if (this.getH(px, pz) >= py)
-				{
-					hit = true;
-					break;
-				}
-			}
-			if (!hit)
-			{
-				switch (dir)
-				{
-					case XUp:
-						ao += r.xd;
-						break;
-					case XDown:
-						ao += r.xu;
-						break;
-					case YUp:
-						ao += r.yd;
-						break;
-					case YDown:
-						ao += r.yu;
-						break;
-					case ZUp:
-						ao += r.zd;
-						break;
-					case ZDown:
-						ao += r.zu;
-						break;
-				}
-			}
+			return 0;
 		}
-		switch (dir)
-		{
-			case XUp:
-				return ao / urchin.xd;
-			case XDown:
-				return ao / urchin.xu;
-			case YUp:
-				return ao / urchin.yd;
-			case YDown:
-				return ao / urchin.yu;
-			case ZUp:
-				return ao / urchin.zd;
-			case ZDown:
-				return ao / urchin.zu;
-			default:
-				return 0;
-		}
+		return 3 - ((side1 ? 1 : 0) + (side2 ? 1 : 0) + (corner ? 1 : 0));
 	}
 }
