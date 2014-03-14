@@ -174,7 +174,7 @@ public class WorldClient
 		float dist = (float) r.getLengthSqr();
 		for (Entity e : ents)
 		{
-			BoxPin pin = e.getBounds().calculateIntercept(r);
+			BoxPin pin = e.getPickBounds().calculateIntercept(r);
 			if (pin != null)
 			{
 				float d = (float) Point.squareDistance(r.start, pin.location);
@@ -193,7 +193,7 @@ public class WorldClient
 		List<Entity> hit = new ArrayList<Entity>();
 		for (Entity e : this.entityList)
 		{
-			if (box.intersectsWith(e.getBounds()))
+			if (box.intersectsWith(e.getPickBounds()))
 			{
 				hit.add(e);
 			}
@@ -207,7 +207,7 @@ public class WorldClient
 		long skip = exclude.uid;
 		for (Entity e : this.entityList)
 		{
-			if (e.uid != skip && box.intersectsWith(e.getBounds()))
+			if (e.uid != skip && box.intersectsWith(e.getPickBounds()))
 			{
 				hit.add(e);
 			}

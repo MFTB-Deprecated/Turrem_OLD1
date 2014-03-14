@@ -24,7 +24,7 @@ public abstract class UnitLearn extends EntityUnit implements IEntityLearnNode
 	public UnitLearn()
 	{
 		super();
-		this.noteHeight = (float) this.getBounds().maxY;
+		this.noteHeight = (float) this.getPickBounds().maxY;
 		newIdeas.add(null);
 	}
 

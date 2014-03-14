@@ -3,14 +3,13 @@ package zap.turrem.core.entity;
 import org.lwjgl.opengl.GL11;
 
 import zap.turrem.client.config.Config;
-import zap.turrem.client.game.entity.IEntityClient;
 import zap.turrem.client.game.world.WorldClient;
 import zap.turrem.client.render.engine.RenderManager;
 import zap.turrem.client.render.object.model.ModelIcon;
 import zap.turrem.utils.geo.Box;
 import zap.turrem.utils.geo.Point;
 
-public abstract class Entity implements IEntityClient
+public abstract class Entity
 {
 	public static long nextUID = 0;
 
@@ -33,14 +32,14 @@ public abstract class Entity implements IEntityClient
 		this.uid = nextUID++;
 	}
 
-	public Box getBounds()
+	public Box getPickBounds()
 	{
-		Box b = this.updateBounds();
+		Box b = this.pickBounds();
 		if (b != null)
 		{
-			return b.moveNew(this.posX, this.posY, this.posZ);
+			return b.moveNew(this.posX, this.posY, this.posZ).yawThis(this.rotation, this.posX, this.posY, this.posZ);
 		}
-		return Box.getBox(-0.5F, 0.0F, -0.5F, 0.5F, 1.0F, 0.5F).moveThis(this.posX, this.posY, this.posZ);
+		return Box.getBox(-0.5F, 0.0F, -0.5F, 0.5F, 1.0F, 0.5F).moveThis(this.posX, this.posY, this.posZ).yawThis(this.rotation, this.posX, this.posY, this.posZ);
 	}
 
 	public void push(WorldClient world, RenderManager man)
@@ -66,7 +65,7 @@ public abstract class Entity implements IEntityClient
 		
 	}
 
-	public abstract Box updateBounds();
+	public abstract Box pickBounds();
 
 	public void render()
 	{
@@ -129,7 +128,7 @@ public abstract class Entity implements IEntityClient
 		GL11.glColor3f(r, g, b);
 		GL11.glBegin(GL11.GL_QUADS);
 
-		Box box = this.getBounds();
+		Box box = this.getPickBounds();
 
 		float xmax = (float) box.maxX;
 		float ymax = (float) box.maxY;

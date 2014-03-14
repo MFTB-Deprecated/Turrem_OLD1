@@ -22,6 +22,7 @@ public class Box
     	this.maxX = maxX;
     	this.maxY = maxY;
     	this.maxZ = maxZ;
+    	this.fixVerts();
     }
     
     public Box setBoundsThis(double minX, double minY, double minZ, double maxX, double maxY, double maxZ)
@@ -32,6 +33,7 @@ public class Box
     	this.maxX = maxX;
     	this.maxY = maxY;
     	this.maxZ = maxZ;
+    	this.fixVerts();
     	return this;
     }
     
@@ -53,6 +55,7 @@ public class Box
        	this.minX -= size;
     	this.minY -= size;
     	this.minZ -= size;
+    	this.fixVerts();
     	return this;
     }
     
@@ -161,6 +164,75 @@ public class Box
     public Box moveNew(double x, double y, double z)
     {
     	return this.duplicate().moveThis(x, y, z);
+    }
+    
+    public Box yawThis(int drot, double x, double y, double z)
+    {
+    	short[] trg = new short[] {0, 1, 0, -1};
+    	int sin = (drot % 4) + 4;
+    	int cos = sin + 1;
+    	sin %= 4;
+    	cos %= 4;
+    	this.moveThis(-x, -y, -z);
+    	double mx;
+    	double my;
+    	double mz;
+    	mx = this.minX * trg[cos] - this.minZ * trg[sin];
+    	my = this.minY;
+    	mz = this.minX * trg[sin] + this.minZ * trg[cos];
+    	this.minX = mx;
+    	this.minY = my;
+    	this.minZ = mz;
+    	mx = this.maxX * trg[cos] - this.maxZ * trg[sin];
+    	my = this.maxY;
+    	mz = this.maxX * trg[sin] + this.maxZ * trg[cos];
+    	this.maxX = mx;
+    	this.maxY = my;
+    	this.maxZ = mz;
+    	this.moveThis(x, y, z);
+    	this.fixVerts();
+    	return this;
+    }
+    
+    public Box fixVerts()
+    {
+    	if (this.maxX < this.minX)
+    	{
+    		this.flipX();
+    	}
+    	if (this.maxY < this.minY)
+    	{
+    		this.flipY();
+    	}
+    	if (this.maxZ < this.minZ)
+    	{
+    		this.flipZ();
+    	}
+    	return this;
+    }
+    
+    protected void flipX()
+    {
+    	double max = this.maxX;
+    	double min = this.minX;
+    	this.maxX = min;
+    	this.minX = max;
+    }
+    
+    protected void flipY()
+    {
+    	double max = this.maxY;
+    	double min = this.minY;
+    	this.maxY = min;
+    	this.minY = max;
+    }
+    
+    protected void flipZ()
+    {
+    	double max = this.maxZ;
+    	double min = this.minZ;
+    	this.maxZ = min;
+    	this.minZ = max;
     }
     
     public BoxPin calculateIntercept(Ray ray)
