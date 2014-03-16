@@ -72,7 +72,7 @@ public class Turrem
 		
 		try
 		{
-			File f = new File(this.dir + "tertest.png");
+			File f = new File(this.dir + "ter.test.png");
 			f.createNewFile();
 			ImageIO.write(ter.renderTest(-8, -8, 16, 16), "png", new FileOutputStream(f));
 		}
