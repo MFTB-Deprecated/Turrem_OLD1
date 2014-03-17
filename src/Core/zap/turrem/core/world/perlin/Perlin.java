@@ -16,6 +16,8 @@ public abstract class Perlin
 		return original;
 	}
 
+	public abstract int getLastScale();
+	
 	public abstract int numLayers();
 
 	public void makeWorld()

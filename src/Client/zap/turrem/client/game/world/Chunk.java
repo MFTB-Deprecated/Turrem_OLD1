@@ -37,7 +37,7 @@ public class Chunk
 					c = sand;
 				}
 				this.colormap[this.getIndex(i, j)] = c;
-				int H = (int) (h * 16);
+				int H = (int) (h * 64);
 				if (H < 0)
 				{
 					H = 0;

@@ -38,6 +38,8 @@ public class Turrem
 
 	public RenderManager theRender;
 	public AssetLoader theAssets;
+	
+	public final long worldseed;
 
 	public static Turrem getTurrem()
 	{
@@ -49,6 +51,7 @@ public class Turrem
 		this.dir = dir;
 		this.session = session;
 		instance = this;
+		this.worldseed = System.currentTimeMillis();
 	}
 
 	/**
@@ -67,14 +70,14 @@ public class Turrem
 			e.printStackTrace();
 		}
 
-		WorldTerrainGen ter = new WorldTerrainGen(15L);
+		WorldTerrainGen ter = new WorldTerrainGen(this.worldseed);
 		ter.generate();
 		
 		try
 		{
 			File f = new File(this.dir + "ter.test.png");
 			f.createNewFile();
-			ImageIO.write(ter.renderTest(-8, -8, 16, 16), "png", new FileOutputStream(f));
+			ImageIO.write(ter.renderTest(-12, -12, 24, 24), "png", new FileOutputStream(f));
 		}
 		catch (Exception e)
 		{

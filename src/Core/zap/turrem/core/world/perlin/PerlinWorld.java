@@ -61,6 +61,13 @@ public class PerlinWorld implements IPerlinGroup
 
 	public float[] getChunk(int chunkx, int chunky)
 	{
+		int lastsc = this.perlin.getLastScale();
+		int subx = ((chunkx % lastsc) + lastsc) % lastsc;
+		int suby = ((chunky % lastsc) + lastsc) % lastsc;
+		int parx = (chunkx < 0 ? chunkx - lastsc + 1 : chunkx) / lastsc;
+		int pary = (chunky < 0 ? chunky - lastsc + 1 : chunky) / lastsc;
+		int side = 16 * lastsc;
+		
 		if (this.saveOld)
 		{
 			for (int i = 0; i < this.chunks.size(); i++)
@@ -72,33 +79,44 @@ public class PerlinWorld implements IPerlinGroup
 				}
 			}
 		}
-		int xind = chunkx / this.layersize;
-		if (chunkx < 0)
+		
+		int xind = parx / this.layersize;
+		if (parx < 0)
 		{
 			xind--;
 		}
-		int yind = chunky / this.layersize;
-		if (chunky < 0)
+		int yind = pary / this.layersize;
+		if (pary < 0)
 		{
 			yind--;
 		}
-		float u = chunkx / (float) this.layersize - xind;
-		float v = chunky / (float) this.layersize - yind;
+		float u = parx / (float) this.layersize - xind;
+		float v = pary / (float) this.layersize - yind;
 		IPerlinLayer l = this.makeLayer(xind, yind);
 		float[] fs = l.getChunk(u, v);
+		float[] grid = new float[256];
+		
+		for (int i = 0; i < 16; i++)
+		{
+			for (int j = 0; j < 16; j++)
+			{
+				grid[i + j * 16] = fs[(i + subx * 16) + (j + suby * 16) * side];
+			}
+		}
+		
 		if (this.saveOld)
 		{
 			ChunkFloats chunk = new ChunkFloats();
 			chunk.x = chunkx;
 			chunk.y = chunky;
-			chunk.floats = fs;
+			chunk.floats = grid;
 			this.chunks.add(chunk);
 			if (this.maxSaveCount > 0 && this.chunks.size() > this.maxSaveCount)
 			{
 				this.chunks.remove(0);
 			}
 		}
-		return fs;
+		return grid;
 	}
 
 	protected IPerlinLayer getLayer(int xind, int yind)

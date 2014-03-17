@@ -9,12 +9,14 @@ public class TerrainLayer extends Perlin
 	private float mod;
 	
 	private float sumscale;
+	private int lastscale;
 	
-	public TerrainLayer(long seed, int num, float mod)
+	public TerrainLayer(long seed, int num, float mod, int lastscale)
 	{
 		this.seed = seed;
 		this.numlayers = num;
 		this.mod = mod;
+		this.lastscale = lastscale;
 		this.calcMax();
 	}
 	
@@ -51,5 +53,11 @@ public class TerrainLayer extends Perlin
 	public int numLayers()
 	{
 		return this.numlayers;
+	}
+
+	@Override
+	public int getLastScale()
+	{
+		return this.lastscale;
 	}
 }

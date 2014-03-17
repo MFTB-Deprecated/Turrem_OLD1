@@ -38,7 +38,7 @@ public class WorldClient
 	public WorldClient(Game game, Turrem turrem)
 	{
 		this.theGame = game;
-		this.terrain = new WorldTerrainGen(15L);
+		this.terrain = new WorldTerrainGen(turrem.worldseed);
 		this.terrain.generate();
 		this.terrainRender = new RenderEngine();
 

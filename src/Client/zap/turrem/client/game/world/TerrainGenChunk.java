@@ -3,41 +3,40 @@ package zap.turrem.client.game.world;
 public class TerrainGenChunk
 {
 	public float[] surface;
-	public float[] water;
-	public float[] dry;
+	public float[] cont;
+	public float[] mount;
 
-	public float[] heat;
-	public float[] humid;
-
-	public TerrainGenChunk(float[] surface, float[] water, float[] dry, float[] heat, float[] humid)
+	public TerrainGenChunk(float[] surface, float[] cont, float[] mount)
 	{
 		this.surface = surface;
-		this.water = water;
-		this.dry = dry;
-		this.heat = heat;
-		this.humid = humid;
+		this.cont = cont;
+		this.mount = mount;
 	}
-
-	public float getRiver(short x, short y, float enviorment, float width, float arid, float point)
+	
+	public float getH(short x, short y)
 	{
 		int i = (x % 16) + (y % 16) * 16;
-		float riv = Math.abs(this.water[i] - enviorment);
-		if (riv < width - this.dry[i] * point)
+		float su = this.surface[i];
+		float mo = this.mount[i];
+		float co = this.cont[i];
+		mo -= 0.5F;
+		mo = mo * mo;
+		if (mo < 0.0F)
 		{
-			if (this.dry[i] > arid)
-			{
-				return 1.0F - (riv / width);
-			}
+			mo = 0.0F;
 		}
-		return 0.0F;
+		mo *= 2;
+		
+		float h = (float) Math.sqrt(((su - 0.5F) + mo + 1.0F) / 2.0F * co);
+		return h;
 	}
 
 	public float ajustSurface(short x, short y, float peak, float sea, float depth)
 	{
-		int i = (x % 16) + (y % 16) * 16;
-		if (this.surface[i] > sea)
+		float h = this.getH(x, y);
+		if (h > sea)
 		{
-			float p = peak - this.surface[i];
+			float p = peak - h;
 			if (p < 0)
 			{
 				p = 0.0F;
@@ -48,7 +47,7 @@ public class TerrainGenChunk
 		}
 		else
 		{
-			float d = this.surface[i] - depth;
+			float d = h - depth;
 			if (d < 0)
 			{
 				d = 0.0F;

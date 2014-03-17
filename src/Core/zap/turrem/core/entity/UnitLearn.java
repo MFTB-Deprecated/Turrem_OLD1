@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 
+import org.lwjgl.input.Mouse;
+
+import turrem.RockTools;
 import zap.turrem.client.render.engine.RenderManager;
 import zap.turrem.client.render.engine.holders.RenderObjectHolderSimple;
 import zap.turrem.client.render.object.model.ModelIcon;
@@ -25,7 +28,7 @@ public abstract class UnitLearn extends EntityUnit implements IEntityLearnNode
 	{
 		super();
 		this.noteHeight = (float) this.getPickBounds().maxY;
-		newIdeas.add(null);
+		newIdeas.add(new RockTools());
 	}
 
 	public void onTick()
@@ -55,5 +58,14 @@ public abstract class UnitLearn extends EntityUnit implements IEntityLearnNode
 		man.pushIcon(idea, "interface", RenderObjectHolderSimple.class);
 		idea.loadMe();
 	}
-
+	
+	public void mouseEvent(boolean me)
+	{
+		if (Mouse.getEventButton() == 1 && Mouse.getEventButtonState() == true)
+		{
+			Idea theidea = this.newIdeas.remove(this.newIdeas.size() - 1);
+			System.out.println(theidea.getClass().getName());
+		}
+		super.mouseEvent(me);
+	}
 }

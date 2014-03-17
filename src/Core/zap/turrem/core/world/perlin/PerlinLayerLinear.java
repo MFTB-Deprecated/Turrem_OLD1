@@ -179,20 +179,37 @@ class PerlinLayerLinear extends PerlinLayer
 	{
 		return (this.seed * 0x5DEECE66DL + 0xBL) & ((1L << 48) - 1);
 	}
+	
+	protected float[] blurGrid(int scale)
+	{
+		int sc = 16 * scale;
+		float[] g = new float[sc * sc];
+		for (int i = 0; i < g.length; i++)
+		{
+			int X = i % sc;
+			int Y = i / sc;
+			g[i] = this.blurGridPt(X / scale, Y / scale, (X % scale) / (float) scale, (Y % scale) / (float) scale);
+		}
+		return g;
+	}
+	
+	protected float blurGridPt(int x, int y, float u, float v)
+	{
+		float lt = this.getOwnValue(x, y);
+		float rt = this.getOwnValue(x + 1, y);
+		float lb = this.getOwnValue(x, y + 1);
+		float rb = this.getOwnValue(x + 1, y + 1);
+		float U = 1.0F - u;
+		float V = 1.0F - v;
+		return lt * U * V + rt * u * V + lb * U * v + rb * u * v;
+	}
 
 	@Override
 	public float[] getChunk(float u, float v)
 	{
 		if (this.isLast)
 		{
-			float[] g = new float[256];
-			for (int i = 0; i < 256; i++)
-			{
-				int X = i % 16;
-				int Y = i / 16;
-				g[i] = this.getOwnValue(X, Y);
-			}
-			return g;
+			return this.blurGrid(this.perlin.getLastScale());
 		}
 		float[] dat = null;
 		if (u < 0.5F && v < 0.5F)
