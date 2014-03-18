@@ -24,6 +24,7 @@ public class WorldClient
 	public List<RealmClient> realms = new ArrayList<RealmClient>();
 
 	public Game theGame;
+	protected Turrem theTurrem;
 
 	private Entity pickedEntity = null;
 
@@ -38,6 +39,7 @@ public class WorldClient
 	public WorldClient(Game game, Turrem turrem)
 	{
 		this.theGame = game;
+		this.theTurrem = turrem;
 		this.terrain = new WorldTerrainGen(turrem.worldseed);
 		this.terrain.generate();
 		this.terrainRender = new RenderEngine();
@@ -50,7 +52,7 @@ public class WorldClient
 	public void updateChunks(int maxop, int r)
 	{
 		int d = r * 2 + 1;
-		Point cam = this.theGame.getFace().getLocation();
+		Point cam = this.theGame.getFace().getFocus();
 		double sc = this.scaleWorld(16);
 		int camx = (int) (cam.xCoord / sc);
 		int camz = (int) (cam.zCoord / sc);
@@ -87,7 +89,7 @@ public class WorldClient
 			{
 				if (!chunks[(i + r) + (j + r) * d])
 				{
-					Chunk c = new Chunk(i + camx, j + camz, this.terrain.getChunk(i + camx, j + camz));
+					Chunk c = new Chunk(i + camx, j + camz, this.terrain.getChunk(i + camx, j + camz), this, this.theTurrem.theRender);
 					this.chunks.add(c);
 					c.loadModel(this.terrainRender);
 				}
@@ -157,9 +159,9 @@ public class WorldClient
 
 		if (this.viewage % 10 == 0)
 		{
-			this.updateChunks(8, 8);
+			this.updateChunks(8, 6);
 		}
-		
+
 		for (RealmClient realm : this.realms)
 		{
 			realm.onTick();
@@ -191,9 +193,17 @@ public class WorldClient
 		}
 		GL11.glPopMatrix();
 		GL11.glPushMatrix();
+		Point loc = this.theGame.getFace().getFocus();
+		double dist = this.scaleWorld(6 * 16);
+		dist = dist * dist;
 		for (Entity e : this.entityList)
 		{
-			e.render();
+			double dx = loc.xCoord - e.posX;
+			double dz = loc.zCoord - e.posZ;
+			if (dx * dx + dz * dz < dist)
+			{
+				e.render();
+			}
 		}
 		GL11.glPopMatrix();
 
@@ -261,5 +271,10 @@ public class WorldClient
 	public final int getViewage()
 	{
 		return viewage;
+	}
+
+	public RenderEngine getTerrainRender()
+	{
+		return terrainRender;
 	}
 }

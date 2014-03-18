@@ -9,7 +9,7 @@ public class Config
 	private static boolean fullscreen = false;
 	private static boolean vsync = true;
 	
-	public static boolean drawBounds = true;
+	public static boolean drawBounds = false;
 	public static boolean debugInfo = true;
 	
 	public final static boolean convertAllVox = false;

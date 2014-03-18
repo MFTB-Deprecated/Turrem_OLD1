@@ -10,6 +10,7 @@ public class WorldTerrainGen
 	public TerrainLayer surface;
 	public TerrainLayer cont;
 	public TerrainLayer mount;
+	public TerrainLayer tree;
 
 	public WorldTerrainGen(long seed)
 	{
@@ -21,15 +22,17 @@ public class WorldTerrainGen
 		this.surface = new TerrainLayer(this.seed * 1L, 6, 0.5F, 4);
 		this.cont = new TerrainLayer(this.seed * 2L, 6, 0.4F, 12);
 		this.mount = new TerrainLayer(this.seed * 3L, 6, 0.4F, 2);
+		this.tree = new TerrainLayer(this.seed * 4L, 6, 0.5F, 8);
 
 		this.surface.makeWorld();
 		this.cont.makeWorld();
 		this.mount.makeWorld();
+		this.tree.makeWorld();
 	}
 
 	public TerrainGenChunk getChunk(int x, int y)
 	{
-		return new TerrainGenChunk(this.surface.getChunk(x, y), this.cont.getChunk(x, y), this.mount.getChunk(x, y));
+		return new TerrainGenChunk(this.surface.getChunk(x, y), this.cont.getChunk(x, y), this.mount.getChunk(x, y), this.tree.getChunk(x, y));
 	}
 
 	public BufferedImage renderTest(int x, int y, int w, int h)

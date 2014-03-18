@@ -1,6 +1,9 @@
 package zap.turrem.client.game.world;
 
+import java.util.Random;
+
 import zap.turrem.client.render.engine.RenderEngine;
+import zap.turrem.client.render.engine.RenderManager;
 
 public class Chunk
 {
@@ -15,11 +18,16 @@ public class Chunk
 	
 	private boolean loaded = false;
 	
-	public Chunk(int chunkx, int chunky, TerrainGenChunk terrain)
+	protected WorldClient theWorld;
+	
+	public Chunk(int chunkx, int chunky, TerrainGenChunk terrain, WorldClient world, RenderManager render)
 	{
+		Random r = new Random();
+		
 		this.chunkx = chunkx;
 		this.chunky = chunky;
 		this.terrain = terrain;
+		this.theWorld = world;
 		
 		for (int i = 0; i < 16; i++)
 		{
@@ -45,6 +53,22 @@ public class Chunk
 					H = 0;
 				}
 				this.heightmap[this.getIndex(i, j)] = (byte) H;
+			}
+		}
+		
+		for (int i = 0; i < 8; i++)
+		{
+			int x = r.nextInt(16);
+			int z = r.nextInt(16);
+			int y = this.getHeight(x, z) & 0xFF;
+			if (y > 4)
+			{
+				if (r.nextFloat() < this.terrain.tree[x + z * 16] - 0.4F)
+				{
+					Tree t = new Tree();
+					t.setPosition(this.theWorld.scaleWorld(x + this.chunkx * 16), this.theWorld.scaleWorld(y), this.theWorld.scaleWorld(z + this.chunky * 16));
+					t.push(this.theWorld, render);
+				}
 			}
 		}
 	}

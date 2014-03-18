@@ -59,6 +59,19 @@ public class Point
 		return Math.sqrt(squareDistance(p1, p2));
 	}
 
+	public double squareDistanceTo(double px, double py, double pz)
+	{
+		double x = this.xCoord - px;
+		double y = this.yCoord - py;
+		double z = this.zCoord - pz;
+
+		double xs = x * x;
+		double ys = y * y;
+		double zs = z * z;
+
+		return xs + ys + zs;
+	}
+	
 	public double squareDistanceTo(Point p)
 	{
 		return squareDistance(this, p);

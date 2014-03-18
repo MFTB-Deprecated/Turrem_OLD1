@@ -5,12 +5,14 @@ public class TerrainGenChunk
 	public float[] surface;
 	public float[] cont;
 	public float[] mount;
+	public float[] tree;
 
-	public TerrainGenChunk(float[] surface, float[] cont, float[] mount)
+	public TerrainGenChunk(float[] surface, float[] cont, float[] mount, float[] tree)
 	{
 		this.surface = surface;
 		this.cont = cont;
 		this.mount = mount;
+		this.tree = tree;
 	}
 	
 	public float getH(short x, short y)
