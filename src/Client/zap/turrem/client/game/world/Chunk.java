@@ -13,6 +13,8 @@ public class Chunk
 	protected ModelChunk model;
 	protected TerrainGenChunk terrain;
 	
+	private boolean loaded = false;
+	
 	public Chunk(int chunkx, int chunky, TerrainGenChunk terrain)
 	{
 		this.chunkx = chunkx;
@@ -54,6 +56,17 @@ public class Chunk
 			this.model.render.doDelete();
 		}
 		this.model = new ModelChunk(this, engine);
+		this.loaded = true;
+	}
+	
+	public void unloadModel()
+	{
+		if (this.model != null)
+		{
+			this.model.render.doDelete();
+			this.model = null;
+			this.loaded = false;
+		}
 	}
 	
 	public int getIndex(int x, int y)
@@ -77,5 +90,10 @@ public class Chunk
 		{
 			this.model.render();
 		}
+	}
+
+	public final boolean isLoaded()
+	{
+		return loaded;
 	}
 }

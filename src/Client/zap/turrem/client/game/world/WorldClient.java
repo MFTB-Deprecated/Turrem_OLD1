@@ -19,7 +19,7 @@ import zap.turrem.utils.geo.Ray;
 public class WorldClient
 {
 	private int viewage = 0;
-	
+
 	public List<Entity> entityList = new ArrayList<Entity>();
 	public List<RealmClient> realms = new ArrayList<RealmClient>();
 
@@ -42,19 +42,57 @@ public class WorldClient
 		this.terrain.generate();
 		this.terrainRender = new RenderEngine();
 
-		for (int i = -8; i < 8; i++)
-		{
-			for (int j = -8; j < 8; j++)
-			{
-				Chunk c = new Chunk(i, j, this.terrain.getChunk(i, j));
-				this.chunks.add(c);
-				c.loadModel(this.terrainRender);
-			}
-		}
-		
 		Citizen e = new Citizen();
 		e.setPosition(0.0F, this.scaleWorld(1), 0.0F);
 		e.push(this, turrem.theRender);
+	}
+
+	public void updateChunks(int maxop, int r)
+	{
+		int d = r * 2 + 1;
+		Point cam = this.theGame.getFace().getLocation();
+		double sc = this.scaleWorld(16);
+		int camx = (int) (cam.xCoord / sc);
+		int camz = (int) (cam.zCoord / sc);
+		if (cam.xCoord < 0)
+		{
+			camx--;
+		}
+		if (cam.zCoord < 0)
+		{
+			camz--;
+		}
+		boolean[] chunks = new boolean[d * d];
+		for (Chunk c : this.chunks)
+		{
+			if (Math.abs(c.chunkx - camx) > r || Math.abs(c.chunky - camz) > r)
+			{
+				if (c.isLoaded())
+				{
+					c.unloadModel();
+				}
+			}
+			else
+			{
+				chunks[((c.chunkx - camx + r) % d) + ((c.chunky - camz + r) % d) * d] = true;
+				if (!c.isLoaded())
+				{
+					c.loadModel(this.terrainRender);
+				}
+			}
+		}
+		for (int i = -r; i <= r; i++)
+		{
+			for (int j = -r; j <= r; j++)
+			{
+				if (!chunks[(i + r) + (j + r) * d])
+				{
+					Chunk c = new Chunk(i + camx, j + camz, this.terrain.getChunk(i + camx, j + camz));
+					this.chunks.add(c);
+					c.loadModel(this.terrainRender);
+				}
+			}
+		}
 	}
 
 	public void doKeyEvent()
@@ -117,6 +155,11 @@ public class WorldClient
 		this.tickEntities();
 		this.pickedEntity = this.calculateEntityPicked();
 
+		if (this.viewage % 10 == 0)
+		{
+			this.updateChunks(8, 8);
+		}
+		
 		for (RealmClient realm : this.realms)
 		{
 			realm.onTick();
