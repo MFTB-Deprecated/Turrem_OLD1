@@ -10,8 +10,10 @@ import zap.turrem.client.game.Game;
 public class StateGame implements IState
 {
 	protected Turrem theTurrem;
-	
+
 	public Game theGame;
+
+	protected long lastTime;
 
 	public StateGame(Turrem turrem)
 	{
@@ -23,6 +25,7 @@ public class StateGame implements IState
 	{
 		this.theGame = new Game(this.theTurrem);
 		this.theGame.onStart();
+		this.lastTime = System.currentTimeMillis();
 	}
 
 	@Override
@@ -34,7 +37,12 @@ public class StateGame implements IState
 	@Override
 	public void tick()
 	{
-		this.theGame.tickGame();
+		long time = System.currentTimeMillis();
+		if (time - this.lastTime > 100)
+		{
+			this.theGame.tickGame();
+			this.lastTime = time;
+		}
 		this.theGame.render();
 	}
 

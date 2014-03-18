@@ -30,13 +30,13 @@ public class Game
 	protected Random rand;
 
 	private float fpsstore = 0.0F;
+	private float tpsstore = 0.0F;
 	private long lastTickTime;
+	private long lastFrameTime;
 
 	public RealmClient myRealm;
 
 	public boolean mat = true;
-	public int starting = 2;
-	public final boolean defaultmat = false;
 
 	public Game(Turrem turrem)
 	{
@@ -72,25 +72,26 @@ public class Game
 		long time = System.currentTimeMillis();
 		int ms = (int) (time - this.lastTickTime);
 		this.lastTickTime = time;
-		float fs = 1000.0F / (float) ms;
-		if (fs < 200.0F && fs > 0.0001F)
+		float ts = 1000.0F / (float) ms;
+		if (ts < 50.0F && ts > 0.0001F)
 		{
-			this.fpsstore *= 0.9F;
-			this.fpsstore += fs * 0.1F;
+			this.tpsstore *= 0.5F;
+			this.tpsstore += ts * 0.5F;
 		}
 	}
 
 	public void render()
 	{
-		this.theRender.render();
-		if (this.starting > 0)
+		long time = System.currentTimeMillis();
+		int ms = (int) (time - this.lastFrameTime);
+		this.lastFrameTime = time;
+		float fs = 1000.0F / (float) ms;
+		if (fs < 200.0F && fs > 0.0001F)
 		{
-			if (this.starting == 1)
-			{
-				this.mat = this.defaultmat;
-			}
-			this.starting--;
+			this.fpsstore *= 0.5F;
+			this.fpsstore += fs * 0.5F;
 		}
+		this.theRender.render();
 	}
 
 	public void renderWorld()
@@ -140,7 +141,8 @@ public class Game
 			GL11.glColor3f(0.0F, 0.0F, 0.0F);
 			font.renderText("\'T\' - Toggle material\n\'L-Click & Drag\' - Pan camera\n\'M-Click & Drag\' - Orbit camera\n\'Scroll\' - Zoom\n\'F3\' - Toggle this info", 20.0F, 10.0F, 20.0F);
 			String fps = Toolbox.getFloat(this.fpsstore, 1);
-			font.renderText("FPS: " + fps, Config.getWidth() - 100.0F, 10.0F, 20.0F);
+			String tps = Toolbox.getFloat(this.tpsstore, 1);
+			font.renderText("FPS: " + fps + "\nTPS: " + tps, Config.getWidth() - 100.0F, 10.0F, 20.0F);
 			GL11.glColor3f(1.0F, 1.0F, 1.0F);
 		}
 
