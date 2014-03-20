@@ -227,7 +227,7 @@ public class Turrem
 
 	public void loadTick()
 	{
-		this.theRender.tickHolders();
+		
 	}
 
 	/**

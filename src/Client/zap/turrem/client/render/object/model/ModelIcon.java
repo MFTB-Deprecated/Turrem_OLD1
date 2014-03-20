@@ -3,32 +3,30 @@ package zap.turrem.client.render.object.model;
 import java.io.IOException;
 
 import zap.turrem.client.asset.AssetLoader;
-import zap.turrem.client.render.engine.holders.IRenderObjectHolder;
-import zap.turrem.client.render.engine.holders.RenderObjectHolder;
+import zap.turrem.client.render.engine.RenderManager;
+import zap.turrem.client.render.engine.RenderStore;
 import zap.turrem.utils.models.TVFFile;
 
 public class ModelIcon
 {
-	private int heldIndex = -1;
+	private int index = -1;
 	public final String source;
-	private IRenderObjectHolder holder;
-	private boolean held = false;
 	private boolean isLoaded = false;
-	private int engineIndex;
-	public float scale;
+	private RenderStore engine;
+	public float size;
 	public float xoff = 0.0F;
 	public float yoff = 0.0F;
 	public float zoff = 0.0F;
 
-	public ModelIcon(String model, float scale)
+	public ModelIcon(String model, float size)
 	{
 		this.source = model;
-		this.scale = scale;
+		this.size = size;
 	}
-	
-	public ModelIcon(String model, float scale, float xoff, float yoff, float zoff)
+
+	public ModelIcon(String model, float size, float xoff, float yoff, float zoff)
 	{
-		this(model, scale);
+		this(model, size);
 		this.xoff = xoff;
 		this.yoff = yoff;
 		this.zoff = zoff;
@@ -40,78 +38,58 @@ public class ModelIcon
 		return true;
 	}
 
-	public int getHeldIndex()
-	{
-		return this.heldIndex;
-	}
-
-	public void setHolder(IRenderObjectHolder holder, int index)
-	{
-		this.holder = holder;
-		this.heldIndex = index;
-		this.held = true;
-	}
-
-	public IRenderObjectHolder getHolder()
-	{
-		return this.holder;
-	}
-
-	public void setLoadImportant()
-	{
-		if (this.held)
-		{
-			if (this.holder instanceof RenderObjectHolder)
-			{
-				((RenderObjectHolder) this.holder).setImportant(this);
-			}
-		}
-	}
-
-	public void loadMe()
-	{
-		if (this.held)
-		{
-			this.holder.load();
-		}
-	}
-
-	public void setLoaded()
-	{
-		this.isLoaded = true;
-	}
-
-	public void setUnloaded()
-	{
-		this.isLoaded = false;
-	}
-
 	public boolean isLoaded()
 	{
 		return this.isLoaded;
-	}
-
-	public void setEngineIndex(int x)
-	{
-		this.engineIndex = x;
-	}
-
-	public int getEngineId()
-	{
-		return this.engineIndex;
 	}
 
 	public void render()
 	{
 		if (this.isLoaded)
 		{
-			this.holder.renderObject(this.engineIndex);
+			this.engine.doRenderObject(this.index);
 		}
 	}
 
 	public String getName()
 	{
 		return this.source;
+	}
+
+	public void onpush(int index, RenderStore engine, boolean loaded)
+	{
+		this.engine = engine;
+		this.index = index;
+		this.isLoaded = loaded;
+	}
+
+	public boolean load(RenderManager man)
+	{
+		if (man.assets == null)
+		{
+			return false;
+		}
+		return this.load(man.assets);
+	}
+	public boolean load(AssetLoader assets)
+	{
+		if (this.isLoaded)
+		{
+			return true;
+		}
+		if (this.engine == null)
+		{
+			return false;
+		}
+		TVFFile tvf = this.makeTVF(assets);
+		if (tvf == null)
+		{
+			return false;
+		}
+		this.isLoaded = true;
+		float scale = (tvf.height & 0xFF) / this.size;
+		this.engine.addObject(this, tvf, scale, this.xoff * (tvf.width & 0xFF), this.yoff * (tvf.height & 0xFF), this.zoff * (tvf.length & 0xFF));
+		return true;
 	}
 
 	public TVFFile makeTVF(AssetLoader assets)

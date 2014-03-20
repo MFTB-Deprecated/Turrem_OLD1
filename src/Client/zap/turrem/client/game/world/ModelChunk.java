@@ -30,7 +30,7 @@ public class ModelChunk
 		this.chunkX = chunk.chunkx;
 		this.chunkY = chunk.chunky;
 		this.doNeiAO = Config.useNeighborOcclusion;
-		this.render = engine.addObject(this.makeTVF(), 5.0F, 0.0F, 0.0F, 0.0F);
+		this.render = engine.makeObject(this.makeTVF(), 5.0F, 0.0F, 0.0F, 0.0F);
 	}
 
 	public void render()

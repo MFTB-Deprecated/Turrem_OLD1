@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import zap.turrem.client.asset.AssetLoader;
-import zap.turrem.client.render.engine.holders.IRenderObjectHolder;
 import zap.turrem.client.render.object.model.ModelIcon;
 import zap.turrem.client.render.texture.ITextureObject;
 import zap.turrem.client.render.texture.TextureObject;
 
 public class RenderManager
 {
-	private ArrayList<IRenderObjectHolder> holders = new ArrayList<IRenderObjectHolder>();
+	private ArrayList<RenderStore> holders = new ArrayList<RenderStore>();
 	private HashMap<String, ITextureObject> textures = new HashMap<String, ITextureObject>();
 	public int working = 0;
 	public AssetLoader assets;
@@ -20,7 +19,7 @@ public class RenderManager
 	{
 		this.assets = assets;
 	}
-	
+
 	public ITextureObject addTexture(String name)
 	{
 		if (!this.textures.containsKey(name))
@@ -32,33 +31,11 @@ public class RenderManager
 		return this.textures.get(name);
 	}
 
-	
-	private void doTickHolders()
+	public RenderStore getHolder(String identifier)
 	{
 		for (int i = 0; i < this.holders.size(); i++)
 		{
-			IRenderObjectHolder holder = this.holders.get(i);
-
-			if (holder != null)
-			{
-				holder.tickLoad();
-			}
-		}
-	}
-	
-	public void tickHolders()
-	{
-		if (this.working != 0)
-		{
-			this.doTickHolders();
-		}
-	}
-
-	public IRenderObjectHolder getHolder(String identifier)
-	{
-		for (int i = 0; i < this.holders.size(); i++)
-		{
-			IRenderObjectHolder h = this.holders.get(i);
+			RenderStore h = this.holders.get(i);
 			if (h.getIdentifier().equals(identifier))
 			{
 				return h;
@@ -66,33 +43,21 @@ public class RenderManager
 		}
 		return null;
 	}
-
-	public IRenderObjectHolder getHolder(int index)
+	
+	public RenderEngine getHolder(int index)
 	{
 		return this.holders.get(index);
 	}
 
-	public boolean pushIcon(ModelIcon icon, String holder, Class<? extends IRenderObjectHolder> newHolderType)
+	public void pushIcon(ModelIcon icon, String holder)
 	{
-		IRenderObjectHolder h = this.getHolder(holder);
+		RenderStore h = this.getHolder(holder);
 
 		if (h == null)
 		{
-			try
-			{
-				h = newHolderType.getConstructor(RenderManager.class, int.class, String.class).newInstance(this, this.holders.size(), holder);
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-				return false;
-			}
+			h = new RenderStore(holder);
 			this.holders.add(h);
 		}
-		if (h != null)
-		{
-			return h.handModel(icon);
-		}
-		return false;
+		h.push(icon);
 	}
 }

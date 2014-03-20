@@ -8,7 +8,6 @@ import org.lwjgl.input.Mouse;
 
 import turrem.RockTools;
 import zap.turrem.client.render.engine.RenderManager;
-import zap.turrem.client.render.engine.holders.RenderObjectHolderSimple;
 import zap.turrem.client.render.object.model.ModelIcon;
 import zap.turrem.core.tech.idea.Idea;
 
@@ -55,8 +54,8 @@ public abstract class UnitLearn extends EntityUnit implements IEntityLearnNode
 	public void loadAssets(RenderManager man)
 	{
 		super.loadAssets(man);
-		man.pushIcon(idea, "interface", RenderObjectHolderSimple.class);
-		idea.loadMe();
+		man.pushIcon(idea, "interface");
+		idea.load(man);
 	}
 	
 	public void mouseEvent(boolean me)
