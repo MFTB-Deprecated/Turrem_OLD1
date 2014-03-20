@@ -80,6 +80,9 @@ public class ModelChunk
 		{
 			tvf.prelit = 1;
 		}
+		tvf.width = (byte) 16;
+		tvf.length = (byte) 16;
+		tvf.height = (byte) 16;
 		return tvf;
 	}
 

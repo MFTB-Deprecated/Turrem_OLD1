@@ -21,7 +21,7 @@ public abstract class UnitLearn extends EntityUnit implements IEntityLearnNode
 	
 	public ArrayList<Idea> newIdeas = new ArrayList<Idea>();
 
-	private ModelIcon idea = new ModelIcon("turrem.interface.idea", 8.0F, 4.0F, 0.0F, 0.5F);
+	private ModelIcon idea = new ModelIcon("turrem.interface.idea", 1.0F, 0.5F, 0.0F, 0.5F);
 	
 	public UnitLearn()
 	{

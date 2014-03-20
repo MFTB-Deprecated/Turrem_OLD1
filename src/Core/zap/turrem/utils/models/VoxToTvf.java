@@ -171,6 +171,10 @@ public class VoxToTvf
 		int i = 0;
 		Iterator<Short> it = this.usedColors.iterator();
 
+		this.tvf.width = (byte) this.vox.width;
+		this.tvf.height = (byte) this.vox.height;
+		this.tvf.length = (byte) this.vox.length;
+		
 		this.tvf.colorNum = this.colorCount;
 		this.tvf.colors = new TVFFile.TVFColor[this.colorCount];
 
