@@ -14,7 +14,7 @@ public class Config
 	
 	public final static boolean convertAllVox = false;
 	
-	public final static boolean useTvfRayOcclusion = false;
+	public final static boolean useTvfRayOcclusion = true;
 	public final static boolean useNeighborOcclusion = true;
 	public final static short tvfOcclusionRays = 128;
 	public final static short tvfOcclusionRaySize = 32;
@@ -24,15 +24,6 @@ public class Config
 	public static final int getLwjglSyncRate()
 	{
 		return lwjglSyncRate;
-	}
-
-	public static final void setLwjglSyncRate(int lwjglSyncRate)
-	{
-		if (Config.lwjglSyncRate != lwjglSyncRate)
-		{
-			Config.lwjglSyncRate = lwjglSyncRate;
-			isChanged = true;
-		}
 	}
 
 	public static final int getWidth()

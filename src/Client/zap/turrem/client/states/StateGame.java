@@ -14,6 +14,7 @@ public class StateGame implements IState
 	public Game theGame;
 
 	protected long lastTime;
+	protected long timeoff = 0;
 
 	public StateGame(Turrem turrem)
 	{
@@ -38,10 +39,19 @@ public class StateGame implements IState
 	public void tick()
 	{
 		long time = System.currentTimeMillis();
-		if (time - this.lastTime > 100)
+		if (time - this.lastTime > 100 - this.timeoff)
 		{
-			this.theGame.tickGame();
+			this.timeoff += (time - this.lastTime) - 100;
+			if (this.timeoff < 0)
+			{
+				this.timeoff = 0;
+			}
+			if (this.timeoff > 50)
+			{
+				this.timeoff = 50;
+			}
 			this.lastTime = time;
+			this.theGame.tickGame();
 		}
 		this.theGame.render();
 	}

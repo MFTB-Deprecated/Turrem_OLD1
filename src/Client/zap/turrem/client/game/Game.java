@@ -29,11 +29,13 @@ public class Game
 
 	protected Random rand;
 
-	private float fpsstore = 0.0F;
-	private float tpsstore = 0.0F;
+	private float fpsstore = 60.0F;
+	private float tpsstore = 10.0F;
 	private long lastTickTime;
 	private long lastFrameTime;
-
+	private int secticks = 0;
+	private int secframes = 0;
+	
 	public RealmClient myRealm;
 
 	public boolean mat = true;
@@ -45,7 +47,6 @@ public class Game
 		this.theWorld = new WorldClient(this, turrem);
 		this.theRender = new RenderGame(this, this.theTurrem.theRender);
 		this.rand = new Random();
-		this.lastTickTime = System.currentTimeMillis();
 	}
 
 	public void onStart()
@@ -56,6 +57,9 @@ public class Game
 		this.myRealm = new RealmClient(new PlayerClient());
 		this.theWorld.realms.add(this.myRealm);
 		this.myRealm.onStart();
+		
+		this.lastTickTime = System.currentTimeMillis();
+		this.lastFrameTime = System.currentTimeMillis();
 	}
 
 	public void updateGL()
@@ -69,28 +73,26 @@ public class Game
 		this.pickRay = this.face.pickMouse().setLength(48.0F);
 		this.theWorld.tickWorld();
 
-		long time = System.currentTimeMillis();
-		int ms = (int) (time - this.lastTickTime);
-		this.lastTickTime = time;
-		float ts = 1000.0F / (float) ms;
-		if (ts < 50.0F && ts > 0.0001F)
+		long dif = System.currentTimeMillis() - this.lastTickTime;
+		if (dif > 1000)
 		{
-			this.tpsstore *= 0.5F;
-			this.tpsstore += ts * 0.5F;
+			this.tpsstore = this.secticks * (1000.0F / dif);
+			this.lastTickTime += dif;
+			this.secticks = 0;
 		}
+		this.secticks++;
 	}
 
 	public void render()
 	{
-		long time = System.currentTimeMillis();
-		int ms = (int) (time - this.lastFrameTime);
-		this.lastFrameTime = time;
-		float fs = 1000.0F / (float) ms;
-		if (fs < 200.0F && fs > 0.0001F)
+		long dif = System.currentTimeMillis() - this.lastFrameTime;
+		if (dif > 1000)
 		{
-			this.fpsstore *= 0.5F;
-			this.fpsstore += fs * 0.5F;
+			this.fpsstore = this.secframes * (1000.0F / dif);
+			this.lastFrameTime += dif;
+			this.secframes = 0;
 		}
+		this.secframes++;
 		this.theRender.render();
 	}
 
