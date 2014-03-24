@@ -47,7 +47,13 @@ public class Turrem
 			e.printStackTrace();
 		}
 		
+		this.onRun();
 		this.runloop();
+	}
+	
+	public void onRun()
+	{
+		System.out.println(this.theSession.username);
 	}
 	
 	public void runloop()
