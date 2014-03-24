@@ -91,7 +91,7 @@ public abstract class Entity
 		this.isDead = true;
 	}
 
-	public void onTick()
+	public void onTick(int tps)
 	{
 
 	}

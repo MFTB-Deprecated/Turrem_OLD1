@@ -11,6 +11,7 @@ import zap.turrem.client.game.Game;
 import zap.turrem.client.game.RealmClient;
 import zap.turrem.client.render.engine.RenderEngine;
 import zap.turrem.core.entity.Entity;
+import zap.turrem.core.entity.IEntityAmbient;
 import zap.turrem.utils.geo.Box;
 import zap.turrem.utils.geo.BoxPin;
 import zap.turrem.utils.geo.Point;
@@ -177,9 +178,9 @@ public class WorldClient
 			{
 				this.entityList.remove(i--);
 			}
-			else
+			else if (!(e instanceof IEntityAmbient))
 			{
-				e.onTick();
+				e.onTick(10);
 			}
 		}
 	}
@@ -206,17 +207,6 @@ public class WorldClient
 			}
 		}
 		GL11.glPopMatrix();
-
-		/**
-		 * GL11.glPushMatrix(); GL11.glColor3f(0.5F, 0.5F, 0.5F);
-		 * GL11.glBegin(GL11.GL_QUADS); GL11.glNormal3f(0.0F, 1.0F, 0.0F);
-		 * GL11.glVertex3f(-10.0F, 0.0F, -10.0F); GL11.glNormal3f(0.0F, 1.0F,
-		 * 0.0F); GL11.glVertex3f(-10.0F, 0.0F, 10.0F); GL11.glNormal3f(0.0F,
-		 * 1.0F, 0.0F); GL11.glVertex3f(10.0F, 0.0F, 10.0F);
-		 * GL11.glNormal3f(0.0F, 1.0F, 0.0F); GL11.glVertex3f(10.0F, 0.0F,
-		 * -10.0F); GL11.glEnd(); GL11.glColor3f(1.0F, 1.0F, 1.0F);
-		 * GL11.glPopMatrix();
-		 **/
 	}
 
 	public Entity calculateEntityPicked()

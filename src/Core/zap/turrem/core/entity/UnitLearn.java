@@ -30,9 +30,9 @@ public abstract class UnitLearn extends EntityUnit implements IEntityLearnNode
 		newIdeas.add(new RockTools());
 	}
 
-	public void onTick()
+	public void onTick(int tps)
 	{
-		super.onTick();
+		super.onTick(tps);
 	}
 
 	public void render()

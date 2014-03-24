@@ -30,13 +30,29 @@ public class Citizen extends UnitLearn
 		person.load(man);
 	}
 	
-	public void onTick()
+	public void onTick(int tps)
 	{
+		super.onTick(tps);
 		if (this.theWorld != null)
 		{
 			this.posY = this.theWorld.scaleWorld(this.theWorld.getHeight(this.theWorld.unScaleWorld(this.posX), this.theWorld.unScaleWorld(this.posZ)));
 		}
-		this.posZ += 0.02F;
+		float vel = 0.02F;
+		switch (this.rotation % 4)
+		{
+			case 0:
+				this.posZ += vel;
+				break;
+			case 1:
+				this.posX += vel;
+				break;
+			case 2:
+				this.posZ -= vel;
+				break;
+			case 3:
+				this.posX -= vel;
+				break;
+		}
 	}
 	
 	public void keyEvent(boolean me)
