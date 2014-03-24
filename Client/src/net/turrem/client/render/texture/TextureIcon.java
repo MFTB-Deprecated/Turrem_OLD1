@@ -15,12 +15,18 @@ public class TextureIcon
 	public void load(RenderManager manager)
 	{
 		this.object = manager.addTexture(this.source);
-		this.object.bind(manager.assets);
+		if (this.object != null)
+		{
+			this.object.bind(manager.assets);
+		}
 	}
 
 	public void unload()
 	{
-		this.object.unbind();
+		if (this.object != null)
+		{
+			this.object.unbind();
+		}
 	}
 
 	public void start()

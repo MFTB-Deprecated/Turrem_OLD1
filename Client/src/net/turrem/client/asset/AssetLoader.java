@@ -28,7 +28,7 @@ public class AssetLoader
 
 	public TVFFile loadTVF(String name) throws IOException
 	{
-		String dir = this.bin + "/assets/" + name.replaceAll("\\.", "/") + ".tvf";
+		String dir = this.bin + "assets/" + name.replaceAll("\\.", "/") + ".tvf";
 
 		File filein = new File(dir);
 		DataInputStream input;
@@ -40,13 +40,13 @@ public class AssetLoader
 
 	public BufferedImage loadTexture(String name) throws IOException
 	{
-		String dir = this.bin + "/assets/" + name.replaceAll("\\.", "/") + ".png";
+		String dir = this.bin + "assets/" + name.replaceAll("\\.", "/") + ".png";
 		return ImageIO.read(new File(dir));
 	}
 	
 	public boolean doesTextureFileExist(String name)
 	{
-		String dir = this.bin + "/assets/" + name.replaceAll("\\.", "/") + ".png";
+		String dir = this.bin + "assets/" + name.replaceAll("\\.", "/") + ".png";
 		return (new File(dir)).exists();
 	}
 
@@ -57,7 +57,7 @@ public class AssetLoader
 		StopTimer timer = new StopTimer();
 		timer.start();
 
-		String dir = this.bin + "/assets/";
+		String dir = this.bin + "assets/";
 		File folder = new File(dir);
 		int num = this.convertVoxFolder(folder, overwrite);
 
