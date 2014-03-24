@@ -56,13 +56,18 @@ public class Turrem
 		System.out.println(this.theSession.username);
 	}
 	
+	public void render()
+	{
+		
+	}
+	
 	public void runloop()
 	{
 		while (!Display.isCloseRequested())
 		{
 			try
 			{
-				
+				this.render();
 			}
 			catch (Exception e)
 			{
