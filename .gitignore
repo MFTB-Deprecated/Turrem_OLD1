@@ -19,8 +19,7 @@ local.properties
 ## Turrem
 #################
 .gitattributes
-/bin/jars/
-/bin/run.bat
+*/bin/jars/
 *.jardesc
 *.tvf
 *.test.png
