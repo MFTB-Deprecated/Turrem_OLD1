@@ -16,6 +16,7 @@ import static org.lwjgl.opengl.GL11.glOrtho;
 import java.awt.Color;
 
 import net.turrem.client.Turrem;
+import net.turrem.client.gui.GuiFrame;
 import net.turrem.client.render.font.Font;
 import net.turrem.client.render.font.FontRender;
 
@@ -31,12 +32,14 @@ public class StateMainMenu implements IState
 {
 	protected Turrem theTurrem;
 
-	private final float h = 0.62F;
+	private float h = 0.62F;
 	private float s = 0.5F;
 	private float b = 0.5F;
 	private int t = 0;
 
 	public FontRender testFont;
+	
+	public GuiFrame frame = new GuiFrame(600, 60, true, true, 6, "turrem.gui.frames.plain", 2.0F);
 
 	public StateMainMenu(Turrem turrem)
 	{
@@ -49,6 +52,7 @@ public class StateMainMenu implements IState
 		Font font = new Font("basicintro");
 		font.loadTexture("core.fonts.basic", this.theTurrem.theRender);
 		font.push();
+		this.frame.onStart(this.theTurrem.theRender);
 		this.testFont = new FontRender(font);
 	}
 
@@ -63,8 +67,9 @@ public class StateMainMenu implements IState
 	{
 		this.t++;
 
-		this.s = ((float) Math.sin(this.t / 40.0f + 5) + 1.0F) / 2.0F;
-		this.b = ((float) Math.sin(this.t / 100.0f + 7) + 1.0F) / 2.0F;
+		this.h = 0.5F + (float) Math.sin(this.t / 457.0f) / 6.0F;
+		this.s = ((float) Math.sin(this.t / 47.0f + 5) + 1.0F) / 2.0F;
+		this.b = ((float) Math.sin(this.t / 109.0f + 7) + 1.0F) / 2.0F;
 
 		Color c = Color.getHSBColor(this.h, this.s * 0.2f, this.b * 0.2f + 0.6F);
 
@@ -80,6 +85,11 @@ public class StateMainMenu implements IState
 
 		glEnd();
 
+		glColor3f(1.0F, 1.0F, 1.0F);
+		
+		this.frame.setPos(this.theTurrem.getScreenWidth() / 2 - 300, this.theTurrem.getScreenHeight() / 2 - 5);
+		this.frame.render();
+		
 		glColor3f(0.0F, 0.0F, 0.0F);
 		this.testFont.renderTextCentered("- Press any Key -", this.theTurrem.getScreenWidth() / 2, this.theTurrem.getScreenHeight() / 2, 50.0F);
 		glColor3f(1.0F, 1.0F, 1.0F);
