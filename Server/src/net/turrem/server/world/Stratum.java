@@ -97,6 +97,25 @@ public class Stratum
 			return 0;
 		}
 	}
+	
+	public int removeDepth(int i, int value)
+	{
+		int d = this.depth[i] & 0xFF;
+		if (d == 0)
+		{
+			return 0;
+		}
+		if (d < value)
+		{
+			this.depth[i] = (byte) (0 & 0xFF);
+			return d;
+		}
+		else
+		{
+			this.depth[i] = (byte) ((d - value) & 0xFF);
+			return value;
+		}
+	}
 
 	public int getDepth(int x, int y)
 	{
