@@ -25,6 +25,16 @@ public class NBTCompound extends NBTTag
 	{
 		return 10;
 	}
+	
+	public boolean isEmpty()
+	{
+		return this.payload.isEmpty();
+	}
+	
+	public boolean hasTag(String name)
+	{
+		return this.payload.containsKey(name);
+	}
 
 	public void writeAsRoot(DataOutput dataoutput) throws IOException
 	{
