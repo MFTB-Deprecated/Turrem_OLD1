@@ -1,5 +1,9 @@
 package net.turrem.server.world;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import net.turrem.server.world.material.MatStack;
 import net.turrem.utils.nbt.NBTCompound;
 
 public class Stratum
@@ -18,6 +22,13 @@ public class Stratum
 		this.material = material;
 		this.depth = map;
 		this.data = data;
+	}
+	
+	public Collection<MatStack> getMat(int x, int y, int z)
+	{
+		ArrayList<MatStack> mat = new ArrayList<MatStack>();
+		mat.add(new MatStack(this.material, 1));
+		return mat;
 	}
 
 	public byte[] getDepthMap()
