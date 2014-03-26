@@ -50,7 +50,7 @@ public class Toolbox
 
 		return lines.toArray(new String[0]);
 	}
-	
+
 	public static String getFloat(float f, int d)
 	{
 		String num = "" + (int) f;

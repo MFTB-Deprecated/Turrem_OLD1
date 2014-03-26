@@ -3,18 +3,18 @@ package net.turrem.utils.ao;
 public class Urchin
 {
 	public AORay[] rays;
-	
+
 	public float xu = 0.0F;
 	public float xd = 0.0F;
 	public float yu = 0.0F;
 	public float yd = 0.0F;
 	public float zu = 0.0F;
 	public float zd = 0.0F;
-	
+
 	public Urchin(int size, int raynum)
 	{
 		this.rays = new AORay[raynum];
-		
+
 		float inc = (float) (Math.PI * (3 - Math.sqrt(5)));
 		float off = 2.0F / raynum;
 		for (int i = 0; i < this.rays.length; i++)

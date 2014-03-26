@@ -7,17 +7,17 @@ import java.io.IOException;
 public class NBTByteArray extends NBTTag
 {
 	private byte[] payload = new byte[0];
-	
+
 	public NBTByteArray()
 	{
 		super();
 	}
-	
+
 	public NBTByteArray(String name)
 	{
 		super(name);
 	}
-	
+
 	@Override
 	public byte getId()
 	{
@@ -38,13 +38,13 @@ public class NBTByteArray extends NBTTag
 		this.payload = new byte[j];
 		datainput.readFully(this.payload);
 	}
-	
+
 	public NBTByteArray setBytes(byte[] bytes)
 	{
 		this.payload = bytes;
 		return this;
 	}
-	
+
 	public byte[] getBytes()
 	{
 		return this.payload;

@@ -5,9 +5,9 @@ import net.turrem.client.asset.AssetLoader;
 public interface ITextureObject
 {
 	public String getName();
-	
+
 	public int bind(AssetLoader assets);
-	
+
 	public void unbind();
 
 	void start();

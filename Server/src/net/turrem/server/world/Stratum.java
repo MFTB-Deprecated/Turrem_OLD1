@@ -23,7 +23,7 @@ public class Stratum
 		this.depth = map;
 		this.data = data;
 	}
-	
+
 	public Collection<MatStack> getMat(int x, int y, int z)
 	{
 		ArrayList<MatStack> mat = new ArrayList<MatStack>();
@@ -33,7 +33,7 @@ public class Stratum
 
 	public byte[] getDepthMap()
 	{
-		return depth;
+		return this.depth;
 	}
 
 	public void setDepthMap(byte[] depth)
@@ -43,7 +43,7 @@ public class Stratum
 
 	public String getMateriaId()
 	{
-		return material;
+		return this.material;
 	}
 
 	public NBTCompound getNBTData()
@@ -52,7 +52,7 @@ public class Stratum
 		{
 			this.data = new NBTCompound();
 		}
-		return data;
+		return this.data;
 	}
 
 	public int setDepth(int x, int y, int value)
@@ -108,7 +108,7 @@ public class Stratum
 			return 0;
 		}
 	}
-	
+
 	public int removeDepth(int i, int value)
 	{
 		int d = this.depth[i] & 0xFF;

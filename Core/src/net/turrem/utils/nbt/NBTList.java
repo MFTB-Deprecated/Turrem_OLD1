@@ -54,7 +54,7 @@ public class NBTList extends NBTTag
 		this.tagType = datainput.readByte();
 		int size = datainput.readInt();
 		this.tagList = new ArrayList<NBTTag>();
-		
+
 		for (int i = 0; i < size; i++)
 		{
 			NBTTag tag = NBTTag.getNewTag(this.tagType, null);
@@ -69,7 +69,7 @@ public class NBTList extends NBTTag
 		{
 			this.tagType = tag.getId();
 		}
-		
+
 		if (tag.getId() == this.tagType)
 		{
 			this.tagList.add(tag);
@@ -90,7 +90,7 @@ public class NBTList extends NBTTag
 	{
 		return this.tagList.size();
 	}
-	
+
 	public void clear()
 	{
 		this.tagList.clear();

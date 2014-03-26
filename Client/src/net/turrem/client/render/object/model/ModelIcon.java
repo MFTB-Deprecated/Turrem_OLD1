@@ -71,6 +71,7 @@ public class ModelIcon
 		}
 		return this.load(man.assets);
 	}
+
 	public boolean load(AssetLoader assets)
 	{
 		if (this.isLoaded)

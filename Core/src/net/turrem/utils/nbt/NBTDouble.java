@@ -7,17 +7,17 @@ import java.io.IOException;
 public class NBTDouble extends NBTTag
 {
 	private double payload;
-	
+
 	public NBTDouble()
 	{
 		super();
 	}
-	
+
 	public NBTDouble(String name)
 	{
 		super(name);
 	}
-	
+
 	@Override
 	public byte getId()
 	{
@@ -35,13 +35,13 @@ public class NBTDouble extends NBTTag
 	{
 		this.payload = datainput.readDouble();
 	}
-	
+
 	public NBTDouble setDouble(double i)
 	{
 		this.payload = i;
 		return this;
 	}
-	
+
 	public double getDouble()
 	{
 		return this.payload;

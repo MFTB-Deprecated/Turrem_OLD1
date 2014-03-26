@@ -4,21 +4,21 @@ public class TurremServer
 {
 	public final String theGameDir;
 	public final String theSaveDir;
-	
+
 	protected long lastTime;
 	protected long timeoff = 0;
-	
+
 	private float lasttps = 10.0F;
 	private long lastTickTime;
 	private int secticks = 0;
-	
+
 	private float tpsstore = 0.0F;
 	private int tpssamp = 0;
-	
+
 	private long lastTPSAnTime;
-	
+
 	private long ticks = 0;
-	
+
 	public TurremServer(String dir, String save)
 	{
 		this.theGameDir = dir;
@@ -30,17 +30,17 @@ public class TurremServer
 		this.onRun();
 		this.runloop();
 	}
-	
+
 	public void onRun()
 	{
-		
+
 	}
-	
+
 	public boolean isDone()
 	{
 		return false;
 	}
-	
+
 	public void runloop()
 	{
 		this.lastTime = System.currentTimeMillis();
@@ -74,11 +74,11 @@ public class TurremServer
 		}
 		this.shutdown();
 	}
-	
+
 	public void tick()
 	{
 		this.ticks++;
-		
+
 		long dif = System.currentTimeMillis() - this.lastTickTime;
 		if (dif > 1000)
 		{
@@ -88,32 +88,32 @@ public class TurremServer
 			this.secticks = 0;
 		}
 		this.secticks++;
-		
+
 		if (this.ticks % 100 == 0)
 		{
 			this.resetTPS();
 			long time = System.currentTimeMillis();
-			System.out.println("Ticks per Second - " + (100.0F / ((time  - this.lastTPSAnTime) / 1000.0F)));
+			System.out.println("Ticks per Second - " + (100.0F / ((time - this.lastTPSAnTime) / 1000.0F)));
 			this.lastTPSAnTime = time;
 		}
 	}
-	
+
 	public float getLastTPS()
 	{
-		return lasttps;
+		return this.lasttps;
 	}
 
 	public void shutdown()
 	{
 		System.exit(0);
 	}
-	
+
 	public void addTPS(float tps)
 	{
 		this.tpsstore += tps;
 		this.tpssamp++;
 	}
-	
+
 	public float getTPS()
 	{
 		if (this.tpssamp == 0)
@@ -122,7 +122,7 @@ public class TurremServer
 		}
 		return this.tpsstore / this.tpssamp;
 	}
-	
+
 	public void resetTPS()
 	{
 		this.tpssamp = 0;

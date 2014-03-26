@@ -27,7 +27,7 @@ public class Point
 		this.zCoord = z;
 		return this;
 	}
-	
+
 	public void moveDelta(double dx, double dy, double dz)
 	{
 		this.xCoord += dx;
@@ -71,7 +71,7 @@ public class Point
 
 		return xs + ys + zs;
 	}
-	
+
 	public double squareDistanceTo(Point p)
 	{
 		return squareDistance(this, p);
@@ -106,19 +106,19 @@ public class Point
 			return weight >= 0.0D && weight <= 1.0D ? new Point(p1.xCoord + x * weight, p1.yCoord + y * weight, p1.zCoord + z * weight) : null;
 		}
 	}
-	
+
 	public void addPoint(Point p)
 	{
 		this.xCoord += p.xCoord;
 		this.yCoord += p.yCoord;
 		this.zCoord += p.zCoord;
 	}
-	
+
 	public static Point addVector(Point point, Vector vector)
 	{
 		return new Point(point.xCoord + vector.xpart, point.yCoord + vector.ypart, point.zCoord + vector.zpart);
 	}
-	
+
 	public static Point getIntermediateWithYValue(Point p1, Point p2, double yval)
 	{
 		double x = p2.xCoord - p1.xCoord;
@@ -135,7 +135,7 @@ public class Point
 			return weight >= 0.0D && weight <= 1.0D ? new Point(p1.xCoord + x * weight, p1.yCoord + y * weight, p1.zCoord + z * weight) : null;
 		}
 	}
-	
+
 	public static Point getSlideWithYValue(Point p1, Point p2, double yval)
 	{
 		double x = p2.xCoord - p1.xCoord;
@@ -153,7 +153,6 @@ public class Point
 		}
 	}
 
-	
 	public static Point getIntermediateWithZValue(Point p1, Point p2, double zval)
 	{
 		double x = p2.xCoord - p1.xCoord;
@@ -171,7 +170,6 @@ public class Point
 		}
 	}
 
-
 	public static Point getSlide(Point p1, Point p2, double slide)
 	{
 		double x = p2.xCoord - p1.xCoord;
@@ -180,7 +178,7 @@ public class Point
 
 		return new Point(p1.xCoord + x * slide, p1.yCoord + y * slide, p1.zCoord + z * slide);
 	}
-	
+
 	public static Point getSlideWithLength(Point p1, Point p2, double length)
 	{
 		double x = p2.xCoord - p1.xCoord;
@@ -188,7 +186,7 @@ public class Point
 		double z = p2.zCoord - p1.zCoord;
 
 		double l = distance(p1, p2);
-		
+
 		if (l < 1E-7D)
 		{
 			return null;
@@ -199,15 +197,16 @@ public class Point
 			return new Point(p1.xCoord + x * weight, p1.yCoord + y * weight, p1.zCoord + z * weight);
 		}
 	}
-	
+
 	public Point duplicate()
 	{
 		return new Point(this.xCoord, this.yCoord, this.zCoord);
 	}
-	
+
+	@Override
 	public String toString()
 	{
 		return "(" + Toolbox.getFloat((float) this.xCoord, 2) + ", " + Toolbox.getFloat((float) this.yCoord, 2) + ", " + Toolbox.getFloat((float) this.zCoord, 2) + ")";
-		
+
 	}
 }

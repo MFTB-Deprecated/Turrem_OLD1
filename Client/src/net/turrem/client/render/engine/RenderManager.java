@@ -43,7 +43,7 @@ public class RenderManager
 		}
 		return null;
 	}
-	
+
 	public RenderEngine getHolder(int index)
 	{
 		return this.holders.get(index);

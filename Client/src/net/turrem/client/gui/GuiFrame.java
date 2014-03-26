@@ -14,7 +14,7 @@ public class GuiFrame extends GuiElement
 	private boolean backin;
 	private int edge;
 	private String texture;
-	
+
 	private float scale;
 
 	public GuiFrame(int width, int height, boolean hasback, boolean backin, int edge, String texture, float scale)
@@ -42,10 +42,10 @@ public class GuiFrame extends GuiElement
 
 		float s = 16 * this.scale;
 		float es = 3 * this.scale;
-		
-		float w = width - es * 2;
-		float h = height - es * 2;
-		
+
+		float w = this.width - es * 2;
+		float h = this.height - es * 2;
+
 		for (int i = 0; i <= w / s; i++)
 		{
 			for (int j = 0; j <= h / s; j++)
@@ -78,12 +78,12 @@ public class GuiFrame extends GuiElement
 		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
 
 		float s = 6 * this.scale;
-		
+
 		float w = this.width - s * 2;
 		float h = this.height - s * 2;
-		
+
 		float bl = 20 * this.scale;
-		
+
 		int tx;
 		tx = this.edge;
 		for (int i = 0; i <= h / bl; i++)
@@ -98,10 +98,10 @@ public class GuiFrame extends GuiElement
 			this.drawTexture(0, Y + s, s, H, tx / 4.0F, 6 / 32.0F, 6 / 24.0F, 20 / 32.0F, 0, false, false);
 		}
 
-		tx = edge;
+		tx = this.edge;
 		this.drawTexture(0, 0, s, s, tx / 4.0F, 0, 6 / 24.0F, 6 / 32.0F, 0, false, false);
 
-		tx = edge;
+		tx = this.edge;
 		for (int i = 0; i <= w / bl; i++)
 		{
 			float W = (w - i * bl);
@@ -114,13 +114,13 @@ public class GuiFrame extends GuiElement
 			this.drawTexture(X + s, 0, W, s, tx / 4.0F, 6 / 32.0F, 6 / 24.0F, 20 / 32.0F, 1, false, false);
 		}
 
-		tx = (edge + 2) % 4;;
+		tx = (this.edge + 2) % 4;;
 		this.drawTexture(0, this.height, s, -s, tx / 4.0F, 26 / 32.0F, 6 / 24.0F, 6 / 32.0F, 1, false, false);
 
-		tx = edge;
+		tx = this.edge;
 		this.drawTexture(this.width, 0, -s, s, tx / 4.0F, 26 / 32.0F, 6 / 24.0F, 6 / 32.0F, 1, false, false);
 
-		tx = (edge + 2) % 4;
+		tx = (this.edge + 2) % 4;
 		for (int i = 0; i <= h / bl; i++)
 		{
 			float H = (h - i * bl);
@@ -133,10 +133,10 @@ public class GuiFrame extends GuiElement
 			this.drawTexture(this.width, Y + s, -s, H, tx / 4.0F, 6 / 32.0F, 6 / 24.0F, 20 / 32.0F, 0, false, false);
 		}
 
-		tx = (edge + 2) % 4;
+		tx = (this.edge + 2) % 4;
 		this.drawTexture(this.width, this.height, -s, -s, tx / 4.0F, 0, 6 / 24.0F, 6 / 32.0F, 0, false, false);
 
-		tx = (edge + 2) % 4;
+		tx = (this.edge + 2) % 4;
 		for (int i = 0; i <= w / bl; i++)
 		{
 			float W = (w - i * bl);
@@ -173,7 +173,7 @@ public class GuiFrame extends GuiElement
 				this.renderBack();
 			}
 		}
-		
+
 		this.renderEdge();
 	}
 }

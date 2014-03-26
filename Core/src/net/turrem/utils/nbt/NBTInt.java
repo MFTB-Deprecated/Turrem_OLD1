@@ -7,17 +7,17 @@ import java.io.IOException;
 public class NBTInt extends NBTTag
 {
 	private int payload;
-	
+
 	public NBTInt()
 	{
 		super();
 	}
-	
+
 	public NBTInt(String name)
 	{
 		super(name);
 	}
-	
+
 	@Override
 	public byte getId()
 	{
@@ -35,13 +35,13 @@ public class NBTInt extends NBTTag
 	{
 		this.payload = datainput.readInt();
 	}
-	
+
 	public NBTInt setInt(int i)
 	{
 		this.payload = i;
 		return this;
 	}
-	
+
 	public int getInt()
 	{
 		return this.payload;

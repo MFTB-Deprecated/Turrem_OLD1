@@ -7,10 +7,10 @@ public interface IState
 	public void end();
 
 	public void render();
-	
+
 	public void updateGL();
-	
+
 	public void mouseEvent();
-	
+
 	public void keyEvent();
 }

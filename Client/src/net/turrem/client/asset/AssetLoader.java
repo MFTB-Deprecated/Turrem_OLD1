@@ -43,7 +43,7 @@ public class AssetLoader
 		String dir = this.bin + "assets/" + name.replaceAll("\\.", "/") + ".png";
 		return ImageIO.read(new File(dir));
 	}
-	
+
 	public boolean doesTextureFileExist(String name)
 	{
 		String dir = this.bin + "assets/" + name.replaceAll("\\.", "/") + ".png";

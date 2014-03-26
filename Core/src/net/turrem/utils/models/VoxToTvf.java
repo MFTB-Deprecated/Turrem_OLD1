@@ -7,8 +7,6 @@ import java.util.Iterator;
 import net.turrem.utils.ao.AORay;
 import net.turrem.utils.ao.Urchin;
 import net.turrem.utils.geo.EnumDir;
-import net.turrem.utils.models.TVFFile;
-import net.turrem.utils.models.VOXFile;
 
 public class VoxToTvf
 {
@@ -175,7 +173,7 @@ public class VoxToTvf
 		this.tvf.width = (byte) this.vox.width;
 		this.tvf.height = (byte) this.vox.height;
 		this.tvf.length = (byte) this.vox.length;
-		
+
 		this.tvf.colorNum = this.colorCount;
 		this.tvf.colors = new TVFFile.TVFColor[this.colorCount];
 

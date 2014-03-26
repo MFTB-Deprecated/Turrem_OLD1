@@ -34,7 +34,7 @@ public class TVFFile
 	public byte width;
 	public byte height;
 	public byte length;
-	
+
 	public byte prelit;
 
 	/**
@@ -142,7 +142,7 @@ public class TVFFile
 		stream.write(this.width & 0xFF);
 		stream.write(this.height & 0xFF);
 		stream.write(this.length & 0xFF);
-		
+
 		stream.write(this.prelit & 0xFF);
 		stream.writeShort(this.colorNum);
 
@@ -230,7 +230,7 @@ public class TVFFile
 		tvf.width = stream.readByte();
 		tvf.height = stream.readByte();
 		tvf.length = stream.readByte();
-		
+
 		tvf.prelit = stream.readByte();
 
 		tvf.colorNum = stream.readShort();

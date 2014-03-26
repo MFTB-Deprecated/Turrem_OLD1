@@ -28,9 +28,10 @@ public class RenderStore extends RenderEngine
 		{
 			return -1;
 		}
-		return (int) i;
+		return i;
 	}
-	
+
+	@Override
 	public RenderObject makeObject(TVFFile tvf, float scale, float x, float y, float z)
 	{
 		RenderObject obj = new RenderObject(this.objects.size());
@@ -71,7 +72,7 @@ public class RenderStore extends RenderEngine
 
 	public String getIdentifier()
 	{
-		return identifier;
+		return this.identifier;
 	}
 
 	public void push(ModelIcon icon)

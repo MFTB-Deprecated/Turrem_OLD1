@@ -5,11 +5,11 @@ import java.nio.FloatBuffer;
 import net.turrem.client.render.object.RenderObject;
 import net.turrem.utils.models.TVFFile;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
-import org.lwjgl.BufferUtils;
 
 /**
  * Binds a TVF file to a LWJGL VBO (Vertex Buffer Object) for rendering

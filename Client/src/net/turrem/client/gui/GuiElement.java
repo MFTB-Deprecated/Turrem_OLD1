@@ -16,13 +16,13 @@ public abstract class GuiElement implements IElement
 			u += tw;
 			tw = -tw;
 		}
-		
+
 		if (flipy)
 		{
 			v += th;
 			th = -th;
 		}
-		
+
 		x = x + this.xpos;
 		y = y + this.ypos;
 
@@ -86,12 +86,14 @@ public abstract class GuiElement implements IElement
 		return this.height;
 	}
 
+	@Override
 	public void setPos(int x, int y)
 	{
 		this.xpos = x;
 		this.ypos = y;
 	}
-	
+
+	@Override
 	public void setSize(int width, int height)
 	{
 		this.width = width;

@@ -29,7 +29,7 @@ public class FontRender
 		this.size = size;
 		this.doRenderText(text, x, y);
 	}
-	
+
 	public void renderTextCentered(String text, float x, float y, float size)
 	{
 		x -= (this.theFont.aspect * this.size) * text.length() / 2;
@@ -53,7 +53,7 @@ public class FontRender
 			}
 			else
 			{
-				int c = ((int) car) % 256;
+				int c = (car) % 256;
 				this.drawChar(c, X, Y);
 				X += w;
 			}

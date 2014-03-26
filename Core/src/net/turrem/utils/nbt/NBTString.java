@@ -7,12 +7,12 @@ import java.io.IOException;
 public class NBTString extends NBTTag
 {
 	private String payload;
-	
+
 	public NBTString()
 	{
 		super();
 	}
-	
+
 	public NBTString(String name)
 	{
 		super(name);
@@ -35,13 +35,13 @@ public class NBTString extends NBTTag
 	{
 		this.payload = datainput.readUTF();
 	}
-	
+
 	public NBTString setString(String string)
 	{
 		this.payload = string;
 		return this;
 	}
-	
+
 	public String getString()
 	{
 		return this.payload;

@@ -6,12 +6,12 @@ import net.turrem.client.render.texture.TextureIcon;
 public class Font
 {
 	protected float aspect;
-	
+
 	protected TextureIcon ico;
-	
+
 	public int width;
 	public int height;
-	
+
 	public final String name;
 
 	public Font(String name)
@@ -27,12 +27,12 @@ public class Font
 		this.height = this.ico.getHeight();
 		this.width = this.ico.getWidth();
 	}
-	
+
 	public void push()
 	{
 		FontList.fonts.put(this.name, this);
 	}
-	
+
 	public void unload()
 	{
 		if (this.ico != null)
@@ -43,9 +43,9 @@ public class Font
 
 	public final float getAspect()
 	{
-		return aspect;
+		return this.aspect;
 	}
-	
+
 	public void start()
 	{
 		if (this.ico != null)

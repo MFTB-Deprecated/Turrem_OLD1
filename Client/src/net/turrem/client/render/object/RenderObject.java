@@ -36,9 +36,9 @@ public class RenderObject implements IRenderObject
 		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glPolygonMode(GL11.GL_FRONT, GL11.GL_FILL);
 		GL11.glEnable(GL11.GL_LIGHTING);
-		//GL11.glDisable(GL11.GL_TEXTURE_2D);
-		//GL11.glColor3f(1.0F, 1.0F, 1.0F);
-		
+		// GL11.glDisable(GL11.GL_TEXTURE_2D);
+		// GL11.glColor3f(1.0F, 1.0F, 1.0F);
+
 		GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.verts);
 		GL11.glVertexPointer(3, GL11.GL_FLOAT, 0, 0);

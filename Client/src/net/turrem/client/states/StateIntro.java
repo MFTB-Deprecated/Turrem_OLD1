@@ -52,13 +52,13 @@ public class StateIntro implements IState
 		GL11.glEnd();
 
 		this.drawLogo();
-		
+
 		if (this.ticks++ > zapLogoTime && !this.theTurrem.isLoading())
 		{
 			this.theTurrem.setClientState(StateMainMenu.class);
 		}
 	}
-	
+
 	public void drawLogo()
 	{
 		int sw = this.theTurrem.getScreenWidth();
@@ -75,7 +75,7 @@ public class StateIntro implements IState
 			h = sh;
 			w = (int) (h * this.zaplogo.getAspect());
 		}
-		
+
 		int x = sw / 2 - w / 2;
 		int y = sh / 2 - h / 2;
 		int X = x + w;
@@ -88,10 +88,10 @@ public class StateIntro implements IState
 		float j = 0.0F;
 		float I = 1.0F;
 		float J = 1.0F;
-		
+
 		this.zaplogo.start();
 		GL11.glBegin(GL11.GL_QUADS);
-		
+
 		GL11.glTexCoord2f(i, j);
 		GL11.glVertex2f(x, y);
 
@@ -103,7 +103,7 @@ public class StateIntro implements IState
 
 		GL11.glTexCoord2f(I, j);
 		GL11.glVertex2f(X, y);
-		
+
 		GL11.glEnd();
 		this.zaplogo.end();
 	}

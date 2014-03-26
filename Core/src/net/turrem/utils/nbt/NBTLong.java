@@ -7,17 +7,17 @@ import java.io.IOException;
 public class NBTLong extends NBTTag
 {
 	private long payload;
-	
+
 	public NBTLong()
 	{
 		super();
 	}
-	
+
 	public NBTLong(String name)
 	{
 		super(name);
 	}
-	
+
 	@Override
 	public byte getId()
 	{
@@ -35,13 +35,13 @@ public class NBTLong extends NBTTag
 	{
 		this.payload = datainput.readLong();
 	}
-	
+
 	public NBTLong setLong(long i)
 	{
 		this.payload = i;
 		return this;
 	}
-	
+
 	public long getLong()
 	{
 		return this.payload;

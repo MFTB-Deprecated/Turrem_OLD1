@@ -7,17 +7,17 @@ import java.io.IOException;
 public class NBTIntArray extends NBTTag
 {
 	private int[] payload = new int[0];
-	
+
 	public NBTIntArray()
 	{
 		super();
 	}
-	
+
 	public NBTIntArray(String name)
 	{
 		super(name);
 	}
-	
+
 	@Override
 	public byte getId()
 	{
@@ -28,7 +28,7 @@ public class NBTIntArray extends NBTTag
 	void writePayload(DataOutput dataoutput) throws IOException
 	{
 		dataoutput.writeInt(this.payload.length);
-		
+
 		for (int i = 0; i < this.payload.length; i++)
 		{
 			dataoutput.writeInt(this.payload[i]);
@@ -40,19 +40,19 @@ public class NBTIntArray extends NBTTag
 	{
 		int j = datainput.readInt();
 		this.payload = new int[j];
-		
+
 		for (int i = 0; i < j; i++)
 		{
 			this.payload[i] = datainput.readInt();
 		}
 	}
-	
+
 	public NBTIntArray setInts(int[] ints)
 	{
 		this.payload = ints;
 		return this;
 	}
-	
+
 	public int[] getInts()
 	{
 		return this.payload;

@@ -7,12 +7,12 @@ import java.io.IOException;
 public class NBTByte extends NBTTag
 {
 	private byte payload;
-	
+
 	public NBTByte()
 	{
 		super();
 	}
-	
+
 	public NBTByte(String name)
 	{
 		super(name);
@@ -35,13 +35,13 @@ public class NBTByte extends NBTTag
 	{
 		this.payload = datainput.readByte();
 	}
-	
+
 	public NBTByte setByte(byte b)
 	{
 		this.payload = b;
 		return this;
 	}
-	
+
 	public byte getByte()
 	{
 		return this.payload;

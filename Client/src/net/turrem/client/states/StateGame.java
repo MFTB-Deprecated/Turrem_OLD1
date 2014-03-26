@@ -32,5 +32,5 @@ public class StateGame implements IState
 	public void keyEvent()
 	{
 	}
-	
+
 }
