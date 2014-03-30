@@ -14,8 +14,8 @@ public class ChunkGroup
 	
 	public Chunk getChunk(int chunkx, int chunky)
 	{
-		chunkx &= 0x2F;
-		chunky &= 0x2F;
+		chunkx &= 0x3F;
+		chunky &= 0x3F;
 		int ind = chunkx + (chunkx << 6);
 		Chunk c = this.chunks[ind];
 		if (c == null)
