@@ -26,7 +26,7 @@ public abstract class Entity
 		
 	}
 	
-	public void onWorldRegister(World world, boolean isstatic)
+	public void onWorldRegister(World world)
 	{
 		this.living = true;
 		this.theWorld = world;

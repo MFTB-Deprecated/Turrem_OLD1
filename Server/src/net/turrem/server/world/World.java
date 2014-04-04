@@ -16,6 +16,7 @@ public class World
 		if (ent != null)
 		{
 			this.entities.add(ent);
+			ent.onWorldRegister(this);
 		}
 	}
 
@@ -23,8 +24,28 @@ public class World
 	{
 		this.worldTime++;
 		this.updateEntities();
+		int i = 0;
+		for (ChunkGroup g : this.chunks.values())
+		{
+			g.onTick();
+			i++;
+			if ((i + this.worldTime) % 10 == 0)
+			{
+				g.tickUnload();
+			}
+		}
 	}
 
+	public void unloadAll()
+	{
+		for (ChunkGroup g : this.chunks.values())
+		{
+			g.tickUnload();
+		}
+		this.chunks.clear();
+		this.entities.clear();
+	}
+	
 	public void updateEntities()
 	{
 		for (int i = 0; i < this.entities.size(); i++)
@@ -47,14 +68,14 @@ public class World
 			else
 			{
 				ent.onTick();
-				if ((this.worldTime + i) % 10 == 0)
+				if ((this.worldTime + i) % 5 == 0)
 				{
 					int r = ent.loadRadius();
 					if (r > 1)
 					{
 						x = (int) ent.x;
 						z = (int) ent.z;
-						ChunkGroup g = this.retriveGroup(x, z);
+						ChunkGroup g = this.getGroup(x, z);
 						cx = (x >> 4) & 0x3F;
 						cz = (z >> 4) & 0x3F;
 						cxmin = cx - r;
@@ -109,14 +130,6 @@ public class World
 		int i = x >> 10;
 		int j = y >> 10;
 		int k = i | (j << 16);
-		return this.chunks.get(k);
-	}
-
-	public ChunkGroup retriveGroup(int x, int y)
-	{
-		int i = x >> 10;
-		int j = y >> 10;
-		int k = i | (j << 16);
 		ChunkGroup c = this.chunks.get(k);
 		if (c == null)
 		{
@@ -128,7 +141,7 @@ public class World
 
 	public Chunk getChunk(int x, int y)
 	{
-		ChunkGroup g = this.retriveGroup(x, y);
+		ChunkGroup g = this.getGroup(x, y);
 		if (g != null)
 		{
 			return g.getChunk(x >> 4, y >> 4);
