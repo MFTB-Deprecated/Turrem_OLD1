@@ -16,17 +16,31 @@ public class ChunkGroup
 	{
 		chunkx &= 0x3F;
 		chunky &= 0x3F;
-		int ind = chunkx + (chunkx << 6);
+		return this.doGetChunk(chunkx, chunky);
+	}
+	
+	public Chunk getChunkClamped(int chunkx, int chunky)
+	{
+		if (chunkx < (groupx * 64) || chunky < (groupy * 64) || chunkx >= (groupx * 64 + 64) || chunky >= (groupy * 64 + 64))
+		{
+			return null;
+		}
+		return this.getChunk(chunkx, chunky);
+	}
+	
+	public Chunk doGetChunk(int i, int j)
+	{
+		int ind = i + (j << 6);
 		Chunk c = this.chunks[ind];
 		if (c == null)
 		{
-			c = this.provide(chunkx, chunky);
+			c = this.provide(i, j);
 			this.chunks[ind] = c;
 		}
 		return c;
 	}
 	
-	public Chunk provide(int chunkx, int chunky)
+	protected Chunk provide(int chunkx, int chunky)
 	{
 		return new Chunk(chunkx, chunky);
 	}
