@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import net.turrem.server.world.material.MatStack;
+import net.turrem.utils.nbt.NBTCompound;
+import net.turrem.utils.nbt.NBTList;
 
 public class Chunk
 {
@@ -18,6 +20,14 @@ public class Chunk
 	protected int entitytickcount = 0;
 	protected int noenttimer = 0;
 
+	private Chunk(int chunkx, int chunky, ArrayList<Stratum> strata)
+	{
+		this.chunkx = chunkx;
+		this.chunky = chunky;
+		this.strata = strata;
+		this.buildHeightMap();
+	}
+	
 	public Chunk(int chunkx, int chunky)
 	{
 		this.chunkx = chunkx;
@@ -236,5 +246,31 @@ public class Chunk
 	public int getChunkY()
 	{
 		return chunky;
+	}
+	
+	public NBTCompound writeToNBT()
+	{
+		NBTCompound nbt = new NBTCompound();
+		NBTList list = new NBTList();
+		for (Stratum s : this.strata)
+		{
+			list.appendTag(s.writeToNBT());
+		}
+		nbt.setList("strata", list);
+		nbt.setInt("chunkx", this.chunkx);
+		nbt.setInt("chunky", this.chunky);
+		return nbt;
+	}
+
+	public static Chunk readFromNBT(NBTCompound nbt, int chunkx, int chunky)
+	{
+		ArrayList<Stratum> strata = new ArrayList<Stratum>();
+		NBTList list = nbt.getList("strata");
+		for (int i = 0; i < list.tagCount(); i++)
+		{
+			strata.add(Stratum.readFromNBT((NBTCompound) list.tagAt(i)));
+		}
+		Chunk chunk = new Chunk(chunkx, chunky, strata);
+		return chunk;
 	}
 }

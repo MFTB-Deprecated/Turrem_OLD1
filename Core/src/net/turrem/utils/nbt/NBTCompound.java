@@ -59,6 +59,10 @@ public class NBTCompound extends NBTTag
 				return compound;
 			}
 			compound.payload.put(tag.getName(), tag);
+			if (tag instanceof NBTEnd)
+			{
+				return compound;
+			}
 		}
 	}
 

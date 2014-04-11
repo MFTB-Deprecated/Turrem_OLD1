@@ -10,6 +10,12 @@ public class World
 	public ArrayList<Entity> entities = new ArrayList<Entity>();
 	public HashMap<Integer, ChunkGroup> chunks = new HashMap<Integer, ChunkGroup>();
 	public long worldTime = 0;
+	public String saveLoc;
+	
+	public World(String save)
+	{
+		this.saveLoc = save;
+	}
 
 	public void addEntity(Entity ent)
 	{
@@ -133,7 +139,7 @@ public class World
 		ChunkGroup c = this.chunks.get(k);
 		if (c == null)
 		{
-			c = new ChunkGroup(i, j);
+			c = new ChunkGroup(i, j, this);
 			this.chunks.put(k, c);
 		}
 		return c;
