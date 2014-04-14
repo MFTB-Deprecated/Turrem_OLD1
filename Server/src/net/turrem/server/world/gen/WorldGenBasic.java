@@ -11,13 +11,15 @@ public class WorldGenBasic extends WorldGen
 	public WorldPerlin large;
 	public WorldPerlin detail;
 	public WorldPerlin dirt;
+	public WorldPerlin valley;
 	
 	public WorldGenBasic(long seed)
 	{
 		this.seed = seed;
 		this.large = new WorldPerlin(this.seed * 1L, 6, 6, 0.5F);
+		this.valley = new WorldPerlin(this.seed * 4L, 6, 2, 0.5F);
 		this.detail = new WorldPerlin(this.seed * 2L, 6, 2, 0.5F);
-		this.dirt = new WorldPerlin(this.seed * 3L, 6, 2, 0.5F);
+		this.dirt = new WorldPerlin(this.seed * 3L, 6, 2, 0.8F);
 	}
 	
 	@Override
@@ -27,12 +29,25 @@ public class WorldGenBasic extends WorldGen
 		float[] la = this.large.getChunk(chunkx, chunky);
 		float[] de = this.detail.getChunk(chunkx, chunky);
 		float[] di = this.dirt.getChunk(chunkx, chunky);
+		float[] va = this.valley.getChunk(chunkx, chunky);
 		for (int i = 0; i < 256; i++)
 		{
-			int h = (int) (la[i] * 512 + de[i] * 48);
+			float v = va[i];
+			v -= 0.4F;
+			v /= 0.6F;
+			v = v * v * v;
+			int h = (int) (la[i] * 512 + de[i] * 64 - v * 256);
+			if (h < 1)
+			{
+				h = 1;
+			}
 			int j = 0;
 			while (h > 0)
 			{
+				if (v > 0.25)
+				{
+					h = 0;
+				}
 				int H = h;
 				if (H > 255)
 				{
