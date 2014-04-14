@@ -11,6 +11,7 @@ public class World
 	public HashMap<Integer, ChunkGroup> chunks = new HashMap<Integer, ChunkGroup>();
 	public long worldTime = 0;
 	public String saveLoc;
+	public long seed;
 	
 	public World(String save)
 	{

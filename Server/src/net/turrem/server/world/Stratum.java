@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import net.turrem.server.world.material.MatStack;
+import net.turrem.server.world.material.Material;
 import net.turrem.utils.nbt.NBTCompound;
 
 public class Stratum
@@ -44,6 +45,11 @@ public class Stratum
 	public String getMateriaId()
 	{
 		return this.material;
+	}
+	
+	public Material getMaterial()
+	{
+		return Material.list.get(this.getMateriaId());
 	}
 
 	public NBTCompound getNBTData()
