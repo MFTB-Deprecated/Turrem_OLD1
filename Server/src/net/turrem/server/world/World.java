@@ -49,6 +49,7 @@ public class World
 			this.getChunk(0, 16);
 			this.getChunk(16, 0);
 			this.getChunk(16, 16);
+			this.getChunk(-1, -1);
 		}
 	}
 

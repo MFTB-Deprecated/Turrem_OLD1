@@ -28,8 +28,6 @@ public class ChunkGroup
 
 	public Chunk getChunk(int chunkx, int chunky)
 	{
-		chunkx &= 0x3F;
-		chunky &= 0x3F;
 		return this.doGetChunk(chunkx, chunky);
 	}
 
@@ -82,25 +80,26 @@ public class ChunkGroup
 		this.chunks[k] = null;
 	}
 
-	public Chunk doGetChunk(int i, int j)
+	public Chunk doGetChunk(int chunkx, int chunky)
 	{
-		int ind = i + (j << 6);
-		Chunk c = this.chunks[ind];
+		int i = chunkx & 0x3F;
+		int j = chunky & 0x3F;
+		int k = i + (j << 6);
+		Chunk c = this.chunks[k];
 		if (c == null)
 		{
-			c = this.provide(i, j);
-			this.chunks[ind] = c;
+			c = this.provide(chunkx, chunky);
+			this.chunks[k] = c;
 		}
 		return c;
 	}
 
 	protected Chunk provide(int chunkx, int chunky)
 	{
-		int ind = chunkx + (chunky << 6);
 		Chunk c = null;
 		try
 		{
-			c = this.loadChunkFile(ind);
+			c = this.loadChunkFile(chunkx, chunky);
 		}
 		catch (IOException e)
 		{
@@ -123,7 +122,9 @@ public class ChunkGroup
 		{
 			return false;
 		}
-		String fn = this.theWorld.saveLoc + k + ".dat";
+		int chunkx = chunk.chunkx;
+		int chunky = chunk.chunky;
+		String fn = this.theWorld.saveLoc + chunkx + "_" + chunky + ".dat";
 		File file = new File(fn);
 		file.createNewFile();
 		DataOutputStream out;
@@ -142,9 +143,9 @@ public class ChunkGroup
 		return true;
 	}
 
-	protected Chunk loadChunkFile(int k) throws IOException
+	protected Chunk loadChunkFile(int chunkx, int chunky) throws IOException
 	{
-		String fn = this.theWorld.saveLoc + k + ".dat";
+		String fn = this.theWorld.saveLoc + chunkx + "_" + chunky + ".dat";
 		File file = new File(fn);
 		if (!file.exists())
 		{
@@ -161,8 +162,6 @@ public class ChunkGroup
 		}
 		NBTCompound nbt = NBTCompound.readAsRoot(in);
 		in.close();
-		int chunkx = k & 0x3F;
-		int chunky = k >> 6;
 		Chunk chunk = Chunk.readFromNBT(nbt.getCompound("dat"), chunkx, chunky);
 		return chunk;
 	}
