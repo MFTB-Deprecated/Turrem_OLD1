@@ -6,4 +6,10 @@ public class Dirt extends Material
 	{
 		super(name);
 	}
+
+	@Override
+	public int getColor()
+	{
+		return 0x704B33;
+	}
 }

@@ -256,9 +256,9 @@ public class Chunk
 		{
 			list.appendTag(s.writeToNBT());
 		}
-		nbt.setList("strata", list);
 		nbt.setInt("chunkx", this.chunkx);
 		nbt.setInt("chunky", this.chunky);
+		nbt.setList("strata", list);
 		return nbt;
 	}
 

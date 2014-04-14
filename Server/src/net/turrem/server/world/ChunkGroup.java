@@ -123,7 +123,7 @@ public class ChunkGroup
 		{
 			return false;
 		}
-		String fn = this.theWorld.saveLoc + k + ".chunk";
+		String fn = this.theWorld.saveLoc + k + ".dat";
 		File file = new File(fn);
 		file.createNewFile();
 		DataOutputStream out;
@@ -135,14 +135,16 @@ public class ChunkGroup
 		{
 			return false;
 		}
-		chunk.writeToNBT().writeAsRoot(out);
+		NBTCompound nbt = new NBTCompound();
+		nbt.setCompound("dat", chunk.writeToNBT());
+		nbt.writeAsRoot(out);
 		out.close();
 		return true;
 	}
 
 	protected Chunk loadChunkFile(int k) throws IOException
 	{
-		String fn = this.theWorld.saveLoc + k + ".chunk";
+		String fn = this.theWorld.saveLoc + k + ".dat";
 		File file = new File(fn);
 		if (!file.exists())
 		{
@@ -161,7 +163,7 @@ public class ChunkGroup
 		in.close();
 		int chunkx = k & 0x3F;
 		int chunky = k >> 6;
-		Chunk chunk = Chunk.readFromNBT(nbt, chunkx, chunky);
+		Chunk chunk = Chunk.readFromNBT(nbt.getCompound("dat"), chunkx, chunky);
 		return chunk;
 	}
 }

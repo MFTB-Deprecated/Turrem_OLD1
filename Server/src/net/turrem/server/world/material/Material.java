@@ -17,4 +17,6 @@ public abstract class Material
 		this.id = id;
 		list.put(this.id, this);
 	}
+	
+	public abstract int getColor();
 }

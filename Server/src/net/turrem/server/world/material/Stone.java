@@ -6,4 +6,10 @@ public class Stone extends Material
 	{
 		super(name);
 	}
+
+	@Override
+	public int getColor()
+	{
+		return 0xA0A0A0;
+	}
 }

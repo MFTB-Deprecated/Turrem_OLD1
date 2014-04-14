@@ -6,4 +6,10 @@ public class Grass extends Material
 	{
 		super(name);
 	}
+
+	@Override
+	public int getColor()
+	{
+		return 0x42772C;
+	}
 }

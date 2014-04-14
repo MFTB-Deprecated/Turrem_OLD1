@@ -12,6 +12,7 @@ public class ServerMain
 		{
 			save = args[0];
 		}
+		save = save.replaceAll("\\\\", "\\/");
 		TurremServer turrem = new TurremServer(dir, save);
 		Thread.currentThread().setName("Turrem Server");
 		turrem.run();

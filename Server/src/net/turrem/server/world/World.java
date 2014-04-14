@@ -13,9 +13,10 @@ public class World
 	public String saveLoc;
 	public long seed;
 	
-	public World(String save)
+	public World(String save, long seed)
 	{
 		this.saveLoc = save;
+		this.seed = seed;
 	}
 
 	public void addEntity(Entity ent)
@@ -40,6 +41,14 @@ public class World
 			{
 				g.tickUnload();
 			}
+		}
+		
+		if (this.worldTime == 4)
+		{
+			this.getChunk(0, 0);
+			this.getChunk(0, 16);
+			this.getChunk(16, 0);
+			this.getChunk(16, 16);
 		}
 	}
 

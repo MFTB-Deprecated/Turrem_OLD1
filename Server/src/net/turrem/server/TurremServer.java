@@ -1,5 +1,7 @@
 package net.turrem.server;
 
+import net.turrem.server.world.World;
+
 public class TurremServer
 {
 	public final String theGameDir;
@@ -19,10 +21,14 @@ public class TurremServer
 
 	private long ticks = 0;
 
+	public World theWorld;
+
 	public TurremServer(String dir, String save)
 	{
 		this.theGameDir = dir;
+		System.out.println("dir: " + dir);
 		this.theSaveDir = save;
+		System.out.println("save: " + save);
 	}
 
 	protected void run()
@@ -33,7 +39,7 @@ public class TurremServer
 
 	public void onRun()
 	{
-
+		this.theWorld = new World(this.theSaveDir, 0x42);
 	}
 
 	public boolean isDone()
@@ -77,6 +83,8 @@ public class TurremServer
 
 	public void tick()
 	{
+		this.theWorld.tick();
+
 		this.ticks++;
 
 		long dif = System.currentTimeMillis() - this.lastTickTime;
