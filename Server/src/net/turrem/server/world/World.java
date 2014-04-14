@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import net.turrem.server.entity.Entity;
+import net.turrem.server.world.gen.WorldGen;
+import net.turrem.server.world.gen.WorldGenBasic;
 
 public class World
 {
@@ -13,10 +15,13 @@ public class World
 	public String saveLoc;
 	public long seed;
 	
+	public WorldGen theWorldGen;
+	
 	public World(String save, long seed)
 	{
 		this.saveLoc = save;
 		this.seed = seed;
+		this.theWorldGen = new WorldGenBasic(this.seed);
 	}
 
 	public void addEntity(Entity ent)

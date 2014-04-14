@@ -111,7 +111,7 @@ public class ChunkGroup
 		}
 		else
 		{
-			return new Chunk(chunkx, chunky);
+			return new Chunk(chunkx, chunky, this.theWorld.theWorldGen.generateChunk(chunkx, chunky));
 		}
 	}
 

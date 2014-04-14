@@ -9,7 +9,7 @@ import net.turrem.utils.nbt.NBTCompound;
 
 public class Stratum
 {
-	protected byte[] depth = new byte[256];
+	public byte[] depth = new byte[256];
 	private String material;
 	protected NBTCompound data = null;
 

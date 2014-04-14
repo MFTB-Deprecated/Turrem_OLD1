@@ -6,7 +6,9 @@ import net.turrem.server.entity.SoftEntity;
 
 public abstract class EntityUnit extends SoftEntity implements IHolding
 {
-	protected Realm allegiance;
+	protected Realm allegiance = null;
+	
+	public abstract float veiwDistance();
 	
 	public Realm getAllegiance()
 	{
@@ -16,7 +18,15 @@ public abstract class EntityUnit extends SoftEntity implements IHolding
 	public Realm setAllegiance(Realm newrealm)
 	{
 		Realm oldrealm = this.allegiance;
+		if (oldrealm != null)
+		{
+			oldrealm.leaveRealm(this, "CHANGED");
+		}
 		this.allegiance = newrealm;
+		if (newrealm != null)
+		{
+			newrealm.joinRealm(this);
+		}
 		return oldrealm;
 	}
 }

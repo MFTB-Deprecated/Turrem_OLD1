@@ -20,7 +20,7 @@ public class Chunk
 	protected int entitytickcount = 0;
 	protected int noenttimer = 0;
 
-	private Chunk(int chunkx, int chunky, ArrayList<Stratum> strata)
+	public Chunk(int chunkx, int chunky, ArrayList<Stratum> strata)
 	{
 		this.chunkx = chunkx;
 		this.chunky = chunky;
