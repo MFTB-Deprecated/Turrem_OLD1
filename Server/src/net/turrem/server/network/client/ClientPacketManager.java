@@ -8,12 +8,12 @@ import java.io.InputStream;
 
 public class ClientPacketManager
 {
-	public ClientPacket readSinglePacket(String user, InputStream data) throws IOException
+	public ClientPacket readSinglePacket(String user, InputStream stream) throws IOException
 	{
-		byte type = (byte) data.read();
-		int length = (data.read() << 8) | (data.read() << 0);
+		byte type = (byte) stream.read();
+		int length = (stream.read() << 8) | (stream.read() << 0);
 		byte[] packet = new byte[length];
-		data.read(packet);
+		stream.read(packet);
 		DataInput input = new DataInputStream(new ByteArrayInputStream(packet));
 		return this.readPacket(type, length, input, user);
 	}
@@ -22,14 +22,18 @@ public class ClientPacketManager
 	{
 		switch (packetType & 0xFF)
 		{
-			case 0x00:
+			case 0x10:
 				return new ClientPacketAction(data, user, length);
-			case 0x01:
+			case 0x11:
 				return new ClientPacketMove(data, user);
-			case 0x02:
+			case 0x30:
 				return new ClientPacketRequest(user, data, length);
-			case 0x03:
+			case 0x31:
 				return new ClientPacketServerInfoRequest(user);
+			case 0xA0:
+				return new ClientPacketChat(user, data, length);
+			case 0xFE:
+				return new ClientPacketCustomNBT(user, data);
 			case 0xFF:
 				return new ClientPacketCustom(user, data, length);
 			default:
