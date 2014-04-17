@@ -17,10 +17,10 @@ public class Chunk
 	protected short minHeight;
 	protected short maxHeight;
 	private boolean rebuildhmap = false;
-	
+
 	public final int chunkx;
 	public final int chunky;
-	
+
 	protected int entitytickcount = 0;
 	protected int noenttimer = 0;
 
@@ -31,18 +31,18 @@ public class Chunk
 		this.strata = strata;
 		this.buildHeightMap();
 	}
-	
+
 	public Chunk(int chunkx, int chunky)
 	{
 		this.chunkx = chunkx;
 		this.chunky = chunky;
 	}
-	
+
 	public void onEntityTick()
 	{
 		this.entitytickcount++;
 	}
-	
+
 	public boolean tickUnload(int unloadtime)
 	{
 		if (this.entitytickcount == 0)
@@ -61,7 +61,7 @@ public class Chunk
 		}
 		return false;
 	}
-	
+
 	public void buildHeightMap()
 	{
 		this.rebuildhmap = false;
@@ -94,7 +94,7 @@ public class Chunk
 			}
 		}
 	}
-	
+
 	public short getMinHeight()
 	{
 		if (this.height == null || this.rebuildhmap)
@@ -273,7 +273,7 @@ public class Chunk
 		}
 		this.rebuildhmap = true;
 	}
-	
+
 	public int getChunkX()
 	{
 		return chunkx;
@@ -283,7 +283,7 @@ public class Chunk
 	{
 		return chunky;
 	}
-	
+
 	public Material[] coreTerrain(int x, int depth, int z)
 	{
 		x &= 0x0F;
@@ -297,8 +297,12 @@ public class Chunk
 			int d = st.getDepth(x, z);
 			for (int j = 0; j < d; j++)
 			{
-				core[y] = mat;
-				if (++y >= depth)
+				if (y < depth)
+				{
+					core[y] = mat;
+					y++;
+				}
+				else
 				{
 					return core;
 				}
@@ -306,7 +310,7 @@ public class Chunk
 		}
 		return core;
 	}
-	
+
 	public NBTCompound writeToNBT()
 	{
 		NBTCompound nbt = new NBTCompound();

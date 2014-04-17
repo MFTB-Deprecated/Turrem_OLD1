@@ -1,7 +1,9 @@
 package net.turrem.server.world;
 
 import java.awt.image.BufferedImage;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,6 +12,7 @@ import javax.imageio.ImageIO;
 
 import net.turrem.server.Realm;
 import net.turrem.server.entity.Entity;
+import net.turrem.server.network.server.ServerPacketTerrain;
 import net.turrem.server.world.gen.WorldGen;
 import net.turrem.server.world.gen.WorldGenBasic;
 import net.turrem.server.world.material.Material;
@@ -22,7 +25,7 @@ public class World
 	public long worldTime = 0;
 	public String saveLoc;
 	public long seed;
-	
+
 	private Chunk lastChunk;
 
 	public WorldGen theWorldGen;
@@ -70,7 +73,24 @@ public class World
 			{
 				e.printStackTrace();
 			}
+
+			try
+			{
+				DataOutputStream out = new DataOutputStream(new FileOutputStream(this.saveLoc + "chunk.test.bin"));
+				this.writeTestPacket(out);
+				out.close();
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+			}
 		}
+	}
+
+	public void writeTestPacket(DataOutputStream out) throws IOException
+	{
+		ServerPacketTerrain packet = new ServerPacketTerrain(this, 0, 0);
+		packet.write(out);
 	}
 
 	public BufferedImage testTerrainMap()
@@ -123,7 +143,6 @@ public class World
 		return img;
 	}
 
-	
 	public void unloadAll()
 	{
 		for (ChunkGroup g : this.chunks.values())
@@ -212,7 +231,7 @@ public class World
 			}
 		}
 	}
-	
+
 	public short getHeight(int x, int z)
 	{
 		int chunkx = x >> 4;
@@ -273,41 +292,41 @@ public class World
 		}
 		return null;
 	}
-	
+
 	public int getSideDrop(int x, int z)
 	{
 		int height = this.getHeight(x, z);
 		int diff = 0;
 		int h;
-		
+
 		h = this.getHeight(x + 1, z);
 		h -= height;
 		if (h < diff)
 		{
 			diff = h;
 		}
-		
+
 		h = this.getHeight(x, z + 1);
 		h -= height;
 		if (h < diff)
 		{
 			diff = h;
 		}
-		
+
 		h = this.getHeight(x - 1, z);
 		h -= height;
 		if (h < diff)
 		{
 			diff = h;
 		}
-		
+
 		h = this.getHeight(x, z - 1);
 		h -= height;
 		if (h < diff)
 		{
 			diff = h;
 		}
-		
+
 		return -diff;
 	}
 }
