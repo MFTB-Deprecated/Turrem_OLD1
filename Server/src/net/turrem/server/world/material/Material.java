@@ -19,4 +19,9 @@ public abstract class Material
 	}
 	
 	public abstract int getColor();
+	
+	public int getNumId()
+	{
+		return this.id.hashCode();
+	}
 }

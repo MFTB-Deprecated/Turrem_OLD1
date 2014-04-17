@@ -22,6 +22,8 @@ public class World
 	public long worldTime = 0;
 	public String saveLoc;
 	public long seed;
+	
+	private Chunk lastChunk;
 
 	public WorldGen theWorldGen;
 
@@ -210,6 +212,19 @@ public class World
 			}
 		}
 	}
+	
+	public short getHeight(int x, int z)
+	{
+		int chunkx = x >> 4;
+		int chunky = z >> 4;
+		if (this.lastChunk != null && this.lastChunk.chunkx == chunkx && this.lastChunk.chunky == chunky)
+		{
+			return this.lastChunk.getHeight(x, z);
+		}
+		Chunk c = this.chunkAt(x, z);
+		this.lastChunk = c;
+		return c.getHeight(chunkx, z);
+	}
 
 	public ChunkGroup groupAt(int x, int y)
 	{
@@ -257,5 +272,42 @@ public class World
 			return g.getChunk(x, y);
 		}
 		return null;
+	}
+	
+	public int getSideDrop(int x, int z)
+	{
+		int height = this.getHeight(x, z);
+		int diff = 0;
+		int h;
+		
+		h = this.getHeight(x + 1, z);
+		h -= height;
+		if (h < diff)
+		{
+			diff = h;
+		}
+		
+		h = this.getHeight(x, z + 1);
+		h -= height;
+		if (h < diff)
+		{
+			diff = h;
+		}
+		
+		h = this.getHeight(x - 1, z);
+		h -= height;
+		if (h < diff)
+		{
+			diff = h;
+		}
+		
+		h = this.getHeight(x, z - 1);
+		h -= height;
+		if (h < diff)
+		{
+			diff = h;
+		}
+		
+		return -diff;
 	}
 }

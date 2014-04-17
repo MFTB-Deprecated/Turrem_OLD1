@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import net.turrem.server.world.material.MatStack;
+import net.turrem.server.world.material.Material;
 import net.turrem.utils.nbt.NBTCompound;
 import net.turrem.utils.nbt.NBTList;
 
@@ -12,6 +13,9 @@ public class Chunk
 	protected ArrayList<Stratum> strata = new ArrayList<Stratum>();
 	protected short[] height;
 	protected short[] top;
+
+	protected short minHeight;
+	protected short maxHeight;
 	private boolean rebuildhmap = false;
 	
 	public final int chunkx;
@@ -63,6 +67,8 @@ public class Chunk
 		this.rebuildhmap = false;
 		this.height = new short[256];
 		this.top = new short[256];
+		this.minHeight = Short.MAX_VALUE;
+		this.maxHeight = Short.MIN_VALUE;
 		for (int i = 0; i < this.strata.size(); i++)
 		{
 			byte[] st = this.strata.get(i).getDepthMap();
@@ -75,6 +81,36 @@ public class Chunk
 				}
 			}
 		}
+		for (int i = 0; i < 256; i++)
+		{
+			short h = this.height[i];
+			if (h > this.maxHeight)
+			{
+				this.maxHeight = h;
+			}
+			if (h < this.minHeight)
+			{
+				this.minHeight = h;
+			}
+		}
+	}
+	
+	public short getMinHeight()
+	{
+		if (this.height == null || this.rebuildhmap)
+		{
+			this.buildHeightMap();
+		}
+		return minHeight;
+	}
+
+	public short getMaxHeight()
+	{
+		if (this.height == null || this.rebuildhmap)
+		{
+			this.buildHeightMap();
+		}
+		return maxHeight;
 	}
 
 	public short[] getHeightMap()
@@ -246,6 +282,29 @@ public class Chunk
 	public int getChunkY()
 	{
 		return chunky;
+	}
+	
+	public Material[] coreTerrain(int x, int depth, int z)
+	{
+		x &= 0x0F;
+		z &= 0x0F;
+		Material[] core = new Material[depth];
+		int y = 0;
+		for (int i = this.strata.size() - 1; i >= 0; i--)
+		{
+			Stratum st = this.strata.get(i);
+			Material mat = st.getMaterial();
+			int d = st.getDepth(x, z);
+			for (int j = 0; j < d; j++)
+			{
+				core[y] = mat;
+				if (++y >= depth)
+				{
+					return core;
+				}
+			}
+		}
+		return core;
 	}
 	
 	public NBTCompound writeToNBT()
