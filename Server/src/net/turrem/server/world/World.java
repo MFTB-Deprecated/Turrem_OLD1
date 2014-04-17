@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 
+import net.turrem.server.Realm;
 import net.turrem.server.entity.Entity;
 import net.turrem.server.world.gen.WorldGen;
 import net.turrem.server.world.gen.WorldGenBasic;
@@ -17,6 +18,7 @@ public class World
 {
 	public ArrayList<Entity> entities = new ArrayList<Entity>();
 	public HashMap<Integer, ChunkGroup> chunks = new HashMap<Integer, ChunkGroup>();
+	public HashMap<String, Realm> realms = new HashMap<String, Realm>();
 	public long worldTime = 0;
 	public String saveLoc;
 	public long seed;
