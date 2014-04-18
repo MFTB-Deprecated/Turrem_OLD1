@@ -6,8 +6,6 @@ import java.util.ArrayList;
 
 import net.turrem.client.game.Chunk;
 import net.turrem.client.game.material.Material;
-import net.turrem.client.render.engine.RenderEngine;
-import net.turrem.client.render.object.RenderObject;
 import net.turrem.utils.models.TVFFile;
 import net.turrem.utils.models.TVFFile.TVFFace;
 import net.turrem.utils.models.TVFFile.TVFColor;
@@ -45,14 +43,9 @@ public class ServerPacketTerrain extends ServerPacket
 		}
 	}
 	
-	public Chunk buildChunk(RenderEngine render)
+	public Chunk buildChunk()
 	{
-		return new Chunk(this.chunkx, this.chunkz, this.buildRender(render));
-	}
-	
-	public RenderObject buildRender(RenderEngine render)
-	{
-		return render.makeObject(this.buildTVF(), 1.0F, 0.0F, this.voff * 1.0F, 0.0F);
+		return new Chunk(this.chunkx, this.chunkz, this.buildTVF(), this.hmap, this.voff);
 	}
 	
 	public TVFFile buildTVF()
