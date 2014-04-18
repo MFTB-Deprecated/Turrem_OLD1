@@ -14,7 +14,7 @@ public class ServerPacketTerrain extends ServerPacket
 	public int chunkz;
 	public short voffset;
 	public byte[] hmap;
-	public int[] mats;
+	public short[] mats;
 	public byte[][] chunk;
 	
 	public ServerPacketTerrain(World world, int chunkx, int chunkz)
@@ -31,7 +31,7 @@ public class ServerPacketTerrain extends ServerPacket
 		this.hmap = new byte[256];
 		this.chunk = new byte[256][];
 		
-		ArrayList<Integer> matlist = new ArrayList<Integer>();
+		ArrayList<Short> matlist = new ArrayList<Short>();
 		
 		for (int i = 0; i < 256; i++)
 		{
@@ -58,7 +58,7 @@ public class ServerPacketTerrain extends ServerPacket
 			this.chunk[i] = cb;
 		}
 		
-		this.mats = new int[matlist.size()];
+		this.mats = new short[matlist.size()];
 		for (int i = 0; i < this.mats.length; i++)
 		{
 			this.mats[i] = matlist.get(i);
@@ -75,7 +75,7 @@ public class ServerPacketTerrain extends ServerPacket
 		stream.writeByte(this.mats.length);
 		for (int i = 0; i < this.mats.length; i++)
 		{
-			stream.writeInt(this.mats[i]);
+			stream.writeShort(this.mats[i]);
 		}
 		for (int i = 0; i < 256; i++)
 		{

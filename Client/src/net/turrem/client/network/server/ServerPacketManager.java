@@ -22,6 +22,10 @@ public class ServerPacketManager
 	{
 		switch (packetType & 0xFF)
 		{
+			case 0x20:
+				return new ServerPacketTerrain(data);
+			case 0x21:
+				return new ServerPacketMaterialSync(data);
 			case 0xFE:
 				return new ServerPacketCustomNBT(data, length);
 			case 0xFF:
