@@ -1,4 +1,4 @@
-package net.turrem.client.game;
+package net.turrem.client.game.world;
 
 import org.lwjgl.opengl.GL11;
 

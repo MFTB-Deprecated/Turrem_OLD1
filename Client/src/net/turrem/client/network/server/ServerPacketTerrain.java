@@ -4,8 +4,8 @@ import java.io.DataInput;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import net.turrem.client.game.Chunk;
-import net.turrem.client.game.material.Material;
+import net.turrem.client.game.world.Chunk;
+import net.turrem.client.game.world.material.Material;
 import net.turrem.utils.models.TVFFile;
 import net.turrem.utils.models.TVFFile.TVFFace;
 import net.turrem.utils.models.TVFFile.TVFColor;

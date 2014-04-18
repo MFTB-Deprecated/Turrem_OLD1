@@ -1,4 +1,4 @@
-package net.turrem.client.game.material;
+package net.turrem.client.game.world.material;
 
 public class Grass extends Material
 {

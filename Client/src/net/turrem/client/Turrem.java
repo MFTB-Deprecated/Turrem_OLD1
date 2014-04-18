@@ -15,6 +15,8 @@ import net.turrem.client.states.StateIntro;
 import net.turrem.utils.graphics.ImgUtils;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
@@ -107,6 +109,7 @@ public class Turrem
 			try
 			{
 				this.render();
+				this.doInputEvents();
 			}
 			catch (Exception e)
 			{
@@ -119,6 +122,24 @@ public class Turrem
 			Display.sync(60);
 		}
 		this.shutdown();
+	}
+
+	private void doInputEvents()
+	{
+		while (Mouse.next())
+		{
+			if (this.thisState != null)
+			{
+				this.thisState.mouseEvent();
+			}
+		}
+		while (Keyboard.next())
+		{
+			if (this.thisState != null)
+			{
+				this.thisState.keyEvent();
+			}
+		}
 	}
 
 	public void setDisplayMode(int width, int height, boolean fullscreen)
@@ -254,7 +275,8 @@ public class Turrem
 		}
 		catch (Exception e)
 		{
-			System.err.println("Could not make new state: " + state.getName() + " (Current: " + this.thisState + " )");
+			System.err.println("Could not make new state: " + state.getSimpleName() + " (Current: " + this.thisState + " )");
+			e.printStackTrace();
 			return false;
 		}
 
