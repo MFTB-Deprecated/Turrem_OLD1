@@ -46,7 +46,7 @@ public class ServerPacketTerrain extends ServerPacket
 	
 	public Chunk buildChunk()
 	{
-		return new Chunk(this.chunkx, this.chunkz, this.buildTVF(), this.hmap, (short) (this.voff - basePadding));
+		return new Chunk(this.chunkx, this.chunkz, this.buildTVF(), this.hmap, (short) this.voff);
 	}
 	
 	public TVFFile buildTVF()

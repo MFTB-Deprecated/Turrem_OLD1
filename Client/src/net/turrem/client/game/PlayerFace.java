@@ -4,6 +4,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.util.glu.GLU;
 
 import net.turrem.client.Config;
+import net.turrem.client.game.world.ClientWorld;
 import net.turrem.utils.geo.Point;
 import net.turrem.utils.geo.Ray;
 import net.turrem.utils.geo.Vector;
@@ -26,8 +27,8 @@ public class PlayerFace
 	public PlayerFace()
 	{
 		this.reset();
-		this.camFocus = Point.getPoint(0.0D, 8.0D, 0.0D);
-		this.camLoc = Point.getPoint(0.0D, 23.0D, 0.0D);
+		this.camFocus = Point.getPoint(0.0D, 128.0D, 0.0D);
+		this.camLoc = Point.getPoint(0.0D, 196.0D, 0.0D);
 		this.reverseFocus();
 		this.updatePars();
 	}
@@ -113,7 +114,7 @@ public class PlayerFace
 		return Ray.getRay(this.camLoc, clip);
 	}
 
-	public void tickCamera()
+	public void tickCamera(ClientWorld world)
 	{
 		int wm = Mouse.getDWheel();
 		if (Mouse.isButtonDown(2))
@@ -133,13 +134,13 @@ public class PlayerFace
 		else if (wm != 0)
 		{
 			this.camDist -= wm * 0.003F;
-			if (this.camDist < 5.0F)
+			if (this.camDist < 8.0F)
 			{
-				this.camDist = 5.0F;
+				this.camDist = 8.0F;
 			}
-			if (this.camDist > 40.0F)
+			if (this.camDist > 128.0F)
 			{
-				this.camDist = 40.0F;
+				this.camDist = 128.0F;
 			}
 		}
 		if (Mouse.isButtonDown(0))
@@ -157,6 +158,8 @@ public class PlayerFace
 			dZ += dx * sin;
 			this.camFocus.moveDelta(dX, 0.0D, dZ);
 		}
+		double height = world.getHeight((int) this.camFocus.xCoord, (int) this.camFocus.zCoord, (int) this.camFocus.yCoord);
+		this.camFocus.yCoord = height;
 		this.doFocus();
 		this.mouselastx = Mouse.getX();
 		this.mouselasty = Mouse.getY();

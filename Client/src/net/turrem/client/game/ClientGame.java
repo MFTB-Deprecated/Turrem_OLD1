@@ -34,7 +34,7 @@ public class ClientGame
 
 	public void render()
 	{
-		this.face.tickCamera();
+		this.face.tickCamera(this.theWorld);
 		
 		GL11.glClearColor(0.18F, 0.18F, 0.23F, 1.0F);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
@@ -84,7 +84,7 @@ public class ClientGame
 	{
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glLoadIdentity();
-		GLU.gluPerspective(face.getFOVY(), face.getAspect(), face.getZNear(), 64.0F);
+		GLU.gluPerspective(face.getFOVY(), face.getAspect(), face.getZNear(), 256.0F);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glHint(GL11.GL_PERSPECTIVE_CORRECTION_HINT, GL11.GL_NICEST);
 		GL11.glDepthFunc(GL11.GL_LEQUAL);

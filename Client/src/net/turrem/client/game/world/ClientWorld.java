@@ -33,6 +33,32 @@ public class ClientWorld
 			chunk.render();
 		}
 	}
+	
+	public long getIndex(int chunkx, int chunkz)
+	{
+		return (((long)chunkx) << 32) | (chunkz & 0xffffffffL);
+	}
+	
+	public Chunk getChunk(int chunkx, int chunkz)
+	{
+		long l = this.getIndex(chunkx, chunkz);
+		return this.chunks.get(l);
+	}
+	
+	public int getHeight(int x, int z, int empty)
+	{
+		Chunk c = this.getChunk(x << 4, z << 4);
+		if (c == null)
+		{
+			return empty;
+		}
+		return c.getHeight(x, z);
+	}
+	
+	public int getHeight(int x, int z)
+	{
+		return this.getHeight(x, z, -1);
+	}
 
 	public void testNetwork()
 	{
@@ -74,7 +100,7 @@ public class ClientWorld
 			{
 				ServerPacketTerrain terr = (ServerPacketTerrain) pack;
 				Chunk c = terr.buildChunk();
-				long l = (((long)c.chunkx) << 32) | (c.chunkz & 0xffffffffL);
+				long l = this.getIndex(c.chunkx, c.chunkz);
 				this.chunks.put(l, c);
 			}
 		}
