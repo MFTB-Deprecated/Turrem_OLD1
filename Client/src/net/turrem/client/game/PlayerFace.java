@@ -11,9 +11,11 @@ import net.turrem.utils.geo.Vector;
 
 public class PlayerFace
 {
-	protected float camPitch = 45.0F;
-	protected float camYaw = 0.0F;
-	protected float camDist = 5.0F;
+	public final static float hdamp = 0.9F;
+	
+	protected float camPitch = 30.0F;
+	protected float camYaw = 45.0F;
+	protected float camDist = 16.0F;
 
 	protected Point camFocus;
 	protected Point camLoc;
@@ -28,8 +30,8 @@ public class PlayerFace
 	{
 		this.reset();
 		this.camFocus = Point.getPoint(0.0D, 128.0D, 0.0D);
-		this.camLoc = Point.getPoint(0.0D, 196.0D, 0.0D);
-		this.reverseFocus();
+		this.camLoc = Point.getPoint(0.0D, 0.0D, 0.0D);
+		this.doFocus();
 		this.updatePars();
 	}
 
@@ -159,7 +161,8 @@ public class PlayerFace
 			this.camFocus.moveDelta(dX, 0.0D, dZ);
 		}
 		double height = world.getHeight((int) this.camFocus.xCoord, (int) this.camFocus.zCoord, (int) this.camFocus.yCoord);
-		this.camFocus.yCoord = height;
+		this.camFocus.yCoord *= hdamp;
+		this.camFocus.yCoord += height * (1.0F - hdamp);
 		this.doFocus();
 		this.mouselastx = Mouse.getX();
 		this.mouselasty = Mouse.getY();

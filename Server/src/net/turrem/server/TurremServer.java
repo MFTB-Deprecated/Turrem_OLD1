@@ -47,7 +47,7 @@ public class TurremServer
 
 	public void onRun()
 	{
-		this.theWorld = new World(this.theSaveDir, 0x42);
+		this.theWorld = new World(this.theSaveDir, System.currentTimeMillis());
 		try
 		{
 			if (networkLoc != null)

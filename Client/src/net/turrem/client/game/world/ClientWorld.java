@@ -47,7 +47,7 @@ public class ClientWorld
 	
 	public int getHeight(int x, int z, int empty)
 	{
-		Chunk c = this.getChunk(x << 4, z << 4);
+		Chunk c = this.getChunk(x >> 4, z >> 4);
 		if (c == null)
 		{
 			return empty;
