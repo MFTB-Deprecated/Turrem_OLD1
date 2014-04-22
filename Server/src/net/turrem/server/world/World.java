@@ -12,6 +12,7 @@ import javax.imageio.ImageIO;
 
 import net.turrem.server.Realm;
 import net.turrem.server.entity.Entity;
+import net.turrem.server.network.server.ServerPacketMaterialSync;
 import net.turrem.server.network.server.ServerPacketTerrain;
 import net.turrem.server.world.gen.WorldGen;
 import net.turrem.server.world.gen.WorldGenBasic;
@@ -85,6 +86,24 @@ public class World
 				e.printStackTrace();
 			}
 		}
+	}
+
+	public void testNetwork(DataOutputStream out) throws IOException
+	{
+		for (Material mat : Material.list.values())
+		{
+			ServerPacketMaterialSync sync = new ServerPacketMaterialSync(mat);
+			sync.write(out);
+		}
+		for (int i = -4; i <= 4; i++)
+		{
+			for (int j = -4; j <= 4; j++)
+			{
+				ServerPacketTerrain terr = new ServerPacketTerrain(this, i, j);
+				terr.write(out);
+			}
+		}
+		System.out.println("Network Write Done");
 	}
 
 	public void writeTestPacket(DataOutputStream out) throws IOException

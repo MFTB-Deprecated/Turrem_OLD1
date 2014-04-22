@@ -87,7 +87,7 @@ public class ServerPacketTerrain extends ServerPacket
 	{
 		if (x < 0 || x >= 16 || z < 0 || z >= 16)
 		{
-			return 0;
+			return -1;
 		}
 		return this.hmap[x + z * 16] & 0xFF;
 	}

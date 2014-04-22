@@ -9,6 +9,11 @@ public class ServerPacketMaterialSync extends ServerPacket
 {
 	public Material mat;
 	
+	public ServerPacketMaterialSync(Material mat)
+	{
+		this.mat = mat;
+	}
+
 	@Override
 	protected void writePacket(DataOutput stream) throws IOException
 	{

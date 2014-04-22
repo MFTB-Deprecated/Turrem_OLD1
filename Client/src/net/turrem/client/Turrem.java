@@ -34,6 +34,8 @@ public class Turrem
 	private long statechange = 0;
 
 	private long renderCount = 0;
+	
+	public static String networkLoc;
 
 	public Turrem(Session session, String dir)
 	{

@@ -25,3 +25,5 @@ local.properties
 *.test.png
 *.test.txt
 *.log.txt
+/testsave/
+/network/

@@ -42,6 +42,11 @@ public class ServerPacketTerrain extends ServerPacket
 			
 			int d = world.getSideDrop(x, z);
 			
+			if (d == 0)
+			{
+				d = 1;
+			}
+			
 			byte[] cb = new byte[d];
 			Material[] cs = ch.coreTerrain(x, d, z);
 			

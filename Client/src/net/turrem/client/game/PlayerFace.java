@@ -10,7 +10,7 @@ import net.turrem.utils.geo.Vector;
 
 public class PlayerFace
 {
-	protected float camPitch = 60.0F;
+	protected float camPitch = 90.0F;
 	protected float camYaw = 45.0F;
 	protected float camDist = 15.0F;
 
@@ -25,9 +25,8 @@ public class PlayerFace
 
 	public PlayerFace()
 	{
-		this.camFocus = Point.getPoint(0.0D, 1.0D, 1.0D);
-		this.camLoc = Point.getPoint(3.0D, 5.3D, 4.5D);
-		this.reverseFocus();
+		this.camFocus = Point.getPoint(0.0D, 128.0D, 0.0D);
+		this.camLoc = Point.getPoint(0.0D, 0.0D, 0.0D);
 		this.updatePars();
 	}
 

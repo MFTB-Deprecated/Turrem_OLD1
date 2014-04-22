@@ -2,11 +2,13 @@ package net.turrem.client.states;
 
 import net.turrem.client.Turrem;
 import net.turrem.client.game.ClientGame;
+import net.turrem.client.render.engine.RenderEngine;
 
 public class StateGame implements IState
 {
 	protected Turrem theTurrem;
 	public ClientGame theGame;
+	public long gameTime = 0;
 	
 	public StateGame(Turrem turrem)
 	{
@@ -30,6 +32,13 @@ public class StateGame implements IState
 	public void render()
 	{
 		this.theGame.render();
+		this.gameTime++;
+		if (this.gameTime == 5)
+		{
+			this.theGame.theWorld.testNetwork();
+			RenderEngine chunkrender = new RenderEngine();
+			this.theGame.theWorld.loadChunkRenders(chunkrender);
+		}
 	}
 
 	@Override

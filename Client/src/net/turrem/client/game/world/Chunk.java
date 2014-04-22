@@ -39,7 +39,7 @@ public class Chunk
 		{
 			this.render.doDelete();
 		}
-		this.render = engine.makeObject(this.tvf, 1.0F, 0.0F, this.voff * 1.0F, 0.0F);
+		this.render = engine.makeObject(this.tvf, 16.0F, 0.0F, this.voff * -1.0F, 0.0F);
 	}
 	
 	public void render()
@@ -47,7 +47,7 @@ public class Chunk
 		if (this.render != null)
 		{
 			GL11.glPushMatrix();
-			GL11.glTranslatef(this.chunkx * 16.0F, 0.0F, this.chunkz * 16.0F);
+			GL11.glTranslatef(this.chunkx * 1.0F, 0.0F, this.chunkz * 1.0F);
 			this.render.doRender();
 			GL11.glPopMatrix();
 		}

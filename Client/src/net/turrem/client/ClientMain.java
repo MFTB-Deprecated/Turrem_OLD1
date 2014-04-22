@@ -12,6 +12,10 @@ public class ClientMain
 		{
 			user = args[0];
 		}
+		if (args.length >= 2)
+		{
+			Turrem.networkLoc = args[1];
+		}
 		Session session = new Session(user);
 		Turrem turrem = new Turrem(session, dir);
 		Thread.currentThread().setName("Turrem Client");
