@@ -79,7 +79,7 @@ public class ClientWorld
 			}
 		}
 	}
-
+	
 	public void loadChunkRenders(RenderEngine engine)
 	{
 		Collection<Chunk> set = this.chunks.values();

@@ -12,11 +12,12 @@ import net.turrem.utils.models.TVFFile.TVFColor;
 
 public class ServerPacketTerrain extends ServerPacket
 {
+	public static final short basePadding = 6;
 	public int chunkx;
 	public int chunkz;
 	public short voff;
 	public byte[] hmap;
-	public Material[] mats;
+	public short[] mats;
 	public byte[][] chunk;
 	
 	public ServerPacketTerrain(DataInput data) throws IOException
@@ -29,10 +30,10 @@ public class ServerPacketTerrain extends ServerPacket
 		{
 			this.hmap[i] = data.readByte();
 		}
-		this.mats = new Material[data.readByte() & 0xFF];
+		this.mats = new short[data.readByte() & 0xFF];
 		for (int i = 0; i < this.mats.length; i++)
 		{
-			this.mats[i] = Material.getMaterial(data.readShort());
+			mats[i] = data.readShort();
 		}
 		this.chunk = new byte[256][];
 		for (int i = 0; i < 256; i++)
@@ -45,7 +46,7 @@ public class ServerPacketTerrain extends ServerPacket
 	
 	public Chunk buildChunk()
 	{
-		return new Chunk(this.chunkx, this.chunkz, this.buildTVF(), this.hmap, this.voff);
+		return new Chunk(this.chunkx, this.chunkz, this.buildTVF(), this.hmap, (short) (this.voff - basePadding));
 	}
 	
 	public TVFFile buildTVF()
@@ -55,7 +56,7 @@ public class ServerPacketTerrain extends ServerPacket
 		
 		for (int i = 0; i < colors.length; i++)
 		{
-			Material mat = this.mats[i];
+			Material mat = Material.getMaterial(this.mats[i]);
 			int cint = 0xFFFFFF;
 			if (mat != null)
 			{
@@ -63,9 +64,9 @@ public class ServerPacketTerrain extends ServerPacket
 			}
 			TVFColor color = new TVFColor();
 			color.id = (byte) i;
-			color.r = (byte) ((cint >> 0) & 0xFF);
+			color.b = (byte) ((cint >> 0) & 0xFF);
 			color.g = (byte) ((cint >> 8) & 0xFF);
-			color.b = (byte) ((cint >> 16) & 0xFF);
+			color.r = (byte) ((cint >> 16) & 0xFF);
 			colors[i] = color;
 		}
 		
@@ -87,7 +88,7 @@ public class ServerPacketTerrain extends ServerPacket
 	{
 		if (x < 0 || x >= 16 || z < 0 || z >= 16)
 		{
-			return -1;
+			return Integer.MIN_VALUE;
 		}
 		return this.hmap[x + z * 16] & 0xFF;
 	}
@@ -104,6 +105,7 @@ public class ServerPacketTerrain extends ServerPacket
 			top.x = (byte) x;
 			top.z = (byte) z;
 			top.y = (byte) y;
+			top.y += basePadding;
 			top.dir = TVFFace.Dir_YUp;
 			faces.add(top);
 			
@@ -119,6 +121,7 @@ public class ServerPacketTerrain extends ServerPacket
 					f.x = (byte) x;
 					f.z = (byte) z;
 					f.y = (byte) (y - i);
+					f.y += basePadding;
 					f.dir = TVFFace.Dir_XUp;
 					faces.add(f);
 				}
@@ -138,6 +141,7 @@ public class ServerPacketTerrain extends ServerPacket
 					f.x = (byte) x;
 					f.z = (byte) z;
 					f.y = (byte) (y - i);
+					f.y += basePadding;
 					f.dir = TVFFace.Dir_XDown;
 					faces.add(f);
 				}
@@ -157,6 +161,7 @@ public class ServerPacketTerrain extends ServerPacket
 					f.x = (byte) x;
 					f.z = (byte) z;
 					f.y = (byte) (y - i);
+					f.y += basePadding;
 					f.dir = TVFFace.Dir_ZUp;
 					faces.add(f);
 				}
@@ -176,6 +181,7 @@ public class ServerPacketTerrain extends ServerPacket
 					f.x = (byte) x;
 					f.z = (byte) z;
 					f.y = (byte) (y - i);
+					f.y += basePadding;
 					f.dir = TVFFace.Dir_ZDown;
 					faces.add(f);
 				}

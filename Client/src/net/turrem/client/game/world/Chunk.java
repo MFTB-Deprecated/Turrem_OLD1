@@ -39,7 +39,7 @@ public class Chunk
 		{
 			this.render.doDelete();
 		}
-		this.render = engine.makeObject(this.tvf, 16.0F, 0.0F, this.voff * -1.0F, 0.0F);
+		this.render = engine.makeObject(this.tvf, 16.0F, 8.0F, this.voff * -1.0F, 8.0F);
 	}
 	
 	public void render()

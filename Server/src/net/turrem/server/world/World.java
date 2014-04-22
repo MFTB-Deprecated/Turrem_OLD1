@@ -259,9 +259,9 @@ public class World
 		{
 			return this.lastChunk.getHeight(x, z);
 		}
-		Chunk c = this.chunkAt(x, z);
+		Chunk c = this.getChunk(chunkx, chunky);
 		this.lastChunk = c;
-		return c.getHeight(chunkx, z);
+		return c.getHeight(x, z);
 	}
 
 	public ChunkGroup groupAt(int x, int y)
