@@ -10,6 +10,8 @@ public abstract class Material
 	public static Material stone = new Stone("stone");
 	public static Material dirt = new Dirt("dirt");
 	public static Material grass = new Grass("grass");
+	public static Material water = new Water("water");
+	public static Material sand = new Sand("sand");
 
 	public final String id;
 

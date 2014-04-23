@@ -69,6 +69,7 @@ public class ChunkGroup
 
 	private void unloadChunk(int k)
 	{
+		/*
 		try
 		{
 			this.saveChunkFile(k);
@@ -77,6 +78,7 @@ public class ChunkGroup
 		{
 			e.printStackTrace();
 		}
+		*/
 		this.chunks[k] = null;
 	}
 

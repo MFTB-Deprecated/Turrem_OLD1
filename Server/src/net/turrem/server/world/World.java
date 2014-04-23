@@ -69,6 +69,7 @@ public class World
 			{
 				File outputfile = new File(this.saveLoc + "map.test.png");
 				ImageIO.write(map, "png", outputfile);
+				System.out.println("Img Write Done");
 			}
 			catch (IOException e)
 			{
@@ -95,9 +96,9 @@ public class World
 			ServerPacketMaterialSync sync = new ServerPacketMaterialSync(mat);
 			sync.write(out);
 		}
-		for (int i = -4; i <= 4; i++)
+		for (int i = -8; i <= 8; i++)
 		{
-			for (int j = -4; j <= 4; j++)
+			for (int j = -8; j <= 8; j++)
 			{
 				ServerPacketTerrain terr = new ServerPacketTerrain(this, i, j);
 				terr.write(out);
@@ -129,15 +130,15 @@ public class World
 						int x = (ci + 4) * 16 + i;
 						int y = (cj + 4) * 16 + j;
 						float h = map[k];
-						h -= 128;
-						h /= 256;
-						if (h < 0)
+						h -= 64;
+						h /= 128;
+						if (h < 0.0F)
 						{
-							h = 0;
+							h = 0.0F;
 						}
-						if (h > 1)
+						if (h > 1.0F)
 						{
-							h = 255;
+							h = 1.0F;
 						}
 						Material mat = Material.list.get(chunk.getTopMaterial(x, y));
 						int rgb = 0x000000;
