@@ -3,6 +3,8 @@ package net.turrem.server.network.client;
 import java.io.DataInput;
 import java.io.IOException;
 
+import net.turrem.server.network.client.request.Request;
+
 /**
  * Request something from the server
  */
@@ -31,5 +33,18 @@ public class ClientPacketRequest extends ClientPacket
 		
 		this.requestData = new byte[length];
 		data.readFully(this.requestData);
+	}
+	
+	public Request getRequest()
+	{
+		try
+		{
+			return Request.getRequest(this);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+			return null;
+		}
 	}
 }
