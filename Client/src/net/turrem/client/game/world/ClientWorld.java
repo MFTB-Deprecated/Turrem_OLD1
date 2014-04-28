@@ -8,43 +8,59 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
+import net.turrem.client.Config;
 import net.turrem.client.Turrem;
+import net.turrem.client.game.ClientGame;
 import net.turrem.client.game.world.material.Material;
 import net.turrem.client.network.server.ServerPacket;
 import net.turrem.client.network.server.ServerPacketManager;
 import net.turrem.client.network.server.ServerPacketMaterialSync;
 import net.turrem.client.network.server.ServerPacketTerrain;
 import net.turrem.client.render.engine.RenderEngine;
+import net.turrem.utils.geo.Point;
 
 public class ClientWorld
 {
+	public ClientGame theGame;
+
 	public HashMap<Long, Chunk> chunks = new HashMap<Long, Chunk>();
 
-	public ClientWorld()
+	public ClientWorld(ClientGame game)
 	{
-		
+		this.theGame = game;
 	}
 
 	public void render()
 	{
+		Point foc = this.theGame.getFace().getFocus();
+		int px = (int) foc.xCoord;
+		int pz = (int) foc.zCoord;
+		int dist = Config.chunkRenderDistance * Config.chunkRenderDistance;
 		Collection<Chunk> set = this.chunks.values();
 		for (Chunk chunk : set)
 		{
-			chunk.render();
+			int x = chunk.chunkx * 16 + 8;
+			int z = chunk.chunkz * 16 + 8;
+			x -= px;
+			z -= pz;
+			if (x * x + z * z < dist)
+			{
+				chunk.render();
+			}
 		}
 	}
-	
+
 	public long getIndex(int chunkx, int chunkz)
 	{
-		return (((long)chunkx) << 32) | (chunkz & 0xffffffffL);
+		return (((long) chunkx) << 32) | (chunkz & 0xffffffffL);
 	}
-	
+
 	public Chunk getChunk(int chunkx, int chunkz)
 	{
 		long l = this.getIndex(chunkx, chunkz);
 		return this.chunks.get(l);
 	}
-	
+
 	public int getHeight(int x, int z, int empty)
 	{
 		Chunk c = this.getChunk(x >> 4, z >> 4);
@@ -54,7 +70,7 @@ public class ClientWorld
 		}
 		return c.getHeight(x, z);
 	}
-	
+
 	public int getRayHeight(double x1, double z1, double x2, double z2, double extend)
 	{
 		double x = x1;
@@ -89,7 +105,7 @@ public class ClientWorld
 		}
 		return height;
 	}
-	
+
 	public int getHeight(int x, int z)
 	{
 		return this.getHeight(x, z, -1);
@@ -140,7 +156,7 @@ public class ClientWorld
 			}
 		}
 	}
-	
+
 	public void loadChunkRenders(RenderEngine engine)
 	{
 		Collection<Chunk> set = this.chunks.values();

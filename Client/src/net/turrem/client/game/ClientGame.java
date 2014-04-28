@@ -28,7 +28,7 @@ public class ClientGame
 
 	public ClientGame(RenderManager manager)
 	{
-		this.theWorld = new ClientWorld();
+		this.theWorld = new ClientWorld(this);
 		this.theManager = manager;
 		this.face = new PlayerFace();
 	}

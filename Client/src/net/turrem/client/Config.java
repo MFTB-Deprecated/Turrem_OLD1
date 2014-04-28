@@ -4,6 +4,8 @@ import org.lwjgl.opengl.Display;
 
 public class Config
 {
+	public static int chunkRenderDistance = 96;
+	
 	public static float getMouseSpeed()
 	{
 		return 0.5F;
