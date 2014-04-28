@@ -7,10 +7,13 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import net.turrem.client.Config;
 import net.turrem.client.Turrem;
 import net.turrem.client.game.ClientGame;
+import net.turrem.client.game.entity.ClientEntity;
 import net.turrem.client.game.world.material.Material;
 import net.turrem.client.network.server.ServerPacket;
 import net.turrem.client.network.server.ServerPacketManager;
@@ -24,6 +27,8 @@ public class ClientWorld
 	public ClientGame theGame;
 
 	public HashMap<Long, Chunk> chunks = new HashMap<Long, Chunk>();
+	
+	public HashMap<Integer, ClientEntity> entities = new HashMap<Integer, ClientEntity>();
 
 	public ClientWorld(ClientGame game)
 	{
@@ -48,6 +53,31 @@ public class ClientWorld
 				chunk.render();
 			}
 		}
+		this.renderEntities();
+	}
+	
+	public void renderEntities()
+	{
+		Set<Entry<Integer, ClientEntity>> set = this.entities.entrySet();
+		ArrayList<Integer> remove = new ArrayList<Integer>();
+		for (Entry<Integer, ClientEntity> ent : set)
+		{
+			ClientEntity entity = ent.getValue();
+			entity.render();
+			if (!entity.isPresent())
+			{
+				remove.add(ent.getKey());
+			}
+		}
+		for (Integer id : remove)
+		{
+			this.entities.remove(id);
+		}
+	}
+	
+	public void pushEntity(ClientEntity entity)
+	{
+		this.entities.put(entity.entityId, entity);
 	}
 
 	public long getIndex(int chunkx, int chunkz)
