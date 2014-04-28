@@ -1,5 +1,8 @@
 package net.turrem.client.game.entity;
 
+import java.io.DataInput;
+import java.io.IOException;
+
 import org.lwjgl.opengl.GL11;
 
 import net.turrem.client.game.world.ClientWorld;
@@ -25,6 +28,18 @@ public abstract class ClientEntity
 	public boolean isPresent()
 	{
 		return this.isPresent;
+	}
+	
+	public void setPosition(double x, double y, double z)
+	{
+		this.xPos = x;
+		this.yPos = y;
+		this.zPos = z;
+	}
+	
+	public void readExtraData(DataInput packet) throws IOException
+	{
+		
 	}
 	
 	public abstract void renderEntity();

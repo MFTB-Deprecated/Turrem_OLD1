@@ -12,4 +12,10 @@ public class EntityTree extends SolidEntity
 	{
 		return -1;
 	}
+
+	@Override
+	public String getEntityType()
+	{
+		return "tree";
+	}
 }

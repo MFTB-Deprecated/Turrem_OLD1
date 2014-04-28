@@ -18,4 +18,10 @@ public class UnitCitizen extends EntityUnit
 	{
 		return 16.0F;
 	}
+
+	@Override
+	public String getEntityType()
+	{
+		return "citizen";
+	}
 }

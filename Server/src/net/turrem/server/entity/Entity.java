@@ -1,5 +1,8 @@
 package net.turrem.server.entity;
 
+import java.io.DataOutput;
+import java.io.IOException;
+
 import net.turrem.server.world.World;
 
 public abstract class Entity
@@ -22,6 +25,13 @@ public abstract class Entity
 	}
 	
 	public void onTick()
+	{
+		
+	}
+	
+	public abstract String getEntityType();
+	
+	public void writeExtraData(DataOutput packet) throws IOException
 	{
 		
 	}
