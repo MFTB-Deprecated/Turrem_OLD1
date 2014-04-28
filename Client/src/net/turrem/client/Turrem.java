@@ -51,6 +51,8 @@ public class Turrem
 
 		this.theAssets = new AssetLoader(this.theGameDir);
 		this.theRender = new RenderManager(this.theAssets);
+		
+		Keyboard.enableRepeatEvents(false);
 
 		try
 		{

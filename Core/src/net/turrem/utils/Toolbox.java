@@ -53,7 +53,13 @@ public class Toolbox
 
 	public static String getFloat(float f, int d)
 	{
-		String num = "" + (int) f;
+		String num = "";
+		if (f < 0)
+		{
+			num += "-";
+			f *= -1;
+		}
+		num += (int) f;
 		if (d > 0)
 		{
 			num += ".";

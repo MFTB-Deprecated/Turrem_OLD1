@@ -29,9 +29,28 @@ public class Ray
 		return this;
 	}
 
+	public Ray addLengthEnd(double length)
+	{
+		Point e = Point.getSlideAddLength(this.start, this.end, length);
+		this.end = e;
+		return this;
+	}
+
+	public Ray addLengthStart(double length)
+	{
+		Point s = Point.getSlideAddLength(this.end, this.start, length);
+		this.start = s;
+		return this;
+	}
+
 	public double getLengthSqr()
 	{
 		return Point.squareDistance(this.start, this.end);
+	}
+
+	public double getLength()
+	{
+		return Point.distance(this.start, this.end);
 	}
 
 	public Box getBox()
@@ -48,5 +67,10 @@ public class Ray
 	{
 		this.end = Point.getSlide(this.start, this.end, scale);
 		return this;
+	}
+
+	public Point getPart(float loc)
+	{
+		return Point.getSlide(this.start, this.end, loc);
 	}
 }

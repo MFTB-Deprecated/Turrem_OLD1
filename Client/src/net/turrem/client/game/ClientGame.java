@@ -3,6 +3,7 @@ package net.turrem.client.game;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
@@ -22,7 +23,7 @@ public class ClientGame
 	public RenderManager theManager;
 
 	private boolean mat = true;
-	
+
 	private PlayerFace face;
 
 	public ClientGame(RenderManager manager)
@@ -35,7 +36,7 @@ public class ClientGame
 	public void render()
 	{
 		this.face.tickCamera(this.theWorld);
-		
+
 		GL11.glClearColor(0.18F, 0.18F, 0.23F, 1.0F);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		GL11.glPushMatrix();
@@ -125,23 +126,30 @@ public class ClientGame
 			GL11.glDisable(GL11.GL_COLOR_MATERIAL);
 		}
 	}
-	
+
 	public void end()
 	{
 
 	}
-	
+
 	public void start()
 	{
 
 	}
-	
+
 	public void mouseEvent()
 	{
 	}
 
 	public void keyEvent()
 	{
+		if (Keyboard.getEventKeyState())
+		{
+			if (Keyboard.getEventKey() == Keyboard.KEY_M)
+			{
+				this.mat = !this.mat;
+			}
+		}
 	}
 
 	public PlayerFace getFace()

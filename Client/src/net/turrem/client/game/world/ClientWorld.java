@@ -22,7 +22,7 @@ public class ClientWorld
 
 	public ClientWorld()
 	{
-
+		
 	}
 
 	public void render()
@@ -53,6 +53,41 @@ public class ClientWorld
 			return empty;
 		}
 		return c.getHeight(x, z);
+	}
+	
+	public int getRayHeight(double x1, double z1, double x2, double z2, double extend)
+	{
+		double x = x1;
+		double z = z1;
+		double dx = (x2 - x1);
+		double dz = (z2 - z1);
+		double adx = Math.abs(dx);
+		double adz = Math.abs(dz);
+		if (adx < 1.0 && adz < 1.0)
+		{
+			return this.getHeight((int) x, (int) z);
+		}
+		double length = Math.sqrt(dx * dx + dz * dz);
+		dx /= length;
+		dz /= length;
+		double l = 0.0;
+		double dl = 1.0 / Math.max(adz, adx);
+		dz *= dl;
+		dx *= dl;
+		int height = Integer.MIN_VALUE;
+		double lim = length + extend;
+		while (l < lim)
+		{
+			l += dl;
+			x += dx;
+			z += dz;
+			int h = this.getHeight((int) x, (int) z, Integer.MIN_VALUE);
+			if (h > height)
+			{
+				height = h;
+			}
+		}
+		return height;
 	}
 	
 	public int getHeight(int x, int z)

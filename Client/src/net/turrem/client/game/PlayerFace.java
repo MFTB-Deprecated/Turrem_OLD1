@@ -116,6 +116,11 @@ public class PlayerFace
 		return Ray.getRay(this.camLoc, clip);
 	}
 
+	public Ray pickCamera()
+	{
+		return Ray.getRay(this.camFocus, this.camLoc);
+	}
+	
 	public void tickCamera(ClientWorld world)
 	{
 		int wm = Mouse.getDWheel();
@@ -160,12 +165,23 @@ public class PlayerFace
 			dZ += dx * sin;
 			this.camFocus.moveDelta(dX, 0.0D, dZ);
 		}
-		double height = world.getHeight((int) this.camFocus.xCoord, (int) this.camFocus.zCoord, (int) this.camFocus.yCoord);
+		this.doFocus();
+		double height = this.getLocalHorizon(world) + 5.0F;
 		this.camFocus.yCoord *= hdamp;
 		this.camFocus.yCoord += height * (1.0F - hdamp);
-		this.doFocus();
+		this.camLoc.yCoord *= hdamp;
+		this.camLoc.yCoord += height * (1.0F - hdamp);
 		this.mouselastx = Mouse.getX();
 		this.mouselasty = Mouse.getY();
+	}
+	
+	public int getLocalHorizon(ClientWorld world)
+	{
+		double x1 = this.camFocus.xCoord;
+		double z1 = this.camFocus.zCoord;
+		double x2 = this.camLoc.xCoord;
+		double z2 = this.camLoc.zCoord;
+		return world.getRayHeight(x1, z1, x2, z2, 5.0F);
 	}
 
 	public void reverseFocus()

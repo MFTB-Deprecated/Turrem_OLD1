@@ -40,9 +40,9 @@ public class Chunk
 		{
 			this.render.doDelete();
 		}
-		this.render = engine.makeObject(this.tvf, 1.0F, 8.0F, (this.voff - ServerPacketTerrain.basePadding) * -1.0F, 8.0F);
+		this.render = engine.makeObject(this.tvf, 1.0F, 0.0F, (this.voff - ServerPacketTerrain.basePadding) * -1.0F, 0.0F);
 	}
-	
+
 	public void render()
 	{
 		if (this.render != null)
@@ -52,8 +52,8 @@ public class Chunk
 			this.render.doRender();
 			GL11.glPopMatrix();
 		}
-	}
-	
+	}	
+
 	public int getHeight(int x, int z)
 	{
 		x &= 0x0F;

@@ -197,6 +197,25 @@ public class Point
 			return new Point(p1.xCoord + x * weight, p1.yCoord + y * weight, p1.zCoord + z * weight);
 		}
 	}
+	
+	public static Point getSlideAddLength(Point p1, Point p2, double length)
+	{
+		double x = p2.xCoord - p1.xCoord;
+		double y = p2.yCoord - p1.yCoord;
+		double z = p2.zCoord - p1.zCoord;
+
+		double l = distance(p1, p2);
+
+		if (l < 1E-7D)
+		{
+			return null;
+		}
+		else
+		{
+			double weight = (length + l) / l;
+			return new Point(p1.xCoord + x * weight, p1.yCoord + y * weight, p1.zCoord + z * weight);
+		}
+	}
 
 	public Point duplicate()
 	{
