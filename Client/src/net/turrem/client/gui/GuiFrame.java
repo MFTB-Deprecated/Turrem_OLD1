@@ -152,6 +152,11 @@ public class GuiFrame extends GuiElement
 		GL11.glEnd();
 		this.front.end();
 	}
+	
+	public void setEdge(int edge)
+	{
+		this.edge = edge;
+	}
 
 	@Override
 	public void onStart(RenderManager manager)

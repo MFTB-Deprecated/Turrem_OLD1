@@ -15,7 +15,7 @@ public class EntityRegistry
 	{
 		registry.put(id, entity);
 	}
-	
+	 
 	public static ClientEntity newInstance(String type, ClientWorld world, int id, double x, double y, double z, DataInput extra)
 	{
 		Class<? extends ClientEntity> cl = registry.get(type);

@@ -6,6 +6,8 @@ public interface IInteractable extends IElement
 
 	public boolean keyEvent();
 
+	public boolean mouseAt(int x, int y);
+	
 	public boolean isInteractableAt(int x, int y);
 
 	public boolean isClickSpot(int x, int y);
