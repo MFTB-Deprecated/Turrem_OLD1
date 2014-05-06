@@ -19,10 +19,10 @@ public class GuiButton extends GuiElement implements IInteractable
 		this.frame = new GuiFrame(width, height, true, true, edge, texture, scale);
 	}
 
-	public GuiButton(int width, int height, int edge, String texture, float scale, FontRender font, String description, float size)
+	public GuiButton(int width, int height, int edge, String texture, float scale, FontRender font, float size)
 	{
 		this(width, height, edge, texture, scale);
-		this.description = new GuiTextTip(font, description, size);
+		this.description = new GuiTextTip(font, "", size);
 	}
 
 	public void setDescription(String text, float r, float g, float b)
@@ -62,10 +62,6 @@ public class GuiButton extends GuiElement implements IInteractable
 	{
 		if (this.mousein)
 		{
-			if (this.description != null)
-			{
-				this.description.render();
-			}
 			this.frame.setEdge(this.edge + 2);
 		}
 		else
@@ -73,6 +69,10 @@ public class GuiButton extends GuiElement implements IInteractable
 			this.frame.setEdge(this.edge);
 		}
 		this.frame.render();
+		if (this.mousein && this.description != null)
+		{
+			this.description.render();
+		}
 	}
 
 	@Override

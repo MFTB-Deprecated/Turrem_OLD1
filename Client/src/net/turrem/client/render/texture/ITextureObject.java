@@ -7,6 +7,8 @@ public interface ITextureObject
 	public String getName();
 
 	public int bind(AssetLoader assets);
+	
+	int rebind(AssetLoader assets);
 
 	public void unbind();
 
