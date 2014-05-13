@@ -1,4 +1,6 @@
-package net.turrem.server.entity.unit;
+package net.turrem.game.entity.unit;
+
+import net.turrem.server.entity.unit.EntityUnit;
 
 public class UnitCitizen extends EntityUnit
 {
