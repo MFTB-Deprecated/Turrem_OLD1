@@ -4,6 +4,7 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 
+import net.turrem.server.load.GameLoader;
 import net.turrem.server.world.World;
 
 public class TurremServer
@@ -30,6 +31,8 @@ public class TurremServer
 	public static String networkLoc = null;
 
 	public DataOutputStream network = null;
+	
+	public GameLoader theLoader;
 
 	public TurremServer(String dir, String save)
 	{
@@ -47,6 +50,7 @@ public class TurremServer
 
 	public void onRun()
 	{
+		this.theLoader = new GameLoader(this);
 		this.theWorld = new World(this.theSaveDir, System.currentTimeMillis());
 		try
 		{
@@ -61,6 +65,8 @@ public class TurremServer
 		{
 			e.printStackTrace();
 		}
+		File entityjar = new File(this.theGameDir + "/jars/entity.game.jar");
+		this.theLoader.loadJar(entityjar);
 	}
 
 	public boolean isDone()

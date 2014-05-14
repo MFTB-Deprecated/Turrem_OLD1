@@ -43,24 +43,27 @@ public class JarExplore
 				if (!je.isDirectory())
 				{
 					String className = this.getClassName(je.getName());
-					Class<?> theClass;
-					try
+					if (!className.startsWith("META-INF"))
 					{
-						theClass = this.theLoader.loadClass(className);
-					}
-					catch (ClassNotFoundException e)
-					{
-						System.err.println(className + ".class could not be loaded from \"" + this.theFile.getName() + "\"");
-						e.printStackTrace();
-						theClass = null;
-					}
-					if (theClass != null)
-					{
-						found.add(theClass);
+						Class<?> theClass;
+						try
+						{
+							theClass = this.theLoader.loadClass(className);
+						}
+						catch (ClassNotFoundException e)
+						{
+							System.err.println(className + ".class could not be loaded from \"" + this.theFile.getName() + "\"");
+							e.printStackTrace();
+							theClass = null;
+						}
+						if (theClass != null)
+						{
+							found.add(theClass);
+						}
 					}
 				}
 			}
-			
+
 			try
 			{
 				this.jar.close();
