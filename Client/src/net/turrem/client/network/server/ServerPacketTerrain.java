@@ -81,14 +81,20 @@ public class ServerPacketTerrain extends ServerPacket
 		TVFFace[] far = new TVFFace[faces.size()];
 		far = faces.toArray(far);
 		TVFFile tvf = new TVFFile(far, colors);
+		tvf.prelit = 1;
 		return tvf;
 	}
 	
 	private int getHeight(int x, int z)
 	{
+		return this.getHeight(x, z, Integer.MIN_VALUE);
+	}
+	
+	private int getHeight(int x, int z, int def)
+	{
 		if (x < 0 || x >= 16 || z < 0 || z >= 16)
 		{
-			return Integer.MIN_VALUE;
+			return def;
 		}
 		return this.hmap[x + z * 16] & 0xFF;
 	}
@@ -112,6 +118,11 @@ public class ServerPacketTerrain extends ServerPacket
 			int h;
 			
 			h = this.getHeight(x + 1, z);
+			if (h > y)
+			{
+				top.light[0] = (byte) ((top.light[0] & 0xFF) * 0.8F);
+				top.light[1] = (byte) ((top.light[1] & 0xFF) * 0.8F);
+			}
 			for (int i = 0; i < col.length; i++)
 			{
 				if (y - i > h)
@@ -132,6 +143,11 @@ public class ServerPacketTerrain extends ServerPacket
 			}
 			
 			h = this.getHeight(x - 1, z);
+			if (h > y)
+			{
+				top.light[2] = (byte) ((top.light[2] & 0xFF) * 0.8F);
+				top.light[3] = (byte) ((top.light[3] & 0xFF) * 0.8F);
+			}
 			for (int i = 0; i < col.length; i++)
 			{
 				if (y - i > h)
@@ -152,6 +168,11 @@ public class ServerPacketTerrain extends ServerPacket
 			}
 			
 			h = this.getHeight(x, z + 1);
+			if (h > y)
+			{
+				top.light[0] = (byte) ((top.light[0] & 0xFF) * 0.8F);
+				top.light[3] = (byte) ((top.light[3] & 0xFF) * 0.8F);
+			}
 			for (int i = 0; i < col.length; i++)
 			{
 				if (y - i > h)
@@ -172,6 +193,11 @@ public class ServerPacketTerrain extends ServerPacket
 			}
 			
 			h = this.getHeight(x, z - 1);
+			if (h > y)
+			{
+				top.light[1] = (byte) ((top.light[1] & 0xFF) * 0.8F);
+				top.light[2] = (byte) ((top.light[2] & 0xFF) * 0.8F);
+			}
 			for (int i = 0; i < col.length; i++)
 			{
 				if (y - i > h)
@@ -189,6 +215,30 @@ public class ServerPacketTerrain extends ServerPacket
 				{
 					break;
 				}
+			}
+			
+			h = this.getHeight(x + 1, z + 1);
+			if (h > y)
+			{
+				top.light[0] = (byte) ((top.light[0] & 0xFF) * 0.8F);
+			}
+			
+			h = this.getHeight(x + 1, z - 1);
+			if (h > y)
+			{
+				top.light[1] = (byte) ((top.light[1] & 0xFF) * 0.8F);
+			}
+			
+			h = this.getHeight(x - 1, z - 1);
+			if (h > y)
+			{
+				top.light[2] = (byte) ((top.light[2] & 0xFF) * 0.8F);
+			}
+			
+			h = this.getHeight(x - 1, z + 1);
+			if (h > y)
+			{
+				top.light[3] = (byte) ((top.light[3] & 0xFF) * 0.8F);
 			}
 		}
 	}

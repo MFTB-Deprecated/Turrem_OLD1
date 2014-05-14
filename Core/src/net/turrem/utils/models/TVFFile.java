@@ -89,6 +89,7 @@ public class TVFFile
 		public byte dir;
 		public byte color;
 
+		//YUp: XUp/ZUp, XUp/ZDown, XDown/ZDown, XDown/ZUp
 		public byte[] light = new byte[] { (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF };
 
 		public static byte Dir_XUp = (byte) 0x01;
