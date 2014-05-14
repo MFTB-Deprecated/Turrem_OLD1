@@ -1,8 +1,6 @@
 package net.turrem.server;
 
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 
 import net.turrem.server.load.GameLoader;
 import net.turrem.server.world.World;
@@ -27,10 +25,6 @@ public class TurremServer
 	private long ticks = 0;
 
 	public World theWorld;
-
-	public static String networkLoc = null;
-
-	public DataOutputStream network = null;
 	
 	public GameLoader theLoader;
 
@@ -52,19 +46,6 @@ public class TurremServer
 	{
 		this.theLoader = new GameLoader(this);
 		this.theWorld = new World(this.theSaveDir, System.currentTimeMillis());
-		try
-		{
-			if (networkLoc != null)
-			{
-				File net = new File(networkLoc);
-				net.createNewFile();
-				this.network = new DataOutputStream(new FileOutputStream(net));
-			}
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
 		File entityjar = new File(this.theGameDir + "/jars/entity.game.jar");
 		this.theLoader.loadJar(entityjar);
 	}
@@ -130,19 +111,6 @@ public class TurremServer
 			long time = System.currentTimeMillis();
 			System.out.println("Ticks per Second - " + (100.0F / ((time - this.lastTPSAnTime) / 1000.0F)));
 			this.lastTPSAnTime = time;
-		}
-
-		if (this.theWorld.worldTime == 5 && this.network != null)
-		{
-			try
-			{
-				this.theWorld.testNetwork(this.network);
-				this.network.close();
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
 		}
 	}
 

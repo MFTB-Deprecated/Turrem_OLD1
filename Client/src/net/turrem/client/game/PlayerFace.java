@@ -12,7 +12,7 @@ import net.turrem.utils.geo.Vector;
 public class PlayerFace
 {
 	public final static float hdamp = 0.9F;
-	
+
 	protected float camPitch = 30.0F;
 	protected float camYaw = 45.0F;
 	protected float camDist = 16.0F;
@@ -120,14 +120,14 @@ public class PlayerFace
 	{
 		return Ray.getRay(this.camFocus, this.camLoc);
 	}
-	
+
 	public void tickCamera(ClientWorld world)
 	{
 		int wm = Mouse.getDWheel();
 		if (Mouse.isButtonDown(2))
 		{
-			this.camYaw -= (Mouse.getX() - this.mouselastx) * Config.getMouseSpeed();
-			this.camPitch -= (Mouse.getY() - this.mouselasty) * Config.getMouseSpeed();
+			this.camYaw -= (Mouse.getX() - this.mouselastx) * Config.mouseSpeedX;
+			this.camPitch -= (Mouse.getY() - this.mouselasty) * Config.mouseSpeedY;
 			if (this.camPitch < 10.0F)
 			{
 				this.camPitch = 10.0F;
@@ -140,14 +140,14 @@ public class PlayerFace
 		}
 		else if (wm != 0)
 		{
-			this.camDist -= wm * 0.003F;
-			if (this.camDist < 8.0F)
+			this.camDist -= wm * Config.scrollSpeed;
+			if (this.camDist < Config.camDistMin)
 			{
-				this.camDist = 8.0F;
+				this.camDist = Config.camDistMin;
 			}
-			if (this.camDist > 128.0F)
+			if (this.camDist > Config.camDistMax)
 			{
-				this.camDist = 128.0F;
+				this.camDist = Config.camDistMax;
 			}
 		}
 		if (Mouse.isButtonDown(0))
@@ -166,15 +166,19 @@ public class PlayerFace
 			this.camFocus.moveDelta(dX, 0.0D, dZ);
 		}
 		this.doFocus();
-		double height = this.getLocalHorizon(world) + 5.0F;
-		this.camFocus.yCoord *= hdamp;
-		this.camFocus.yCoord += height * (1.0F - hdamp);
-		this.camLoc.yCoord *= hdamp;
-		this.camLoc.yCoord += height * (1.0F - hdamp);
+		int iheight = this.getLocalHorizon(world);
+		if (iheight != Integer.MIN_VALUE)
+		{
+			double height = iheight + 5.0F;
+			this.camFocus.yCoord *= hdamp;
+			this.camFocus.yCoord += height * (1.0F - hdamp);
+			this.camLoc.yCoord *= hdamp;
+			this.camLoc.yCoord += height * (1.0F - hdamp);
+		}
 		this.mouselastx = Mouse.getX();
 		this.mouselasty = Mouse.getY();
 	}
-	
+
 	public int getLocalHorizon(ClientWorld world)
 	{
 		double x1 = this.camFocus.xCoord;

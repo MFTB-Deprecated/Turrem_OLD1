@@ -6,12 +6,12 @@ public class Config
 {
 	public static int chunkRenderDistance = 96;
 	public static int entityRenderDistance = 96;
+	public static float mouseSpeedX = 0.5F;
+	public static float mouseSpeedY = 0.5F;
+	public static float scrollSpeed = 0.012F;
+	public static float camDistMin = 8.0F;
+	public static float camDistMax = 120.0F;
 	
-	public static float getMouseSpeed()
-	{
-		return 0.5F;
-	}
-
 	public static int getHeight()
 	{
 		return Display.getDisplayMode().getHeight();

@@ -2,13 +2,9 @@ package net.turrem.server.world;
 
 import java.awt.image.BufferedImage;
 import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import javax.imageio.ImageIO;
 
 import net.turrem.server.Realm;
 import net.turrem.server.entity.Entity;
@@ -59,32 +55,6 @@ public class World
 			if ((i + this.worldTime) % 10 == 0)
 			{
 				g.tickUnload();
-			}
-		}
-
-		if (this.worldTime == 4)
-		{
-			BufferedImage map = this.testTerrainMap();
-			try
-			{
-				File outputfile = new File(this.saveLoc + "map.test.png");
-				ImageIO.write(map, "png", outputfile);
-				System.out.println("Img Write Done");
-			}
-			catch (IOException e)
-			{
-				e.printStackTrace();
-			}
-
-			try
-			{
-				DataOutputStream out = new DataOutputStream(new FileOutputStream(this.saveLoc + "chunk.test.bin"));
-				this.writeTestPacket(out);
-				out.close();
-			}
-			catch (IOException e)
-			{
-				e.printStackTrace();
 			}
 		}
 	}
