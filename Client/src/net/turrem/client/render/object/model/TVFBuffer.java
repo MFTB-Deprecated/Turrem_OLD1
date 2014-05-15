@@ -24,7 +24,7 @@ public class TVFBuffer
 	/**
 	 * A list specifing which vericies in offs belong to which faces on a cube
 	 */
-	public static final int[][] offinds = new int[][] { new int[] { 4, 7, 3, 0 }/*XUp*/, new int[] { 5, 6, 2, 1 }/*XDown*/, new int[] { 4, 7, 6, 5 }/*YUp*/, new int[] { 0, 3, 2, 1 }/*YDown*/, new int[] { 4, 0, 1, 5 }/*ZUp*/, new int[] { 7, 3, 2, 6 }/*ZDown*/ };
+	public static final int[][] offinds = new int[][] { new int[] { 4, 0, 3, 7 }/*XUp*/, new int[] { 5, 6, 2, 1 }/*XDown*/, new int[] { 4, 7, 6, 5 }/*YUp*/, new int[] { 0, 1, 2, 3 }/*YDown*/, new int[] { 4, 5, 1, 0 }/*ZUp*/, new int[] { 7, 3, 2, 6 }/*ZDown*/ };
 
 	private int vaoId = 0;
 	/**

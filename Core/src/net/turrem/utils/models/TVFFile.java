@@ -89,12 +89,12 @@ public class TVFFile
 		public byte dir;
 		public byte color;
 
-		//XUp: YUp/ZUp, YUp/ZDown, YDown/ZDown, YDown/ZUp
-		//XDown: YUp/ZUp, YUp/ZDown, YDown/ZDown, YDown/ZUp
-		//YUp: XUp/ZUp, XUp/ZDown, XDown/ZDown, XDown/ZUp
-		//YDown: XUp/ZUp, XUp/ZDown, XDown/ZDown, XDown/ZUp
-		//ZUp: XUp/YUp, XUp/YDown, XDown/YDown, XDown/YUp
-		//ZDown: XUp/YUp, XUp/YDown, XDown/YDown, XDown/YUp
+		// XUp: YUp/ZUp, YDown/ZUp, YDown/ZDown, YUp/ZDown
+		// XDown: YUp/ZUp, YUp/ZDown, YDown/ZDown, YDown/ZUp
+		// YUp: XUp/ZUp, XUp/ZDown, XDown/ZDown, XDown/ZUp
+		// YDown: XUp/ZUp, XDown/ZUp, XDown/ZDown, XUp/ZDown
+		// ZUp: XUp/YUp, XDown/YUp, XDown/YDown, XUp/YDown
+		// ZDown: XUp/YUp, XUp/YDown, XDown/YDown, XDown/YUp
 		public byte[] light = new byte[] { (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF };
 
 		public static byte Dir_XUp = (byte) 0x01;
@@ -103,6 +103,81 @@ public class TVFFile
 		public static byte Dir_YDown = (byte) 0x04;
 		public static byte Dir_ZUp = (byte) 0x05;
 		public static byte Dir_ZDown = (byte) 0x06;
+
+		private final static int[][] vertDir = {new int[] {2, 1, 3, 0}, new int[] {2, 3, 1, 0}, new int[] {2, 3, 1, 0}, new int[] {2, 1, 3, 0}, new int[] {2, 1, 3, 0}, new int[] {2, 3, 1, 0}};
+		
+		private int getVert(int x, int y, int z)
+		{
+			int d = (this.dir - 1) / 2;
+			int k = 0;
+			if (d != 0)
+			{
+				k <<= 1;
+				k |= x;
+			}
+			if (d != 1)
+			{
+				k <<= 1;
+				k |= y;
+			}
+			if (d != 2)
+			{
+				k <<= 1;
+				k |= z;
+			}
+			return vertDir[this.dir - 1][k];
+		}
+		
+		private int[] getVerts(int x, int y, int z)
+		{
+			int dir = (this.dir - 1) / 2;
+			int i0 = x == 1? 1: 0;
+			int j0 = y == 1? 1: 0;
+			int k0 = z == 1? 1: 0;
+			int i1 = i0 + (x == 0 && dir != 0? 2: 1);
+			int j1 = j0 + (y == 0 && dir != 1? 2: 1);
+			int k1 = k0 + (z == 0 && dir != 2? 2: 1);
+			int[] vrt = new int[(i1 - i0) * (j1 - j0) * (k1 - k0)];
+			int v = 0;
+			for (int i = i0; i < i1; i++)
+			{
+				for (int j = j0; j < j1; j++)
+				{
+					for (int k = k0; k < k1; k++)
+					{
+						vrt[v++] = this.getVert(i, j, k);
+					}
+				}
+			}
+			return vrt;
+		}
+		
+		public void multiplyLight(int x, int y, int z, float value)
+		{
+			int[] verts = this.getVerts(x, y, z);
+			for (int v : verts)
+			{
+				this.light[v] = (byte) ((this.light[v] & 0xFF) * value);
+			}
+		}
+		
+		public void addLight(int x, int y, int z, float value)
+		{
+			int[] verts = this.getVerts(x, y, z);
+			for (int v : verts)
+			{
+				this.light[v] = (byte) ((this.light[v] & 0xFF) + (value * 0xFF));
+			}
+		}
+		
+		public void setLight(int x, int y, int z, float value)
+		{
+			int[] verts = this.getVerts(x, y, z);
+			for (int v : verts)
+			{
+				this.light[v] = (byte) (value * 0xFF);
+			}
+		}
 	}
 
 	private TVFFile()

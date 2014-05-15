@@ -4,6 +4,7 @@ import java.io.DataInput;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import net.turrem.client.Config;
 import net.turrem.client.game.world.Chunk;
 import net.turrem.client.game.world.material.Material;
 import net.turrem.utils.models.TVFFile;
@@ -19,7 +20,7 @@ public class ServerPacketTerrain extends ServerPacket
 	public byte[] hmap;
 	public short[] mats;
 	public byte[][] chunk;
-	
+
 	public ServerPacketTerrain(DataInput data) throws IOException
 	{
 		this.chunkx = data.readInt();
@@ -43,17 +44,17 @@ public class ServerPacketTerrain extends ServerPacket
 			this.chunk[i] = col;
 		}
 	}
-	
+
 	public Chunk buildChunk()
 	{
 		return new Chunk(this.chunkx, this.chunkz, this.buildTVF(), this.hmap, (short) this.voff);
 	}
-	
+
 	public TVFFile buildTVF()
 	{
 		ArrayList<TVFFace> faces = new ArrayList<TVFFace>();
 		TVFColor[] colors = new TVFColor[this.mats.length];
-		
+
 		for (int i = 0; i < colors.length; i++)
 		{
 			Material mat = Material.getMaterial(this.mats[i]);
@@ -69,7 +70,7 @@ public class ServerPacketTerrain extends ServerPacket
 			color.r = (byte) ((cint >> 16) & 0xFF);
 			colors[i] = color;
 		}
-		
+
 		for (int i = 0; i < 16; i++)
 		{
 			for (int j = 0; j < 16; j++)
@@ -77,19 +78,26 @@ public class ServerPacketTerrain extends ServerPacket
 				this.makeCore(i, j, faces);
 			}
 		}
-		
+
 		TVFFace[] far = new TVFFace[faces.size()];
 		far = faces.toArray(far);
 		TVFFile tvf = new TVFFile(far, colors);
-		tvf.prelit = 1;
+		if (Config.doTerrainAo)
+		{
+			tvf.prelit = 1;
+		}
+		else
+		{
+			tvf.prelit = 0;
+		}
 		return tvf;
 	}
-	
+
 	private int getHeight(int x, int z)
 	{
 		return this.getHeight(x, z, Integer.MIN_VALUE);
 	}
-	
+
 	private int getHeight(int x, int z, int def)
 	{
 		if (x < 0 || x >= 16 || z < 0 || z >= 16)
@@ -98,7 +106,7 @@ public class ServerPacketTerrain extends ServerPacket
 		}
 		return this.hmap[x + z * 16] & 0xFF;
 	}
-	
+
 	private void makeCore(int x, int z, ArrayList<TVFFace> faces)
 	{
 		int ind = x + z * 16;
@@ -114,14 +122,19 @@ public class ServerPacketTerrain extends ServerPacket
 			top.y += basePadding;
 			top.dir = TVFFace.Dir_YUp;
 			faces.add(top);
-			
+
 			int h;
-			
+			int hu;
+			int hd;
+
+			float mao = Config.terrainAoSampleMult;
+
 			h = this.getHeight(x + 1, z);
+			hu = this.getHeight(x + 1, z + 1);
+			hd = this.getHeight(x + 1, z - 1);
 			if (h > y)
 			{
-				top.light[0] = (byte) ((top.light[0] & 0xFF) * 0.8F);
-				top.light[1] = (byte) ((top.light[1] & 0xFF) * 0.8F);
+				top.multiplyLight(1, 1, 0, mao);
 			}
 			for (int i = 0; i < col.length; i++)
 			{
@@ -135,18 +148,39 @@ public class ServerPacketTerrain extends ServerPacket
 					f.y += basePadding;
 					f.dir = TVFFace.Dir_XUp;
 					faces.add(f);
+					if (y - i == h + 1)
+					{
+						f.multiplyLight(1, -1, 0, mao);
+					}
+					if (y - i <= hu)
+					{
+						f.multiplyLight(1, 0, 1, mao);
+					}
+					if (y - i <= hd)
+					{
+						f.multiplyLight(1, 0, -1, mao);
+					}
+					if (y - i == hu + 1)
+					{
+						f.multiplyLight(1, -1, 1, mao);
+					}
+					if (y - i == hd + 1)
+					{
+						f.multiplyLight(1, -1, -1, mao);
+					}
 				}
 				else
 				{
 					break;
 				}
 			}
-			
+
 			h = this.getHeight(x - 1, z);
+			hu = this.getHeight(x - 1, z + 1);
+			hd = this.getHeight(x - 1, z - 1);
 			if (h > y)
 			{
-				top.light[2] = (byte) ((top.light[2] & 0xFF) * 0.8F);
-				top.light[3] = (byte) ((top.light[3] & 0xFF) * 0.8F);
+				top.multiplyLight(-1, 1, 0, mao);
 			}
 			for (int i = 0; i < col.length; i++)
 			{
@@ -160,18 +194,39 @@ public class ServerPacketTerrain extends ServerPacket
 					f.y += basePadding;
 					f.dir = TVFFace.Dir_XDown;
 					faces.add(f);
+					if (y - i == h + 1)
+					{
+						f.multiplyLight(-1, -1, 0, mao);
+					}
+					if (y - i <= hu)
+					{
+						f.multiplyLight(-1, 0, 1, mao);
+					}
+					if (y - i <= hd)
+					{
+						f.multiplyLight(-1, 0, -1, mao);
+					}
+					if (y - i == hu + 1)
+					{
+						f.multiplyLight(-1, -1, 1, mao);
+					}
+					if (y - i == hd + 1)
+					{
+						f.multiplyLight(-1, -1, -1, mao);
+					}
 				}
 				else
 				{
 					break;
 				}
 			}
-			
+
 			h = this.getHeight(x, z + 1);
+			hu = this.getHeight(x + 1, z + 1);
+			hd = this.getHeight(x - 1, z + 1);
 			if (h > y)
 			{
-				top.light[0] = (byte) ((top.light[0] & 0xFF) * 0.8F);
-				top.light[3] = (byte) ((top.light[3] & 0xFF) * 0.8F);
+				top.multiplyLight(0, 1, 1, mao);
 			}
 			for (int i = 0; i < col.length; i++)
 			{
@@ -185,18 +240,39 @@ public class ServerPacketTerrain extends ServerPacket
 					f.y += basePadding;
 					f.dir = TVFFace.Dir_ZUp;
 					faces.add(f);
+					if (y - i == h + 1)
+					{
+						f.multiplyLight(0, -1, 1, mao);
+					}
+					if (y - i <= hu)
+					{
+						f.multiplyLight(1, 0, 1, mao);
+					}
+					if (y - i <= hd)
+					{
+						f.multiplyLight(-1, 0, 1, mao);
+					}
+					if (y - i == hu + 1)
+					{
+						f.multiplyLight(1, -1, 1, mao);
+					}
+					if (y - i == hd + 1)
+					{
+						f.multiplyLight(-1, -1, 1, mao);
+					}
 				}
 				else
 				{
 					break;
 				}
 			}
-			
+
 			h = this.getHeight(x, z - 1);
+			hu = this.getHeight(x + 1, z - 1);
+			hd = this.getHeight(x - 1, z - 1);
 			if (h > y)
 			{
-				top.light[1] = (byte) ((top.light[1] & 0xFF) * 0.8F);
-				top.light[2] = (byte) ((top.light[2] & 0xFF) * 0.8F);
+				top.multiplyLight(0, 1, -1, mao);
 			}
 			for (int i = 0; i < col.length; i++)
 			{
@@ -210,35 +286,55 @@ public class ServerPacketTerrain extends ServerPacket
 					f.y += basePadding;
 					f.dir = TVFFace.Dir_ZDown;
 					faces.add(f);
+					if (y - i == h + 1)
+					{
+						f.multiplyLight(0, -1, -1, mao);
+					}
+					if (y - i <= hu)
+					{
+						f.multiplyLight(1, 0, -1, mao);
+					}
+					if (y - i <= hd)
+					{
+						f.multiplyLight(-1, 0, -1, mao);
+					}
+					if (y - i == hu + 1)
+					{
+						f.multiplyLight(1, -1, -1, mao);
+					}
+					if (y - i == hd + 1)
+					{
+						f.multiplyLight(-1, -1, -1, mao);
+					}
 				}
 				else
 				{
 					break;
 				}
 			}
-			
+
 			h = this.getHeight(x + 1, z + 1);
 			if (h > y)
 			{
-				top.light[0] = (byte) ((top.light[0] & 0xFF) * 0.8F);
+				top.multiplyLight(1, 1, 1, mao);
 			}
-			
+
 			h = this.getHeight(x + 1, z - 1);
 			if (h > y)
 			{
-				top.light[1] = (byte) ((top.light[1] & 0xFF) * 0.8F);
+				top.multiplyLight(1, 1, -1, mao);
 			}
-			
+
 			h = this.getHeight(x - 1, z - 1);
 			if (h > y)
 			{
-				top.light[2] = (byte) ((top.light[2] & 0xFF) * 0.8F);
+				top.multiplyLight(-1, 1, -1, mao);
 			}
-			
+
 			h = this.getHeight(x - 1, z + 1);
 			if (h > y)
 			{
-				top.light[3] = (byte) ((top.light[3] & 0xFF) * 0.8F);
+				top.multiplyLight(-1, 1, 1, mao);
 			}
 		}
 	}
