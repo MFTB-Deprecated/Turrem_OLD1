@@ -89,7 +89,12 @@ public class TVFFile
 		public byte dir;
 		public byte color;
 
+		//XUp: YUp/ZUp, YUp/ZDown, YDown/ZDown, YDown/ZUp
+		//XDown: YUp/ZUp, YUp/ZDown, YDown/ZDown, YDown/ZUp
 		//YUp: XUp/ZUp, XUp/ZDown, XDown/ZDown, XDown/ZUp
+		//YDown: XUp/ZUp, XUp/ZDown, XDown/ZDown, XDown/ZUp
+		//ZUp: XUp/YUp, XUp/YDown, XDown/YDown, XDown/YUp
+		//ZDown: XUp/YUp, XUp/YDown, XDown/YDown, XDown/YUp
 		public byte[] light = new byte[] { (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF };
 
 		public static byte Dir_XUp = (byte) 0x01;

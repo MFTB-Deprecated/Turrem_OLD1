@@ -20,11 +20,11 @@ public class TVFBuffer
 	 * A list of vertex offsets to be used when converting faces in the file to
 	 * vertices in the VBO
 	 */
-	public static final int[][] offs = new int[][] { new int[] { 1, 0, 1 }, new int[] { 0, 0, 1 }, new int[] { 0, 0, 0 }, new int[] { 1, 0, 0 }, new int[] { 1, 1, 1 }, new int[] { 0, 1, 1 }, new int[] { 0, 1, 0 }, new int[] { 1, 1, 0 } };
+	public static final int[][] offs = new int[][] { new int[] { 1, 0, 1 }/*0*/, new int[] { 0, 0, 1 }/*1*/, new int[] { 0, 0, 0 }/*2*/, new int[] { 1, 0, 0 }/*3*/, new int[] { 1, 1, 1 }/*4*/, new int[] { 0, 1, 1 }/*5*/, new int[] { 0, 1, 0 }/*6*/, new int[] { 1, 1, 0 }/*7*/ };
 	/**
 	 * A list specifing which vericies in offs belong to which faces on a cube
 	 */
-	public static final int[][] offinds = new int[][] { new int[] { 4, 0, 3, 7 }, new int[] { 1, 5, 6, 2 }, new int[] { 4, 7, 6, 5 }, new int[] { 0, 1, 2, 3 }, new int[] { 0, 4, 5, 1 }, new int[] { 2, 6, 7, 3 } };
+	public static final int[][] offinds = new int[][] { new int[] { 4, 7, 3, 0 }/*XUp*/, new int[] { 5, 6, 2, 1 }/*XDown*/, new int[] { 4, 7, 6, 5 }/*YUp*/, new int[] { 0, 3, 2, 1 }/*YDown*/, new int[] { 4, 0, 1, 5 }/*ZUp*/, new int[] { 7, 3, 2, 6 }/*ZDown*/ };
 
 	private int vaoId = 0;
 	/**
