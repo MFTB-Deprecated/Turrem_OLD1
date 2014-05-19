@@ -8,7 +8,7 @@ public class StateGame implements IState
 {
 	protected Turrem theTurrem;
 	public ClientGame theGame;
-	public long gameTime = 0;
+	public static long gameTime = 0;
 	
 	public StateGame(Turrem turrem)
 	{
@@ -32,8 +32,8 @@ public class StateGame implements IState
 	public void render()
 	{
 		this.theGame.render();
-		this.gameTime++;
-		if (this.gameTime == 5)
+		gameTime++;
+		if (gameTime == 5)
 		{
 			this.theGame.theWorld.testNetwork();
 			RenderEngine chunkrender = new RenderEngine();

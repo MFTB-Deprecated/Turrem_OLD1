@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -26,36 +25,43 @@ public class ClientWorld
 {
 	public ClientGame theGame;
 
-	public HashMap<Long, Chunk> chunks = new HashMap<Long, Chunk>();
-	
+	public ChunkStorage chunks;
+
 	public HashMap<Integer, ClientEntity> entities = new HashMap<Integer, ClientEntity>();
+
+	public long worldTime = 0;
 
 	public ClientWorld(ClientGame game)
 	{
 		this.theGame = game;
+		this.chunks = new ChunkStorage(Config.chunkStorageWidth);
 	}
 
 	public void render()
 	{
+		this.worldTime++;
 		Point foc = this.theGame.getFace().getFocus();
 		int px = (int) foc.xCoord;
 		int pz = (int) foc.zCoord;
 		int dist = Config.chunkRenderDistance * Config.chunkRenderDistance;
-		Collection<Chunk> set = this.chunks.values();
+		Chunk[] set = this.chunks.getArray();
 		for (Chunk chunk : set)
 		{
-			int x = chunk.chunkx * 16 + 8;
-			int z = chunk.chunkz * 16 + 8;
-			x -= px;
-			z -= pz;
-			if (x * x + z * z < dist)
+			if (chunk != null)
 			{
-				chunk.render();
+				int x = chunk.chunkx * 16 + 8;
+				int z = chunk.chunkz * 16 + 8;
+				x -= px;
+				z -= pz;
+				if (x * x + z * z < dist)
+				{
+					chunk.render();
+				}
 			}
 		}
 		this.renderEntities();
 	}
-	
+
 	public void renderEntities()
 	{
 		Set<Entry<Integer, ClientEntity>> set = this.entities.entrySet();
@@ -74,21 +80,15 @@ public class ClientWorld
 			this.entities.remove(id);
 		}
 	}
-	
+
 	public void pushEntity(ClientEntity entity)
 	{
 		this.entities.put(entity.entityId, entity);
 	}
 
-	public long getIndex(int chunkx, int chunkz)
-	{
-		return (((long) chunkx) << 32) | (chunkz & 0xffffffffL);
-	}
-
 	public Chunk getChunk(int chunkx, int chunkz)
 	{
-		long l = this.getIndex(chunkx, chunkz);
-		return this.chunks.get(l);
+		return this.chunks.getChunk(chunkx, chunkz);
 	}
 
 	public int getHeight(int x, int z, int empty)
@@ -181,18 +181,21 @@ public class ClientWorld
 			{
 				ServerPacketTerrain terr = (ServerPacketTerrain) pack;
 				Chunk c = terr.buildChunk();
-				long l = this.getIndex(c.chunkx, c.chunkz);
-				this.chunks.put(l, c);
+				Point face = this.theGame.getFace().getLocation();
+				this.chunks.setChunk(c, (int) face.xCoord , (int) face.zCoord);
 			}
 		}
 	}
 
 	public void loadChunkRenders(RenderEngine engine)
 	{
-		Collection<Chunk> set = this.chunks.values();
+		Chunk[] set = this.chunks.getArray();
 		for (Chunk chunk : set)
 		{
-			chunk.buildRender(engine);
+			if (chunk != null)
+			{
+				chunk.buildRender(engine);
+			}
 		}
 	}
 }

@@ -15,6 +15,7 @@ public class Chunk
 	private short voff;
 	protected short[] height;
 	private RenderObject render = null;
+	private boolean loaded = false;
 
 	public Chunk(int chunkx, int chunkz, TVFFile tvf, byte[] hmap, short voff)
 	{
@@ -33,14 +34,31 @@ public class Chunk
 	{
 		return render;
 	}
+	
+	public boolean isLoaded()
+	{
+		return loaded;
+	}
 
 	public void buildRender(RenderEngine engine)
 	{
-		if (this.render != null)
+		if (this.render != null && this.loaded)
 		{
+			this.loaded = false;
 			this.render.doDelete();
 		}
+		this.loaded = true;
 		this.render = engine.makeObject(this.tvf, 1.0F, 0.0F, (this.voff - ServerPacketTerrain.basePadding) * -1.0F, 0.0F);
+	}
+
+	public void unload()
+	{
+		if (this.render != null && this.loaded)
+		{
+			this.render.doDelete();
+			this.loaded = false;
+			this.render = null;
+		}
 	}
 
 	public void render()
@@ -52,7 +70,7 @@ public class Chunk
 			this.render.doRender();
 			GL11.glPopMatrix();
 		}
-	}	
+	}
 
 	public int getHeight(int x, int z)
 	{

@@ -5,6 +5,7 @@ import org.lwjgl.opengl.Display;
 public class Config
 {
 	public static int chunkRenderDistance = 96;
+	public static int chunkStorageWidth = 16;
 	public static int entityRenderDistance = 96;
 	public static float mouseSpeedX = 0.5F;
 	public static float mouseSpeedY = 0.5F;

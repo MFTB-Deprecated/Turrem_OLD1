@@ -72,11 +72,11 @@ public class TVFBuffer
 				}
 			}
 			TVFFile.TVFColor c = tvf.colors[cind];
-
+			
 			int[] foffinds = offinds[(f.dir & 0xFF) - 1];
-
+			
 			for (int j = 0; j < 4; j++)
-			{
+			{				
 				int ind = ((i * 4) + j) * 3;
 				colors[ind + 0] = (c.r & 0xFF) / 255.0F;
 				colors[ind + 1] = (c.g & 0xFF) / 255.0F;

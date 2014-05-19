@@ -12,8 +12,6 @@ import java.util.zip.GZIPOutputStream;
 
 import javax.imageio.ImageIO;
 
-import net.turrem.utils.StopTimer;
-import net.turrem.utils.Toolbox;
 import net.turrem.utils.models.TVFFile;
 import net.turrem.utils.models.VOXFile;
 
@@ -54,17 +52,12 @@ public class AssetLoader
 	{
 		System.out.println("Converting all VOX files...this may take awhile");
 
-		StopTimer timer = new StopTimer();
-		timer.start();
-
 		String dir = this.bin + "assets/";
 		File folder = new File(dir);
 		int num = this.convertVoxFolder(folder, overwrite);
 
-		timer.pause();
-		String time = Toolbox.getFloat((float) timer.getTotalmili(), 2);
 
-		System.out.println("Converted " + num + " VOX files to TVF files in " + time + "ms");
+		System.out.println("Converted " + num + " VOX files to TVF files");
 	}
 
 	private int convertVoxFolder(File folder, boolean overwrite)
