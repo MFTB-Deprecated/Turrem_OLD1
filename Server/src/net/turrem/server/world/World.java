@@ -132,7 +132,7 @@ public class World
 		}
 		return img;
 	}
-
+	
 	public void unloadAll()
 	{
 		for (ChunkGroup g : this.chunks.values())

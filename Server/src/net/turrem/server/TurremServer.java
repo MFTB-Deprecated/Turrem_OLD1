@@ -49,6 +49,11 @@ public class TurremServer
 		File entityjar = new File(this.theGameDir + "/jars/entity.game.jar");
 		this.theLoader.loadJar(entityjar);
 	}
+	
+	public synchronized boolean acceptingClients()
+	{
+		return true;
+	}
 
 	public boolean isDone()
 	{

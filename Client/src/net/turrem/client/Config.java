@@ -14,6 +14,8 @@ public class Config
 	public static float camDistMax = 120.0F;
 	public static float terrainAoSampleMult = 0.5F;
 	public static boolean doTerrainAo = true;
+	public static int turremServerPort = 26555;
+	public static String turremServerHost = "localhost";
 	
 	public static int getHeight()
 	{
