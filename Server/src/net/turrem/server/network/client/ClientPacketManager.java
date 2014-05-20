@@ -8,17 +8,17 @@ import java.io.InputStream;
 
 public class ClientPacketManager
 {
-	public ClientPacket readSinglePacket(String user, InputStream stream) throws IOException
+	public static ClientPacket readSinglePacket(String user, InputStream stream) throws IOException
 	{
 		byte type = (byte) stream.read();
 		int length = (stream.read() << 8) | (stream.read() << 0);
 		byte[] packet = new byte[length];
 		stream.read(packet);
 		DataInput input = new DataInputStream(new ByteArrayInputStream(packet));
-		return this.readPacket(type, length, input, user);
+		return readPacket(type, length, input, user);
 	}
 	
-	public ClientPacket readPacket(byte packetType, int length, DataInput data, String user) throws IOException
+	public static ClientPacket readPacket(byte packetType, int length, DataInput data, String user) throws IOException
 	{
 		switch (packetType & 0xFF)
 		{

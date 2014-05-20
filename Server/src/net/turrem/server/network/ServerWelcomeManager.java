@@ -59,7 +59,7 @@ public class ServerWelcomeManager extends Thread
 	{
 		DataInputStream in = new DataInputStream(socket.getInputStream());
 		String name = in.readUTF();
-		GameConnection client = new GameConnection(name, socket);
+		GameConnection client = new GameConnection(name, socket, this.room);
 		if(!this.room.addClient(client))
 		{
 			socket.close();

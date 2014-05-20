@@ -12,6 +12,8 @@ public class NetworkRoom
 	public ServerWelcomeManager welcome;
 	private List<GameConnection> clients;
 	
+	public static int clientLimitPerTick = 1000;
+	
 	public NetworkRoom(TurremServer turrem)
 	{
 		this.theTurrem = turrem;
@@ -32,5 +34,21 @@ public class NetworkRoom
 		}
 		this.clients.add(client);
 		return true;
+	}
+	
+	public void networkTick()
+	{
+        for (int i = 0; i < this.clients.size(); ++i)
+        {
+        	GameConnection con = this.clients.get(i);
+        	if (con.isRunning())
+        	{
+        		con.processPackets(clientLimitPerTick);
+        	}
+        	else
+        	{
+        		this.clients.remove(i--);
+        	}
+        }
 	}
 }
