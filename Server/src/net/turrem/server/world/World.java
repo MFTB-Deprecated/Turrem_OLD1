@@ -42,6 +42,17 @@ public class World
 			ent.onWorldRegister(this);
 		}
 	}
+	
+	public void addPlayer(ClientPlayer player)
+	{
+		Realm realm = this.realms.get(player.username);
+		if (realm == null)
+		{
+			realm = new Realm(player.username, this);
+			this.realms.put(player.username, realm);
+		}
+		realm.setClient(player);
+	}
 
 	public void tick()
 	{

@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import net.turrem.server.TurremServer;
+import net.turrem.server.world.ClientPlayer;
 
 public class NetworkRoom
 {
@@ -33,7 +34,15 @@ public class NetworkRoom
 			}
 		}
 		this.clients.add(client);
+		client.onCreate();
 		return true;
+	}
+	
+	public synchronized void addPlayerToWorld(GameConnection client)
+	{
+		ClientPlayer player = new ClientPlayer(this.theTurrem.theWorld, client.name);
+		client.player = player;
+		this.theTurrem.theWorld.addPlayer(player);
 	}
 	
 	public void networkTick()

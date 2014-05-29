@@ -3,6 +3,7 @@ package net.turrem.server;
 import java.util.ArrayList;
 
 import net.turrem.server.entity.IHolding;
+import net.turrem.server.world.ClientPlayer;
 import net.turrem.server.world.World;
 
 public class Realm
@@ -10,6 +11,7 @@ public class Realm
 	public final String user;
 	public World theWorld;	
 	public ArrayList<IHolding> holdings = new ArrayList<IHolding>();
+	private ClientPlayer client = null;
 	
 	public Realm(String username, World world)
 	{
@@ -29,5 +31,21 @@ public class Realm
 	public void leaveRealm(IHolding item, String reason)
 	{
 		this.holdings.remove(item);
+	}
+	
+	public ClientPlayer getClient()
+	{
+		return client;
+	}
+
+	public void setClient(ClientPlayer client)
+	{
+		this.client = client;
+		this.client.theRealm = this;
+	}
+	
+	public void onPlayerExit()
+	{
+		this.client = null;
 	}
 }

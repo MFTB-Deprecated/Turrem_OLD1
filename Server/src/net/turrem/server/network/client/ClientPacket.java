@@ -1,5 +1,7 @@
 package net.turrem.server.network.client;
 
+import net.turrem.server.world.ClientPlayer;
+
 /**
  * A packet received server-side and sent from a client
  */
@@ -13,5 +15,10 @@ public abstract class ClientPacket
 	public ClientPacket(String user)
 	{
 		this.user = user;
+	}
+	
+	public void process(ClientPlayer player)
+	{
+		player.processPacket(this);
 	}
 }

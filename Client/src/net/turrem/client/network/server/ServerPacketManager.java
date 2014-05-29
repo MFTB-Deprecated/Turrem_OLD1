@@ -30,6 +30,8 @@ public class ServerPacketManager
 				return new ServerPacketAddPlayer(data, length);
 			case 0x90:
 				return new ServerPacketAddEntity(data, length);
+			case 0xFD:
+				return new ServerPacketKeepAlive();
 			case 0xFE:
 				return new ServerPacketCustomNBT(data, length);
 			case 0xFF:

@@ -15,7 +15,7 @@ public class ServerWelcomeManager extends Thread
 	
 	public ServerWelcomeManager(TurremServer turrem, NetworkRoom room)
 	{
-		this.setName("ClientWelcomer");
+		this.setName("Client Welcomer");
 		this.theTurrem = turrem;
 		this.room = room;
 	}
@@ -33,7 +33,7 @@ public class ServerWelcomeManager extends Thread
 			e.printStackTrace();
 			return;
 		}
-		while (!listener.isClosed() && !this.theTurrem.acceptingClients())
+		while (!listener.isClosed() && this.theTurrem.acceptingClients())
 		{
 			try
 			{

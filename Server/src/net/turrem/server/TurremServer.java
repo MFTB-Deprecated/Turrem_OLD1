@@ -3,6 +3,7 @@ package net.turrem.server;
 import java.io.File;
 
 import net.turrem.server.load.GameLoader;
+import net.turrem.server.network.NetworkRoom;
 import net.turrem.server.world.World;
 
 public class TurremServer
@@ -27,6 +28,8 @@ public class TurremServer
 	public World theWorld;
 	
 	public GameLoader theLoader;
+	
+	public NetworkRoom theNetwork;
 
 	public TurremServer(String dir, String save)
 	{
@@ -48,6 +51,7 @@ public class TurremServer
 		this.theWorld = new World(this.theSaveDir, System.currentTimeMillis());
 		File entityjar = new File(this.theGameDir + "/jars/entity.game.jar");
 		this.theLoader.loadJar(entityjar);
+		this.theNetwork = new NetworkRoom(this);
 	}
 	
 	public synchronized boolean acceptingClients()
@@ -117,6 +121,8 @@ public class TurremServer
 			System.out.println("Ticks per Second - " + (100.0F / ((time - this.lastTPSAnTime) / 1000.0F)));
 			this.lastTPSAnTime = time;
 		}
+		
+		this.theNetwork.networkTick();
 	}
 
 	public float getLastTPS()

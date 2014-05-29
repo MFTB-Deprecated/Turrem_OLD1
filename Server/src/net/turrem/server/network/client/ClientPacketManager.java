@@ -32,6 +32,8 @@ public class ClientPacketManager
 				return new ClientPacketServerInfoRequest(user);
 			case 0xA0:
 				return new ClientPacketChat(user, data, length);
+			case 0xFD:
+				return new ClientPacketKeepAlive(user);
 			case 0xFE:
 				return new ClientPacketCustomNBT(user, data);
 			case 0xFF:

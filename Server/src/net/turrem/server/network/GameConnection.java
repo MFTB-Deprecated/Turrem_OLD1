@@ -11,6 +11,8 @@ import net.turrem.server.Config;
 import net.turrem.server.network.client.ClientPacket;
 import net.turrem.server.network.client.ClientPacketManager;
 import net.turrem.server.network.server.ServerPacket;
+import net.turrem.server.network.server.ServerPacketKeepAlive;
+import net.turrem.server.world.ClientPlayer;
 
 public class GameConnection
 {
@@ -31,6 +33,10 @@ public class GameConnection
 	
 	private Thread readThread;
 	private Thread writeThread;
+	
+	public ClientPlayer player = null;
+	
+	private int currentWriteCount = 0;
 
 	public GameConnection(String name, Socket network, NetworkRoom room) throws IOException
 	{
@@ -109,6 +115,7 @@ public class GameConnection
 			try
 			{
 				pak.write(this.output);
+				this.currentWriteCount++;
 				return true;
 			}
 			catch (IOException e)
@@ -134,6 +141,19 @@ public class GameConnection
 	{
 		if (this.isRunning)
 		{
+			if (this.currentWriteCount == 0)
+			{
+				ServerPacketKeepAlive alive = new ServerPacketKeepAlive();
+				try
+				{
+					alive.write(this.output);
+				}
+				catch (IOException e)
+				{
+					this.shutdown("Failed write keep alive", e);
+				}
+			}
+			this.currentWriteCount = 0;
 			try
 			{
 				this.output.flush();
@@ -168,7 +188,7 @@ public class GameConnection
 			ClientPacket pak = this.incoming.poll();
 			if (pak != null)
 			{
-
+				pak.process(this.player);
 			}
 			else
 			{
@@ -176,11 +196,28 @@ public class GameConnection
 			}
 		}
 	}
+	
+	public void onCreate()
+	{
+		this.theRoom.addPlayerToWorld(this);
+		if (this.player != null)
+		{
+			this.player.joinNetwork(this);
+		}
+		else
+		{
+			this.shutdown("Player not assigned");
+		}
+	}
 
 	public void shutdown(String reason, Exception... cause)
 	{
 		if (this.isRunning)
 		{
+			if (this.player != null)
+			{
+				this.player.exit();
+			}
 			this.isRunning = false;
 
 			try
