@@ -42,6 +42,7 @@ public class ClientGame
 		}
 		catch (IOException e)
 		{
+			System.out.println(e);
 			this.theWorld.end();
 		}
 	}
@@ -168,5 +169,10 @@ public class ClientGame
 	public PlayerFace getFace()
 	{
 		return face;
+	}
+
+	public void stopGame()
+	{
+		this.theTurrem.shutdown();
 	}
 }

@@ -27,12 +27,18 @@ public class PlayerFace
 	private float fovy = 60.0F;
 	
 	private int requestChunkSelector = 0;
+	
+	private long lastChunkRequestTime = 0;
+	private int lastChunkRequestX;
+	private int lastChunkRequestZ;
 
 	public PlayerFace()
 	{
 		this.reset();
 		this.camFocus = Point.getPoint(0.0D, 128.0D, 0.0D);
 		this.camLoc = Point.getPoint(0.0D, 0.0D, 0.0D);
+		this.lastChunkRequestX = (int) this.camLoc.xCoord;
+		this.lastChunkRequestZ = (int) this.camLoc.zCoord;
 		this.doFocus();
 		this.updatePars();
 	}
@@ -125,7 +131,20 @@ public class PlayerFace
 
 	public void tickCamera(ClientWorld world)
 	{
-		this.requestChunkSelector = world.requestNullChunks((int) this.camLoc.xCoord, (int) this.camLoc.zCoord, this.requestChunkSelector, 2);
+		long currentTime = System.currentTimeMillis();
+		if (currentTime - this.lastChunkRequestTime > Config.chunkRequestTimeLimit || this.lastChunkRequestTime == 0)
+		{
+			int dx = this.lastChunkRequestX - (int) this.camLoc.xCoord;
+			int dz = this.lastChunkRequestZ - (int) this.camLoc.zCoord;
+			if (dx * dx + dz * dz > 256)
+			{
+				this.lastChunkRequestX = (int) this.camLoc.xCoord;
+				this.lastChunkRequestZ = (int) this.camLoc.zCoord;
+				this.requestChunkSelector = 0;
+			}
+			this.lastChunkRequestTime = currentTime;
+			this.requestChunkSelector = world.requestNullChunks((int) this.camLoc.xCoord, (int) this.camLoc.zCoord, this.requestChunkSelector, 8);
+		}
 		
 		int wm = Mouse.getDWheel();
 		if (Mouse.isButtonDown(2))

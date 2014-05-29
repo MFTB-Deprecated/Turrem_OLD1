@@ -18,9 +18,11 @@ public class Config
 	public static String turremServerHost = "localhost";
 	public static int connectionReadSleep = 2;
 	public static int connectionWriteSleep = 2;
-	public static int connectionTimeoutLimit = 1200;
+	public static int connectionTimeoutLimit = 120;
 	public static int connectionInQueueOverflow = 100000;
 	public static int connectionOutQueueOverflow = 100000;
+	public static long chunkRequestTimeLimit = 100;
+	public static int chunkRequestDistance = 8;
 	
 	public static int getHeight()
 	{

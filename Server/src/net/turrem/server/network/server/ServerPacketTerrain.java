@@ -17,13 +17,26 @@ public class ServerPacketTerrain extends ServerPacket
 	public short[] mats;
 	public byte[][] chunk;
 
+	public ServerPacketTerrain(Chunk ch, World world)
+	{
+		this.chunkx = ch.chunkx;
+		this.chunkz = ch.chunky;
+		
+		this.create(ch, world);
+	}
+	
 	public ServerPacketTerrain(World world, int chunkx, int chunkz)
 	{
 		this.chunkx = chunkx;
 		this.chunkz = chunkz;
 
 		Chunk ch = world.getChunk(chunkx, chunkz);
-
+		
+		this.create(ch, world);
+	}
+	
+	private void create(Chunk ch, World world)
+	{
 		this.voffset = ch.getMinHeight();
 
 		short[] map = ch.getHeightMap();

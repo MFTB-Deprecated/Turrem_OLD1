@@ -66,6 +66,11 @@ public class ClientWorld
 		this.renderEntities();
 
 		this.theConnection.processPackets();
+
+		if (!this.theConnection.isRunning())
+		{
+			this.theGame.stopGame();
+		}
 	}
 
 	public void renderEntities()
@@ -141,16 +146,16 @@ public class ClientWorld
 		}
 		return height;
 	}
-	
+
 	public int requestNullChunks(int centerx, int centerz, int select, int num)
 	{
 		int chunkx = centerx >> 4;
 		int chunkz = centerz >> 4;
 		int ind = 0;
-		for (int dist = 1; dist <= 16; dist+=2)
+		for (int dist = 1; dist <= Config.chunkRequestDistance * 2; dist += 2)
 		{
-			int hal = dist /  2;
-			
+			int hal = dist / 2;
+
 			for (int i = -hal; i <= hal; i++)
 			{
 				if (this.getChunk(chunkx + i, chunkz + hal) == null)
@@ -166,7 +171,7 @@ public class ClientWorld
 					}
 				}
 			}
-			
+
 			for (int i = -hal + 1; i < hal; i++)
 			{
 				if (this.getChunk(chunkx + i, chunkz - hal) == null)
@@ -182,7 +187,7 @@ public class ClientWorld
 					}
 				}
 			}
-			
+
 			for (int i = -hal; i < hal; i++)
 			{
 				if (this.getChunk(chunkx + hal, chunkz + i) == null)
@@ -198,7 +203,7 @@ public class ClientWorld
 					}
 				}
 			}
-			
+
 			for (int i = -hal; i < hal; i++)
 			{
 				if (this.getChunk(chunkx - hal, chunkz + i) == null)
@@ -215,10 +220,10 @@ public class ClientWorld
 				}
 			}
 		}
-		
+
 		return 0;
 	}
-	
+
 	private void requestChunk(int chunkx, int chunkz)
 	{
 		RequestChunk req = new RequestChunk(chunkx, chunkz);
@@ -240,7 +245,10 @@ public class ClientWorld
 
 	public void end()
 	{
-		this.theConnection.shutdown("Client closed");
+		if (this.theConnection != null)
+		{
+			this.theConnection.shutdown("Client closed");
+		}
 	}
 
 	public void processPacket(ServerPacket pack)

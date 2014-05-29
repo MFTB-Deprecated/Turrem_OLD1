@@ -1,15 +1,11 @@
 package net.turrem.server.world;
 
 import java.awt.image.BufferedImage;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import net.turrem.server.Realm;
 import net.turrem.server.entity.Entity;
-import net.turrem.server.network.server.ServerPacketMaterialSync;
-import net.turrem.server.network.server.ServerPacketTerrain;
 import net.turrem.server.world.gen.WorldGen;
 import net.turrem.server.world.gen.WorldGenBasic;
 import net.turrem.server.world.material.Material;
@@ -68,30 +64,6 @@ public class World
 				g.tickUnload();
 			}
 		}
-	}
-
-	public void testNetwork(DataOutputStream out) throws IOException
-	{
-		for (Material mat : Material.list.values())
-		{
-			ServerPacketMaterialSync sync = new ServerPacketMaterialSync(mat);
-			sync.write(out);
-		}
-		for (int i = -8; i <= 8; i++)
-		{
-			for (int j = -8; j <= 8; j++)
-			{
-				ServerPacketTerrain terr = new ServerPacketTerrain(this, i, j);
-				terr.write(out);
-			}
-		}
-		System.out.println("Network Write Done");
-	}
-
-	public void writeTestPacket(DataOutputStream out) throws IOException
-	{
-		ServerPacketTerrain packet = new ServerPacketTerrain(this, 0, 0);
-		packet.write(out);
 	}
 
 	public BufferedImage testTerrainMap()

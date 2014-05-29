@@ -212,6 +212,7 @@ public class GameConnection
 
 	public void shutdown(String reason, Exception... cause)
 	{
+		System.out.println("Network Shutdown: " + reason);
 		if (this.isRunning)
 		{
 			if (this.player != null)
