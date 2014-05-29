@@ -25,6 +25,8 @@ public class PlayerFace
 	private float aspect;
 	private float znear = 1.0F;
 	private float fovy = 60.0F;
+	
+	private int requestChunkSelector = 0;
 
 	public PlayerFace()
 	{
@@ -123,6 +125,8 @@ public class PlayerFace
 
 	public void tickCamera(ClientWorld world)
 	{
+		this.requestChunkSelector = world.requestNullChunks((int) this.camLoc.xCoord, (int) this.camLoc.zCoord, this.requestChunkSelector, 2);
+		
 		int wm = Mouse.getDWheel();
 		if (Mouse.isButtonDown(2))
 		{

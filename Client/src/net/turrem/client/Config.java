@@ -16,6 +16,11 @@ public class Config
 	public static boolean doTerrainAo = true;
 	public static int turremServerPort = 26555;
 	public static String turremServerHost = "localhost";
+	public static int connectionReadSleep = 2;
+	public static int connectionWriteSleep = 2;
+	public static int connectionTimeoutLimit = 1200;
+	public static int connectionInQueueOverflow = 100000;
+	public static int connectionOutQueueOverflow = 100000;
 	
 	public static int getHeight()
 	{

@@ -2,7 +2,6 @@ package net.turrem.client.states;
 
 import net.turrem.client.Turrem;
 import net.turrem.client.game.ClientGame;
-import net.turrem.client.render.engine.RenderEngine;
 
 public class StateGame implements IState
 {
@@ -13,7 +12,7 @@ public class StateGame implements IState
 	public StateGame(Turrem turrem)
 	{
 		this.theTurrem = turrem;
-		this.theGame = new ClientGame(turrem.theRender);
+		this.theGame = new ClientGame(turrem.theRender, this.theTurrem);
 	}
 	
 	@Override
@@ -33,12 +32,6 @@ public class StateGame implements IState
 	{
 		this.theGame.render();
 		gameTime++;
-		if (gameTime == 5)
-		{
-			this.theGame.theWorld.testNetwork();
-			RenderEngine chunkrender = new RenderEngine();
-			this.theGame.theWorld.loadChunkRenders(chunkrender);
-		}
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package net.turrem.client.game;
 
+import java.io.IOException;
 import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
@@ -8,12 +9,14 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
 import net.turrem.client.Config;
+import net.turrem.client.Turrem;
 import net.turrem.client.game.world.ClientWorld;
 import net.turrem.client.render.engine.RenderManager;
 
 public class ClientGame
 {
 	public ClientWorld theWorld;
+	protected Turrem theTurrem;
 
 	private FloatBuffer lightPosition;
 	private FloatBuffer whiteLight;
@@ -26,11 +29,21 @@ public class ClientGame
 
 	private PlayerFace face;
 
-	public ClientGame(RenderManager manager)
+	public ClientGame(RenderManager manager, Turrem turrem)
 	{
+		this.theTurrem = turrem;
 		this.theWorld = new ClientWorld(this);
 		this.theManager = manager;
 		this.face = new PlayerFace();
+		
+		try
+		{
+			this.theWorld.startNetwork(turrem.theSession.username);
+		}
+		catch (IOException e)
+		{
+			this.theWorld.end();
+		}
 	}
 
 	public void render()

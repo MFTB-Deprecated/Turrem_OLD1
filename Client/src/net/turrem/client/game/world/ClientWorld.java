@@ -1,21 +1,20 @@
 package net.turrem.client.game.world;
 
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import net.turrem.client.Config;
-import net.turrem.client.Turrem;
 import net.turrem.client.game.ClientGame;
 import net.turrem.client.game.entity.ClientEntity;
 import net.turrem.client.game.world.material.Material;
+import net.turrem.client.network.GameConnection;
+import net.turrem.client.network.client.request.RequestChunk;
 import net.turrem.client.network.server.ServerPacket;
-import net.turrem.client.network.server.ServerPacketManager;
 import net.turrem.client.network.server.ServerPacketMaterialSync;
 import net.turrem.client.network.server.ServerPacketTerrain;
 import net.turrem.client.render.engine.RenderEngine;
@@ -31,9 +30,14 @@ public class ClientWorld
 
 	public long worldTime = 0;
 
+	public RenderEngine chunkRender;
+
+	public GameConnection theConnection;
+
 	public ClientWorld(ClientGame game)
 	{
 		this.theGame = game;
+		this.chunkRender = new RenderEngine();
 		this.chunks = new ChunkStorage(Config.chunkStorageWidth);
 	}
 
@@ -60,6 +64,8 @@ public class ClientWorld
 			}
 		}
 		this.renderEntities();
+
+		this.theConnection.processPackets();
 	}
 
 	public void renderEntities()
@@ -135,66 +141,123 @@ public class ClientWorld
 		}
 		return height;
 	}
+	
+	public int requestNullChunks(int centerx, int centerz, int select, int num)
+	{
+		int chunkx = centerx >> 4;
+		int chunkz = centerz >> 4;
+		int ind = 0;
+		for (int dist = 1; dist <= 16; dist+=2)
+		{
+			int hal = dist /  2;
+			
+			for (int i = -hal; i <= hal; i++)
+			{
+				if (this.getChunk(chunkx + i, chunkz + hal) == null)
+				{
+					if (select <= ind)
+					{
+						this.requestChunk(chunkx + i, chunkz + hal);
+					}
+					ind++;
+					if (ind - select == num)
+					{
+						return select += num;
+					}
+				}
+			}
+			
+			for (int i = -hal + 1; i < hal; i++)
+			{
+				if (this.getChunk(chunkx + i, chunkz - hal) == null)
+				{
+					if (select <= ind)
+					{
+						this.requestChunk(chunkx + i, chunkz - hal);
+					}
+					ind++;
+					if (ind - select == num)
+					{
+						return select += num;
+					}
+				}
+			}
+			
+			for (int i = -hal; i < hal; i++)
+			{
+				if (this.getChunk(chunkx + hal, chunkz + i) == null)
+				{
+					if (select <= ind)
+					{
+						this.requestChunk(chunkx + hal, chunkz + i);
+					}
+					ind++;
+					if (ind - select == num)
+					{
+						return select += num;
+					}
+				}
+			}
+			
+			for (int i = -hal; i < hal; i++)
+			{
+				if (this.getChunk(chunkx - hal, chunkz + i) == null)
+				{
+					if (select <= ind)
+					{
+						this.requestChunk(chunkx - hal, chunkz + i);
+					}
+					ind++;
+					if (ind - select == num)
+					{
+						return select += num;
+					}
+				}
+			}
+		}
+		
+		return 0;
+	}
+	
+	private void requestChunk(int chunkx, int chunkz)
+	{
+		RequestChunk req = new RequestChunk(chunkx, chunkz);
+		this.theConnection.addToSendQueue(req.getPacket());
+	}
 
 	public int getHeight(int x, int z)
 	{
 		return this.getHeight(x, z, -1);
 	}
 
-	public void testNetwork()
+	public void startNetwork(String username) throws IOException
 	{
-		try
-		{
-			if (Turrem.networkLoc != null)
-			{
-				File file = new File(Turrem.networkLoc);
-				if (!file.exists())
-				{
-					return;
-				}
-				FileInputStream in = new FileInputStream(file);
-				this.network(in);
-				in.close();
-			}
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		Socket socket = new Socket(Config.turremServerHost, Config.turremServerPort);
+		DataOutputStream output = new DataOutputStream(socket.getOutputStream());
+		output.writeUTF(username);
+		this.theConnection = new GameConnection(socket, this);
 	}
 
-	public void network(InputStream in) throws IOException
+	public void end()
 	{
-		ArrayList<ServerPacket> packets = new ArrayList<ServerPacket>();
-		while (in.available() > 0)
-		{
-			packets.add(ServerPacketManager.readSinglePacket(in));
-		}
-		for (ServerPacket pack : packets)
-		{
-			if (pack instanceof ServerPacketMaterialSync)
-			{
-				ServerPacketMaterialSync sync = (ServerPacketMaterialSync) pack;
-				Material.numidmap.put(sync.num, sync.id);
-			}
-			if (pack instanceof ServerPacketTerrain)
-			{
-				ServerPacketTerrain terr = (ServerPacketTerrain) pack;
-				Chunk c = terr.buildChunk();
-				Point face = this.theGame.getFace().getLocation();
-				this.chunks.setChunk(c, (int) face.xCoord , (int) face.zCoord);
-			}
-		}
+		this.theConnection.shutdown("Client closed");
 	}
 
-	public void loadChunkRenders(RenderEngine engine)
+	public void processPacket(ServerPacket pack)
 	{
-		Chunk[] set = this.chunks.getArray();
-		for (Chunk chunk : set)
+		if (pack instanceof ServerPacketMaterialSync)
 		{
-			if (chunk != null)
+			ServerPacketMaterialSync sync = (ServerPacketMaterialSync) pack;
+			Material.numidmap.put(sync.num, sync.id);
+		}
+		if (pack instanceof ServerPacketTerrain)
+		{
+			ServerPacketTerrain terr = (ServerPacketTerrain) pack;
+			Chunk c = terr.buildChunk();
+			Point face = this.theGame.getFace().getLocation();
+			if (this.chunks.setChunk(c, (int) face.xCoord, (int) face.zCoord))
 			{
-				chunk.buildRender(engine);
+				c.buildRender(this.chunkRender);
 			}
 		}
 	}
