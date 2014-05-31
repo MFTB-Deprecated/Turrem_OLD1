@@ -1,5 +1,8 @@
 package net.turrem.utils.geo;
 
+/**
+ * An axis-aligned box
+ */
 public class Box
 {
 	public double minX;
@@ -9,6 +12,9 @@ public class Box
 	public double maxY;
 	public double maxZ;
 
+	/**
+	 * Creates a new box
+	 */
 	public static Box getBox(double minX, double minY, double minZ, double maxX, double maxY, double maxZ)
 	{
 		return new Box(minX, minY, minZ, maxX, maxY, maxZ);
@@ -25,6 +31,10 @@ public class Box
 		this.fixVerts();
 	}
 
+	/**
+	 * Changes the bounds of a box
+	 * @return This box resized
+	 */
 	public Box setBoundsThis(double minX, double minY, double minZ, double maxX, double maxY, double maxZ)
 	{
 		this.minX = minX;
@@ -37,16 +47,28 @@ public class Box
 		return this;
 	}
 
+	/**
+	 * Creates a new box with different bounds
+	 * @return A new box
+	 */
 	public Box setBounds(double minX, double minY, double minZ, double maxX, double maxY, double maxZ)
 	{
 		return this.duplicate().setBoundsThis(minX, minY, minZ, maxX, maxY, maxZ);
 	}
 
+	/**
+	 * Duplicates this box
+	 * @return A new box
+	 */
 	public Box duplicate()
 	{
 		return new Box(this.minX, this.minY, this.minZ, this.maxX, this.maxY, this.maxZ);
 	}
 
+	/**
+	 * Increases the size of the box by a certain amount in each direction
+	 * @return This box resized
+	 */
 	public Box expand(float size)
 	{
 		this.maxX += size;
@@ -59,6 +81,10 @@ public class Box
 		return this;
 	}
 
+	/**
+	 * Increases the size of the box by the absolute value of the amounts in the respective directions. Positive values move the upper faces. Negative values move the lower faces.
+	 * @return This box resized
+	 */
 	public Box grow(float x, float y, float z)
 	{
 		if (x > 0)
@@ -88,6 +114,11 @@ public class Box
 		return this;
 	}
 
+	/**
+	 * Increases the size of the box so that the point is inside the box
+	 * @param p The point to include
+	 * @return This box resized
+	 */
 	public Box eat(Point p)
 	{
 		double x = p.xCoord;
@@ -120,36 +151,63 @@ public class Box
 		return this;
 	}
 
+	/**
+	 * Checks to see if a point is within this box.
+	 * @param point The point to check
+	 */
 	public boolean isPointInside(Point point)
 	{
 		return point.xCoord > this.minX && point.xCoord < this.maxX ? (point.yCoord > this.minY && point.yCoord < this.maxY ? point.zCoord > this.minZ && point.zCoord < this.maxZ : false) : false;
 	}
 
+	/**
+	 * Checks to see if a point is within this box, but ignores the X coordinate.
+	 * @param point The point to check
+	 */
 	public boolean isPointInYZ(Point point)
 	{
 		return point == null ? false : point.yCoord >= this.minY && point.yCoord <= this.maxY && point.zCoord >= this.minZ && point.zCoord <= this.maxZ;
 	}
 
+	/**
+	 * Checks to see if a point is within this box, but ignores the Y coordinate.
+	 * @param point The point to check
+	 */
 	public boolean isPointInXZ(Point point)
 	{
 		return point == null ? false : point.xCoord >= this.minX && point.xCoord <= this.maxX && point.zCoord >= this.minZ && point.zCoord <= this.maxZ;
 	}
 
+	/**
+	 * Checks to see if a point is within this box, but ignores the Z coordinate.
+	 * @param point The point to check
+	 */
 	public boolean isPointInXY(Point point)
 	{
 		return point == null ? false : point.xCoord >= this.minX && point.xCoord <= this.maxX && point.yCoord >= this.minY && point.yCoord <= this.maxY;
 	}
 
+	/**
+	 * Tests if a given box intersect this box.
+	 * @param box The box to compare
+	 */
 	public boolean intersectsWith(Box box)
 	{
 		return box.maxX > this.minX && box.minX < this.maxX ? (box.maxY > this.minY && box.minY < this.maxY ? box.maxZ > this.minZ && box.minZ < this.maxZ : false) : false;
 	}
 
+	/**
+	 * Tests if two boxes intersect each other.
+	 */
 	public static boolean intersects(Box box1, Box box2)
 	{
 		return box1.intersectsWith(box2);
 	}
 
+	/**
+	 * Translate this box by a given offset.
+	 * @return This box translated
+	 */
 	public Box moveThis(double x, double y, double z)
 	{
 		this.maxX += x;
@@ -161,11 +219,23 @@ public class Box
 		return this;
 	}
 
+	/**
+	 * Creates a new box translated by a given offset.
+	 * @return A new box
+	 */
 	public Box moveNew(double x, double y, double z)
 	{
 		return this.duplicate().moveThis(x, y, z);
 	}
 
+	/**
+	 * Rotates this box on a vertical line. (Yaw)
+	 * @param drot The amount to rotate the box in increments of 90°.
+	 * @param x The x coordinate of the center of rotation.
+	 * @param y The y coordinate of the center of rotation. Has no effect.
+	 * @param z The z coordinate of the center of rotation.
+	 * @return This box rotated
+	 */
 	public Box yawThis(int drot, double x, double y, double z)
 	{
 		short[] trg = new short[] { 0, 1, 0, -1 };
@@ -194,6 +264,10 @@ public class Box
 		return this;
 	}
 
+	/**
+	 * Ensures that the lower bounds are less than the upper bounds. If not, the two variables are swapped.
+	 * @return This box corrected
+	 */
 	public Box fixVerts()
 	{
 		if (this.maxX < this.minX)
@@ -211,6 +285,9 @@ public class Box
 		return this;
 	}
 
+	/**
+	 * Swaps the lower x bound and upper x bound. Should only be performed if maxX < minX.
+	 */
 	protected void flipX()
 	{
 		double max = this.maxX;
@@ -219,6 +296,9 @@ public class Box
 		this.minX = max;
 	}
 
+	/**
+	 * Swaps the lower y bound and upper y bound. Should only be performed if maxY < minY.
+	 */
 	protected void flipY()
 	{
 		double max = this.maxY;
@@ -227,6 +307,9 @@ public class Box
 		this.minY = max;
 	}
 
+	/**
+	 * Swaps the lower z bound and upper z bound. Should only be performed if maxZ < minZ.
+	 */
 	protected void flipZ()
 	{
 		double max = this.maxZ;
@@ -235,11 +318,22 @@ public class Box
 		this.minZ = max;
 	}
 
+	/**
+	 * Calculates the first point along a line that intersects the surface of this box.
+	 * @param ray The ray/line. Has a starting point, end point, and direction.
+	 * @return The first intersection of the line and the surface of this box. Returns null if there is no intersection.
+	 */
 	public BoxPin calculateIntercept(Ray ray)
 	{
 		return this.calculateIntercept(ray.start, ray.end);
 	}
 
+	/**
+	 * Calculates the first point on a line that intersects the surface of this box.
+	 * @param point1 The starting point of the line
+	 * @param point2 The end point of the line
+	 * @return The first intersection of the line and the surface of this box. Returns null if there is no intersection.
+	 */
 	public BoxPin calculateIntercept(Point point1, Point point2)
 	{
 		Point xdown = Point.getIntermediateWithXValue(point1, point2, this.minX);
@@ -353,16 +447,25 @@ public class Box
 		}
 	}
 
+	/**
+	 * @return The side length of the box along the X axis.
+	 */
 	public double getXLength()
 	{
 		return this.maxX - this.minX;
 	}
 
+	/**
+	 * @return The side length of the box along the Y axis.
+	 */
 	public double getYLength()
 	{
 		return this.maxY - this.minY;
 	}
 
+	/**
+	 * @return The side length of the box along the Z axis.
+	 */
 	public double getZLength()
 	{
 		return this.maxZ - this.minZ;
