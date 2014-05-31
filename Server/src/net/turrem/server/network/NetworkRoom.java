@@ -7,6 +7,9 @@ import java.util.List;
 import net.turrem.server.TurremServer;
 import net.turrem.server.world.ClientPlayer;
 
+/**
+ * The manager for all server-client connections
+ */
 public class NetworkRoom
 {
 	protected TurremServer theTurrem;

@@ -14,6 +14,9 @@ import net.turrem.server.network.server.ServerPacket;
 import net.turrem.server.network.server.ServerPacketKeepAlive;
 import net.turrem.server.world.ClientPlayer;
 
+/**
+ * A server-client connection
+ */
 public class GameConnection
 {
 	public String name;
@@ -56,6 +59,10 @@ public class GameConnection
 		this.writeThread.start();
 	}
 
+	/**
+	 * Add a packet to the send queue.
+	 * @param packet The packet to send to the client
+	 */
 	public void addToSendQueue(ServerPacket packet)
 	{
 		if (this.isRunning)
@@ -98,6 +105,11 @@ public class GameConnection
 		return true;
 	}
 
+	/**
+	 * Causes the given connection to read a single packet from the TCP stream.
+	 * @param connection The client-server connection.
+	 * @return True if a packet was successfully read, false otherwise.
+	 */
 	public static boolean readPacket(GameConnection connection)
 	{
 		return connection.readPacket();
@@ -127,6 +139,11 @@ public class GameConnection
 		return false;
 	}
 
+	/**
+	 * Causes the given connection to write a single packet to the TCP stream.
+	 * @param connection The client-server connection.
+	 * @return True if a packet was successfully written, false otherwise.
+	 */
 	public static boolean writePacket(GameConnection connection)
 	{
 		return connection.writePacket();
@@ -137,6 +154,9 @@ public class GameConnection
 		return isRunning;
 	}
 
+	/**
+	 * Should be called after writing each group of packets.
+	 */
 	public void flushWrite()
 	{
 		if (this.isRunning)
@@ -165,6 +185,10 @@ public class GameConnection
 		}
 	}
 
+	/**
+	 * Causes a number of received packets to be polled from the receive queue and processed by the server.
+	 * @param maxnum How many packets to process this call.
+	 */
 	public void processPackets(int maxnum)
 	{
 		if (this.incoming.isEmpty())
@@ -210,6 +234,11 @@ public class GameConnection
 		}
 	}
 
+	/**
+	 * Ends this client-server connection.
+	 * @param reason A short message describing the reason for the shutdown (ex. "Timeout")
+	 * @param cause Any exceptions associated with the shutdown.
+	 */
 	public void shutdown(String reason, Exception... cause)
 	{
 		System.out.println("Network Shutdown: " + reason);

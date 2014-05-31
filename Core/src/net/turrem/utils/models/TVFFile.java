@@ -4,6 +4,9 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+/**
+ * TVF (Turrem Voxel File)
+ */
 public class TVFFile
 {
 	/**
@@ -35,6 +38,14 @@ public class TVFFile
 	public byte height;
 	public byte length;
 
+	/**
+	 * The precalculated lighting type for this model. Used for ambient occlusion.
+	 * <p>
+	 * <li>0: No lighting included</li>
+	 * <li>1: Per-vertex lighting included</li>
+	 * <li>2: Per-face lighting included</li>
+	 * </p>
+	 */
 	public byte prelit;
 
 	/**
@@ -65,6 +76,9 @@ public class TVFFile
 	 */
 	public TVFDynamicColor[] dynamicColors;
 
+	/**
+	 * A color that can change based on some condition. Not currently implemented.
+	 */
 	public static class TVFDynamicColor
 	{
 		public byte id;
@@ -106,6 +120,13 @@ public class TVFFile
 
 		private final static int[][] vertDir = {new int[] {2, 1, 3, 0}, new int[] {2, 3, 1, 0}, new int[] {2, 3, 1, 0}, new int[] {2, 1, 3, 0}, new int[] {2, 1, 3, 0}, new int[] {2, 3, 1, 0}};
 		
+		/**
+		 * Gets the position of a vertex in this face's vertex array given the relative location of that vertex in the current voxel.
+		 * @param x X offset (0 or 1)
+		 * @param y Y offset (0 or 1)
+		 * @param z Z offset (0 or 1)
+		 * @return The position in this face's vertex array.
+		 */
 		private int getVert(int x, int y, int z)
 		{
 			int d = (this.dir - 1) / 2;
@@ -128,6 +149,13 @@ public class TVFFile
 			return vertDir[this.dir - 1][k];
 		}
 		
+		/**
+		 * Gets the indices in this face's vertex array of every vertex that matches the given parameters.
+		 * @param x X offset (-1 or 1, 0 matches both)
+		 * @param y Y offset (-1 or 1, 0 matches both)
+		 * @param z Z offset (-1 or 1, 0 matches both)
+		 * @return A list of indices in this face's vertex array
+		 */
 		private int[] getVerts(int x, int y, int z)
 		{
 			int dir = (this.dir - 1) / 2;
@@ -152,6 +180,13 @@ public class TVFFile
 			return vrt;
 		}
 		
+		/**
+		 * Multiplies the light values of every vertex that matches the given parameters.
+		 * @param x X offset (-1 or 1, 0 matches both)
+		 * @param y Y offset (-1 or 1, 0 matches both)
+		 * @param z Z offset (-1 or 1, 0 matches both)
+		 * @param value The value to multiply the matching vertices' light levels by.
+		 */
 		public void multiplyLight(int x, int y, int z, float value)
 		{
 			int[] verts = this.getVerts(x, y, z);
@@ -161,6 +196,13 @@ public class TVFFile
 			}
 		}
 		
+		/**
+		 * Adds to the light values of every vertex that matches the given parameters.
+		 * @param x X offset (-1 or 1, 0 matches both)
+		 * @param y Y offset (-1 or 1, 0 matches both)
+		 * @param z Z offset (-1 or 1, 0 matches both)
+		 * @param value The value to add to the matching vertices' light levels.
+		 */
 		public void addLight(int x, int y, int z, float value)
 		{
 			int[] verts = this.getVerts(x, y, z);
@@ -170,6 +212,13 @@ public class TVFFile
 			}
 		}
 		
+		/**
+		 * Sets the light values of every vertex that matches the given parameters.
+		 * @param x X offset (-1 or 1, 0 matches both)
+		 * @param y Y offset (-1 or 1, 0 matches both)
+		 * @param z Z offset (-1 or 1, 0 matches both)
+		 * @param value The value to set the matching vertices' light levels to.
+		 */
 		public void setLight(int x, int y, int z, float value)
 		{
 			int[] verts = this.getVerts(x, y, z);
@@ -186,8 +235,7 @@ public class TVFFile
 	}
 
 	/**
-	 * Construct TVF file from VOX file
-	 * 
+	 * Constructs a new TVF file from the given VOX file.
 	 * @param vox The VOX file
 	 */
 	public TVFFile(VOXFile vox)
@@ -197,6 +245,11 @@ public class TVFFile
 		con.make();
 	}
 
+	/**
+	 * Creates a TVF file using the given faces and colors.
+	 * @param faces The list of faces in the file
+	 * @param colors The list of colors in the file
+	 */
 	public TVFFile(TVFFace[] faces, TVFColor[] colors)
 	{
 		this();

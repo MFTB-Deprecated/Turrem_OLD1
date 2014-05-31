@@ -8,6 +8,9 @@ import net.turrem.server.world.material.Material;
 import net.turrem.utils.nbt.NBTCompound;
 import net.turrem.utils.nbt.NBTList;
 
+/**
+ * A 16x16 region of the world
+ */
 public class Chunk
 {
 	protected ArrayList<Stratum> strata = new ArrayList<Stratum>();
@@ -16,6 +19,9 @@ public class Chunk
 
 	protected short minHeight;
 	protected short maxHeight;
+	/**
+	 * Has this chunk's terrain been changed recently
+	 */
 	private boolean rebuildhmap = false;
 
 	public final int chunkx;
@@ -38,11 +44,19 @@ public class Chunk
 		this.chunky = chunky;
 	}
 
+	/**
+	 * Called when any entity loading this chunk is ticked.
+	 */
 	public void onEntityTick()
 	{
 		this.entitytickcount++;
 	}
 
+	/**
+	 * Determines is this chunk be unloaded.
+	 * @param unloadtime The number calls to this method should the chunk wait before unloading if the chunk does not have a reason to stay loaded.
+	 * @return True if the the chunk should be unloaded
+	 */
 	public boolean tickUnload(int unloadtime)
 	{
 		if (this.entitytickcount == 0)
@@ -62,6 +76,9 @@ public class Chunk
 		return false;
 	}
 
+	/**
+	 * Re-builds the chunk's heightmap and a few other things. Should be called if any change to the terrain in this chunk has been made.
+	 */
 	public void buildHeightMap()
 	{
 		this.rebuildhmap = false;

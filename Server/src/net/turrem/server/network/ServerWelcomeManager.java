@@ -8,6 +8,9 @@ import java.net.Socket;
 import net.turrem.server.Config;
 import net.turrem.server.TurremServer;
 
+/**
+ * Processes any incoming TCP connections
+ */
 public class ServerWelcomeManager extends Thread
 {
 	protected TurremServer theTurrem;

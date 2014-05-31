@@ -7,6 +7,9 @@ import net.turrem.server.world.material.MatStack;
 import net.turrem.server.world.material.Material;
 import net.turrem.utils.nbt.NBTCompound;
 
+/**
+ * A layer of material that makes up the terrain
+ */
 public class Stratum
 {
 	public byte[] depth = new byte[256];
