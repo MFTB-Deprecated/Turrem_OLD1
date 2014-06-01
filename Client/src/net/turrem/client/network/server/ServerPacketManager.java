@@ -32,6 +32,8 @@ public class ServerPacketManager
 				return new ServerPacketMaterialSync(data);
 			case 0x22:
 				return new ServerPacketAddPlayer(data, length);
+			case 0x32:
+				return new ServerPacketPing(data);
 			case 0x90:
 				return new ServerPacketAddEntity(data, length);
 			case 0xFD:

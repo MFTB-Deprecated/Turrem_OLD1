@@ -34,6 +34,8 @@ public class ClientPacketManager
 				return new ClientPacketRequest(user, data, length);
 			case 0x31:
 				return new ClientPacketServerInfoRequest(user);
+			case 0x32:
+				return new ClientPacketPing(user, data);
 			case 0xA0:
 				return new ClientPacketChat(user, data, length);
 			case 0xFD:
