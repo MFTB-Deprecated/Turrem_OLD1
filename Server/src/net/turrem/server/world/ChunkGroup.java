@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import net.turrem.server.entity.Entity;
 import net.turrem.utils.nbt.NBTCompound;
 
 public class ChunkGroup
@@ -79,6 +80,17 @@ public class ChunkGroup
 			e.printStackTrace();
 		}
 		*/
+		int chunkx = this.chunks[k].chunkx;
+		int chunkz = this.chunks[k].chunky;
+		chunkx *= 16;
+		chunkz *= 16;
+		for (Entity ent : this.theWorld.entities)
+		{
+			if (ent.x >= chunkx && ent.x < chunkx + 16 && ent.z >= chunkz && ent.z < chunkz + 16)
+			{
+				ent.unload();
+			}
+		}
 		this.chunks[k] = null;
 	}
 
@@ -113,8 +125,15 @@ public class ChunkGroup
 		}
 		else
 		{
-			return new Chunk(chunkx, chunky, this.theWorld.theWorldGen.generateChunk(chunkx, chunky));
+			return this.generateChunk(chunkx, chunky);
 		}
+	}
+	
+	protected Chunk generateChunk(int chunkx, int chunky)
+	{
+		Chunk chunk = new Chunk(chunkx, chunky, this.theWorld.theWorldGen.generateChunk(chunkx, chunky));
+		chunk.decorate(this.theWorld.theWorldGen, this.theWorld.theTurrem);
+		return chunk;
 	}
 
 	protected boolean saveChunkFile(int k) throws IOException

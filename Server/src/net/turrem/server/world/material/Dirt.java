@@ -12,4 +12,10 @@ public class Dirt extends Material
 	{
 		return 0x704B33;
 	}
+	
+	@Override
+	public boolean canGrowTrees(float prob)
+	{
+		return prob > 0.8F;
+	}
 }

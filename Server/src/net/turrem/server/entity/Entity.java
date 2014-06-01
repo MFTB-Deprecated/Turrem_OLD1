@@ -12,6 +12,7 @@ public abstract class Entity
 	public final long entityIdentifier;
 	
 	protected boolean living = false;
+	public boolean shouldUnload = false;
 	
 	public World theWorld;
 	
@@ -51,6 +52,11 @@ public abstract class Entity
 	public boolean isDead()
 	{
 		return !this.living;
+	}
+	
+	public void unload()
+	{
+		this.shouldUnload = true;
 	}
 	
 	public abstract void onEnter();

@@ -3,6 +3,8 @@ package net.turrem.server.world;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import net.turrem.server.TurremServer;
+import net.turrem.server.world.gen.WorldGen;
 import net.turrem.server.world.material.MatStack;
 import net.turrem.server.world.material.Material;
 import net.turrem.utils.nbt.NBTCompound;
@@ -196,81 +198,6 @@ public class Chunk
 		return st.getMat(x, y, z);
 	}
 
-	public Collection<MatStack> removeMultiTop(int x, int y, int num, boolean drop)
-	{
-		ArrayList<MatStack> mats = new ArrayList<MatStack>();
-		int z = this.getHeight(x, y);
-		if (num < z)
-		{
-			num = z;
-		}
-		int n = num;
-		while (n > 0)
-		{
-			Stratum st = this.getTopStratum(x, y);
-			int k = st.getDepth(x, y);
-			if (n < k)
-			{
-				k = n;
-			}
-			if (drop)
-			{
-				for (int i = 0; i < k; i++)
-				{
-					mats.addAll(st.getMat(x, y, z--));
-				}
-			}
-			n += st.addDepth(x, y, n);
-			this.rebuildhmap = true;
-		}
-		return mats;
-	}
-
-	public Collection<MatStack> removeShapeTop(byte[] grid, boolean drop)
-	{
-		ArrayList<MatStack> mats = new ArrayList<MatStack>();
-		int i = this.strata.size() - 1;
-		byte[] rm = grid.clone();
-		while (i >= 0)
-		{
-			Stratum st = this.strata.get(i);
-			int sum = 0;
-			for (int j = 0; j < 256; j++)
-			{
-				int g = rm[j] & 0xFF;
-				if (g > 0)
-				{
-					if (drop)
-					{
-						int x = j % 16;
-						int y = i / 16;
-						int d = st.getDepth(x, y);
-						int z = this.height[j] - (rm[j] & 0xFF) + (grid[j] & 0xFF);
-						if (g < d)
-						{
-							d = g;
-						}
-						for (int k = 0; k < d; k++)
-						{
-							mats.addAll(st.getMat(x, y, z));
-							z--;
-						}
-					}
-
-					rm[j] = (byte) ((g - st.removeDepth(j, g)) & 0xFF);
-					sum += rm[j] & 0xFF;
-				}
-			}
-			if (sum == 0)
-			{
-				break;
-			}
-			i--;
-		}
-		this.rebuildhmap = true;
-		return mats;
-	}
-
 	public void placeTop(int x, int y, String id)
 	{
 		x &= 0x0F;
@@ -299,6 +226,11 @@ public class Chunk
 	public int getChunkY()
 	{
 		return chunky;
+	}
+	
+	public void decorate(WorldGen gen, TurremServer turrem)
+	{
+		gen.decorateChunk(this, turrem);
 	}
 
 	public Material[] coreTerrain(int x, int depth, int z)

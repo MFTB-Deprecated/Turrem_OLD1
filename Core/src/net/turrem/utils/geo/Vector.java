@@ -95,13 +95,13 @@ public class Vector
 	/**
 	 * Cross Product of A and B
 	 * <p>
-	 * <li>Finds a vector that is 90° to two other vectors</li>
+	 * <li>Finds a vector that is 90� to two other vectors</li>
 	 * <li>Finds a the normal vector of a plane defined by two other vectors</li>
 	 * </p>
 	 * 
 	 * @param a Vector A
 	 * @param b Vector B
-	 * @return A × B
+	 * @return A x B
 	 * @code [ya * zb - za * yb, za * xb - xz * zb, xa * yb - yz * xb]
 	 */
 	public static Vector cross(Vector a, Vector b)

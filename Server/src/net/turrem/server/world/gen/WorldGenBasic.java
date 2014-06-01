@@ -2,6 +2,8 @@ package net.turrem.server.world.gen;
 
 import java.util.ArrayList;
 
+import net.turrem.server.TurremServer;
+import net.turrem.server.world.Chunk;
 import net.turrem.server.world.Stratum;
 
 public class WorldGenBasic extends WorldGen
@@ -118,4 +120,9 @@ public class WorldGenBasic extends WorldGen
 		return strata;
 	}
 
+	@Override
+	public void decorateChunk(Chunk chunk, TurremServer turrem)
+	{
+		turrem.theLoader.getEntityLoader().processChunkDecorates(chunk, turrem.theWorld);
+	}
 }

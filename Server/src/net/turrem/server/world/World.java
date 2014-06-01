@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import net.turrem.server.Realm;
+import net.turrem.server.TurremServer;
 import net.turrem.server.entity.Entity;
 import net.turrem.server.world.gen.WorldGen;
 import net.turrem.server.world.gen.WorldGenBasic;
@@ -18,13 +19,15 @@ public class World
 	public long worldTime = 0;
 	public String saveLoc;
 	public long seed;
+	public TurremServer theTurrem;
 
 	private Chunk lastChunk;
 
 	public WorldGen theWorldGen;
 
-	public World(String save, long seed)
+	public World(String save, long seed, TurremServer turrem)
 	{
+		this.theTurrem = turrem;
 		this.saveLoc = save;
 		this.seed = seed;
 		this.theWorldGen = new WorldGenBasic(this.seed);
@@ -141,7 +144,7 @@ public class World
 			int cxmax;
 			int czmax;
 
-			if (ent.isDead())
+			if (ent.isDead() || ent.shouldUnload)
 			{
 				this.entities.remove(i--);
 			}

@@ -14,6 +14,7 @@ public class GameLoader implements IGameLoad
 {
 	protected TurremServer theServer;
 	protected EntityLoader loaderEntity;
+
 	public ClassLoader theClassLoader;
 
 	public GameLoader(TurremServer server)
@@ -36,6 +37,11 @@ public class GameLoader implements IGameLoad
 		{
 			this.processClass(clss);
 		}
+	}
+	
+	public EntityLoader getEntityLoader()
+	{
+		return loaderEntity;
 	}
 
 	@Override

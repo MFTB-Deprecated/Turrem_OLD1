@@ -12,4 +12,10 @@ public class Grass extends Material
 	{
 		return 0x42772C;
 	}
+	
+	@Override
+	public boolean canGrowTrees(float prob)
+	{
+		return prob > 0.2F;
+	}
 }

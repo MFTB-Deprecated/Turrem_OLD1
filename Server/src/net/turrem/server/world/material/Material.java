@@ -30,4 +30,9 @@ public abstract class Material
 	{
 		return this.num;
 	}
+	
+	public boolean canGrowTrees(float prob)
+	{
+		return false;
+	}
 }
