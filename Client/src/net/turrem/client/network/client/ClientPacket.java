@@ -12,7 +12,15 @@ public abstract class ClientPacket
 		ByteArrayOutputStream data = new ByteArrayOutputStream();
 		this.writePacket(new DataOutputStream(data));
 		stream.writeByte(this.type());
-		stream.writeShort(data.size());
+		if (data.size() <= 0xFFFFFFFF)
+		{
+			stream.writeShort(data.size());
+		}
+		else
+		{
+			stream.writeShort(0xFFFFFFFF);
+			stream.writeInt(data.size());
+		}
 		data.writeTo(stream);
 	}
 	

@@ -12,6 +12,10 @@ public class ClientPacketManager
 	{
 		byte type = (byte) stream.read();
 		int length = (stream.read() << 8) | (stream.read() << 0);
+		if (length == 0xFFFFFFFF)
+		{
+			length = (stream.read() << 24) | (stream.read() << 16) | (stream.read() << 8) | (stream.read() << 0);
+		}
 		byte[] packet = new byte[length];
 		stream.read(packet);
 		DataInput input = new DataInputStream(new ByteArrayInputStream(packet));
