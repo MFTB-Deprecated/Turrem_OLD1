@@ -5,8 +5,13 @@ package net.turrem.server.network.client;
  */
 public class ClientPacketServerInfoRequest extends ClientPacket
 {
-	public ClientPacketServerInfoRequest(String user)
+	private ClientPacketServerInfoRequest(String user, byte type)
 	{
-		super(user);
+		super(user, type);
+	}
+	
+	public static ClientPacketServerInfoRequest create(String user, byte type)
+	{
+		return new ClientPacketServerInfoRequest(user, type);
 	}
 }

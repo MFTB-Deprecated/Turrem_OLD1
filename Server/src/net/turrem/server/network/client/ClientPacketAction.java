@@ -21,9 +21,9 @@ public class ClientPacketAction extends ClientPacket
 	 */
 	public byte[] actionData;
 	
-	public ClientPacketAction(DataInput data, String user, int length) throws IOException
+	private ClientPacketAction(DataInput data, String user, int length, byte type) throws IOException
 	{
-		super(user);
+		super(user, type);
 		length -= 1;
 		this.entities = new int[data.readByte() & 0xFF];
 		for (int i = 0; i < this.entities.length; i++)
@@ -42,5 +42,10 @@ public class ClientPacketAction extends ClientPacket
 		
 		this.actionData = new byte[length];
 		data.readFully(this.actionData);
+	}
+	
+	public static ClientPacketAction create(DataInput data, String user, int length, byte type) throws IOException
+	{
+		return new ClientPacketAction(data, user, length, type);
 	}
 }

@@ -11,11 +11,16 @@ public class ClientPacketPing extends ClientPacket
 	public long readTime;
 	public long clientSendTime;
 	
-	public ClientPacketPing(String user, DataInput data) throws IOException
+	private ClientPacketPing(String user, DataInput data, byte type) throws IOException
 	{
-		super(user);
+		super(user, type);
 		this.readTime = System.nanoTime();
 		this.clientSendTime = data.readLong();
+	}
+	
+	public static ClientPacketPing create(String user, DataInput data, byte type) throws IOException
+	{
+		return new ClientPacketPing(user, data, type);
 	}
 
 	@Override

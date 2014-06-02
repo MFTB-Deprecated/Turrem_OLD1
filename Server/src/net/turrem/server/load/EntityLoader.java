@@ -35,7 +35,7 @@ public class EntityLoader implements IGameLoad
 		if (Modifier.isStatic(mtd.getModifiers()) && mtd.isAnnotationPresent(SubscribeDecorate.class));
 		{
 			Class<?>[] pars = mtd.getParameterTypes();
-			if (pars.length == 3 && Chunk.class.isAssignableFrom(pars[0]) && World.class.isAssignableFrom(pars[1]) && Random.class.isAssignableFrom(pars[2]))
+			if (pars.length == 3 && pars[0].isAssignableFrom(Chunk.class) && pars[1].isAssignableFrom(World.class) && pars[2].isAssignableFrom(Random.class))
 			{
 				this.decorateCalls.add(mtd);
 			}

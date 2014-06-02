@@ -59,4 +59,9 @@ public class ClientPlayer
 			}
 		}
 	}
+	
+	public boolean reviewPacket(ClientPacket packet)
+	{
+		return true;
+	}
 }

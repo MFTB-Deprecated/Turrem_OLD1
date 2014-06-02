@@ -13,12 +13,17 @@ public class ClientPacketChat extends ClientPacket
 	 */
 	public String chat;
 	
-	public ClientPacketChat(String user, DataInput data, int length) throws IOException
+	private ClientPacketChat(String user, DataInput data, int length, byte type) throws IOException
 	{
-		super(user);
+		super(user, type);
 		
 		byte[] stringbytes = new byte[length];
 		data.readFully(stringbytes);
 		this.chat = new String(stringbytes, "UTF-8");
+	}
+	
+	public static ClientPacketChat create(String user, DataInput data, int length, byte type) throws IOException
+	{
+		return new ClientPacketChat(user, data, length, type);
 	}
 }

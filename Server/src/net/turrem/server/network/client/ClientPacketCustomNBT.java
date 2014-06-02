@@ -19,9 +19,9 @@ public class ClientPacketCustomNBT extends ClientPacket
 	 */
 	public NBTCompound data;
 
-	public ClientPacketCustomNBT(String user, DataInput data) throws IOException
+	private ClientPacketCustomNBT(String user, DataInput data, byte type) throws IOException
 	{
-		super(user);
+		super(user, type);
 		
 		int stringlength = data.readByte() & 0xFF;
 		
@@ -30,5 +30,10 @@ public class ClientPacketCustomNBT extends ClientPacket
 		this.customType = new String(stringbytes, "UTF-8");
 		
 		this.data = NBTCompound.readAsRoot(data);
+	}
+	
+	public static ClientPacketCustomNBT create(String user, DataInput data, byte type) throws IOException
+	{
+		return new ClientPacketCustomNBT(user, data, type);
 	}
 }

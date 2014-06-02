@@ -19,9 +19,9 @@ public class ClientPacketRequest extends ClientPacket
 	 */
 	public byte[] requestData;
 	
-	public ClientPacketRequest(String user, DataInput data, int length) throws IOException
+	private ClientPacketRequest(String user, DataInput data, int length, byte type) throws IOException
 	{
-		super(user);
+		super(user, type);
 		
 		length -= 1;
 		int stringlength = data.readByte() & 0xFF;
@@ -33,6 +33,11 @@ public class ClientPacketRequest extends ClientPacket
 		
 		this.requestData = new byte[length];
 		data.readFully(this.requestData);
+	}
+	
+	public static ClientPacketRequest create(String user, DataInput data, int length, byte type) throws IOException
+	{
+		return new ClientPacketRequest(user, data, length, type);
 	}
 	
 	public Request getRequest()

@@ -2,8 +2,13 @@ package net.turrem.server.network.client;
 
 public class ClientPacketKeepAlive extends ClientPacket
 {
-	public ClientPacketKeepAlive(String user)
+	private ClientPacketKeepAlive(String user, byte type)
 	{
-		super(user);
+		super(user, type);
+	}
+	
+	public static ClientPacketKeepAlive create(String user, byte type)
+	{
+		return new ClientPacketKeepAlive(user, type);
 	}
 }

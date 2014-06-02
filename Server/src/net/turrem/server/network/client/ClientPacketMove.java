@@ -25,9 +25,9 @@ public class ClientPacketMove extends ClientPacket
 	 */
 	public int zpos;
 	
-	public ClientPacketMove(DataInput data, String user) throws IOException
+	private ClientPacketMove(DataInput data, String user, byte type) throws IOException
 	{
-		super(user);
+		super(user, type);
 		this.entities = new int[data.readByte() & 0xFF];
 		for (int i = 0; i < this.entities.length; i++)
 		{
@@ -36,5 +36,10 @@ public class ClientPacketMove extends ClientPacket
 		this.xpos = data.readInt();
 		this.ypos = data.readInt();
 		this.zpos = data.readInt();
+	}
+	
+	public static ClientPacketMove create(DataInput data, String user, byte type) throws IOException
+	{
+		return new ClientPacketMove(data, user, type);
 	}
 }
