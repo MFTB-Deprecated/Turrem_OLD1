@@ -15,6 +15,7 @@ import net.turrem.server.load.control.SubscribePacket;
 import net.turrem.server.load.control.SubscribePacketByClass;
 import net.turrem.server.network.client.ClientPacket;
 import net.turrem.server.network.client.ClientPacketManager;
+import net.turrem.utils.JarExplore;
 
 public class GameLoader implements IGameLoad
 {
@@ -33,8 +34,8 @@ public class GameLoader implements IGameLoad
 	public void loadServerJar()
 	{
 		File jar = new File(this.theServer.theGameDir + "/jars/server.jar");
-		LoadedJarExplore explore = LoadedJarExplore.newInstance(jar);
-		ArrayList<Class<?>> classList = explore.loadJarClassFiles();
+		JarExplore explore = JarExplore.newInstance(jar);
+		ArrayList<Class<?>> classList = explore.getClassFiles();
 		for (Class<?> clss : classList)
 		{
 			this.processTurremClass(clss);
@@ -43,7 +44,7 @@ public class GameLoader implements IGameLoad
 
 	public void loadJar(File jar)
 	{
-		JarExplore explore = JarExplore.newInstance(jar, this.theClassLoader);
+		JarLoader explore = JarLoader.newInstance(jar, this.theClassLoader);
 		ArrayList<Class<?>> classList = explore.loadJarClassFiles();
 		this.processClassList(classList);
 	}

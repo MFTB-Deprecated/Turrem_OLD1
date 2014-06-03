@@ -12,8 +12,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import net.turrem.server.load.CallList;
 import net.turrem.server.world.ClientPlayer;
+import net.turrem.utils.CallList;
 
 public class ClientPacketManager
 {

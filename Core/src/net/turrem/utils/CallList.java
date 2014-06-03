@@ -1,4 +1,4 @@
-package net.turrem.server.load;
+package net.turrem.utils;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
