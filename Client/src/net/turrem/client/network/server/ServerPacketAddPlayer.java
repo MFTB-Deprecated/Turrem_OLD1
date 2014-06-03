@@ -9,8 +9,9 @@ public class ServerPacketAddPlayer extends ServerPacket
 	public short teamId;
 	public String playerName;
 	
-	public ServerPacketAddPlayer(DataInput data, int length) throws IOException
+	private ServerPacketAddPlayer(DataInput data, int length, byte type) throws IOException
 	{
+		super(type);
 		this.playerID = data.readShort();
 		length -= 2;
 		
@@ -20,5 +21,10 @@ public class ServerPacketAddPlayer extends ServerPacket
 		byte[] stringbytes = new byte[length];
 		data.readFully(stringbytes);
 		this.playerName = new String(stringbytes, "UTF-8");
+	}
+	
+	public static ServerPacketAddPlayer create(DataInput data, int length, byte type) throws IOException
+	{
+		return new ServerPacketAddPlayer(data, length, type);
 	}
 }

@@ -8,8 +8,9 @@ public class ServerPacketCustom extends ServerPacket
 	public String customType;
 	public byte[] packet;
 	
-	public ServerPacketCustom(DataInput data, int length) throws IOException
+	private ServerPacketCustom(DataInput data, int length, byte type) throws IOException
 	{		
+		super(type);
 		length -= 1;
 		int stringlength = data.readByte() & 0xFF;
 		
@@ -20,5 +21,10 @@ public class ServerPacketCustom extends ServerPacket
 		
 		this.packet = new byte[length];
 		data.readFully(this.packet);
+	}
+	
+	public static ServerPacketCustom create(DataInput data, int length, byte type) throws IOException
+	{
+		return new ServerPacketCustom(data, length, type);
 	}
 }

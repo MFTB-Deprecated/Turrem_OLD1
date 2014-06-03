@@ -10,8 +10,9 @@ public class ServerPacketCustomNBT extends ServerPacket
 	public String customType;
 	public NBTCompound nbt;
 	
-	public ServerPacketCustomNBT(DataInput data, int length) throws IOException
+	private ServerPacketCustomNBT(DataInput data, int length, byte type) throws IOException
 	{		
+		super(type);
 		length -= 1;
 		int stringlength = data.readByte() & 0xFF;
 		
@@ -21,5 +22,10 @@ public class ServerPacketCustomNBT extends ServerPacket
 		this.customType = new String(stringbytes, "UTF-8");
 		
 		this.nbt = NBTCompound.readAsRoot(data);
+	}
+	
+	public static ServerPacketCustomNBT create(DataInput data, int length, byte type) throws IOException
+	{
+		return new ServerPacketCustomNBT(data, length, type);
 	}
 }

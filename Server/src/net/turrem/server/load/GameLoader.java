@@ -16,6 +16,7 @@ import net.turrem.server.load.control.SubscribePacketByClass;
 import net.turrem.server.network.client.ClientPacket;
 import net.turrem.server.network.client.ClientPacketManager;
 import net.turrem.utils.JarExplore;
+import net.turrem.utils.JarLoader;
 
 public class GameLoader implements IGameLoad
 {

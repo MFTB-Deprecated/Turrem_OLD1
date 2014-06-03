@@ -21,8 +21,9 @@ public class ServerPacketTerrain extends ServerPacket
 	public short[] mats;
 	public byte[][] chunk;
 
-	public ServerPacketTerrain(DataInput data) throws IOException
+	private ServerPacketTerrain(DataInput data, byte type) throws IOException
 	{
+		super(type);
 		this.chunkx = data.readInt();
 		this.chunkz = data.readInt();
 		this.voff = data.readShort();
@@ -43,6 +44,11 @@ public class ServerPacketTerrain extends ServerPacket
 			data.readFully(col);
 			this.chunk[i] = col;
 		}
+	}
+	
+	public static ServerPacketTerrain create(DataInput data, byte type) throws IOException
+	{
+		return new ServerPacketTerrain(data, type);
 	}
 
 	public Chunk buildChunk()

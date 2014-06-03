@@ -22,6 +22,60 @@ public class ClientPacketManager
 	private static CallList[] packetProcessCalls;
 	private static CallList[] packetReviewCalls;
 
+	public static ClientPacket readPacket(byte packetType, int length, DataInput data, String user) throws IOException
+	{
+		switch (packetType & 0xFF)
+		{
+			case 0x10:
+				return ClientPacketAction.create(data, user, length, packetType);
+			case 0x11:
+				return ClientPacketMove.create(data, user, packetType);
+			case 0x30:
+				return ClientPacketRequest.create(user, data, length, packetType);
+			case 0x31:
+				return ClientPacketServerInfoRequest.create(user, packetType);
+			case 0x32:
+				return ClientPacketPing.create(user, data, packetType);
+			case 0xA0:
+				return ClientPacketChat.create(user, data, length, packetType);
+			case 0xFD:
+				return ClientPacketKeepAlive.create(user, packetType);
+			case 0xFE:
+				return ClientPacketCustomNBT.create(user, data, packetType);
+			case 0xFF:
+				return ClientPacketCustom.create(user, data, length, packetType);
+			default:
+				return null;
+		}
+	}
+	
+	public static Class<? extends ClientPacket> getPacket(byte packetType)
+	{
+		switch (packetType & 0xFF)
+		{
+			case 0x10:
+				return ClientPacketAction.class;
+			case 0x11:
+				return ClientPacketMove.class;
+			case 0x30:
+				return ClientPacketRequest.class;
+			case 0x31:
+				return ClientPacketServerInfoRequest.class;
+			case 0x32:
+				return ClientPacketPing.class;
+			case 0xA0:
+				return ClientPacketChat.class;
+			case 0xFD:
+				return ClientPacketKeepAlive.class;
+			case 0xFE:
+				return ClientPacketCustomNBT.class;
+			case 0xFF:
+				return ClientPacketCustom.class;
+			default:
+				return null;
+		}
+	}
+	
 	public static boolean addProcessCall(Method call, byte type)
 	{
 		if (getPacket(type) == null)
@@ -122,9 +176,13 @@ public class ClientPacketManager
 			{
 				mtd.invoke(null, pak, player);
 			}
-			catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
+			catch (IllegalAccessException | IllegalArgumentException e)
 			{
 				
+			}
+			catch (InvocationTargetException e)
+			{
+				e.getCause().printStackTrace();
 			}
 		}
 	}
@@ -141,60 +199,6 @@ public class ClientPacketManager
 		stream.read(packet);
 		DataInput input = new DataInputStream(new ByteArrayInputStream(packet));
 		return readPacket(type, length, input, user);
-	}
-	
-	public static ClientPacket readPacket(byte packetType, int length, DataInput data, String user) throws IOException
-	{
-		switch (packetType & 0xFF)
-		{
-			case 0x10:
-				return ClientPacketAction.create(data, user, length, packetType);
-			case 0x11:
-				return ClientPacketMove.create(data, user, packetType);
-			case 0x30:
-				return ClientPacketRequest.create(user, data, length, packetType);
-			case 0x31:
-				return ClientPacketServerInfoRequest.create(user, packetType);
-			case 0x32:
-				return ClientPacketPing.create(user, data, packetType);
-			case 0xA0:
-				return ClientPacketChat.create(user, data, length, packetType);
-			case 0xFD:
-				return ClientPacketKeepAlive.create(user, packetType);
-			case 0xFE:
-				return ClientPacketCustomNBT.create(user, data, packetType);
-			case 0xFF:
-				return ClientPacketCustom.create(user, data, length, packetType);
-			default:
-				return null;
-		}
-	}
-	
-	public static Class<? extends ClientPacket> getPacket(byte packetType)
-	{
-		switch (packetType & 0xFF)
-		{
-			case 0x10:
-				return ClientPacketAction.class;
-			case 0x11:
-				return ClientPacketMove.class;
-			case 0x30:
-				return ClientPacketRequest.class;
-			case 0x31:
-				return ClientPacketServerInfoRequest.class;
-			case 0x32:
-				return ClientPacketPing.class;
-			case 0xA0:
-				return ClientPacketChat.class;
-			case 0xFD:
-				return ClientPacketKeepAlive.class;
-			case 0xFE:
-				return ClientPacketCustomNBT.class;
-			case 0xFF:
-				return ClientPacketCustom.class;
-			default:
-				return null;
-		}
 	}
 	
 	static

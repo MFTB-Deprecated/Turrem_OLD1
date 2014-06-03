@@ -9,10 +9,16 @@ public class ServerPacketPing extends ServerPacket
 	public int writeDelay;
 	public int ping;
 	
-	public ServerPacketPing(DataInput data) throws IOException
+	private ServerPacketPing(DataInput data, byte type) throws IOException
 	{
+		super(type);
 		this.processDelay = data.readInt();
 		this.writeDelay = data.readInt();
 		this.ping = (int) (System.nanoTime() - data.readLong());
+	}
+	
+	public static ServerPacketPing create(DataInput data, byte type) throws IOException
+	{
+		return new ServerPacketPing(data, type);
 	}
 }

@@ -5,9 +5,75 @@ import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.Iterator;
+import java.util.Map;
+
+import net.turrem.client.game.world.ClientWorld;
+import net.turrem.utils.CallList;
 
 public class ServerPacketManager
 {
+	private static Map<Class<? extends ServerPacket>, Byte> packetClassMap;
+	
+	private static CallList[] packetProcessCalls;
+	
+	public static ServerPacket readPacket(byte packetType, int length, DataInput data) throws IOException
+	{
+		switch (packetType & 0xFF)
+		{
+			case 0x20:
+				return ServerPacketTerrain.create(data, packetType);
+			case 0x21:
+				return ServerPacketMaterialSync.create(data, packetType);
+			case 0x22:
+				return ServerPacketAddPlayer.create(data, length, packetType);
+			case 0x32:
+				return ServerPacketPing.create(data, packetType);
+			case 0x90:
+				return ServerPacketAddEntity.create(data, length, packetType);
+			case 0xA0:
+				return ServerPacketChat.create(data, length, packetType);
+			case 0xFD:
+				return ServerPacketKeepAlive.create(packetType);
+			case 0xFE:
+				return ServerPacketCustomNBT.create(data, length, packetType);
+			case 0xFF:
+				return ServerPacketCustom.create(data, length, packetType);
+			default:
+				return null;
+		}
+	}
+	
+	public static Class<? extends ServerPacket> getPacket(byte packetType)
+	{
+		switch (packetType & 0xFF)
+		{
+			case 0x20:
+				return ServerPacketTerrain.class;
+			case 0x21:
+				return ServerPacketMaterialSync.class;
+			case 0x22:
+				return ServerPacketAddPlayer.class;
+			case 0x32:
+				return ServerPacketPing.class;
+			case 0x90:
+				return ServerPacketAddEntity.class;
+			case 0xA0:
+				return ServerPacketChat.class;
+			case 0xFD:
+				return ServerPacketKeepAlive.class;
+			case 0xFE:
+				return ServerPacketCustomNBT.class;
+			case 0xFF:
+				return ServerPacketCustom.class;
+			default:
+				return null;
+		}
+	}
+	
 	public static ServerPacket readSinglePacket(InputStream stream) throws IOException
 	{
 		byte type = (byte) stream.read();
@@ -22,30 +88,57 @@ public class ServerPacketManager
 		return readPacket(type, length, input);
 	}
 	
-	public static ServerPacket readPacket(byte packetType, int length, DataInput data) throws IOException
+	public static boolean addProcessCall(Method call, byte type)
 	{
-		switch (packetType & 0xFF)
+		if (getPacket(type) == null)
 		{
-			case 0x20:
-				return new ServerPacketTerrain(data);
-			case 0x21:
-				return new ServerPacketMaterialSync(data);
-			case 0x22:
-				return new ServerPacketAddPlayer(data, length);
-			case 0x32:
-				return new ServerPacketPing(data);
-			case 0x90:
-				return new ServerPacketAddEntity(data, length);
-			case 0xA0:
-				return new ServerPacketChat(data, length);
-			case 0xFD:
-				return new ServerPacketKeepAlive();
-			case 0xFE:
-				return new ServerPacketCustomNBT(data, length);
-			case 0xFF:
-				return new ServerPacketCustom(data, length);
-			default:
-				return null;
+			return false;
+		}
+		Class<?>[] pars = call.getParameterTypes();
+		if (!Modifier.isStatic(call.getModifiers()))
+		{
+			return false;
+		}
+		if (pars.length == 2)
+		{
+			if (pars[0].isAssignableFrom(ServerPacket.class) && pars[1].isAssignableFrom(ClientWorld.class))
+			{
+				packetProcessCalls[type & 0xFF].addCall(call);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static boolean addProcessCall(Method call, Class<? extends ServerPacket> type)
+	{
+		Byte typeByte = packetClassMap.get(type);
+		if (typeByte != null)
+		{
+			return addProcessCall(call, typeByte);
+		}
+		return false;
+	}
+	
+	public static void processPacket(ServerPacket pak, ClientWorld world)
+	{
+		CallList list = packetProcessCalls[pak.getPacketType() & 0xFF];
+		Iterator<Method> mtds = list.getCalls();
+		while (mtds.hasNext())
+		{
+			Method mtd = mtds.next();
+			try
+			{
+				mtd.invoke(null, pak, world);
+			}
+			catch (IllegalAccessException | IllegalArgumentException e)
+			{
+				
+			}
+			catch (InvocationTargetException e)
+			{
+				e.getCause().printStackTrace();
+			}
 		}
 	}
 }

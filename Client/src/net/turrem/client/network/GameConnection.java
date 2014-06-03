@@ -185,7 +185,7 @@ public class GameConnection
 			ServerPacket pak = this.incoming.poll();
 			if (pak != null)
 			{
-				this.theWorld.processPacket(pak);
+				pak.processPacket(this.theWorld);
 			}
 			else
 			{

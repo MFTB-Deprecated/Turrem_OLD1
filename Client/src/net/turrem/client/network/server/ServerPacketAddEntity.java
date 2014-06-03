@@ -18,8 +18,9 @@ public class ServerPacketAddEntity extends ServerPacket
 	public float z;
 	public byte[] extra;
 
-	public ServerPacketAddEntity(DataInput data, int length) throws IOException
+	private ServerPacketAddEntity(DataInput data, int length, byte type) throws IOException
 	{	
+		super(type);
 		length -= 4;
 		this.entityId = data.readInt();
 		
@@ -42,6 +43,10 @@ public class ServerPacketAddEntity extends ServerPacket
 		data.readFully(this.extra);
 	}
 	
+	public static ServerPacketAddEntity create(DataInput data, int length, byte type) throws IOException
+	{	
+		return new ServerPacketAddEntity(data, length, type);
+	}
 
 	public ClientEntity makeEntity(ClientWorld world)
 	{
