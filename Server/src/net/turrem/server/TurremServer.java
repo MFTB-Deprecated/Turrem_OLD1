@@ -48,6 +48,7 @@ public class TurremServer
 	public void onRun()
 	{
 		this.theLoader = new GameLoader(this);
+		this.theLoader.loadServerJar();
 		this.theWorld = new World(this.theSaveDir, System.currentTimeMillis(), this);
 		File entityjar = new File(this.theGameDir + "/jars/entity.game.jar");
 		this.theLoader.loadJar(entityjar);

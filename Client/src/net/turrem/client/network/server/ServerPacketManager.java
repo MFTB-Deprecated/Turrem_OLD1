@@ -36,6 +36,8 @@ public class ServerPacketManager
 				return new ServerPacketPing(data);
 			case 0x90:
 				return new ServerPacketAddEntity(data, length);
+			case 0xA0:
+				return new ServerPacketChat(data, length);
 			case 0xFD:
 				return new ServerPacketKeepAlive();
 			case 0xFE:

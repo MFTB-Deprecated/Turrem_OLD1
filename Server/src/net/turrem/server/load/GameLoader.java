@@ -3,12 +3,18 @@ package net.turrem.server.load;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 
 import net.turrem.server.TurremServer;
 import net.turrem.server.load.control.GameComponent;
 import net.turrem.server.load.control.GameEntity;
+import net.turrem.server.load.control.GameTurremEntity;
 import net.turrem.server.load.control.SubscribeLoad;
+import net.turrem.server.load.control.SubscribePacket;
+import net.turrem.server.load.control.SubscribePacketByClass;
+import net.turrem.server.network.client.ClientPacket;
+import net.turrem.server.network.client.ClientPacketManager;
 
 public class GameLoader implements IGameLoad
 {
@@ -24,11 +30,34 @@ public class GameLoader implements IGameLoad
 		this.loaderEntity = new EntityLoader(this);
 	}
 
+	public void loadServerJar()
+	{
+		File jar = new File(this.theServer.theGameDir + "/jars/server.jar");
+		LoadedJarExplore explore = LoadedJarExplore.newInstance(jar);
+		ArrayList<Class<?>> classList = explore.loadJarClassFiles();
+		for (Class<?> clss : classList)
+		{
+			this.processTurremClass(clss);
+		}
+	}
+
 	public void loadJar(File jar)
 	{
 		JarExplore explore = JarExplore.newInstance(jar, this.theClassLoader);
 		ArrayList<Class<?>> classList = explore.loadJarClassFiles();
 		this.processClassList(classList);
+	}
+
+	private void processTurremClass(Class<?> clss)
+	{
+		for (Method mtd : clss.getMethods())
+		{
+			this.processMethod(mtd, clss);
+		}
+		if (clss.isAnnotationPresent(GameEntity.class) || clss.isAnnotationPresent(GameTurremEntity.class))
+		{
+			this.loaderEntity.processClass(clss);
+		}
 	}
 
 	private void processClassList(ArrayList<Class<?>> classList)
@@ -38,7 +67,7 @@ public class GameLoader implements IGameLoad
 			this.processClass(clss);
 		}
 	}
-	
+
 	public EntityLoader getEntityLoader()
 	{
 		return loaderEntity;
@@ -95,6 +124,35 @@ public class GameLoader implements IGameLoad
 			catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
 			{
 				System.out.println("Warning: " + clss.getName() + "." + mtd.getName() + "(...) was not called correctly!");
+			}
+		}
+		if (Modifier.isStatic(mtd.getModifiers()))
+		{
+			if (mtd.isAnnotationPresent(SubscribePacket.class))
+			{
+				SubscribePacket sub = mtd.getAnnotation(SubscribePacket.class);
+				byte type = sub.type();
+				if (sub.review())
+				{
+					ClientPacketManager.addReviewCall(mtd, type);
+				}
+				else
+				{
+					ClientPacketManager.addProcessCall(mtd, type);
+				}
+			}
+			if (mtd.isAnnotationPresent(SubscribePacketByClass.class))
+			{
+				SubscribePacketByClass sub = mtd.getAnnotation(SubscribePacketByClass.class);
+				Class<? extends ClientPacket> type = sub.typeClass();
+				if (sub.review())
+				{
+					ClientPacketManager.addReviewCall(mtd, type);
+				}
+				else
+				{
+					ClientPacketManager.addProcessCall(mtd, type);
+				}
 			}
 		}
 	}

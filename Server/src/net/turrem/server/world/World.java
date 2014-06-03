@@ -7,6 +7,10 @@ import java.util.HashMap;
 import net.turrem.server.Realm;
 import net.turrem.server.TurremServer;
 import net.turrem.server.entity.Entity;
+import net.turrem.server.load.control.SubscribePacket;
+import net.turrem.server.network.client.ClientPacket;
+import net.turrem.server.network.client.ClientPacketChat;
+import net.turrem.server.network.server.ServerPacketChat;
 import net.turrem.server.world.gen.WorldGen;
 import net.turrem.server.world.gen.WorldGenBasic;
 import net.turrem.server.world.material.Material;
@@ -304,5 +308,22 @@ public class World
 		}
 
 		return -diff;
+	}
+	
+	@SubscribePacket(type = (byte) 0xA0)
+	public static void processChat(ClientPacket pak, ClientPlayer player)
+	{
+		ClientPacketChat chat = (ClientPacketChat) pak;
+		ServerPacketChat out = new ServerPacketChat();
+		out.chat = chat.chat;
+		out.from = chat.user;
+		out.type = ServerPacketChat.ChatType.PLAYER;
+		for (Realm rlm : player.theWorld.realms.values())
+		{
+			if (rlm.getClient() != null)
+			{
+				rlm.getClient().theConnection.addToSendQueue(out);
+			}
+		}
 	}
 }

@@ -15,7 +15,7 @@ public class EntityLoader implements IGameLoad
 {
 	protected List<Method> decorateCalls = new ArrayList<Method>();
 	protected GameLoader theLoader;
-	
+
 	public EntityLoader(GameLoader loader)
 	{
 		this.theLoader = loader;
@@ -32,16 +32,19 @@ public class EntityLoader implements IGameLoad
 
 	private void processMethod(Method mtd, Class<?> clss)
 	{
-		if (Modifier.isStatic(mtd.getModifiers()) && mtd.isAnnotationPresent(SubscribeDecorate.class));
+		if (Modifier.isStatic(mtd.getModifiers()))
 		{
 			Class<?>[] pars = mtd.getParameterTypes();
-			if (pars.length == 3 && pars[0].isAssignableFrom(Chunk.class) && pars[1].isAssignableFrom(World.class) && pars[2].isAssignableFrom(Random.class))
+			if (mtd.isAnnotationPresent(SubscribeDecorate.class))
 			{
-				this.decorateCalls.add(mtd);
+				if (pars.length == 3 && pars[0].isAssignableFrom(Chunk.class) && pars[1].isAssignableFrom(World.class) && pars[2].isAssignableFrom(Random.class))
+				{
+					this.decorateCalls.add(mtd);
+				}
 			}
 		}
 	}
-	
+
 	public void processChunkDecorates(Chunk chunk, World world)
 	{
 		long seed = this.posSeed(chunk.chunkx, chunk.chunky, world.seed);
@@ -58,7 +61,7 @@ public class EntityLoader implements IGameLoad
 			}
 		}
 	}
-	
+
 	private long posSeed(long x, long y, long seed)
 	{
 		seed *= seed * 6364136223846793005L + 1442695040888963407L;
