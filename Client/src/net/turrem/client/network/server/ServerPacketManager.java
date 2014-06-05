@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -78,7 +79,7 @@ public class ServerPacketManager
 	{
 		byte type = (byte) stream.read();
 		int length = (stream.read() << 8) | (stream.read() << 0);
-		if (length == 0xFFFFFFFF)
+		if (length == 0xFFFF)
 		{
 			length = (stream.read() << 24) | (stream.read() << 16) | (stream.read() << 8) | (stream.read() << 0);
 		}
@@ -139,6 +140,25 @@ public class ServerPacketManager
 			{
 				e.getCause().printStackTrace();
 			}
+		}
+	}
+	
+	static
+	{
+		packetClassMap = new HashMap<Class<? extends ServerPacket>, Byte>();
+		for (int i = 0; i <= 0xFF; i++)
+		{
+			Class<? extends ServerPacket> pak = getPacket((byte) i);
+			if (pak != null)
+			{
+				packetClassMap.put(pak, (byte) i);
+			}
+		}
+		
+		packetProcessCalls = new CallList[256];
+		for (int i = 0; i < packetProcessCalls.length; i++)
+		{
+			packetProcessCalls[i] = new CallList();
 		}
 	}
 }

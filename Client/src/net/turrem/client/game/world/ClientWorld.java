@@ -47,20 +47,17 @@ public class ClientWorld
 		Point foc = this.theGame.getFace().getFocus();
 		int px = (int) foc.xCoord;
 		int pz = (int) foc.zCoord;
-		int dist = Config.chunkRenderDistance * Config.chunkRenderDistance;
-		Chunk[] set = this.chunks.getArray();
-		for (Chunk chunk : set)
+		int mincx = (px >> 4) - Config.chunkCheckRenderDistance;
+		int mincz = (pz >> 4) - Config.chunkCheckRenderDistance;
+		int maxcx = (px >> 4) + Config.chunkCheckRenderDistance;
+		int maxcz = (pz >> 4) + Config.chunkCheckRenderDistance;
+		ChunkGroup[] aro = this.chunks.getChunksAround(px >> 4, pz >> 4);
+		for (int i = 0; i < 4; i++)
 		{
-			if (chunk != null)
+			ChunkGroup cg = aro[i];
+			if (cg != null)
 			{
-				int x = chunk.chunkx * 16 + 8;
-				int z = chunk.chunkz * 16 + 8;
-				x -= px;
-				z -= pz;
-				if (x * x + z * z < dist)
-				{
-					chunk.render();
-				}
+				cg.renderChunks(mincx, mincz, maxcx, maxcz, px, pz, this);
 			}
 		}
 		this.renderEntities();
@@ -70,6 +67,19 @@ public class ClientWorld
 		if (!this.theConnection.isRunning())
 		{
 			this.theGame.stopGame();
+		}
+	}
+
+	public void renderChunk(Chunk chunk, int px, int pz)
+	{
+		int dist = Config.chunkRenderDistance * Config.chunkRenderDistance;
+		int x = chunk.chunkx * 16 + 8;
+		int z = chunk.chunkz * 16 + 8;
+		x -= px;
+		z -= pz;
+		if (x * x + z * z < dist)
+		{
+			chunk.render();
 		}
 	}
 
@@ -262,11 +272,8 @@ public class ClientWorld
 		{
 			ServerPacketTerrain terr = (ServerPacketTerrain) pack;
 			Chunk c = terr.buildChunk();
-			Point face = this.theGame.getFace().getLocation();
-			if (this.chunks.setChunk(c, (int) face.xCoord, (int) face.zCoord))
-			{
-				c.buildRender(this.chunkRender);
-			}
+			this.chunks.setChunk(c);
+			c.buildRender(this.chunkRender);
 		}
 	}
 }

@@ -17,9 +17,9 @@ import net.turrem.client.network.server.ServerPacketManager;
 public class GameConnection
 {
 	public static int serverLimitPerTick = 1000;
-	
+
 	protected ClientWorld theWorld;
-	
+
 	public Socket network;
 
 	public Queue<ClientPacket> outgoing;
@@ -31,12 +31,12 @@ public class GameConnection
 	private boolean isRunning = false;
 
 	private int outTimer = 0;
-	
+
 	private Thread readThread;
 	private Thread writeThread;
-	
+
 	private int currentWriteCount = 0;
-	
+
 	public GameConnection(Socket network, ClientWorld world) throws IOException
 	{
 		this.theWorld = world;
@@ -47,13 +47,13 @@ public class GameConnection
 
 		this.input = new DataInputStream(this.network.getInputStream());
 		this.output = new DataOutputStream(this.network.getOutputStream());
-		
+
 		this.readThread = new ConnectionReaderThread(this);
 		this.writeThread = new ConnectionWriterThread(this);
 		this.readThread.start();
 		this.writeThread.start();
 	}
-	
+
 	public void addToSendQueue(ClientPacket packet)
 	{
 		if (this.isRunning)
@@ -65,7 +65,7 @@ public class GameConnection
 			}
 		}
 	}
-	
+
 	public int sendQueueSize()
 	{
 		return this.outgoing.size();
@@ -75,6 +75,7 @@ public class GameConnection
 	{
 		return this.incoming.size();
 	}
+
 	private boolean readPacket()
 	{
 		if (!this.isRunning)
@@ -91,7 +92,14 @@ public class GameConnection
 			this.shutdown("IOException during read", e);
 			return false;
 		}
-		this.incoming.add(pak);
+		if (pak != null)
+		{
+			this.incoming.add(pak);
+		}
+		else
+		{
+			System.err.println("Warning! Null Packet");
+		}
 		return true;
 	}
 

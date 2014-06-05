@@ -191,7 +191,7 @@ public class ClientPacketManager
 	{
 		byte type = (byte) stream.read();
 		int length = (stream.read() << 8) | (stream.read() << 0);
-		if (length == 0xFFFFFFFF)
+		if (length == 0xFFFF)
 		{
 			length = (stream.read() << 24) | (stream.read() << 16) | (stream.read() << 8) | (stream.read() << 0);
 		}

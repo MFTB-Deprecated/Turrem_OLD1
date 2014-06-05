@@ -101,7 +101,14 @@ public class GameConnection
 			this.shutdown("IOException during read", e);
 			return false;
 		}
-		this.incoming.add(pak);
+		if (pak != null)
+		{
+			this.incoming.add(pak);
+		}
+		else
+		{
+			System.err.println("Warning! Null Packet");
+		}
 		return true;
 	}
 
