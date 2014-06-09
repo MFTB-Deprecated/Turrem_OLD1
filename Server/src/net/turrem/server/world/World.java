@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import net.turrem.server.Config;
 import net.turrem.server.Realm;
 import net.turrem.server.TurremServer;
 import net.turrem.server.entity.Entity;
@@ -18,7 +19,7 @@ import net.turrem.server.world.material.Material;
 public class World
 {
 	public ArrayList<Entity> entities = new ArrayList<Entity>();
-	public HashMap<Integer, ChunkGroup> chunks = new HashMap<Integer, ChunkGroup>();
+	public ChunkStorage storage = new ChunkStorage(Config.chunkStorageWidth, this);
 	public HashMap<String, Realm> realms = new HashMap<String, Realm>();
 	public long worldTime = 0;
 	public String saveLoc;
@@ -61,16 +62,7 @@ public class World
 	{
 		this.worldTime++;
 		this.updateEntities();
-		int i = 0;
-		for (ChunkGroup g : this.chunks.values())
-		{
-			g.onTick();
-			i++;
-			if ((i + this.worldTime) % 10 == 0)
-			{
-				g.tickUnload();
-			}
-		}
+		this.storage.tick(this.worldTime);
 	}
 
 	public BufferedImage testTerrainMap()
@@ -125,12 +117,7 @@ public class World
 	
 	public void unloadAll()
 	{
-		for (ChunkGroup g : this.chunks.values())
-		{
-			g.tickUnload();
-		}
-		this.chunks.clear();
-		this.entities.clear();
+		this.storage.clear();
 	}
 
 	public void updateEntities()
@@ -162,39 +149,16 @@ public class World
 					{
 						x = (int) ent.x;
 						z = (int) ent.z;
-						ChunkGroup g = this.groupAt(x, z);
-						cx = (x >> 4) & 0x3F;
-						cz = (z >> 4) & 0x3F;
+						cx = x >> 4;
+						cz = z >> 4;
 						cxmin = cx - r;
-						if (cxmin < 0)
-						{
-							cxmin = 0;
-						}
 						czmin = cz - r;
-						if (czmin < 0)
-						{
-							czmin = 0;
-						}
 						cxmax = cx + r;
-						if (cxmax > 63)
-						{
-							cxmax = 63;
-						}
 						czmax = cz + r;
-						if (czmax > 63)
+						ChunkGroup[] groups = this.storage.getChunksAround(cx, cz);
+						for (ChunkGroup g : groups)
 						{
-							czmax = 63;
-						}
-						for (int ci = cxmin; ci < cxmax; ci++)
-						{
-							for (int cj = czmin; cj < czmax; cj++)
-							{
-								Chunk c = g.doGetChunk(ci, cj);
-								if (c != null)
-								{
-									c.onEntityTick();
-								}
-							}
+							g.entityChunkTick(cxmin, czmin, cxmax, czmax, cx, cz);
 						}
 					}
 					else if (r == 1)
@@ -216,7 +180,7 @@ public class World
 	{
 		int chunkx = x >> 4;
 		int chunky = z >> 4;
-		if (this.lastChunk != null && this.lastChunk.chunkx == chunkx && this.lastChunk.chunky == chunky)
+		if (this.lastChunk != null && this.lastChunk.chunkx == chunkx && this.lastChunk.chunkz == chunky)
 		{
 			return this.lastChunk.getHeight(x, z);
 		}
@@ -225,52 +189,14 @@ public class World
 		return c.getHeight(x, z);
 	}
 
-	public ChunkGroup groupAt(int x, int y)
+	public Chunk chunkAt(int x, int z)
 	{
-		int i = x >> 10;
-		int j = y >> 10;
-		int k = i | (j << 16);
-		ChunkGroup c = this.chunks.get(k);
-		if (c == null)
-		{
-			c = new ChunkGroup(i, j, this);
-			this.chunks.put(k, c);
-		}
-		return c;
+		return this.storage.getChunk(x >> 4, z >> 4);
 	}
 
-	public Chunk chunkAt(int x, int y)
+	public Chunk getChunk(int x, int z)
 	{
-		ChunkGroup g = this.groupAt(x, y);
-		if (g != null)
-		{
-			return g.getChunk(x >> 4, y >> 4);
-		}
-		return null;
-	}
-
-	public ChunkGroup getGroup(int x, int y)
-	{
-		int i = x >> 6;
-		int j = y >> 6;
-		int k = i | (j << 16);
-		ChunkGroup c = this.chunks.get(k);
-		if (c == null)
-		{
-			c = new ChunkGroup(i, j, this);
-			this.chunks.put(k, c);
-		}
-		return c;
-	}
-
-	public Chunk getChunk(int x, int y)
-	{
-		ChunkGroup g = this.getGroup(x, y);
-		if (g != null)
-		{
-			return g.getChunk(x, y);
-		}
-		return null;
+		return this.storage.getChunk(x, z);
 	}
 
 	public int getSideDrop(int x, int z)

@@ -27,7 +27,7 @@ public class Chunk
 	private boolean rebuildhmap = false;
 
 	public final int chunkx;
-	public final int chunky;
+	public final int chunkz;
 
 	protected int entitytickcount = 0;
 	protected int noenttimer = 0;
@@ -35,7 +35,7 @@ public class Chunk
 	public Chunk(int chunkx, int chunky, ArrayList<Stratum> strata)
 	{
 		this.chunkx = chunkx;
-		this.chunky = chunky;
+		this.chunkz = chunky;
 		this.strata = strata;
 		this.buildHeightMap();
 	}
@@ -43,7 +43,7 @@ public class Chunk
 	public Chunk(int chunkx, int chunky)
 	{
 		this.chunkx = chunkx;
-		this.chunky = chunky;
+		this.chunkz = chunky;
 	}
 
 	/**
@@ -225,7 +225,7 @@ public class Chunk
 
 	public int getChunkY()
 	{
-		return chunky;
+		return chunkz;
 	}
 	
 	public void decorate(WorldGen gen, TurremServer turrem)
@@ -269,7 +269,7 @@ public class Chunk
 			list.appendTag(s.writeToNBT());
 		}
 		nbt.setInt("chunkx", this.chunkx);
-		nbt.setInt("chunky", this.chunky);
+		nbt.setInt("chunky", this.chunkz);
 		nbt.setList("strata", list);
 		return nbt;
 	}

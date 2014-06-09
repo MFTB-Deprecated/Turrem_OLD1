@@ -20,7 +20,7 @@ public class ServerPacketTerrain extends ServerPacket
 	public ServerPacketTerrain(Chunk ch, World world)
 	{
 		this.chunkx = ch.chunkx;
-		this.chunkz = ch.chunky;
+		this.chunkz = ch.chunkz;
 		
 		this.create(ch, world);
 	}

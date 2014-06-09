@@ -47,7 +47,7 @@ public class EntityLoader implements IGameLoad
 
 	public void processChunkDecorates(Chunk chunk, World world)
 	{
-		long seed = this.posSeed(chunk.chunkx, chunk.chunky, world.seed);
+		long seed = this.posSeed(chunk.chunkx, chunk.chunkz, world.seed);
 		for (Method mtd : this.decorateCalls)
 		{
 			long seedoff = mtd.getAnnotation(SubscribeDecorate.class).seed();

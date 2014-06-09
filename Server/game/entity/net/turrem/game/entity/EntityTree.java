@@ -36,7 +36,7 @@ public class EntityTree extends EntityWorldDec
 			{
 				EntityTree tree = new EntityTree();
 				tree.x = chunk.chunkx * 16 + x + 0.5D;
-				tree.z = chunk.chunky * 16 + z + 0.5D;
+				tree.z = chunk.chunkz * 16 + z + 0.5D;
 				tree.y = chunk.getHeight(x, z);
 				world.addEntity(tree);
 			}

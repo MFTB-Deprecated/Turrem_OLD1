@@ -8,4 +8,6 @@ public class Config
 	public static int connectionOutQueueOverflow = 100000;
 	public static int connectionWriteSleep = 2;
 	public static int connectionReadSleep = 2;
+	public static int chunkStorageWidth = 16;
+	public static int chunkUnloadTickMod = 10;
 }

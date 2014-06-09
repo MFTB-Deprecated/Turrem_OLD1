@@ -41,6 +41,36 @@ public class ChunkGroup
 		return this.getChunk(chunkx, chunky);
 	}
 
+	public void entityChunkTick(int mincx, int mincz, int maxcx, int maxcz, int px, int pz)
+	{
+		mincx -= this.groupx * 64;
+		mincz -= this.groupy * 64;
+		maxcx -= this.groupx * 64;
+		maxcz -= this.groupy * 64;
+		mincx = mincx < 0 ? 0 : mincx;
+		mincx = mincx >= 64 ? 64 : mincx;
+		mincz = mincz < 0 ? 0 : mincz;
+		mincz = mincz >= 64 ? 64 : mincz;
+		maxcx = maxcx < 0 ? 0 : maxcx;
+		maxcx = maxcx >= 64 ? 64 : maxcx;
+		maxcz = maxcz < 0 ? 0 : maxcz;
+		maxcz = maxcz >= 64 ? 64 : maxcz;
+		for (int i = mincx; i < maxcx; i++)
+		{
+			for (int j = mincz; j < maxcz; j++)
+			{
+				int k = i + (j << 6);
+				Chunk c = this.chunks[k];
+				if (c == null)
+				{
+					c = this.provide(i + this.groupx * 64, j + this.groupy * 64);
+					this.chunks[k] = c;
+				}
+				c.onEntityTick();
+			}
+		}
+	}
+
 	public void onTick()
 	{
 
@@ -71,17 +101,11 @@ public class ChunkGroup
 	private void unloadChunk(int k)
 	{
 		/*
-		try
-		{
-			this.saveChunkFile(k);
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-		*/
+		 * try { this.saveChunkFile(k); } catch (IOException e) {
+		 * e.printStackTrace(); }
+		 */
 		int chunkx = this.chunks[k].chunkx;
-		int chunkz = this.chunks[k].chunky;
+		int chunkz = this.chunks[k].chunkz;
 		chunkx *= 16;
 		chunkz *= 16;
 		for (Entity ent : this.theWorld.entities)
@@ -128,7 +152,7 @@ public class ChunkGroup
 			return this.generateChunk(chunkx, chunky);
 		}
 	}
-	
+
 	protected Chunk generateChunk(int chunkx, int chunky)
 	{
 		Chunk chunk = new Chunk(chunkx, chunky, this.theWorld.theWorldGen.generateChunk(chunkx, chunky));
@@ -144,7 +168,7 @@ public class ChunkGroup
 			return false;
 		}
 		int chunkx = chunk.chunkx;
-		int chunky = chunk.chunky;
+		int chunky = chunk.chunkz;
 		String fn = this.theWorld.saveLoc + chunkx + "_" + chunky + ".dat";
 		File file = new File(fn);
 		file.createNewFile();
