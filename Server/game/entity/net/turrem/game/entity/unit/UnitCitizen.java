@@ -6,6 +6,7 @@ import net.turrem.server.load.control.GameEntity;
 import net.turrem.server.load.control.SubscribeStartingEntity;
 import net.turrem.server.world.World;
 import net.turrem.utils.geo.Point;
+import net.turrem.utils.nbt.NBTCompound;
 
 @GameEntity(from = "turrem", author = "eekysam")
 public class UnitCitizen extends EntityUnit
@@ -13,6 +14,12 @@ public class UnitCitizen extends EntityUnit
 	@Override
 	public void onEnter()
 	{
+	}
+
+	@Override
+	public void onTick()
+	{
+		super.onTick();
 	}
 	
 	@Override
@@ -44,5 +51,10 @@ public class UnitCitizen extends EntityUnit
 		cit.z = start.zCoord;
 		world.addEntity(cit);
 		return cit;
+	}
+
+	@Override
+	public void writeNBT(NBTCompound data)
+	{
 	}
 }

@@ -1,22 +1,21 @@
 package net.turrem.client.game.entity;
 
-import java.io.DataInput;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 
 import net.turrem.client.game.world.ClientWorld;
+import net.turrem.utils.nbt.NBTCompound;
 
 public class EntityRegistry
 {
 	private static HashMap<String, Class<? extends ClientEntity>> registry = new HashMap<String, Class<? extends ClientEntity>>();
-	
+
 	public static void register(String id, Class<? extends ClientEntity> entity)
 	{
 		registry.put(id, entity);
 	}
-	 
-	public static ClientEntity newInstance(String type, ClientWorld world, long entityId, double x, double y, double z, DataInput extra)
+
+	public static ClientEntity newInstance(String type, ClientWorld world, long entityId, double x, double y, double z, NBTCompound data)
 	{
 		Class<? extends ClientEntity> cl = registry.get(type);
 		if (cl == null)
@@ -35,15 +34,9 @@ public class EntityRegistry
 			return null;
 		}
 		entity.setPosition(x, y, z);
-		try
-		{
-			entity.readExtraData(extra);
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-			return null;
-		}
+
+		entity.readNBT(data);
+
 		return entity;
 	}
 }

@@ -1,6 +1,7 @@
 package net.turrem.server.world;
 
 import net.turrem.server.Config;
+import net.turrem.server.Realm;
 
 public class ChunkStorage
 {
@@ -45,6 +46,30 @@ public class ChunkStorage
 		i += this.width / 2;
 		j += this.width / 2;
 		return (i < 0 || i >= this.width - 1 || j < 0 || j >= this.width - 1);
+	}
+	
+	public void sendChunkUpdateToClients(int chunkx, int chunkz)
+	{
+		int vis = this.getVisibility(chunkx, chunkz);
+		ChunkUpdate update = this.getChunkUpdate(chunkx, chunkz);
+		
+		for (int i = 0; i < 16; i++)
+		{
+			if ((vis & 1) == 1)
+			{
+				Realm realm = this.theWorld.getRealms()[i];
+				if (realm != null)
+				{
+					realm.addChunkUpdate(update);
+				}
+			}
+			vis >>>= 1;
+		}
+	}
+	
+	public ChunkUpdate getChunkUpdate(int chunkx, int chunkz)
+	{
+		return new ChunkUpdate(chunkx, chunkz);
 	}
 
 	private ChunkGroup getGroup(int i)

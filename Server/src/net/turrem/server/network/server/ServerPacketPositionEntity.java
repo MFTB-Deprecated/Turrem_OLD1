@@ -5,7 +5,7 @@ import java.io.IOException;
 
 public class ServerPacketPositionEntity extends ServerPacket
 {
-	public int entity;
+	public long entity;
 	public float xpos;
 	public float ypos;
 	public float zpos;
@@ -13,7 +13,7 @@ public class ServerPacketPositionEntity extends ServerPacket
 	@Override
 	protected void writePacket(DataOutput stream) throws IOException
 	{
-		stream.writeInt(this.entity);
+		stream.writeLong(this.entity);
 		stream.writeFloat(this.xpos);
 		stream.writeFloat(this.ypos);
 		stream.writeFloat(this.zpos);

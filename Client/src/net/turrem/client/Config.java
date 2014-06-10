@@ -24,6 +24,7 @@ public class Config
 	public static int connectionOutQueueOverflow = 100000;
 	public static long chunkRequestTimeLimit = 100;
 	public static int chunkRequestDistance = 8;
+	public static boolean shouldRequestChunks = false;
 	
 	public static int getHeight()
 	{

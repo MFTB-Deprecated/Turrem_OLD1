@@ -29,4 +29,25 @@ public abstract class EntityUnit extends SoftEntity implements IHolding
 		}
 		return oldrealm;
 	}
+	
+	public boolean getRealmVisibility(int x, int z)
+	{
+		int cx = x >> 4;
+		int cz = z >> 4;
+		
+		if (this.allegiance == null)
+		{
+			return false;
+		}
+		
+		return this.theWorld.storage.getVisibility(cx, cz, this.allegiance.realmId);
+	}
+	
+	public boolean getThisVisibility(int x, int z)
+	{
+		float dx = (float) x - (float) this.x;
+		float dz = (float) z - (float) this.z;
+		
+		return dx * dx + dz * dz <= this.veiwDistance();
+	}
 }

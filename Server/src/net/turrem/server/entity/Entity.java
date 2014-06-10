@@ -1,11 +1,11 @@
 package net.turrem.server.entity;
 
-import java.io.DataOutput;
-import java.io.IOException;
+import java.util.Random;
 
 import net.turrem.server.Realm;
 import net.turrem.server.network.server.ServerPacket;
 import net.turrem.server.world.World;
+import net.turrem.utils.nbt.NBTCompound;
 
 public abstract class Entity
 {
@@ -24,10 +24,16 @@ public abstract class Entity
 
 	protected int visibility = 0;
 	protected int oldVisibility = 0;
+	
+	private Random entityRand;
+	private Random worldRand;
+	
+	public int modelType = -1;
 
 	public Entity()
 	{
 		this.entityIdentifier = nextId++;
+		this.entityRand = new Random();
 	}
 
 	public void onTick()
@@ -80,6 +86,11 @@ public abstract class Entity
 	
 	public void sendPacketToClients(ServerPacket packet)
 	{
+		if (this.theWorld == null)
+		{
+			return;
+		}
+		
 		int vis = this.visibility;
 
 		for (int i = 0; i < 16; i++)
@@ -104,18 +115,37 @@ public abstract class Entity
 		return vis == 1;
 	}
 
-	public abstract String getEntityType();
-
-	public void writeExtraData(DataOutput packet) throws IOException
+	public Random getRNG()
 	{
-
+		return this.entityRand;
+	}
+	
+	public Random getWorldLinkedRNG()
+	{
+		return this.worldRand;
+	}
+	
+	public abstract String getEntityType();
+	
+	public void writeNBT(NBTCompound data)
+	{
+		data.setInt("ModelNumber", this.modelType);
 	}
 
 	public void onWorldRegister(World world)
 	{
 		this.living = true;
 		this.theWorld = world;
+		this.worldRand = new Random(this.getWorldLinkedSeed(this.theWorld.seed));
+		this.modelType = this.worldRand.nextInt();
 		this.onEnter();
+	}
+	
+	private long getWorldLinkedSeed(long seed)
+	{
+		seed ^= this.getEntityType().hashCode();
+		seed *= ((long) (this.x * 16)) ^ ((long) (this.z * 16));
+		return seed;
 	}
 
 	public void kill()

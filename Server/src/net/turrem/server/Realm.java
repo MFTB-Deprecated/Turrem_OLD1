@@ -8,6 +8,7 @@ import net.turrem.server.network.server.ServerPacket;
 import net.turrem.server.network.server.ServerPacketAddEntity;
 import net.turrem.server.network.server.ServerPacketEntityRemove;
 import net.turrem.server.network.server.ServerPacketEntityRemove.EntityRemoveType;
+import net.turrem.server.world.ChunkUpdate;
 import net.turrem.server.world.ClientPlayer;
 import net.turrem.server.world.World;
 import net.turrem.utils.geo.Point;
@@ -46,6 +47,24 @@ public class Realm
 		{
 			this.client.sendPacket(packet);
 		}
+	}
+	
+	public boolean addChunkUpdate(int chunkx, int chunkz)
+	{
+		if (this.client != null)
+		{
+			return this.client.addChunkUpdate(chunkx, chunkz);
+		}
+		return false;
+	}
+	
+	public boolean addChunkUpdate(ChunkUpdate update)
+	{
+		if (this.client != null)
+		{
+			return this.client.addChunkUpdate(update);
+		}
+		return false;
 	}
 	
 	public void joinRealm(IHolding item)

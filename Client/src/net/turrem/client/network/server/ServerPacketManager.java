@@ -25,6 +25,8 @@ public class ServerPacketManager
 	{
 		switch (packetType & 0xFF)
 		{
+			case 0x10:
+				return ServerPacketMoveEntity.create(data, length, packetType);
 			case 0x20:
 				return ServerPacketTerrain.create(data, packetType);
 			case 0x21:

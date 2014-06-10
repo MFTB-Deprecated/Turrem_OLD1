@@ -17,6 +17,7 @@ import net.turrem.client.network.client.request.RequestChunk;
 import net.turrem.client.network.server.ServerPacket;
 import net.turrem.client.network.server.ServerPacketAddEntity;
 import net.turrem.client.network.server.ServerPacketMaterialSync;
+import net.turrem.client.network.server.ServerPacketMoveEntity;
 import net.turrem.client.network.server.ServerPacketRemoveEntity;
 import net.turrem.client.network.server.ServerPacketTerrain;
 import net.turrem.client.render.engine.RenderEngine;
@@ -106,7 +107,11 @@ public class ClientWorld
 
 	public void pushEntity(ClientEntity entity)
 	{
-		this.entities.put(entity.entityId, entity);
+		ClientEntity prev = this.entities.put(entity.entityId, entity);
+		if (prev != null)
+		{
+			prev.onOverride();
+		}
 	}
 
 	public Chunk getChunk(int chunkx, int chunkz)
@@ -161,6 +166,10 @@ public class ClientWorld
 
 	public int requestNullChunks(int centerx, int centerz, int select, int num)
 	{
+		if (!Config.shouldRequestChunks)
+		{
+			return 0;
+		}
 		int chunkx = centerx >> 4;
 		int chunkz = centerz >> 4;
 		int ind = 0;
@@ -289,7 +298,21 @@ public class ClientWorld
 		if (pack instanceof ServerPacketAddEntity)
 		{
 			ServerPacketAddEntity add = (ServerPacketAddEntity) pack;
+			ClientEntity entity = add.makeEntity(this);
+			if (entity != null)
+			{
+				this.pushEntity(entity);
+			}
 			System.out.println("Added new entity: \"" + add.entityType + "\" (id: " + add.entityId + ")");
+		}
+		if (pack instanceof ServerPacketMoveEntity)
+		{
+			ServerPacketMoveEntity move = (ServerPacketMoveEntity) pack;
+			ClientEntity entity = this.entities.get(move.entityId);
+			if (entity != null)
+			{
+				entity.setMove(move.xpos, move.ypos, move.zpos, move.moveTime);
+			}
 		}
 	}
 }

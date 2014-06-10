@@ -1,13 +1,12 @@
 package net.turrem.client.network.server;
 
-import java.io.ByteArrayInputStream;
 import java.io.DataInput;
-import java.io.DataInputStream;
 import java.io.IOException;
 
 import net.turrem.client.game.entity.ClientEntity;
 import net.turrem.client.game.entity.EntityRegistry;
 import net.turrem.client.game.world.ClientWorld;
+import net.turrem.utils.nbt.NBTCompound;
 
 public class ServerPacketAddEntity extends ServerPacket
 {
@@ -16,7 +15,7 @@ public class ServerPacketAddEntity extends ServerPacket
 	public float x;
 	public float y;
 	public float z;
-	public byte[] extra;
+	public NBTCompound data;
 
 	private ServerPacketAddEntity(DataInput data, int length, byte type) throws IOException
 	{	
@@ -39,8 +38,7 @@ public class ServerPacketAddEntity extends ServerPacket
 		length -= 4;
 		this.z = data.readFloat();
 		
-		this.extra = new byte[length];
-		data.readFully(this.extra);
+		this.data = NBTCompound.readAsRoot(data);
 	}
 	
 	public static ServerPacketAddEntity create(DataInput data, int length, byte type) throws IOException
@@ -50,7 +48,6 @@ public class ServerPacketAddEntity extends ServerPacket
 
 	public ClientEntity makeEntity(ClientWorld world)
 	{
-		DataInput edat = new DataInputStream(new ByteArrayInputStream(this.extra));
-		return EntityRegistry.newInstance(this.entityType, world, this.entityId, this.x, this.y, this.z, edat);
+		return EntityRegistry.newInstance(this.entityType, world, this.entityId, this.x, this.y, this.z, this.data);
 	}
 }

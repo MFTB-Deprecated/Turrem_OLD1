@@ -25,6 +25,8 @@ public class Chunk
 	 * Has this chunk's terrain been changed recently
 	 */
 	private boolean rebuildhmap = false;
+	
+	private boolean changed = false;
 
 	public final int chunkx;
 	public final int chunkz;
@@ -78,6 +80,13 @@ public class Chunk
 			return false;
 		}
 		return false;
+	}
+	
+	public boolean chunkChanged()
+	{
+		boolean flag = this.changed;
+		this.changed = false;
+		return flag;
 	}
 
 	/**

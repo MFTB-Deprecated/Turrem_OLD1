@@ -4,6 +4,7 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 import net.turrem.server.entity.Entity;
+import net.turrem.utils.nbt.NBTCompound;
 
 public class ServerPacketAddEntity extends ServerPacket
 {
@@ -24,7 +25,9 @@ public class ServerPacketAddEntity extends ServerPacket
 		stream.writeFloat((float) this.entity.x);
 		stream.writeFloat((float) this.entity.y);
 		stream.writeFloat((float) this.entity.z);
-		entity.writeExtraData(stream);
+		NBTCompound data = new NBTCompound();
+		entity.writeNBT(data);
+		data.writeAsRoot(stream);
 	}
 
 	@Override
