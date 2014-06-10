@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import net.turrem.server.entity.IHolding;
 import net.turrem.server.world.ClientPlayer;
 import net.turrem.server.world.World;
+import net.turrem.utils.geo.Point;
 
 public class Realm
 {
@@ -14,6 +15,8 @@ public class Realm
 	public ArrayList<IHolding> holdings = new ArrayList<IHolding>();
 	private ClientPlayer client = null;
 	public final int realmId;
+	
+	public Point startingLocation;
 	
 	public Realm(String username, World world)
 	{
@@ -26,7 +29,11 @@ public class Realm
 	
 	public void spawn()
 	{
-		
+		int x = 0;
+		int z = 0;
+		int y = this.theWorld.getHeight(x, z);
+		this.startingLocation = Point.getPoint(x, y, z);
+		this.theWorld.theTurrem.theLoader.getEntityLoader().processRealmInits(this, this.theWorld);
 	}
 	
 	public void joinRealm(IHolding item)

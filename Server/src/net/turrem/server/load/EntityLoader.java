@@ -7,13 +7,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import net.turrem.server.Realm;
+import net.turrem.server.entity.Entity;
 import net.turrem.server.load.control.SubscribeDecorate;
+import net.turrem.server.load.control.SubscribeStartingEntity;
 import net.turrem.server.world.Chunk;
 import net.turrem.server.world.World;
 
 public class EntityLoader implements IGameLoad
 {
 	protected List<Method> decorateCalls = new ArrayList<Method>();
+	protected List<Method> realmInitCalls = new ArrayList<Method>();
 	protected GameLoader theLoader;
 
 	public EntityLoader(GameLoader loader)
@@ -35,11 +39,19 @@ public class EntityLoader implements IGameLoad
 		if (Modifier.isStatic(mtd.getModifiers()))
 		{
 			Class<?>[] pars = mtd.getParameterTypes();
+			Class<?> rtrn = mtd.getReturnType();
 			if (mtd.isAnnotationPresent(SubscribeDecorate.class))
 			{
 				if (pars.length == 3 && pars[0].isAssignableFrom(Chunk.class) && pars[1].isAssignableFrom(World.class) && pars[2].isAssignableFrom(Random.class))
 				{
 					this.decorateCalls.add(mtd);
+				}
+			}
+			if (mtd.isAnnotationPresent(SubscribeStartingEntity.class))
+			{
+				if (pars.length == 2 && pars[0].isAssignableFrom(Realm.class) && pars[1].isAssignableFrom(World.class) && Entity.class.isAssignableFrom(rtrn))
+				{
+					this.realmInitCalls.add(mtd);
 				}
 			}
 		}
@@ -60,6 +72,23 @@ public class EntityLoader implements IGameLoad
 				System.err.println("Decorate call for \"" + mtd.getClass().getName() + "\" failed");
 			}
 		}
+	}
+	
+	public List<Entity> processRealmInits(Realm realm, World world)
+	{
+		List<Entity> ents = new ArrayList<Entity>();
+		for (Method mtd : this.realmInitCalls)
+		{
+			try
+			{
+				ents.add((Entity) mtd.invoke(null, realm, world));
+			}
+			catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
+			{
+				System.err.println("Starting entities call for \"" + mtd.getClass().getName() + "\" failed");
+			}
+		}
+		return ents;
 	}
 
 	private long posSeed(long x, long y, long seed)

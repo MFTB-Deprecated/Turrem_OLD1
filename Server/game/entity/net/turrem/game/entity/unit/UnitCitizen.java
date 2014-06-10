@@ -1,14 +1,20 @@
 package net.turrem.game.entity.unit;
 
+import net.turrem.server.Realm;
 import net.turrem.server.entity.unit.EntityUnit;
+import net.turrem.server.load.control.GameEntity;
+import net.turrem.server.load.control.SubscribeStartingEntity;
+import net.turrem.server.world.World;
+import net.turrem.utils.geo.Point;
 
+@GameEntity(from = "turrem", author = "eekysam")
 public class UnitCitizen extends EntityUnit
 {
 	@Override
 	public void onEnter()
 	{
 	}
-
+	
 	@Override
 	public short loadRadius()
 	{
@@ -25,5 +31,18 @@ public class UnitCitizen extends EntityUnit
 	public String getEntityType()
 	{
 		return "citizen";
+	}
+	
+	@SubscribeStartingEntity
+	public static UnitCitizen startingUnits(Realm realm, World world)
+	{
+		UnitCitizen cit = new UnitCitizen();
+		cit.setAllegiance(realm);
+		Point start = realm.startingLocation;
+		cit.x = start.xCoord;
+		cit.y = start.yCoord;
+		cit.z = start.zCoord;
+		world.addEntity(cit);
+		return cit;
 	}
 }
