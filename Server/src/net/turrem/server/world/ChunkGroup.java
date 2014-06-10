@@ -246,6 +246,7 @@ public class ChunkGroup
 				ent.unload();
 			}
 		}
+		this.theWorld.sortEntities();
 		this.chunks[k] = null;
 	}
 

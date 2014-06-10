@@ -4,8 +4,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.turrem.server.Realm;
+import net.turrem.server.entity.Entity;
 import net.turrem.server.network.GameConnection;
 import net.turrem.server.network.client.ClientPacket;
+import net.turrem.server.network.client.ClientPacketMove;
 import net.turrem.server.network.client.ClientPacketRequest;
 import net.turrem.server.network.client.request.Request;
 import net.turrem.server.network.client.request.RequestChunk;
@@ -76,6 +78,18 @@ public class ClientPlayer
 						ServerPacketTerrain pak = new ServerPacketTerrain(chunk, this.theWorld);
 						this.theConnection.addToSendQueue(pak);
 					}
+				}
+			}
+		}
+		if (packet instanceof ClientPacketMove)
+		{
+			ClientPacketMove move = (ClientPacketMove) packet;
+			for (long id : move.entities)
+			{
+				Entity ent = this.theWorld.getEntity(id);
+				if (ent != null)
+				{
+					ent.clientMove(this.theRealm, move.xpos, move.zpos);
 				}
 			}
 		}

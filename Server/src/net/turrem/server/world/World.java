@@ -50,7 +50,7 @@ public class World
 		if (ent != null)
 		{
 			boolean sort = false;
-			if (this.entities.get(this.entities.size() - 1).entityIdentifier > ent.entityIdentifier)
+			if (!this.entities.isEmpty() && this.entities.get(this.entities.size() - 1).entityIdentifier > ent.entityIdentifier)
 			{
 				sort = true;
 			}
@@ -62,25 +62,33 @@ public class World
 			}
 		}
 	}
-	
+
 	public Iterator<Entity> getEntities()
 	{
 		return this.entities.iterator();
 	}
 
 	/**
-	 * Finds the entity with the given identifier using a binary search algorithm. It is expected to finish in log2(N)-1 iterations, giving it O(LOG N) time.
+	 * Finds the entity with the given identifier using a binary search
+	 * algorithm. It is expected to finish in log2(N)-1 iterations, giving it
+	 * O(LOG N) time.
+	 * 
 	 * @param id The entity's server/client identifier.
-	 * @return The entity with that identifier. Null if that entity has been removed or if the world's entity list is out of order.
+	 * @return The entity with that identifier. Null if that entity has been
+	 *         removed or if the world's entity list is out of order.
 	 */
 	public Entity getEntity(long id)
 	{
 		int num = this.entities.size();
+		if (num == 0)
+		{
+			return null;
+		}
 		int size = num;
 		int exp = 0;
 		while (size != 1)
 		{
-			size >>>= 0;
+			size >>>= 1;
 			exp++;
 		}
 		size = 1;
@@ -89,12 +97,15 @@ public class World
 		{
 			size <<= 1;
 		}
-		size /= 2;
+		size >>>= 1;
 		int select = size;
 		int its = 0;
 		while (its++ <= exp + 1)
 		{
-			size >>>= 1;
+			if (size > 1)
+			{
+				size >>>= 1;
+			}
 			if (select >= num)
 			{
 				select -= size;
@@ -118,7 +129,7 @@ public class World
 		}
 		return null;
 	}
-	
+
 	public void sortEntities()
 	{
 		Collections.sort(this.entities, new Entity.EntityIndexComparator());

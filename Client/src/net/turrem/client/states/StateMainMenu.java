@@ -91,6 +91,12 @@ public class StateMainMenu implements IState
 
 		glColor3f(0.0F, 0.0F, 0.0F);
 		this.testFont.renderTextCentered("- Press any Key -", this.theTurrem.getScreenWidth() / 2, this.theTurrem.getScreenHeight() / 2, 50.0F);
+		this.testFont.renderTextCentered("Right Click - Move Citizen", this.theTurrem.getScreenWidth() / 2, (this.theTurrem.getScreenHeight() / 14) * 1, 50.0F);
+		this.testFont.renderTextCentered("Left Click - Move Camera", this.theTurrem.getScreenWidth() / 2, (this.theTurrem.getScreenHeight() / 14) * 2, 50.0F);
+		this.testFont.renderTextCentered("Middle Click - Rotate Camera", this.theTurrem.getScreenWidth() / 2, (this.theTurrem.getScreenHeight() / 14) * 3, 50.0F);
+		this.testFont.renderTextCentered("Scroll - Zoom", this.theTurrem.getScreenWidth() / 2, (this.theTurrem.getScreenHeight() / 14) * 4, 50.0F);
+		this.testFont.renderTextCentered("'M' - Toggle Materials", this.theTurrem.getScreenWidth() / 2, (this.theTurrem.getScreenHeight() / 14) * 5, 50.0F);
+		this.testFont.renderTextCentered("Don't Forget to Start the Server!", this.theTurrem.getScreenWidth() / 2, (this.theTurrem.getScreenHeight() / 14) * 10, 50.0F);
 		glColor3f(1.0F, 1.0F, 1.0F);
 	}
 

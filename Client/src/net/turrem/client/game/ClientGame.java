@@ -5,13 +5,17 @@ import java.nio.FloatBuffer;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
 import net.turrem.client.Config;
 import net.turrem.client.Turrem;
 import net.turrem.client.game.world.ClientWorld;
+import net.turrem.client.network.client.ClientPacketMove;
 import net.turrem.client.render.engine.RenderManager;
+import net.turrem.utils.geo.Point;
+import net.turrem.utils.geo.Ray;
 
 public class ClientGame
 {
@@ -29,13 +33,15 @@ public class ClientGame
 
 	private PlayerFace face;
 
+	public long mine = -1;
+
 	public ClientGame(RenderManager manager, Turrem turrem)
 	{
 		this.theTurrem = turrem;
 		this.theWorld = new ClientWorld(this);
 		this.theManager = manager;
 		this.face = new PlayerFace();
-		
+
 		try
 		{
 			this.theWorld.startNetwork(turrem.theSession.username);
@@ -153,6 +159,22 @@ public class ClientGame
 
 	public void mouseEvent()
 	{
+		if (Mouse.getEventButtonState())
+		{
+			if (Mouse.getEventButton() == 1)
+			{
+				Ray pick = this.face.pickMouse();
+				Point location = Point.getSlideWithYValue(pick.start, pick.end, 96.0D);
+				ClientPacketMove move = new ClientPacketMove();
+				move.addEntity(this.mine);
+				move.xpos = (float) location.xCoord;
+				move.zpos = (float) location.zCoord;
+				if (this.theWorld.theConnection != null)
+				{
+					this.theWorld.theConnection.addToSendQueue(move);
+				}
+			}
+		}
 	}
 
 	public void keyEvent()

@@ -11,31 +11,26 @@ public class ClientPacketMove extends ClientPacket
 	/**
 	 * The entities that the player wants to move (identification numbers)
 	 */
-	public int[] entities;
+	public long[] entities;
 	/**
 	 * X coordinate
 	 */
-	public int xpos;
-	/**
-	 * Y coordinate (should be recalculated before use)
-	 */
-	public int ypos;
+	public float xpos;
 	/**
 	 * Z coordinate
 	 */
-	public int zpos;
+	public float zpos;
 	
 	private ClientPacketMove(DataInput data, String user, byte type) throws IOException
 	{
 		super(user, type);
-		this.entities = new int[data.readByte() & 0xFF];
+		this.entities = new long[data.readByte() & 0xFF];
 		for (int i = 0; i < this.entities.length; i++)
 		{
-			this.entities[i] = data.readInt();
+			this.entities[i] = data.readLong();
 		}
-		this.xpos = data.readInt();
-		this.ypos = data.readInt();
-		this.zpos = data.readInt();
+		this.xpos = data.readFloat();
+		this.zpos = data.readFloat();
 	}
 	
 	public static ClientPacketMove create(DataInput data, String user, byte type) throws IOException

@@ -25,6 +25,10 @@ public class ClientEntityCitizen extends ClientEntity
 	public ClientEntityCitizen(long id, ClientWorld world)
 	{
 		super(id, world);
+		if (this.theWorld.theGame.mine == -1)
+		{
+			this.theWorld.theGame.mine = this.entityId;
+		}
 	}
 
 	@Override

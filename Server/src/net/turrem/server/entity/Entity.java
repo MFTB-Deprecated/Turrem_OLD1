@@ -187,4 +187,9 @@ public abstract class Entity
 		}
 		return false;
 	}
+	
+	public void clientMove(Realm realm, float x, float z)
+	{
+		
+	}
 }

@@ -25,8 +25,11 @@ public abstract class ClientEntity
 	protected double moveX;
 	protected double moveY;
 	protected double moveZ;
+	protected double newX;
+	protected double newY;
+	protected double newZ;
 
-	protected int moveTime = 0;
+	protected int moveTime = -1;
 
 	public ClientEntity(long id, ClientWorld world)
 	{
@@ -69,6 +72,13 @@ public abstract class ClientEntity
 			this.zPos += this.moveZ;
 			this.moveTime--;
 		}
+		else if (this.moveTime == 0)
+		{
+			this.moveTime = 0;
+			this.xPos = this.newX;
+			this.yPos = this.newY;
+			this.zPos = this.newZ;
+		}
 
 		GL11.glPushMatrix();
 		GL11.glTranslated(this.xPos, this.yPos, this.zPos);
@@ -104,6 +114,9 @@ public abstract class ClientEntity
 
 	public void setMove(float x, float y, float z, int time)
 	{
+		this.newX = x;
+		this.newY = y;
+		this.newZ = z;
 		if (time == 0)
 		{
 			this.xPos = x;
