@@ -96,13 +96,13 @@ public class ChunkStorage
 		}
 	}
 	
-	public void resetVisibility()
+	public void processVisibility()
 	{
 		for (int i = 0; i < this.array.length; i++)
 		{
 			if (this.array[i] != null)
 			{
-				this.array[i].resetVisibility();
+				this.array[i].processVisibility();
 			}
 		}
 	}

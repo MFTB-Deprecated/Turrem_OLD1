@@ -32,6 +32,14 @@ public class Realm
 		this.spawn();
 	}
 	
+	public void tick()
+	{
+		if (this.client != null)
+		{
+			this.client.sendChunks();
+		}
+	}
+	
 	public void spawn()
 	{
 		int x = 35;

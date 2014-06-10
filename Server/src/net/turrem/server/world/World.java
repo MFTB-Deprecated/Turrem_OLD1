@@ -74,6 +74,13 @@ public class World
 		this.worldTime++;
 		this.updateEntities();
 		this.storage.tick(this.worldTime);
+		for (Realm realm : this.realms)
+		{
+			if (realm != null)
+			{
+				realm.tick();
+			}
+		}
 	}
 
 	public BufferedImage testTerrainMap()
@@ -133,7 +140,6 @@ public class World
 
 	public void updateEntities()
 	{
-		this.storage.resetVisibility();
 		for (int i = 0; i < this.entities.size(); i++)
 		{
 			Entity ent = this.entities.get(i);
@@ -212,6 +218,8 @@ public class World
 				}
 			}
 		}
+		
+		this.storage.processVisibility();
 	}
 
 	public short getHeight(int x, int z)

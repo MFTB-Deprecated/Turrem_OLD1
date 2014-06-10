@@ -104,7 +104,12 @@ public class ClientPlayer
 		ChunkUpdate[] updates;
 		synchronized (this.chunkUpdatesLock)
 		{
-			updates = new ChunkUpdate[this.chunkUpdates.size()];
+			int size = this.chunkUpdates.size();
+			if (size != 0)
+			{
+				System.out.println("Sending " + size + " chunk updates to " + this.username);
+			}
+			updates = new ChunkUpdate[size];
 			this.chunkUpdates.toArray(updates);
 			this.chunkUpdates.clear();
 		}

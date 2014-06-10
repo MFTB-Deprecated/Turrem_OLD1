@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import net.turrem.server.Realm;
 import net.turrem.server.entity.Entity;
 import net.turrem.utils.nbt.NBTCompound;
 
@@ -79,7 +80,7 @@ public class ChunkGroup
 			}
 		}
 	}
-	
+
 	public void entityChunkTick(int mincx, int mincz, int maxcx, int maxcz)
 	{
 		mincx -= this.groupx * 64;
@@ -115,12 +116,52 @@ public class ChunkGroup
 
 	}
 
-	public void resetVisibility()
+	public void processVisibility()
 	{
-		for (int i = 0; i < 4096; i++)
+		int k;
+		for (int i = 0; i < 64; i++)
 		{
-			this.oldVisibility[i] = this.visibility[i];
-			this.visibility[i] = 0;
+			for (int j = 0; j < 64; j++)
+			{
+				k = i + j * 64;
+				if ((this.oldVisibility[k] ^ this.visibility[k]) != 0)
+				{
+					this.onChunkVisibilityChange(i, j);
+				}
+				this.oldVisibility[k] = this.visibility[k];
+				this.visibility[k] = 0;
+			}
+		}
+	}
+	
+	public void onChunkVisibilityChange(int i, int j)
+	{
+		int chunkx = i + this.groupx * 64;
+		int chunkz = j + this.groupy * 64;
+		int k = i + j * 64;
+		short vis = this.visibility[k];
+		short oldvis = this.oldVisibility[k];
+
+		for (int r = 0; r < 16; r++)
+		{
+			if ((vis & 1) < (oldvis & 1))
+			{
+				Realm realm = this.theWorld.getRealms()[r];
+				if (realm != null)
+				{
+					
+				}
+			}
+			if ((vis & 1) > (oldvis & 1))
+			{
+				Realm realm = this.theWorld.getRealms()[r];
+				if (realm != null)
+				{
+					realm.addChunkUpdate(chunkx, chunkz);
+				}
+			}
+			vis >>>= 1;
+			oldvis >>>= 1;
 		}
 	}
 
@@ -140,7 +181,7 @@ public class ChunkGroup
 
 		int mod = 1;
 		mod <<= realm;
-		
+
 		if (visible)
 		{
 			this.visibility[k] |= mod;
@@ -150,7 +191,7 @@ public class ChunkGroup
 			this.visibility[k] &= ~mod;
 		}
 	}
-	
+
 	public boolean getVisibility(int chunkx, int chunky, int realm)
 	{
 		int i = chunkx & 0x3F;
@@ -162,7 +203,7 @@ public class ChunkGroup
 		vis &= 1;
 		return vis == 1;
 	}
-	
+
 	public int getVisibility(int chunkx, int chunkz)
 	{
 		int i = chunkx & 0x3F;
