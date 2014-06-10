@@ -12,4 +12,10 @@ public class Sand extends Material
 	{
 		return 0xE5D7A2;
 	}
+	
+	@Override
+	public boolean isPlayerSpawnable()
+	{
+		return false;
+	}
 }

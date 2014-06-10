@@ -26,13 +26,14 @@ public class EntityRegistry
 		ClientEntity entity;
 		try
 		{
-			entity = cl.getConstructor(int.class, ClientWorld.class).newInstance(entityId, world);
+			entity = cl.getConstructor(long.class, ClientWorld.class).newInstance(entityId, world);
 		}
 		catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e)
 		{
 			System.err.println("Could not create entity " + cl.getCanonicalName() + " (" + type + ")");
 			return null;
 		}
+		
 		entity.setPosition(x, y, z);
 
 		entity.readNBT(data);

@@ -46,9 +46,9 @@ public class UnitCitizen extends EntityUnit
 		UnitCitizen cit = new UnitCitizen();
 		cit.setAllegiance(realm);
 		Point start = realm.startingLocation;
-		cit.x = start.xCoord;
+		cit.x = start.xCoord + 0.5D;
 		cit.y = start.yCoord;
-		cit.z = start.zCoord;
+		cit.z = start.zCoord + 0.5D;
 		world.addEntity(cit);
 		return cit;
 	}

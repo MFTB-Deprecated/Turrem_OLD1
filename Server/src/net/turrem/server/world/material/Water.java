@@ -12,4 +12,10 @@ public class Water extends Material
 	{
 		return 0x3330FF;
 	}
+	
+	@Override
+	public boolean isPlayerSpawnable()
+	{
+		return false;
+	}
 }

@@ -10,6 +10,7 @@ import java.util.Set;
 
 import net.turrem.client.Config;
 import net.turrem.client.game.ClientGame;
+import net.turrem.client.game.PlayerFace;
 import net.turrem.client.game.entity.ClientEntity;
 import net.turrem.client.game.world.material.Material;
 import net.turrem.client.network.GameConnection;
@@ -19,6 +20,7 @@ import net.turrem.client.network.server.ServerPacketAddEntity;
 import net.turrem.client.network.server.ServerPacketMaterialSync;
 import net.turrem.client.network.server.ServerPacketMoveEntity;
 import net.turrem.client.network.server.ServerPacketRemoveEntity;
+import net.turrem.client.network.server.ServerPacketStartingInfo;
 import net.turrem.client.network.server.ServerPacketTerrain;
 import net.turrem.client.render.engine.RenderEngine;
 import net.turrem.utils.geo.Point;
@@ -112,6 +114,7 @@ public class ClientWorld
 		{
 			prev.onOverride();
 		}
+		entity.loadAssets(this.theGame.theManager);
 	}
 
 	public Chunk getChunk(int chunkx, int chunkz)
@@ -290,6 +293,7 @@ public class ClientWorld
 		{
 			ServerPacketRemoveEntity rem = (ServerPacketRemoveEntity) pack;
 			ClientEntity ent = this.entities.get(rem.entityId);
+			System.out.println("Removed entity: \"" + ent.getClass().getSimpleName() + "\" (id: " + rem.entityId + ")");
 			if (ent != null)
 			{
 				ent.remove(rem.removeType);
@@ -302,8 +306,12 @@ public class ClientWorld
 			if (entity != null)
 			{
 				this.pushEntity(entity);
+				System.out.println("Added new entity: \"" + add.entityType + "\" (id: " + add.entityId + ")");
 			}
-			System.out.println("Added new entity: \"" + add.entityType + "\" (id: " + add.entityId + ")");
+			else
+			{
+				System.out.println("Failed to add new entity: \"" + add.entityType + "\" (id: " + add.entityId + ")");
+			}
 		}
 		if (pack instanceof ServerPacketMoveEntity)
 		{
@@ -313,6 +321,12 @@ public class ClientWorld
 			{
 				entity.setMove(move.xpos, move.ypos, move.zpos, move.moveTime);
 			}
+		}
+		if (pack instanceof ServerPacketStartingInfo)
+		{
+			ServerPacketStartingInfo sti = (ServerPacketStartingInfo) pack;
+			PlayerFace face = this.theGame.getFace();
+			face.setFocus(Point.getPoint(sti.startx + 0.5D, 128.0D, sti.startz + 0.5D));
 		}
 	}
 }

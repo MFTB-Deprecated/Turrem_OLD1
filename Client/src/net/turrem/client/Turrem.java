@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 import net.turrem.client.asset.AssetLoader;
+import net.turrem.client.load.ClientLoader;
 import net.turrem.client.render.engine.RenderManager;
 import net.turrem.client.states.IState;
 import net.turrem.client.states.StateIntro;
@@ -36,6 +37,8 @@ public class Turrem
 	private long renderCount = 0;
 	
 	public static String networkLoc;
+	
+	public ClientLoader theLoader;
 
 	public Turrem(Session session, String dir)
 	{
@@ -49,6 +52,7 @@ public class Turrem
 	{
 		this.updateDisplay(1280, 800, false, true);
 
+		this.theLoader = new ClientLoader(this);
 		this.theAssets = new AssetLoader(this.theGameDir);
 		this.theRender = new RenderManager(this.theAssets);
 		
@@ -93,6 +97,10 @@ public class Turrem
 		if (this.renderCount == 2)
 		{
 			this.afterStart();
+		}
+		if (this.renderCount == 3)
+		{
+			this.theLoader.loadClientJar();
 		}
 		if (this.thisState != null)
 		{

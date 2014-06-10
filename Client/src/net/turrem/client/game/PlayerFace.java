@@ -230,6 +230,12 @@ public class PlayerFace
 		this.camYaw = (yawrad / 3.14F) * 180.0F;
 	}
 
+	public void setFocus(Point point)
+	{
+		this.camFocus = point;
+		this.doFocus();
+	}
+	
 	public void doFocus()
 	{
 		float yawrad = this.camYaw / 180.0F * 3.14F;

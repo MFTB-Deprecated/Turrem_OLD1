@@ -4,6 +4,7 @@ import org.lwjgl.opengl.GL11;
 
 import net.turrem.client.game.world.ClientWorld;
 import net.turrem.client.network.server.ServerPacketRemoveEntity.EntityRemoveType;
+import net.turrem.client.render.engine.RenderManager;
 import net.turrem.utils.nbt.NBTCompound;
 
 public abstract class ClientEntity
@@ -31,7 +32,6 @@ public abstract class ClientEntity
 	{
 		this.entityId = id;
 		this.theWorld = world;
-		this.theWorld.pushEntity(this);
 	}
 
 	public boolean isPresent()
@@ -47,6 +47,8 @@ public abstract class ClientEntity
 	}
 
 	public abstract void renderEntity();
+	
+	public abstract void loadAssets(RenderManager man);
 
 	public void render()
 	{

@@ -11,6 +11,7 @@ import net.turrem.server.network.client.request.Request;
 import net.turrem.server.network.client.request.RequestChunk;
 import net.turrem.server.network.server.ServerPacket;
 import net.turrem.server.network.server.ServerPacketMaterialSync;
+import net.turrem.server.network.server.ServerPacketStartingInfo;
 import net.turrem.server.network.server.ServerPacketTerrain;
 import net.turrem.server.world.material.Material;
 
@@ -23,6 +24,8 @@ public class ClientPlayer
 
 	private Set<ChunkUpdate> chunkUpdates = new HashSet<ChunkUpdate>();
 	private Object chunkUpdatesLock = new Object();
+	
+	private boolean sentStarting = false;
 
 	public ClientPlayer(World world, String name)
 	{
@@ -101,6 +104,12 @@ public class ClientPlayer
 
 	public void sendChunks()
 	{
+		if (!this.sentStarting && this.theRealm.startingLocation != null)
+		{
+			this.sentStarting = true;
+			ServerPacketStartingInfo sti = new ServerPacketStartingInfo(this.theRealm);
+			this.theConnection.addToSendQueue(sti);
+		}
 		ChunkUpdate[] updates;
 		synchronized (this.chunkUpdatesLock)
 		{

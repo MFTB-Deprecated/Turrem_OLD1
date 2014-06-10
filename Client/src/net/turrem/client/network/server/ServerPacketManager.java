@@ -33,6 +33,8 @@ public class ServerPacketManager
 				return ServerPacketMaterialSync.create(data, packetType);
 			case 0x22:
 				return ServerPacketAddPlayer.create(data, length, packetType);
+			case 0x23:
+				return ServerPacketStartingInfo.create(data, packetType);
 			case 0x32:
 				return ServerPacketPing.create(data, packetType);
 			case 0x90:

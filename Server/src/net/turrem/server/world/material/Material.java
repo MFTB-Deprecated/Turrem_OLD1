@@ -35,4 +35,9 @@ public abstract class Material
 	{
 		return false;
 	}
+
+	public boolean isPlayerSpawnable()
+	{
+		return true;
+	}
 }
