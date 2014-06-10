@@ -25,13 +25,13 @@ public class UnitCitizen extends EntityUnit
 	@Override
 	public short loadRadius()
 	{
-		return 1;
+		return 2;
 	}
 
 	@Override
 	public float veiwDistance()
 	{
-		return 16.0F;
+		return 32.0F;
 	}
 
 	@Override

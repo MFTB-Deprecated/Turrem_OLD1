@@ -29,11 +29,10 @@ public class ChunkStorage
 		{
 			return null;
 		}
-		int k = i + j * this.width;
-		aro[0] = this.getGroup(k);
-		aro[1] = this.getGroup(k + 1);
-		aro[2] = this.getGroup(k + this.width);
-		aro[3] = this.getGroup(k + this.width + 1);
+		aro[0] = this.getGroup(i, j);
+		aro[1] = this.getGroup(i + 1, j);
+		aro[2] = this.getGroup(i, j + 1);
+		aro[3] = this.getGroup(i + 1, j + 1);
 		return aro;
 	}
 
@@ -72,13 +71,14 @@ public class ChunkStorage
 		return new ChunkUpdate(chunkx, chunkz);
 	}
 
-	private ChunkGroup getGroup(int i)
+	private ChunkGroup getGroup(int i, int j)
 	{
-		if (this.array[i] == null)
+		int k = i + j * this.width;
+		if (this.array[k] == null)
 		{
-			this.array[i] = new ChunkGroup((i % this.width) - this.width / 2, (i / this.width) - this.width / 2, this.theWorld);
+			this.array[k] = new ChunkGroup(i - this.width / 2, j - this.width / 2, this.theWorld);
 		}
-		return this.array[i];
+		return this.array[k];
 	}
 
 	public void tick(long time)
@@ -117,7 +117,7 @@ public class ChunkStorage
 			{
 				if (visible)
 				{
-					cg = new ChunkGroup(chunkx, chunkz, this.theWorld);
+					cg = new ChunkGroup(chunkx >> 6, chunkz >> 6, this.theWorld);
 					this.array[i] = cg;
 				}
 				else
@@ -178,7 +178,7 @@ public class ChunkStorage
 		ChunkGroup cg = this.array[i];
 		if (cg == null)
 		{
-			cg = new ChunkGroup(chunkx, chunkz, this.theWorld);
+			cg = new ChunkGroup(chunkx >> 6, chunkz >> 6, this.theWorld);
 			this.array[i] = cg;
 		}
 		Chunk ch = cg.getChunk(chunkx, chunkz);

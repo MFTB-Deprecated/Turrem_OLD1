@@ -34,8 +34,8 @@ public class Realm
 	
 	public void spawn()
 	{
-		int x = 0;
-		int z = 0;
+		int x = 35;
+		int z = 35;
 		int y = this.theWorld.getHeight(x, z);
 		this.startingLocation = Point.getPoint(x, y, z);
 		this.theWorld.theTurrem.theLoader.getEntityLoader().processRealmInits(this, this.theWorld);

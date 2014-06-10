@@ -37,10 +37,10 @@ public abstract class Entity
 	}
 
 	public void onTick()
-	{
+	{	
 		this.oldVisibility = this.visibility;
-		this.visibility = this.theWorld.storage.getVisibility(((int) this.x) << 4, ((int) this.z) << 4);
-
+		this.visibility = this.theWorld.storage.getVisibility(((int) this.x) >> 4, ((int) this.z) >> 4);
+		
 		{
 			int vis = this.visibility;
 			int oldvis = this.oldVisibility;
