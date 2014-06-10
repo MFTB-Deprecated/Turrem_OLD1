@@ -16,7 +16,7 @@ public class EntityRegistry
 		registry.put(id, entity);
 	}
 	 
-	public static ClientEntity newInstance(String type, ClientWorld world, int id, double x, double y, double z, DataInput extra)
+	public static ClientEntity newInstance(String type, ClientWorld world, long entityId, double x, double y, double z, DataInput extra)
 	{
 		Class<? extends ClientEntity> cl = registry.get(type);
 		if (cl == null)
@@ -27,7 +27,7 @@ public class EntityRegistry
 		ClientEntity entity;
 		try
 		{
-			entity = cl.getConstructor(int.class, ClientWorld.class).newInstance(id, world);
+			entity = cl.getConstructor(int.class, ClientWorld.class).newInstance(entityId, world);
 		}
 		catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e)
 		{

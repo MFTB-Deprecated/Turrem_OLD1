@@ -11,7 +11,7 @@ import net.turrem.client.game.world.ClientWorld;
 
 public class ServerPacketAddEntity extends ServerPacket
 {
-	public int entityId;
+	public long entityId;
 	public String entityType;
 	public float x;
 	public float y;
@@ -21,8 +21,8 @@ public class ServerPacketAddEntity extends ServerPacket
 	private ServerPacketAddEntity(DataInput data, int length, byte type) throws IOException
 	{	
 		super(type);
-		length -= 4;
-		this.entityId = data.readInt();
+		length -= 8;
+		this.entityId = data.readLong();
 		
 		length -= 1;
 		int stringlength = data.readByte() & 0xFF;

@@ -14,6 +14,6 @@ public class ServerPacketEntityEvent extends ServerPacket
 	@Override
 	public byte type()
 	{
-		return (byte) 0x91;
+		return (byte) 0x92;
 	}
 }

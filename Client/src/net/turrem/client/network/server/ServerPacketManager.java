@@ -35,6 +35,8 @@ public class ServerPacketManager
 				return ServerPacketPing.create(data, packetType);
 			case 0x90:
 				return ServerPacketAddEntity.create(data, length, packetType);
+			case 0x91:
+				return ServerPacketRemoveEntity.create(data, packetType);
 			case 0xA0:
 				return ServerPacketChat.create(data, length, packetType);
 			case 0xFD:

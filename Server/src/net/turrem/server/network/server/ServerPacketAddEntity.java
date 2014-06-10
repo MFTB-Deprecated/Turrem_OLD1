@@ -17,7 +17,7 @@ public class ServerPacketAddEntity extends ServerPacket
 	@Override
 	protected void writePacket(DataOutput stream) throws IOException
 	{
-		stream.writeInt((int) this.entity.entityIdentifier);
+		stream.writeLong(this.entity.entityIdentifier);
 		byte[] typebytes = this.entity.getEntityType().getBytes("UTF-8");
 		stream.writeByte(typebytes.length);
 		stream.write(typebytes);

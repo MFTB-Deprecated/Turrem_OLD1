@@ -119,6 +119,21 @@ public class ChunkStorage
 		return cg.getVisibility(chunkx, chunkz, realm);
 	}
 
+	public int getVisibility(int chunkx, int chunkz)
+	{
+		if (this.isChunkOutside(chunkx, chunkz))
+		{
+			return 0;
+		}
+		int i = this.getIndex(chunkx, chunkz);
+		ChunkGroup cg = this.array[i];
+		if (cg == null)
+		{
+			return 0;
+		}
+		return cg.getVisibility(chunkx, chunkz);
+	}
+
 	private int getIndex(int i, int j)
 	{
 		i >>= 6;

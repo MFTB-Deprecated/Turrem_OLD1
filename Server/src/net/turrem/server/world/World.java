@@ -12,7 +12,10 @@ import net.turrem.server.entity.IHolding;
 import net.turrem.server.load.control.SubscribePacket;
 import net.turrem.server.network.client.ClientPacket;
 import net.turrem.server.network.client.ClientPacketChat;
+import net.turrem.server.network.server.ServerPacket;
 import net.turrem.server.network.server.ServerPacketChat;
+import net.turrem.server.network.server.ServerPacketEntityRemove;
+import net.turrem.server.network.server.ServerPacketEntityRemove.EntityRemoveType;
 import net.turrem.server.world.gen.WorldGen;
 import net.turrem.server.world.gen.WorldGenBasic;
 import net.turrem.server.world.material.Material;
@@ -21,7 +24,8 @@ public class World
 {
 	public ArrayList<Entity> entities = new ArrayList<Entity>();
 	public ChunkStorage storage = new ChunkStorage(Config.chunkStorageWidth, this);
-	public HashMap<String, Realm> realms = new HashMap<String, Realm>();
+	private HashMap<String, Integer> realmMap = new HashMap<String, Integer>();
+	private Realm[] realms = new Realm[16];
 	public long worldTime = 0;
 	public String saveLoc;
 	public long seed;
@@ -50,16 +54,17 @@ public class World
 
 	public void addPlayer(ClientPlayer player)
 	{
-		Realm realm = this.realms.get(player.username);
-		if (realm == null)
+		Integer id = this.realmMap.get(player.username);
+		Realm realm;
+		if (id == null)
 		{
-			if (this.realms.size() >= 16)
-			{
-				System.out.println("Too many players!");
-				return;
-			}
 			realm = new Realm(player.username, this);
-			this.realms.put(player.username, realm);
+			this.realmMap.put(player.username, realm.realmId);
+			this.realms[realm.realmId] = realm;
+		}
+		else
+		{
+			realm = this.realms[id];
 		}
 		realm.setClient(player);
 	}
@@ -142,8 +147,16 @@ public class World
 			int cxmax;
 			int czmax;
 
-			if (ent.isDead() || ent.shouldUnload)
+			if (ent.isDead())
 			{
+				ServerPacket rem = new ServerPacketEntityRemove(EntityRemoveType.KILL, ent.entityIdentifier);
+				ent.sendPacketToClients(rem);
+				this.entities.remove(i--);
+			}
+			else if (ent.shouldUnload)
+			{
+				ServerPacket rem = new ServerPacketEntityRemove(EntityRemoveType.UNLOAD, ent.entityIdentifier);
+				ent.sendPacketToClients(rem);
 				this.entities.remove(i--);
 			}
 			else
@@ -261,6 +274,11 @@ public class World
 		return -diff;
 	}
 
+	public Realm[] getRealms()
+	{
+		return realms;
+	}
+
 	@SubscribePacket(type = (byte) 0xA0)
 	public static void processChat(ClientPacket pak, ClientPlayer player)
 	{
@@ -269,7 +287,7 @@ public class World
 		out.chat = chat.chat;
 		out.from = chat.user;
 		out.type = ServerPacketChat.ChatType.PLAYER;
-		for (Realm rlm : player.theWorld.realms.values())
+		for (Realm rlm : player.theWorld.realms)
 		{
 			if (rlm.getClient() != null)
 			{

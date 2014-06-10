@@ -2,7 +2,12 @@ package net.turrem.server;
 
 import java.util.ArrayList;
 
+import net.turrem.server.entity.Entity;
 import net.turrem.server.entity.IHolding;
+import net.turrem.server.network.server.ServerPacket;
+import net.turrem.server.network.server.ServerPacketAddEntity;
+import net.turrem.server.network.server.ServerPacketEntityRemove;
+import net.turrem.server.network.server.ServerPacketEntityRemove.EntityRemoveType;
 import net.turrem.server.world.ClientPlayer;
 import net.turrem.server.world.World;
 import net.turrem.utils.geo.Point;
@@ -21,7 +26,6 @@ public class Realm
 	public Realm(String username, World world)
 	{
 		this.theWorld = world;
-		world.realms.put(username, this);
 		this.user = username;
 		this.realmId = nextRealmId++;
 		this.spawn();
@@ -34,6 +38,14 @@ public class Realm
 		int y = this.theWorld.getHeight(x, z);
 		this.startingLocation = Point.getPoint(x, y, z);
 		this.theWorld.theTurrem.theLoader.getEntityLoader().processRealmInits(this, this.theWorld);
+	}
+	
+	public void sendPacket(ServerPacket packet)
+	{
+		if (this.client != null)
+		{
+			this.client.sendPacket(packet);
+		}
 	}
 	
 	public void joinRealm(IHolding item)
@@ -63,6 +75,18 @@ public class Realm
 	public void onPlayerExit()
 	{
 		this.client = null;
+	}
+	
+	public void onEntityDisappear(Entity ent)
+	{
+		ServerPacket rem = new ServerPacketEntityRemove(EntityRemoveType.OFFMAP, ent.entityIdentifier);
+		this.sendPacket(rem);
+	}
+	
+	public void onEntityAppear(Entity ent)
+	{
+		ServerPacket add = new ServerPacketAddEntity(ent);
+		this.sendPacket(add);
 	}
 	
 	public void setVisibility(int chunkx, int chunkz, boolean visible)

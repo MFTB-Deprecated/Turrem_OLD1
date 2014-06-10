@@ -15,7 +15,9 @@ import net.turrem.client.game.world.material.Material;
 import net.turrem.client.network.GameConnection;
 import net.turrem.client.network.client.request.RequestChunk;
 import net.turrem.client.network.server.ServerPacket;
+import net.turrem.client.network.server.ServerPacketAddEntity;
 import net.turrem.client.network.server.ServerPacketMaterialSync;
+import net.turrem.client.network.server.ServerPacketRemoveEntity;
 import net.turrem.client.network.server.ServerPacketTerrain;
 import net.turrem.client.render.engine.RenderEngine;
 import net.turrem.utils.geo.Point;
@@ -26,7 +28,7 @@ public class ClientWorld
 
 	public ChunkStorage chunks;
 
-	public HashMap<Integer, ClientEntity> entities = new HashMap<Integer, ClientEntity>();
+	public HashMap<Long, ClientEntity> entities = new HashMap<Long, ClientEntity>();
 
 	public long worldTime = 0;
 
@@ -85,9 +87,9 @@ public class ClientWorld
 
 	public void renderEntities()
 	{
-		Set<Entry<Integer, ClientEntity>> set = this.entities.entrySet();
-		ArrayList<Integer> remove = new ArrayList<Integer>();
-		for (Entry<Integer, ClientEntity> ent : set)
+		Set<Entry<Long, ClientEntity>> set = this.entities.entrySet();
+		ArrayList<Long> remove = new ArrayList<Long>();
+		for (Entry<Long, ClientEntity> ent : set)
 		{
 			ClientEntity entity = ent.getValue();
 			entity.render();
@@ -96,7 +98,7 @@ public class ClientWorld
 				remove.add(ent.getKey());
 			}
 		}
-		for (Integer id : remove)
+		for (Long id : remove)
 		{
 			this.entities.remove(id);
 		}
@@ -274,6 +276,20 @@ public class ClientWorld
 			Chunk c = terr.buildChunk();
 			this.chunks.setChunk(c);
 			c.buildRender(this.chunkRender);
+		}
+		if (pack instanceof ServerPacketRemoveEntity)
+		{
+			ServerPacketRemoveEntity rem = (ServerPacketRemoveEntity) pack;
+			ClientEntity ent = this.entities.get(rem.entityId);
+			if (ent != null)
+			{
+				ent.remove(rem.removeType);
+			}
+		}
+		if (pack instanceof ServerPacketAddEntity)
+		{
+			ServerPacketAddEntity add = (ServerPacketAddEntity) pack;
+			System.out.println("Added new entity: \"" + add.entityType + "\" (id: " + add.entityId + ")");
 		}
 	}
 }

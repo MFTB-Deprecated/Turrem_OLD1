@@ -162,6 +162,14 @@ public class ChunkGroup
 		vis &= 1;
 		return vis == 1;
 	}
+	
+	public int getVisibility(int chunkx, int chunkz)
+	{
+		int i = chunkx & 0x3F;
+		int j = chunkz & 0x3F;
+		int k = i + (j << 6);
+		return this.visibility[k] | this.oldVisibility[k];
+	}
 
 	public void tickUnload()
 	{
