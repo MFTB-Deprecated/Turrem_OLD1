@@ -17,6 +17,8 @@ public class ChunkGroup
 {
 	public World theWorld;
 	public Chunk[] chunks = new Chunk[4096];
+	public short[] visibility = new short[4096];
+	public short[] oldVisibility = new short[4096];
 	public final int groupx;
 	public final int groupy;
 
@@ -41,7 +43,44 @@ public class ChunkGroup
 		return this.getChunk(chunkx, chunky);
 	}
 
-	public void entityChunkTick(int mincx, int mincz, int maxcx, int maxcz, int px, int pz)
+	public void entityChunkTick(int mincx, int mincz, int maxcx, int maxcz, int px, int pz, float dist, int realm)
+	{
+		float sqdist = dist * dist;
+		mincx -= this.groupx * 64;
+		mincz -= this.groupy * 64;
+		maxcx -= this.groupx * 64;
+		maxcz -= this.groupy * 64;
+		mincx = mincx < 0 ? 0 : mincx;
+		mincx = mincx >= 64 ? 64 : mincx;
+		mincz = mincz < 0 ? 0 : mincz;
+		mincz = mincz >= 64 ? 64 : mincz;
+		maxcx = maxcx < 0 ? 0 : maxcx;
+		maxcx = maxcx >= 64 ? 64 : maxcx;
+		maxcz = maxcz < 0 ? 0 : maxcz;
+		maxcz = maxcz >= 64 ? 64 : maxcz;
+		for (int i = mincx; i < maxcx; i++)
+		{
+			for (int j = mincz; j < maxcz; j++)
+			{
+				int k = i + (j << 6);
+				Chunk c = this.chunks[k];
+				if (c == null)
+				{
+					c = this.provide(i + this.groupx * 64, j + this.groupy * 64);
+					this.chunks[k] = c;
+				}
+				c.onEntityTick();
+				int dx = (c.chunkx * 16 + 8) - px;
+				int dz = (c.chunkz * 16 + 8) - pz;
+				if (dx * dx + dz * dz <= sqdist)
+				{
+					this.setVisibility(i, j, realm, true);
+				}
+			}
+		}
+	}
+	
+	public void entityChunkTick(int mincx, int mincz, int maxcx, int maxcz)
 	{
 		mincx -= this.groupx * 64;
 		mincz -= this.groupy * 64;
@@ -76,12 +115,52 @@ public class ChunkGroup
 
 	}
 
+	public void resetVisibility()
+	{
+		for (int i = 0; i < 4096; i++)
+		{
+			this.oldVisibility[i] = this.visibility[i];
+			this.visibility[i] = 0;
+		}
+	}
+
 	public void unloadAll()
 	{
 		for (int i = 0; i < this.chunks.length; i++)
 		{
 			this.unloadChunk(i);
 		}
+	}
+
+	public void setVisibility(int chunkx, int chunky, int realm, boolean visible)
+	{
+		int i = chunkx & 0x3F;
+		int j = chunky & 0x3F;
+		int k = i + (j << 6);
+
+		int mod = 1;
+		mod <<= realm;
+		
+		if (visible)
+		{
+			this.visibility[k] |= mod;
+		}
+		else
+		{
+			this.visibility[k] &= ~mod;
+		}
+	}
+	
+	public boolean getVisibility(int chunkx, int chunky, int realm)
+	{
+		int i = chunkx & 0x3F;
+		int j = chunky & 0x3F;
+		int k = i + (j << 6);
+
+		int vis = this.visibility[k] | this.oldVisibility[k];
+		vis >>>= realm;
+		vis &= 1;
+		return vis == 1;
 	}
 
 	public void tickUnload()

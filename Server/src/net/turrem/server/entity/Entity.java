@@ -59,6 +59,8 @@ public abstract class Entity
 		this.shouldUnload = true;
 	}
 	
+	public abstract float veiwDistance();
+	
 	public abstract void onEnter();
 	
 	public abstract short loadRadius();

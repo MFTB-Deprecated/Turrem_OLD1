@@ -20,6 +20,12 @@ public class EntityWorldDec extends SolidEntity
 	@Override
 	public short loadRadius()
 	{
-		return 0;
+		return -1;
+	}
+
+	@Override
+	public float veiwDistance()
+	{
+		return 0.0F;
 	}
 }

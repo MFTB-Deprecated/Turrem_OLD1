@@ -8,6 +8,7 @@ import net.turrem.server.Config;
 import net.turrem.server.Realm;
 import net.turrem.server.TurremServer;
 import net.turrem.server.entity.Entity;
+import net.turrem.server.entity.IHolding;
 import net.turrem.server.load.control.SubscribePacket;
 import net.turrem.server.network.client.ClientPacket;
 import net.turrem.server.network.client.ClientPacketChat;
@@ -46,12 +47,17 @@ public class World
 			ent.onWorldRegister(this);
 		}
 	}
-	
+
 	public void addPlayer(ClientPlayer player)
 	{
 		Realm realm = this.realms.get(player.username);
 		if (realm == null)
 		{
+			if (this.realms.size() >= 16)
+			{
+				System.out.println("Too many players!");
+				return;
+			}
 			realm = new Realm(player.username, this);
 			this.realms.put(player.username, realm);
 		}
@@ -114,7 +120,7 @@ public class World
 		}
 		return img;
 	}
-	
+
 	public void unloadAll()
 	{
 		this.storage.clear();
@@ -122,6 +128,7 @@ public class World
 
 	public void updateEntities()
 	{
+		this.storage.resetVisibility();
 		for (int i = 0; i < this.entities.size(); i++)
 		{
 			Entity ent = this.entities.get(i);
@@ -142,34 +149,52 @@ public class World
 			else
 			{
 				ent.onTick();
-				if ((this.worldTime + i) % 5 == 0)
+
+				int realm = -1;
+				float vis = ent.veiwDistance();
+
+				if (ent instanceof IHolding)
 				{
-					int r = ent.loadRadius();
-					if (r > 1)
+					Realm al = ((IHolding) ent).getAllegiance();
+					if (al != null)
 					{
-						x = (int) ent.x;
-						z = (int) ent.z;
-						cx = x >> 4;
-						cz = z >> 4;
-						cxmin = cx - r;
-						czmin = cz - r;
-						cxmax = cx + r;
-						czmax = cz + r;
-						ChunkGroup[] groups = this.storage.getChunksAround(cx, cz);
-						for (ChunkGroup g : groups)
+						realm = al.realmId;
+					}
+				}
+
+				int r = ent.loadRadius();
+
+				if (r > 0)
+				{
+					x = (int) ent.x;
+					z = (int) ent.z;
+					cx = x >> 4;
+					cz = z >> 4;
+					cxmin = cx - r;
+					czmin = cz - r;
+					cxmax = cx + r;
+					czmax = cz + r;
+					ChunkGroup[] groups = this.storage.getChunksAround(cx, cz);
+					for (ChunkGroup g : groups)
+					{
+						if (realm != -1 && realm < 16)
 						{
-							g.entityChunkTick(cxmin, czmin, cxmax, czmax, cx, cz);
+							g.entityChunkTick(cxmin, czmin, cxmax, czmax, x, z, vis, realm);
+						}
+						else
+						{
+							g.entityChunkTick(cxmin, czmin, cxmax, czmax);
 						}
 					}
-					else if (r == 1)
+				}
+				else if (r == 0)
+				{
+					x = (int) ent.x;
+					z = (int) ent.z;
+					Chunk c = this.chunkAt(x, z);
+					if (c != null)
 					{
-						x = (int) ent.x;
-						z = (int) ent.z;
-						Chunk c = this.chunkAt(x, z);
-						if (c != null)
-						{
-							c.onEntityTick();
-						}
+						c.onEntityTick();
 					}
 				}
 			}
@@ -235,7 +260,7 @@ public class World
 
 		return -diff;
 	}
-	
+
 	@SubscribePacket(type = (byte) 0xA0)
 	public static void processChat(ClientPacket pak, ClientPlayer player)
 	{

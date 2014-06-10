@@ -10,8 +10,6 @@ public abstract class EntityUnit extends SoftEntity implements IHolding
 {
 	protected Realm allegiance = null;
 	
-	public abstract float veiwDistance();
-	
 	public Realm getAllegiance()
 	{
 		return this.allegiance;

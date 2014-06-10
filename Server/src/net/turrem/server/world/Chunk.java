@@ -31,6 +31,8 @@ public class Chunk
 
 	protected int entitytickcount = 0;
 	protected int noenttimer = 0;
+	
+	protected int playerLoads = 0;
 
 	public Chunk(int chunkx, int chunky, ArrayList<Stratum> strata)
 	{
