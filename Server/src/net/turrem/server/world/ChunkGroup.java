@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -236,8 +237,10 @@ public class ChunkGroup
 		int chunkz = this.chunks[k].chunkz;
 		chunkx *= 16;
 		chunkz *= 16;
-		for (Entity ent : this.theWorld.entities)
+		Iterator<Entity> it = this.theWorld.getEntities();
+		while (it.hasNext())
 		{
+			Entity ent = it.next();
 			if (ent.x >= chunkx && ent.x < chunkx + 16 && ent.z >= chunkz && ent.z < chunkz + 16)
 			{
 				ent.unload();

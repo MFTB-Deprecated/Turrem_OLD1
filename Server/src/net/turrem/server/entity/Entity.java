@@ -1,5 +1,6 @@
 package net.turrem.server.entity;
 
+import java.util.Comparator;
 import java.util.Random;
 
 import net.turrem.server.Realm;
@@ -9,6 +10,15 @@ import net.turrem.utils.nbt.NBTCompound;
 
 public abstract class Entity
 {
+	public static class EntityIndexComparator implements Comparator<Entity>
+	{
+		@Override
+		public int compare(Entity o1, Entity o2)
+		{
+			return Long.compare(o1.entityIdentifier, o2.entityIdentifier);
+		}
+	}
+	
 	protected static long nextId = 0;
 
 	public final long entityIdentifier;
