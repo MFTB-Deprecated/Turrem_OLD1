@@ -21,9 +21,10 @@ local.properties
 .gitattributes
 */bin/jars/
 *.jardesc
-*.tvf
 *.test.png
 *.test.txt
 *.log.txt
 /testsave/
 /network/
+*.qbcl
+*.tvf
