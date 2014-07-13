@@ -26,9 +26,9 @@ public class TurremServer
 	private long ticks = 0;
 
 	public World theWorld;
-	
+
 	public GameLoader theLoader;
-	
+
 	public NetworkRoom theNetwork;
 
 	public TurremServer(String dir, String save)
@@ -54,7 +54,7 @@ public class TurremServer
 		this.theLoader.loadJar(entityjar);
 		this.theNetwork = new NetworkRoom(this);
 	}
-	
+
 	public synchronized boolean acceptingClients()
 	{
 		return true;
@@ -74,19 +74,31 @@ public class TurremServer
 			try
 			{
 				long time = System.currentTimeMillis();
-				if (time - this.lastTime > 100 - this.timeoff)
+
+				this.timeoff += (time - this.lastTime) - 100;
+				if (this.timeoff < 0)
 				{
-					this.timeoff += (time - this.lastTime) - 100;
-					if (this.timeoff < 0)
+					this.timeoff = 0;
+				}
+				if (this.timeoff > 100)
+				{
+					this.timeoff = 100;
+				}
+				this.lastTime = time;
+
+				this.tick();
+
+				if (0 < 100 - this.timeoff)
+				{
+					Thread.currentThread();
+					try
 					{
-						this.timeoff = 0;
+						Thread.sleep(100 - this.timeoff);
 					}
-					if (this.timeoff > 100)
+					catch (InterruptedException e)
 					{
-						this.timeoff = 100;
+						e.printStackTrace();
 					}
-					this.lastTime = time;
-					this.tick();
 				}
 			}
 			catch (Exception e)
@@ -122,7 +134,7 @@ public class TurremServer
 			System.out.println("Ticks per Second - " + (100.0F / ((time - this.lastTPSAnTime) / 1000.0F)));
 			this.lastTPSAnTime = time;
 		}
-		
+
 		this.theNetwork.networkTick();
 	}
 
