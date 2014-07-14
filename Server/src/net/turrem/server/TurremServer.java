@@ -90,7 +90,6 @@ public class TurremServer
 
 				if (0 < 100 - this.timeoff)
 				{
-					Thread.currentThread();
 					try
 					{
 						Thread.sleep(100 - this.timeoff);

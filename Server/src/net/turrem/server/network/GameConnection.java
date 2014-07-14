@@ -263,7 +263,7 @@ public class GameConnection
 			}
 			catch (IOException e)
 			{
-				e.printStackTrace();
+				
 			}
 
 			try
@@ -272,7 +272,7 @@ public class GameConnection
 			}
 			catch (IOException e)
 			{
-				e.printStackTrace();
+				
 			}
 
 			try
@@ -281,7 +281,7 @@ public class GameConnection
 			}
 			catch (IOException e)
 			{
-				e.printStackTrace();
+				
 			}
 
 			this.input = null;
