@@ -1,214 +1,112 @@
 package net.turrem.server.world;
 
-import net.turrem.server.Config;
-import net.turrem.server.Realm;
+import java.util.Collection;
 
-public class ChunkStorage
+import net.turrem.server.world.gen.WorldGen;
+
+public class ChunkStorage implements IWorldChunkStorage
 {
-	protected World theWorld;
-	private ChunkGroup[] array;
 	public final int width;
-
-	public ChunkStorage(int width, World world)
+	public final int depth;
+	public final int mapSize;
+	
+	public ChunkQuad[] quads;
+	
+	public ChunkStorage(int width, int depth)
 	{
-		this.theWorld = world;
+		if (depth < 1)
+		{
+			throw new IllegalArgumentException("Depth must be a positive integer!");
+		}
+		if (depth > 25)
+		{
+			throw new IllegalArgumentException("Depth is too large!");
+		}
 		this.width = width;
-		this.array = new ChunkGroup[width * width];
+		this.depth = depth;
+		int s = 1;
+		for (int i = 0; i < this.depth; i++)
+		{
+			s <<= 1;
+		}
+		this.mapSize = s * this.width;
+		this.quads = new ChunkQuad[width * width];
 	}
 
-	public ChunkGroup[] getChunksAround(int chunkx, int chunkz)
+	public Chunk findChunk(int chunkx, int chunkz)
 	{
-		ChunkGroup[] aro = new ChunkGroup[4];
-		int i = chunkx - 32;
-		int j = chunkz - 32;
-		i >>= 6;
-		j >>= 6;
-		i += this.width / 2;
-		j += this.width / 2;
-		if (i < 0 || i >= this.width - 1 || j < 0 || j >= this.width - 1)
+		return this.binaryFindChunk(chunkx, chunkz, false, null);
+	}
+
+	public void generateChunk(int chunkx, int chunkz, WorldGen gen)
+	{
+		this.binaryFindChunk(chunkx, chunkz, true, gen);
+	}
+
+	public Chunk findAndGenerateChunk(int chunkx, int chunkz, World world)
+	{
+		return this.binaryFindChunk(chunkx, chunkz, true, world.theWorldGen);
+	}
+	
+	private Chunk binaryFindChunk(int chunkx, int chunkz, boolean dogen, WorldGen gen)
+	{
+		if (!this.isChunkInMap(chunkx, chunkz))
 		{
 			return null;
 		}
-		aro[0] = this.getGroup(i, j);
-		aro[1] = this.getGroup(i + 1, j);
-		aro[2] = this.getGroup(i, j + 1);
-		aro[3] = this.getGroup(i + 1, j + 1);
-		return aro;
-	}
-
-	private boolean isChunkOutside(int chunkx, int chunkz)
-	{
-		int i = chunkx;
-		int j = chunkz;
-		i >>= 6;
-		j >>= 6;
-		i += this.width / 2;
-		j += this.width / 2;
-		return (i < 0 || i >= this.width - 1 || j < 0 || j >= this.width - 1);
+		int u = chunkx << (32 - this.depth);
+		int v = chunkz << (32 - this.depth);
+		int U = chunkx >> (this.depth);
+		int V = chunkz >> (this.depth);
+		ChunkQuad quad = this.getQuad(U, V, dogen);
+		if (quad != null)
+		{
+			return quad.binaryFindChunk(u, v, dogen, gen);
+		}
+		return null;
 	}
 	
-	public void sendChunkUpdateToClients(int chunkx, int chunkz)
+	private ChunkQuad getQuad(int U, int V, boolean make)
 	{
-		int vis = this.getVisibility(chunkx, chunkz);
-		ChunkUpdate update = this.getChunkUpdate(chunkx, chunkz);
-		
-		for (int i = 0; i < 16; i++)
-		{
-			if ((vis & 1) == 1)
-			{
-				Realm realm = this.theWorld.getRealms()[i];
-				if (realm != null)
-				{
-					realm.addChunkUpdate(update);
-				}
-			}
-			vis >>>= 1;
-		}
-	}
-	
-	public ChunkUpdate getChunkUpdate(int chunkx, int chunkz)
-	{
-		return new ChunkUpdate(chunkx, chunkz);
-	}
-
-	private ChunkGroup getGroup(int i, int j)
-	{
-		int k = i + j * this.width;
-		if (this.array[k] == null)
-		{
-			this.array[k] = new ChunkGroup(i - this.width / 2, j - this.width / 2, this.theWorld);
-		}
-		return this.array[k];
-	}
-
-	public void tick(long time)
-	{
-		for (int i = 0; i < this.array.length; i++)
-		{
-			if (this.array[i] != null)
-			{
-				this.array[i].onTick();
-				if ((i + time) % Config.chunkUnloadTickMod == 0)
-				{
-					this.array[i].tickUnload();
-				}
-			}
-		}
-	}
-	
-	public void processVisibility()
-	{
-		for (int i = 0; i < this.array.length; i++)
-		{
-			if (this.array[i] != null)
-			{
-				this.array[i].processVisibility();
-			}
-		}
-	}
-
-	public void setVisibility(int chunkx, int chunkz, int realm, boolean visible)
-	{
-		if (!this.isChunkOutside(chunkx, chunkz))
-		{
-			int i = this.getIndex(chunkx, chunkz);
-			ChunkGroup cg = this.array[i];
-			if (cg == null)
-			{
-				if (visible)
-				{
-					cg = new ChunkGroup(chunkx >> 6, chunkz >> 6, this.theWorld);
-					this.array[i] = cg;
-				}
-				else
-				{
-					return;
-				}
-			}
-			cg.setVisibility(chunkx, chunkz, realm, visible);
-		}
-	}
-
-	public boolean getVisibility(int chunkx, int chunkz, int realm)
-	{
-		if (this.isChunkOutside(chunkx, chunkz))
-		{
-			return false;
-		}
-		int i = this.getIndex(chunkx, chunkz);
-		ChunkGroup cg = this.array[i];
-		if (cg == null)
-		{
-			return false;
-		}
-		return cg.getVisibility(chunkx, chunkz, realm);
-	}
-
-	public int getVisibility(int chunkx, int chunkz)
-	{
-		if (this.isChunkOutside(chunkx, chunkz))
-		{
-			return 0;
-		}
-		int i = this.getIndex(chunkx, chunkz);
-		ChunkGroup cg = this.array[i];
-		if (cg == null)
-		{
-			return 0;
-		}
-		return cg.getVisibility(chunkx, chunkz);
-	}
-
-	private int getIndex(int i, int j)
-	{
-		i >>= 6;
-		j >>= 6;
-		i += width / 2;
-		j += width / 2;
-		return i + j * this.width;
-	}
-
-	public Chunk getChunk(int chunkx, int chunkz)
-	{
-		if (this.isChunkOutside(chunkx, chunkz))
+		if (U < 0 || U >= this.width || V < 0 || V >= this.width)
 		{
 			return null;
 		}
-		int i = this.getIndex(chunkx, chunkz);
-		ChunkGroup cg = this.array[i];
-		if (cg == null)
+		int i = U + V * this.width;
+		if (this.quads[i] != null)
 		{
-			cg = new ChunkGroup(chunkx >> 6, chunkz >> 6, this.theWorld);
-			this.array[i] = cg;
+			return this.quads[i];
 		}
-		Chunk ch = cg.getChunk(chunkx, chunkz);
-		return ch;
-	}
-
-	public ChunkGroup[] getArray()
-	{
-		return array;
-	}
-
-	public int distSqr(int dx, int dz)
-	{
-		return dx * dx + dz * dz;
-	}
-
-	public int distSqr(int x0, int x1, int z0, int z1)
-	{
-		return this.distSqr(x0 - x1, z0 - z1);
-	}
-
-	public void clear()
-	{
-		for (int i = 0; i < this.array.length; i++)
+		if (make)
 		{
-			if (this.array[i] != null)
-			{
-				this.array[i].unloadAll();
-				this.array[i] = null;
-			}
+			ChunkQuad qu = new ChunkQuad(this, this, this.depth, U, V);
+			this.quads[i] = qu;
+			return qu;
 		}
+		else
+		{
+			return null;
+		}
+	}
+
+	@Override
+	public Collection<Chunk> getChunks(Collection<Chunk> list)
+	{
+		return null;
+	}
+	
+	public Chunk loadChunk(int chunkx, int chunkz)
+	{
+		return null;
+	}
+	
+	public Chunk genChunk(int chunkx, int chunkz, WorldGen gen)
+	{
+		return null;
+	}
+	
+	public boolean isChunkInMap(int chunkx, int chunkz)
+	{
+		return chunkx >= 0 && chunkx < this.mapSize && chunkz >= 0 && chunkz < this.mapSize;
 	}
 }

@@ -9,8 +9,8 @@ import java.util.Iterator;
 import net.turrem.server.Config;
 import net.turrem.server.Realm;
 import net.turrem.server.TurremServer;
-import net.turrem.server.entity.Entity;
 import net.turrem.server.entity.IHolding;
+import net.turrem.server.entity.SoftEntity;
 import net.turrem.server.load.control.SubscribePacket;
 import net.turrem.server.network.client.ClientPacket;
 import net.turrem.server.network.client.ClientPacketChat;
@@ -20,12 +20,9 @@ import net.turrem.server.network.server.ServerPacketEntityRemove;
 import net.turrem.server.network.server.ServerPacketEntityRemove.EntityRemoveType;
 import net.turrem.server.world.gen.WorldGen;
 import net.turrem.server.world.gen.WorldGenBasic;
-import net.turrem.server.world.material.Material;
 
 public class World
 {
-	private ArrayList<Entity> entities = new ArrayList<Entity>();
-	public ChunkStorage storage = new ChunkStorage(Config.chunkStorageWidth, this);
 	private HashMap<String, Integer> realmMap = new HashMap<String, Integer>();
 	private Realm[] realms = new Realm[16];
 	public long worldTime = 0;
@@ -45,28 +42,6 @@ public class World
 		this.theWorldGen = new WorldGenBasic(this.seed);
 	}
 
-	public void addEntity(Entity ent)
-	{
-		if (ent != null)
-		{
-			boolean sort = false;
-			if (!this.entities.isEmpty() && this.entities.get(this.entities.size() - 1).entityIdentifier > ent.entityIdentifier)
-			{
-				sort = true;
-			}
-			this.entities.add(ent);
-			ent.onWorldRegister(this);
-			if (sort)
-			{
-				this.sortEntities();
-			}
-		}
-	}
-
-	public Iterator<Entity> getEntities()
-	{
-		return this.entities.iterator();
-	}
 
 	/**
 	 * Finds the entity with the given identifier using a binary search
@@ -77,63 +52,6 @@ public class World
 	 * @return The entity with that identifier. Null if that entity has been
 	 *         removed or if the world's entity list is out of order.
 	 */
-	public Entity getEntity(long id)
-	{
-		int num = this.entities.size();
-		if (num == 0)
-		{
-			return null;
-		}
-		int size = num;
-		int exp = 0;
-		while (size != 1)
-		{
-			size >>>= 1;
-			exp++;
-		}
-		size = 1;
-		size <<= exp;
-		if (num > size)
-		{
-			size <<= 1;
-		}
-		size >>>= 1;
-		int select = size;
-		int its = 0;
-		while (its++ <= exp + 1)
-		{
-			if (size > 1)
-			{
-				size >>>= 1;
-			}
-			if (select >= num)
-			{
-				select -= size;
-			}
-			else
-			{
-				long sid = this.entities.get(select).entityIdentifier;
-				if (sid == id)
-				{
-					return this.entities.get(select);
-				}
-				if (sid > id)
-				{
-					select -= size;
-				}
-				if (sid < id)
-				{
-					select += size;
-				}
-			}
-		}
-		return null;
-	}
-
-	public void sortEntities()
-	{
-		Collections.sort(this.entities, new Entity.EntityIndexComparator());
-	}
 
 	public void addPlayer(ClientPlayer player)
 	{

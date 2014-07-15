@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import net.turrem.server.Realm;
-import net.turrem.server.entity.Entity;
 import net.turrem.server.network.GameConnection;
 import net.turrem.server.network.client.ClientPacket;
 import net.turrem.server.network.client.ClientPacketMove;
@@ -15,7 +14,6 @@ import net.turrem.server.network.server.ServerPacket;
 import net.turrem.server.network.server.ServerPacketMaterialSync;
 import net.turrem.server.network.server.ServerPacketStartingInfo;
 import net.turrem.server.network.server.ServerPacketTerrain;
-import net.turrem.server.world.material.Material;
 
 public class ClientPlayer
 {
