@@ -78,6 +78,10 @@ public class ChunkQuad implements IWorldChunkStorageSegment, IWorldChunkStorage
 		if (chunk != null)
 		{
 			this.quad[i] = chunk;
+			if (chunk != null)
+			{
+				chunk.setParentQuad(this);
+			}
 			return chunk;
 		}
 		if (dogen)
@@ -86,6 +90,10 @@ public class ChunkQuad implements IWorldChunkStorageSegment, IWorldChunkStorage
 			if (chunk != null)
 			{
 				this.quad[i] = chunk;
+				if (chunk != null)
+				{
+					chunk.setParentQuad(this);
+				}
 				return chunk;
 			}
 		}
@@ -136,5 +144,20 @@ public class ChunkQuad implements IWorldChunkStorageSegment, IWorldChunkStorage
 			}
 		}
 		return list;
+	}
+
+	@Override
+	public void removeMe(int U, int V)
+	{
+		int i = U + V * 2;
+		this.quad[i] = null;
+		for (int j = 0; j < 4; j++)
+		{
+			if (this.quad[j] != null)
+			{
+				return;
+			}
+		}
+		this.theParent.removeMe(this.xpos % 2, this.zpos % 2);
 	}
 }
