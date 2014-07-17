@@ -33,12 +33,15 @@ public class World
 	private Chunk lastChunk;
 
 	public WorldGen theWorldGen;
+	
+	public WorldStorage storage;
 
 	public World(String save, long seed, TurremServer turrem)
 	{
 		this.theTurrem = turrem;
 		this.saveLoc = save;
 		this.seed = seed;
+		this.storage = new WorldStorage(32, 9);
 		this.theWorldGen = new WorldGenBasic(this.seed);
 	}
 

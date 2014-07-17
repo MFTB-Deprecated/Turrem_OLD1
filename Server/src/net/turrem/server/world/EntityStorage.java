@@ -8,13 +8,6 @@ import net.turrem.server.entity.SoftEntity;
 
 public class EntityStorage
 {
-	public World theWorld;
-	
-	public EntityStorage(World world)
-	{
-		this.theWorld = world;
-	}
-	
 	public static class EntityIndexComparator implements Comparator<SoftEntity>
 	{
 		@Override
@@ -24,9 +17,16 @@ public class EntityStorage
 		}
 	}
 	
+	public World theWorld;
+	
 	private ArrayList<SoftEntity> entities = new ArrayList<SoftEntity>();
 	
-	public SoftEntity getSoftEntity(long id)
+	public EntityStorage(World world)
+	{
+		this.theWorld = world;
+	}
+	
+	public SoftEntity getSoftEntity(int id)
 	{
 		int num = this.entities.size();
 		if (num == 0)
@@ -61,7 +61,7 @@ public class EntityStorage
 			}
 			else
 			{
-				long sid = this.entities.get(select).entityIdentifier;
+				int sid = this.entities.get(select).entityIdentifier;
 				if (sid == id)
 				{
 					return this.entities.get(select);
@@ -93,6 +93,7 @@ public class EntityStorage
 			{
 				sort = true;
 			}
+			ent.onPreWorldRegister(this.theWorld);
 			this.entities.add(ent);
 			ent.onWorldRegister(this.theWorld);
 			if (sort)
@@ -100,5 +101,26 @@ public class EntityStorage
 				this.sortEntities();
 			}
 		}
+	}
+
+	public void worldTick()
+	{
+		for (int entityIndex = 0; entityIndex < this.entities.size(); entityIndex++)
+		{
+			SoftEntity entity = this.entities.get(entityIndex);
+			if (entity == null || !entity.isAlive())
+			{
+				this.entities.remove(entityIndex--);
+			}
+			else
+			{
+				this.entityTick(entity);
+			}
+		}
+	}
+	
+	public void entityTick(SoftEntity entity)
+	{
+		
 	}
 }
