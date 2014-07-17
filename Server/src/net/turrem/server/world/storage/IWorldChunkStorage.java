@@ -1,6 +1,8 @@
-package net.turrem.server.world;
+package net.turrem.server.world.storage;
 
 import java.util.Collection;
+
+import net.turrem.server.world.Chunk;
 
 public interface IWorldChunkStorage
 {	

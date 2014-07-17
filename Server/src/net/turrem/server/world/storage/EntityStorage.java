@@ -1,22 +1,14 @@
-package net.turrem.server.world;
+package net.turrem.server.world.storage;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 
 import net.turrem.server.entity.SoftEntity;
+import net.turrem.server.world.EntityIndexComparator;
+import net.turrem.server.world.World;
 
 public class EntityStorage
 {
-	public static class EntityIndexComparator implements Comparator<SoftEntity>
-	{
-		@Override
-		public int compare(SoftEntity o1, SoftEntity o2)
-		{
-			return Long.compare(o1.entityIdentifier, o2.entityIdentifier);
-		}
-	}
-	
 	public World theWorld;
 	
 	private ArrayList<SoftEntity> entities = new ArrayList<SoftEntity>();
@@ -122,5 +114,10 @@ public class EntityStorage
 	public void entityTick(SoftEntity entity)
 	{
 		
+	}
+
+	public void clear()
+	{
+		this.entities.clear();
 	}
 }

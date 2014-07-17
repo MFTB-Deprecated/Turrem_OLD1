@@ -29,11 +29,19 @@ public abstract class SoftEntity implements IEntity
 		
 	}
 	
+	@Override
 	public void kill()
 	{
 		this.isAlive = false;
+		this.onDie();
 	}
 	
+	public void onDie()
+	{
+		
+	}
+	
+	@Override
 	public boolean isAlive()
 	{
 		return this.isAlive;

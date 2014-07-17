@@ -1,7 +1,8 @@
-package net.turrem.server.world;
+package net.turrem.server.world.storage;
 
 import java.util.Collection;
 
+import net.turrem.server.world.Chunk;
 import net.turrem.server.world.gen.WorldGen;
 
 public class ChunkQuad implements IWorldChunkStorageSegment, IWorldChunkStorage
@@ -159,5 +160,46 @@ public class ChunkQuad implements IWorldChunkStorageSegment, IWorldChunkStorage
 			}
 		}
 		this.theParent.removeMe(this.xpos % 2, this.zpos % 2);
+	}
+
+	public void worldTick()
+	{
+		if (this.thisDepth == 1)
+		{
+			for (IWorldChunkStorageSegment seg : this.quad)
+			{
+				if (seg != null && seg instanceof Chunk)
+				{
+					((Chunk) seg).worldTick();
+				}
+			}
+		}
+		else
+		{
+			for (IWorldChunkStorageSegment seg : this.quad)
+			{
+				if (seg != null && seg instanceof ChunkQuad)
+				{
+					((ChunkQuad) seg).worldTick();
+				}
+			}
+		}
+	}
+
+	public void clear()
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			IWorldChunkStorageSegment seg = this.quad[i];
+			if (seg != null && seg instanceof ChunkQuad)
+			{
+				((ChunkQuad) seg).clear();
+			}
+			else if (seg != null && seg instanceof Chunk)
+			{
+				((Chunk) seg).unload();
+			}
+			this.quad[i] = null;
+		}
 	}
 }

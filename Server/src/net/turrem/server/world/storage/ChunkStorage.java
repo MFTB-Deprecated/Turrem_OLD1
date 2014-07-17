@@ -1,8 +1,10 @@
-package net.turrem.server.world;
+package net.turrem.server.world.storage;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
+import net.turrem.server.world.Chunk;
+import net.turrem.server.world.World;
 import net.turrem.server.world.gen.WorldGen;
 
 public class ChunkStorage implements IWorldChunkStorage
@@ -136,5 +138,29 @@ public class ChunkStorage implements IWorldChunkStorage
 	{
 		int i = U + V * this.width;
 		this.quads[i] = null;
+	}
+
+	public void worldTick()
+	{
+		for (ChunkQuad quad : this.quads)
+		{
+			if (quad != null)
+			{
+				quad.worldTick();
+			}
+		}
+	}
+
+	public void clear()
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			ChunkQuad quad = this.quads[i];
+			if (quad != null)
+			{
+				quad.clear();
+			}
+			this.quads[i] = null;
+		}
 	}
 }

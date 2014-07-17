@@ -1,4 +1,6 @@
-package net.turrem.server.world;
+package net.turrem.server.world.storage;
+
+import net.turrem.server.world.World;
 
 public class WorldStorage
 {
@@ -20,6 +22,12 @@ public class WorldStorage
 	
 	public void tickChunks()
 	{
-		
+		this.chunks.worldTick();
+	}
+
+	public void clear()
+	{
+		this.chunks.clear();
+		this.entities.clear();
 	}
 }

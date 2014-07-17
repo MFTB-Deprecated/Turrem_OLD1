@@ -20,6 +20,7 @@ import net.turrem.server.network.server.ServerPacketEntityRemove;
 import net.turrem.server.network.server.ServerPacketEntityRemove.EntityRemoveType;
 import net.turrem.server.world.gen.WorldGen;
 import net.turrem.server.world.gen.WorldGenBasic;
+import net.turrem.server.world.storage.WorldStorage;
 
 public class World
 {
@@ -41,7 +42,7 @@ public class World
 		this.theTurrem = turrem;
 		this.saveLoc = save;
 		this.seed = seed;
-		this.storage = new WorldStorage(32, 9);
+		this.storage = new WorldStorage(32, 9, this);
 		this.theWorldGen = new WorldGenBasic(this.seed);
 	}
 
@@ -77,7 +78,8 @@ public class World
 	{
 		this.worldTime++;
 		this.updateEntities();
-		this.storage.tick(this.worldTime);
+		this.storage.tickChunks();
+		this.storage.tickEntities();
 		for (Realm realm : this.realms)
 		{
 			if (realm != null)
@@ -85,56 +87,6 @@ public class World
 				realm.tick();
 			}
 		}
-	}
-
-	public BufferedImage testTerrainMap()
-	{
-		BufferedImage img = new BufferedImage(128, 128, BufferedImage.TYPE_INT_RGB);
-		for (int ci = -4; ci < 4; ci++)
-		{
-			for (int cj = -4; cj < 4; cj++)
-			{
-				Chunk chunk = this.getChunk(ci, cj);
-				short[] map = chunk.getHeightMap();
-				for (int i = 0; i < 16; i++)
-				{
-					for (int j = 0; j < 16; j++)
-					{
-						int k = i + j * 16;
-						int x = (ci + 4) * 16 + i;
-						int y = (cj + 4) * 16 + j;
-						float h = map[k];
-						h -= 64;
-						h /= 128;
-						if (h < 0.0F)
-						{
-							h = 0.0F;
-						}
-						if (h > 1.0F)
-						{
-							h = 1.0F;
-						}
-						Material mat = Material.list.get(chunk.getTopMaterial(x, y));
-						int rgb = 0x000000;
-						if (mat != null)
-						{
-							rgb = mat.getColor();
-						}
-						{
-							int r = (rgb >> 16) & 0xFF;
-							int g = (rgb >> 8) & 0xFF;
-							int b = (rgb >> 0) & 0xFF;
-							r = (int) (h * r);
-							g = (int) (h * g);
-							b = (int) (h * b);
-							rgb = (r << 16) | (g << 8) | b;
-						}
-						img.setRGB(x, y, rgb);
-					}
-				}
-			}
-		}
-		return img;
 	}
 
 	public void unloadAll()
@@ -241,12 +193,12 @@ public class World
 
 	public Chunk chunkAt(int x, int z)
 	{
-		return this.storage.getChunk(x >> 4, z >> 4);
+		return this.storage.chunks.findAndGenerateChunk(x >> 4, z >> 4, this);
 	}
 
-	public Chunk getChunk(int x, int z)
+	public Chunk getChunk(int chunkx, int chunkz)
 	{
-		return this.storage.getChunk(x, z);
+		return this.storage.chunks.findAndGenerateChunk(chunkx, chunkz, this);
 	}
 
 	public int getSideDrop(int x, int z)
