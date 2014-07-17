@@ -1,35 +1,15 @@
 package net.turrem.client.game.world.material;
 
-import java.util.HashMap;
+import net.turrem.utils.graphics.MakeColor;
 
-public abstract class Material
+public class Material
 {
-	public static HashMap<String, Material> list = new HashMap<String, Material>();
-	public static HashMap<Short, String> numidmap = new HashMap<Short, String>();
+	public byte red = (byte) 0xFF;
+	public byte green = (byte) 0xFF;
+	public byte blue = (byte) 0xFF;
 	
-	public static Material stone = new Stone("stone");
-	public static Material dirt = new Dirt("dirt");
-	public static Material grass = new Grass("grass");
-	public static Material water = new Water("water");
-	public static Material sand = new Sand("sand");
-
-	public final String id;
-
-	public Material(String id)
+	public int getColor()
 	{
-		this.id = id;
-		list.put(this.id, this);
-	}
-
-	public abstract int getColor();
-	
-	public static Material getMaterial(short num)
-	{
-		String id = numidmap.get(num);
-		if (id == null)
-		{
-			return null;
-		}
-		return list.get(id);
+		return MakeColor.RGB(red & 0xFF, green & 0xFF, blue & 0xFF);
 	}
 }

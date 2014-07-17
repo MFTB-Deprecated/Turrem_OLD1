@@ -18,6 +18,12 @@ public abstract class SolidEntity implements IEntity
 		this.entityIdentifier = nextId++;
 	}
 	
+	@Override
+	public int getEntityIdentifier()
+	{
+		return this.entityIdentifier;
+	}
+	
 	public void onChunkUnload(int chunkX, int chunkZ)
 	{
 		

@@ -125,7 +125,7 @@ public class ChunkStorage implements IWorldChunkStorage
 
 	public Chunk genChunk(int chunkx, int chunkz, WorldGen gen)
 	{
-		return null;
+		return gen.generateChunk(chunkx, chunkz);
 	}
 
 	public boolean isChunkInMap(int chunkx, int chunkz)

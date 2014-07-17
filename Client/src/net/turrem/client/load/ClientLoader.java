@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 
 import net.turrem.client.Turrem;
-import net.turrem.client.game.entity.ClientEntity;
-import net.turrem.client.game.entity.EntityRegistry;
 import net.turrem.client.load.control.GameEntity;
 import net.turrem.utils.JarExplore;
 import net.turrem.utils.JarLoader;
@@ -27,11 +25,13 @@ public class ClientLoader implements IClientLoad
 	{
 		if (clss.isAnnotationPresent(GameEntity.class))
 		{
+			/**
 			if (ClientEntity.class.isAssignableFrom(clss))
 			{
 				GameEntity ann = clss.getAnnotation(GameEntity.class);
 				EntityRegistry.register(ann.id(), clss.asSubclass(ClientEntity.class));
 			}
+			**/
 		}
 	}
 

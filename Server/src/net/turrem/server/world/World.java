@@ -1,23 +1,13 @@
 package net.turrem.server.world;
 
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 
-import net.turrem.server.Config;
 import net.turrem.server.Realm;
 import net.turrem.server.TurremServer;
-import net.turrem.server.entity.IHolding;
-import net.turrem.server.entity.SoftEntity;
 import net.turrem.server.load.control.SubscribePacket;
 import net.turrem.server.network.client.ClientPacket;
 import net.turrem.server.network.client.ClientPacketChat;
-import net.turrem.server.network.server.ServerPacket;
 import net.turrem.server.network.server.ServerPacketChat;
-import net.turrem.server.network.server.ServerPacketEntityRemove;
-import net.turrem.server.network.server.ServerPacketEntityRemove.EntityRemoveType;
 import net.turrem.server.world.gen.WorldGen;
 import net.turrem.server.world.gen.WorldGenBasic;
 import net.turrem.server.world.storage.WorldStorage;
@@ -77,7 +67,6 @@ public class World
 	public void tick()
 	{
 		this.worldTime++;
-		this.updateEntities();
 		this.storage.tickChunks();
 		this.storage.tickEntities();
 		for (Realm realm : this.realms)
@@ -94,6 +83,7 @@ public class World
 		this.storage.clear();
 	}
 
+	/**
 	public void updateEntities()
 	{
 		for (int i = 0; i < this.entities.size(); i++)
@@ -177,6 +167,7 @@ public class World
 
 		this.storage.processVisibility();
 	}
+	**/
 
 	public short getHeight(int x, int z)
 	{

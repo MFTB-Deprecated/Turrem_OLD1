@@ -23,6 +23,12 @@ public abstract class SoftEntity implements IEntity
 			throw new IndexOutOfBoundsException("Entity ID overflow! Over 2,147,483,648 entities have been created!");
 		}
 	}
+	
+	@Override
+	public int getEntityIdentifier()
+	{
+		return this.entityIdentifier;
+	}
 
 	public void onWorldRegister(World world)
 	{

@@ -6,4 +6,9 @@ public class Material
 	{
 		return true;
 	}
+
+	public short getNumId()
+	{
+		return 0;
+	}
 }

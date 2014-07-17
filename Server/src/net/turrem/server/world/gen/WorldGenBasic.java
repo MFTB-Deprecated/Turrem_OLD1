@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import net.turrem.server.TurremServer;
 import net.turrem.server.world.Chunk;
 import net.turrem.server.world.Stratum;
+import net.turrem.server.world.material.Material;
 
 public class WorldGenBasic extends WorldGen
 {
@@ -25,7 +26,20 @@ public class WorldGenBasic extends WorldGen
 	}
 
 	@Override
-	public ArrayList<Stratum> generateChunk(int chunkx, int chunky)
+	public Chunk generateChunk(int chunkx, int chunky)
+	{
+		Chunk chunk = new Chunk(chunkx, chunky);
+		ArrayList<Stratum> strata = this.generateStrata(chunkx, chunky);
+		short[] height = new short[256];
+		for (Stratum st : strata)
+		{
+			st.sumHeight(height);
+		}
+		chunk.generateWithTop(height, strata);
+		return chunk;
+	}
+	
+	public ArrayList<Stratum> generateStrata(int chunkx, int chunky)
 	{
 		ArrayList<Stratum> strata = new ArrayList<Stratum>();
 		float[] la = this.large.getChunk(chunkx, chunky);
@@ -53,18 +67,18 @@ public class WorldGenBasic extends WorldGen
 				h -= H;
 				if (j >= strata.size())
 				{
-					strata.add(new Stratum("stone"));
+					strata.add(new Stratum(new Material(), new byte[256]));
 				}
 				strata.get(j).depth[i] = (byte) H;
 				j++;
 			}
 		}
 		int dirtl = strata.size();
-		strata.add(new Stratum("dirt"));
+		strata.add(new Stratum(new Material(), new byte[256]));
 		int grassl = strata.size();
-		strata.add(new Stratum("grass"));
+		strata.add(new Stratum(new Material(), new byte[256]));
 		int sandl = strata.size();
-		strata.add(new Stratum("sand"));
+		strata.add(new Stratum(new Material(), new byte[256]));
 		int waterl = strata.size();
 		for (int i = 0; i < 256; i++)
 		{
@@ -110,7 +124,7 @@ public class WorldGenBasic extends WorldGen
 					h -= H;
 					if (j >= strata.size())
 					{
-						strata.add(new Stratum("water"));
+						strata.add(new Stratum(new Material(), new byte[256]));
 					}
 					strata.get(j).depth[i] = (byte) H;
 					j++;

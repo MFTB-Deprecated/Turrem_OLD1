@@ -3,23 +3,15 @@ package net.turrem.client.game.world;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import net.turrem.client.Config;
 import net.turrem.client.game.ClientGame;
 import net.turrem.client.game.PlayerFace;
-import net.turrem.client.game.entity.ClientEntity;
-import net.turrem.client.game.world.material.Material;
+import net.turrem.client.game.world.material.MaterialList;
 import net.turrem.client.network.GameConnection;
 import net.turrem.client.network.client.request.RequestChunk;
 import net.turrem.client.network.server.ServerPacket;
-import net.turrem.client.network.server.ServerPacketAddEntity;
 import net.turrem.client.network.server.ServerPacketMaterialSync;
-import net.turrem.client.network.server.ServerPacketMoveEntity;
-import net.turrem.client.network.server.ServerPacketRemoveEntity;
 import net.turrem.client.network.server.ServerPacketStartingInfo;
 import net.turrem.client.network.server.ServerPacketTerrain;
 import net.turrem.client.render.engine.RenderEngine;
@@ -30,8 +22,6 @@ public class ClientWorld
 	public ClientGame theGame;
 
 	public ChunkStorage chunks;
-
-	public HashMap<Long, ClientEntity> entities = new HashMap<Long, ClientEntity>();
 
 	public long worldTime = 0;
 
@@ -90,31 +80,7 @@ public class ClientWorld
 
 	public void renderEntities()
 	{
-		Set<Entry<Long, ClientEntity>> set = this.entities.entrySet();
-		ArrayList<Long> remove = new ArrayList<Long>();
-		for (Entry<Long, ClientEntity> ent : set)
-		{
-			ClientEntity entity = ent.getValue();
-			entity.render();
-			if (!entity.isPresent())
-			{
-				remove.add(ent.getKey());
-			}
-		}
-		for (Long id : remove)
-		{
-			this.entities.remove(id);
-		}
-	}
-
-	public void pushEntity(ClientEntity entity)
-	{
-		ClientEntity prev = this.entities.put(entity.entityId, entity);
-		if (prev != null)
-		{
-			prev.onOverride();
-		}
-		entity.loadAssets(this.theGame.theManager);
+		
 	}
 
 	public Chunk getChunk(int chunkx, int chunkz)
@@ -280,7 +246,7 @@ public class ClientWorld
 		if (pack instanceof ServerPacketMaterialSync)
 		{
 			ServerPacketMaterialSync sync = (ServerPacketMaterialSync) pack;
-			Material.numidmap.put(sync.num, sync.id);
+			MaterialList.put(sync);
 		}
 		if (pack instanceof ServerPacketTerrain)
 		{
@@ -288,39 +254,6 @@ public class ClientWorld
 			Chunk c = terr.buildChunk();
 			this.chunks.setChunk(c);
 			c.buildRender(this.chunkRender);
-		}
-		if (pack instanceof ServerPacketRemoveEntity)
-		{
-			ServerPacketRemoveEntity rem = (ServerPacketRemoveEntity) pack;
-			ClientEntity ent = this.entities.get(rem.entityId);
-			System.out.println("Removed entity: \"" + ent.getClass().getSimpleName() + "\" (id: " + rem.entityId + ")");
-			if (ent != null)
-			{
-				ent.remove(rem.removeType);
-			}
-		}
-		if (pack instanceof ServerPacketAddEntity)
-		{
-			ServerPacketAddEntity add = (ServerPacketAddEntity) pack;
-			ClientEntity entity = add.makeEntity(this);
-			if (entity != null)
-			{
-				this.pushEntity(entity);
-				System.out.println("Added new entity: \"" + add.entityType + "\" (id: " + add.entityId + ")");
-			}
-			else
-			{
-				System.out.println("Failed to add new entity: \"" + add.entityType + "\" (id: " + add.entityId + ")");
-			}
-		}
-		if (pack instanceof ServerPacketMoveEntity)
-		{
-			ServerPacketMoveEntity move = (ServerPacketMoveEntity) pack;
-			ClientEntity entity = this.entities.get(move.entityId);
-			if (entity != null)
-			{
-				entity.setMove(move.xpos, move.ypos, move.zpos, move.moveTime);
-			}
 		}
 		if (pack instanceof ServerPacketStartingInfo)
 		{

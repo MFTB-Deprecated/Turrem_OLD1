@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import net.turrem.client.Config;
 import net.turrem.client.game.world.Chunk;
 import net.turrem.client.game.world.material.Material;
+import net.turrem.client.game.world.material.MaterialList;
 import net.turrem.utils.models.TVFFile;
 import net.turrem.utils.models.TVFFile.TVFFace;
 import net.turrem.utils.models.TVFFile.TVFColor;
@@ -63,7 +64,7 @@ public class ServerPacketTerrain extends ServerPacket
 
 		for (int i = 0; i < colors.length; i++)
 		{
-			Material mat = Material.getMaterial(this.mats[i]);
+			Material mat = MaterialList.getMaterial(this.mats[i]);
 			int cint = 0xFFFFFF;
 			if (mat != null)
 			{

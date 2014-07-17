@@ -12,12 +12,6 @@ import net.turrem.server.world.World;
 @GameEntity(from = "turrem", author = "eekysam")
 public class EntityTree extends EntityWorldDec
 {
-	@Override
-	public String getEntityType()
-	{
-		return "tree";
-	}
-	
 	@SubscribeLoad
 	public static void onLoad(TurremServer server)
 	{
@@ -32,14 +26,7 @@ public class EntityTree extends EntityWorldDec
 		{
 			int x = rand.nextInt(16);
 			int z = rand.nextInt(16);
-			if (chunk.getTopStratum(x, z).getMaterial().canGrowTrees(rand.nextFloat()))
-			{
-				EntityTree tree = new EntityTree();
-				tree.x = chunk.chunkx * 16 + x + 0.5D;
-				tree.z = chunk.chunkz * 16 + z + 0.5D;
-				tree.y = chunk.getHeight(x, z);
-				world.addEntity(tree);
-			}
+			chunk.getTopStratum(x, z);
 		}
 	}
 }

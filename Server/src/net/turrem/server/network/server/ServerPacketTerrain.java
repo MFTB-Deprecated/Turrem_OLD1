@@ -39,7 +39,7 @@ public class ServerPacketTerrain extends ServerPacket
 	{
 		this.voffset = ch.getMinHeight();
 
-		short[] map = ch.getHeightMap();
+		short[] map = ch.getHeight();
 
 		this.hmap = new byte[256];
 		this.chunk = new byte[256][];
