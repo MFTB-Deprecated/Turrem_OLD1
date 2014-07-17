@@ -111,7 +111,7 @@ public class ChunkQuad implements IWorldChunkStorageSegment, IWorldChunkStorage
 		}
 		if (make)
 		{
-			ChunkQuad qu = new ChunkQuad(this.theStorage, this, this.thisDepth - 1, this.xpos * 2 + u, this.xpos * 2 + v);
+			ChunkQuad qu = new ChunkQuad(this.theStorage, this, this.thisDepth - 1, this.xpos * 2 + u, this.zpos * 2 + v);
 			this.quad[i] = qu;
 			return qu;
 		}
