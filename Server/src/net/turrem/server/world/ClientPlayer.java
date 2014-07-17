@@ -36,11 +36,6 @@ public class ClientPlayer
 	public void joinNetwork(GameConnection connection)
 	{
 		this.theConnection = connection;
-		for (Material mat : Material.list.values())
-		{
-			ServerPacketMaterialSync sync = new ServerPacketMaterialSync(mat);
-			this.theConnection.addToSendQueue(sync);
-		}
 	}
 
 	public void sendPacket(ServerPacket packet)
