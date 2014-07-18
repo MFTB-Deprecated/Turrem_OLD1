@@ -4,6 +4,7 @@ import net.turrem.utils.graphics.MakeColor;
 
 public class Material
 {
+	public String name = "-BROKEN MATERIAL-";
 	public byte red = (byte) 0xFF;
 	public byte green = (byte) 0xFF;
 	public byte blue = (byte) 0xFF;

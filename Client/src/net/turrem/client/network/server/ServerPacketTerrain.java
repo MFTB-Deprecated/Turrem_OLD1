@@ -65,16 +65,20 @@ public class ServerPacketTerrain extends ServerPacket
 		for (int i = 0; i < colors.length; i++)
 		{
 			Material mat = MaterialList.getMaterial(this.mats[i]);
-			int cint = 0xFFFFFF;
+			TVFColor color = new TVFColor();
 			if (mat != null)
 			{
-				cint = mat.getColor();
+				color.b = mat.blue;
+				color.g = mat.green;
+				color.r = mat.red;
 			}
-			TVFColor color = new TVFColor();
+			else
+			{
+				color.b = (byte) 0xFF;
+				color.g = (byte) 0xFF;
+				color.r = (byte) 0xFF;
+			}
 			color.id = (byte) i;
-			color.b = (byte) ((cint >> 0) & 0xFF);
-			color.g = (byte) ((cint >> 8) & 0xFF);
-			color.r = (byte) ((cint >> 16) & 0xFF);
 			colors[i] = color;
 		}
 
