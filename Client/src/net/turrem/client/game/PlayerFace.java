@@ -1,10 +1,13 @@
 package net.turrem.client.game;
 
 import org.lwjgl.input.Mouse;
+
 import org.lwjgl.util.glu.GLU;
 
 import net.turrem.client.Config;
+import net.turrem.client.game.world.Chunk;
 import net.turrem.client.game.world.ClientWorld;
+import net.turrem.utils.geo.EnumDir;
 import net.turrem.utils.geo.Point;
 import net.turrem.utils.geo.Ray;
 import net.turrem.utils.geo.Vector;
@@ -12,6 +15,8 @@ import net.turrem.utils.geo.Vector;
 public class PlayerFace
 {
 	public final static float hdamp = 0.9F;
+
+	private final int worldSize;
 
 	protected float camPitch = 30.0F;
 	protected float camYaw = 45.0F;
@@ -25,16 +30,22 @@ public class PlayerFace
 	private float aspect;
 	private float znear = 1.0F;
 	private float fovy = 60.0F;
-	
+
 	private int requestChunkSelector = 0;
-	
+
 	private long lastChunkRequestTime = 0;
 	private int lastChunkRequestX;
 	private int lastChunkRequestZ;
 
-	public PlayerFace()
+	private int pickx;
+	private int picky;
+	private int pickz;
+	private EnumDir pickSide;
+
+	public PlayerFace(ClientWorld world)
 	{
 		this.reset();
+		this.worldSize = world.worldSize;
 		this.camFocus = Point.getPoint(0.0D, 128.0D, 0.0D);
 		this.camLoc = Point.getPoint(0.0D, 0.0D, 0.0D);
 		this.lastChunkRequestX = (int) this.camLoc.xCoord;
@@ -124,6 +135,195 @@ public class PlayerFace
 		return Ray.getRay(this.camLoc, clip);
 	}
 
+	public int getTerrainPickX()
+	{
+		return this.pickx;
+	}
+
+	public int getTerrainPickY()
+	{
+		return this.picky;
+	}
+
+	public int getTerrainPickZ()
+	{
+		return this.pickz;
+	}
+
+	public EnumDir getTerrainPickSide()
+	{
+		return this.pickSide;
+	}
+
+	protected void rayPickTerrain(Point origin, Vector direction, float radius, ClientWorld world)
+	{
+		// Cube containing origin point.
+		int x = (int) origin.xCoord;
+		int y = (int) origin.yCoord;
+		int z = (int) origin.zCoord;
+		// Break out direction vector.
+		float dx = direction.xpart;
+		float dy = direction.ypart;
+		float dz = direction.zpart;
+		// Direction to increment x,y,z when stepping.
+		int stepX = signum(dx);
+		int stepY = signum(dy);
+		int stepZ = signum(dz);
+		// See description above. The initial values depend on the fractional
+		// part of the origin.
+		float tMaxX = intbound((float) origin.xCoord, dx);
+		float tMaxY = intbound((float) origin.yCoord, dy);
+		float tMaxZ = intbound((float) origin.zCoord, dz);
+		// The change in t when taking a step (always positive).
+		float tDeltaX = stepX / dx;
+		float tDeltaY = stepY / dy;
+		float tDeltaZ = stepZ / dz;
+
+		EnumDir face = null;
+
+		if (dx == 0 && dy == 0 && dz == 0)
+		{
+			return;
+		}
+		
+		if (dy > 0)
+		{
+			this.pickx = -1;
+			this.picky = -1;
+			this.pickz = -1;
+			this.pickSide = null;
+			return;
+		}
+
+		radius /= direction.length();
+
+		while ((stepX > 0 ? x < this.worldSize : x >= 0) && (stepY > 0 ? y < this.worldSize : y >= 0) && (stepZ > 0 ? z < this.worldSize : z >= 0))
+		{
+			if (!(x < 0 || y < 0 || z < 0 || x >= this.worldSize || y >= this.worldSize || z >= this.worldSize))
+			{
+				if (testPickTerrain(x, y, z, face, world))
+				{
+					this.pickx = x;
+					this.picky = y;
+					this.pickz = z;
+					this.pickSide = face;
+					return;
+				}
+			}
+
+			// tMaxX stores the t-value at which we cross a cube boundary along
+			// the
+			// X axis, and similarly for Y and Z. Therefore, choosing the least
+			// tMax
+			// chooses the closest cube boundary. Only the first case of the
+			// four
+			// has been commented in detail.
+			if (tMaxX < tMaxZ)
+			{
+				if (tMaxX < tMaxY)
+				{
+					if (tMaxX > radius)
+					{
+						break;
+					}
+					// Update which cube we are now in.
+					x += stepX;
+					// Adjust tMaxX to the next X-oriented boundary crossing.
+					tMaxX += tDeltaX;
+					// Record the normal vector of the cube face we entered.
+					if (stepX > 0)
+					{
+						face = EnumDir.XDown;
+					}
+					else
+					{
+						face = EnumDir.XUp;
+					}
+				}
+				else
+				{
+					if (tMaxY > radius)
+					{
+						break;
+					}
+					y += stepY;
+					tMaxY += tDeltaY;
+					face = EnumDir.YUp;
+				}
+			}
+			else
+			{
+				if (tMaxZ < tMaxY)
+				{
+					if (tMaxZ > radius)
+					{
+						break;
+					}
+					z += stepZ;
+					tMaxZ += tDeltaZ;
+					if (stepZ > 0)
+					{
+						face = EnumDir.ZDown;
+					}
+					else
+					{
+						face = EnumDir.ZUp;
+					}
+				}
+				else
+				{
+					// Identical to the second case, repeated for simplicity in
+					// the conditionals.
+					if (tMaxY > radius)
+					{
+						break;
+					}
+					y += stepY;
+					tMaxY += tDeltaY;
+					face = EnumDir.YUp;
+				}
+			}
+		}
+		this.pickx = -1;
+		this.picky = -1;
+		this.pickz = -1;
+		this.pickSide = null;
+	}
+
+	private float intbound(float s, float ds)
+	{
+		// Find the smallest positive t such that s+t*ds is an integer.
+		if (ds < 0)
+		{
+			return intbound(-s, -ds);
+		}
+		else
+		{
+			s -= (int) s;
+			if (s < 0)
+			{
+				s += 1;
+			}
+			// problem is now s+t*ds = 1
+			return (1 - s) / ds;
+		}
+	}
+
+	private int signum(float x)
+	{
+		return x > 0 ? 1 : x < 0 ? -1 : 0;
+	}
+
+	private boolean testPickTerrain(int x, int y, int z, EnumDir face, ClientWorld world)
+	{
+		Chunk chunk = world.getChunk(x >> 4, z >> 4);
+		if (chunk == null)
+		{
+			return false;
+		}
+		return chunk.getHeight(x, z) > y;
+	}
+
 	public Ray pickCamera()
 	{
 		return Ray.getRay(this.camFocus, this.camLoc);
@@ -145,7 +345,7 @@ public class PlayerFace
 			this.lastChunkRequestTime = currentTime;
 			this.requestChunkSelector = world.requestNullChunks((int) this.camLoc.xCoord, (int) this.camLoc.zCoord, this.requestChunkSelector, 8);
 		}
-		
+
 		int wm = Mouse.getDWheel();
 		if (Mouse.isButtonDown(2))
 		{
@@ -200,6 +400,8 @@ public class PlayerFace
 		}
 		this.mouselastx = Mouse.getX();
 		this.mouselasty = Mouse.getY();
+		Ray mouse = this.pickMouse();
+		this.rayPickTerrain(mouse.start, mouse.getVector().returnNormalized(), 128, world);
 	}
 
 	public int getLocalHorizon(ClientWorld world)
@@ -235,7 +437,7 @@ public class PlayerFace
 		this.camFocus = point;
 		this.doFocus();
 	}
-	
+
 	public void doFocus()
 	{
 		float yawrad = this.camYaw / 180.0F * 3.14F;

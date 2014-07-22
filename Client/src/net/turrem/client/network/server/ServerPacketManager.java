@@ -44,7 +44,7 @@ public class ServerPacketManager
 			case 0xFF:
 				return ServerPacketCustom.create(data, length, packetType);
 			default:
-				return null;
+				return new NullPacket(packetType, length, data);
 		}
 	}
 	

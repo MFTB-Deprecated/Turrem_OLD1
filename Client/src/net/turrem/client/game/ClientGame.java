@@ -6,13 +6,17 @@ import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+
 import org.lwjgl.opengl.GL11;
+
 import org.lwjgl.util.glu.GLU;
 
 import net.turrem.client.Config;
 import net.turrem.client.Turrem;
 import net.turrem.client.game.world.ClientWorld;
 import net.turrem.client.render.engine.RenderManager;
+import net.turrem.client.render.font.Font;
+import net.turrem.client.render.font.FontRender;
 import net.turrem.utils.geo.Point;
 import net.turrem.utils.geo.Ray;
 
@@ -33,13 +37,14 @@ public class ClientGame
 	private PlayerFace face;
 
 	public long mine = -1;
+	protected FontRender debugFont;
 
 	public ClientGame(RenderManager manager, Turrem turrem)
 	{
 		this.theTurrem = turrem;
 		this.theWorld = new ClientWorld(this);
 		this.theManager = manager;
-		this.face = new PlayerFace();
+		this.face = new PlayerFace(this.theWorld);
 
 		try
 		{
@@ -75,7 +80,10 @@ public class ClientGame
 
 	public void renderInterface()
 	{
-
+		if (this.face.getTerrainPickSide() != null)
+		{
+			this.debugFont.renderText("@(" + this.face.getTerrainPickX() + ", " + this.face.getTerrainPickY() + ", " + this.face.getTerrainPickZ() + ", " + this.face.getTerrainPickSide().name() + ")", 16, 16, 32);
+		}
 	}
 
 	public void renderWorld()
@@ -153,7 +161,10 @@ public class ClientGame
 
 	public void start()
 	{
-
+		Font font = new Font("basicintro");
+		font.loadTexture("core.fonts.basic", this.theTurrem.theRender);
+		font.push();
+		this.debugFont = new FontRender(font);
 	}
 
 	public void mouseEvent()
@@ -164,7 +175,7 @@ public class ClientGame
 			{
 				Ray pick = this.face.pickMouse();
 				Point location = Point.getSlideWithYValue(pick.start, pick.end, 96.0D);
-				System.out.println(location);
+				System.out.println("R-Click @ " + location);
 			}
 		}
 	}
