@@ -19,6 +19,8 @@ import net.turrem.utils.geo.Point;
 
 public class ClientWorld
 {
+	public final int worldSize = 32000;
+
 	public ClientGame theGame;
 
 	public ChunkStorage chunks;
@@ -97,7 +99,7 @@ public class ClientWorld
 		}
 		return c.getHeight(x, z);
 	}
-
+	
 	public int getRayHeight(double x1, double z1, double x2, double z2, double extend)
 	{
 		double x = x1;

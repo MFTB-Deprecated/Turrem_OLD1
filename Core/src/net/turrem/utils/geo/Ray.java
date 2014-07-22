@@ -125,4 +125,9 @@ public class Ray
 	{
 		return Point.getSlide(this.start, this.end, loc);
 	}
+
+	public Vector getVector()
+	{
+		return Vector.getVector(this);
+	}
 }
