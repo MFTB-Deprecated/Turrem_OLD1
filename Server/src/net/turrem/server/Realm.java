@@ -1,14 +1,9 @@
 package net.turrem.server;
 
 import java.util.ArrayList;
-import java.util.Random;
 
-import net.turrem.server.entity.Entity;
 import net.turrem.server.entity.IHolding;
 import net.turrem.server.network.server.ServerPacket;
-import net.turrem.server.network.server.ServerPacketAddEntity;
-import net.turrem.server.network.server.ServerPacketEntityRemove;
-import net.turrem.server.network.server.ServerPacketEntityRemove.EntityRemoveType;
 import net.turrem.server.world.ChunkUpdate;
 import net.turrem.server.world.ClientPlayer;
 import net.turrem.server.world.World;
@@ -43,20 +38,15 @@ public class Realm
 
 	public void spawn()
 	{
-		Random rand = new Random(this.theWorld.seed ^ this.user.hashCode());
-		int x = 0;
-		int z = 0;
+		//Random rand = new Random(this.theWorld.seed ^ this.user.hashCode());
+		int x = 500;
+		int z = 500;
 		int y;
-		int tries = 0;
-		while (tries++ < 100)
-		{
-			x = rand.nextInt(400) - 200;
-			z = rand.nextInt(400) - 200;
-			if (this.theWorld.chunkAt(x, z).getTopStratum(x, z).getMaterial().isPlayerSpawnable())
-			{
-				break;
-			}
-		}
+		/**
+		int size = this.theWorld.storage.chunks.mapSize;
+		x = rand.nextInt(size - 1000) + 500;
+		z = rand.nextInt(size - 1000) + 500;
+		**/
 		y = this.theWorld.getHeight(x, z);
 		this.startingLocation = Point.getPoint(x, y, z);
 		this.theWorld.theTurrem.theLoader.getEntityLoader().processRealmInits(this, this.theWorld);
@@ -115,37 +105,5 @@ public class Realm
 	public void onPlayerExit()
 	{
 		this.client = null;
-	}
-
-	public void onEntityDisappear(Entity ent)
-	{
-		ServerPacket rem = new ServerPacketEntityRemove(EntityRemoveType.OFFMAP, ent.entityIdentifier);
-		this.sendPacket(rem);
-	}
-
-	public void onEntityAppear(Entity ent)
-	{
-		ServerPacket add = new ServerPacketAddEntity(ent);
-		this.sendPacket(add);
-	}
-
-	public void setVisibility(int chunkx, int chunkz, boolean visible)
-	{
-		this.theWorld.storage.setVisibility(chunkx, chunkz, this.realmId, visible);
-	}
-
-	public boolean getVisibility(int chunkx, int chunkz)
-	{
-		return this.theWorld.storage.getVisibility(chunkx, chunkz, this.realmId);
-	}
-
-	public void setVisibilityAt(int x, int z, boolean visible)
-	{
-		this.theWorld.storage.setVisibility(x >> 4, z >> 4, this.realmId, visible);
-	}
-
-	public boolean getVisibilityAt(int x, int z)
-	{
-		return this.theWorld.storage.getVisibility(x >> 4, z >> 4, this.realmId);
 	}
 }

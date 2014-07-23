@@ -197,4 +197,10 @@ public class Vector
 	{
 		return this.xpart * this.xpart + this.ypart * this.ypart + this.zpart * this.zpart;
 	}
+
+	public Vector returnNormalized()
+	{
+		this.normalize();
+		return this;
+	}
 }

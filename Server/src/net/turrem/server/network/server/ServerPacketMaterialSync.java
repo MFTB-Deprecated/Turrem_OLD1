@@ -7,20 +7,19 @@ import net.turrem.server.world.material.Material;
 
 public class ServerPacketMaterialSync extends ServerPacket
 {
-	public Material mat;
+	public Material material;
 	
-	public ServerPacketMaterialSync(Material mat)
-	{
-		this.mat = mat;
-	}
-
 	@Override
 	protected void writePacket(DataOutput stream) throws IOException
 	{
-		stream.writeShort(mat.getNumId());
-		byte[] frombytes = this.mat.id.getBytes("UTF-8");
-		stream.writeByte(frombytes.length);
-		stream.write(frombytes);
+		stream.writeShort(this.material.getNumId());
+		byte[] namebytes = this.material.getName().getBytes("UTF-8");
+		stream.writeByte(namebytes.length);
+		stream.write(namebytes);
+		int color = material.getColorInt();
+		stream.writeByte((color >> 16) & 0xFF);
+		stream.writeByte((color >> 8) & 0xFF);
+		stream.writeByte((color >> 0) & 0xFF);
 	}
 
 	@Override

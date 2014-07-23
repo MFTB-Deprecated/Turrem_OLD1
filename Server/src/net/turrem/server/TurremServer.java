@@ -73,6 +73,7 @@ public class TurremServer
 		{
 			try
 			{
+				this.timeoff *= 0.98F;
 				long time = System.currentTimeMillis();
 
 				this.timeoff += (time - this.lastTime) - 100;
@@ -80,9 +81,9 @@ public class TurremServer
 				{
 					this.timeoff = 0;
 				}
-				if (this.timeoff > 100)
+				if (this.timeoff > 1000)
 				{
-					this.timeoff = 100;
+					this.timeoff = 1000;
 				}
 				this.lastTime = time;
 

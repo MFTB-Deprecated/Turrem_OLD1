@@ -99,19 +99,19 @@ public class TVFBuffer
 						norms[ind + 0] = length;
 						break;
 					case 2:
-						norms[ind + 0] = -length;
+						norms[ind + 0] = length;
 						break;
 					case 3:
 						norms[ind + 1] = length;
 						break;
 					case 4:
-						norms[ind + 1] = -length;
+						norms[ind + 1] = length;
 						break;
 					case 5:
 						norms[ind + 2] = length;
 						break;
 					case 6:
-						norms[ind + 2] = -length;
+						norms[ind + 2] = length;
 						break;
 				}
 			}

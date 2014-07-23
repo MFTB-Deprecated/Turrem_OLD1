@@ -50,7 +50,7 @@ public class Turrem
 
 	protected void run()
 	{
-		this.updateDisplay(1280, 800, false, true);
+		this.updateDisplay(1280, 720, false, true);
 
 		this.theLoader = new ClientLoader(this);
 		this.theAssets = new AssetLoader(this.theGameDir);

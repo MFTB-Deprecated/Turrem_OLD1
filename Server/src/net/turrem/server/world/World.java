@@ -1,31 +1,19 @@
 package net.turrem.server.world;
 
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 
-import net.turrem.server.Config;
 import net.turrem.server.Realm;
 import net.turrem.server.TurremServer;
-import net.turrem.server.entity.Entity;
-import net.turrem.server.entity.IHolding;
 import net.turrem.server.load.control.SubscribePacket;
 import net.turrem.server.network.client.ClientPacket;
 import net.turrem.server.network.client.ClientPacketChat;
-import net.turrem.server.network.server.ServerPacket;
 import net.turrem.server.network.server.ServerPacketChat;
-import net.turrem.server.network.server.ServerPacketEntityRemove;
-import net.turrem.server.network.server.ServerPacketEntityRemove.EntityRemoveType;
 import net.turrem.server.world.gen.WorldGen;
 import net.turrem.server.world.gen.WorldGenBasic;
-import net.turrem.server.world.material.Material;
+import net.turrem.server.world.storage.WorldStorage;
 
 public class World
 {
-	private ArrayList<Entity> entities = new ArrayList<Entity>();
-	public ChunkStorage storage = new ChunkStorage(Config.chunkStorageWidth, this);
 	private HashMap<String, Integer> realmMap = new HashMap<String, Integer>();
 	private Realm[] realms = new Realm[16];
 	public long worldTime = 0;
@@ -36,37 +24,18 @@ public class World
 	private Chunk lastChunk;
 
 	public WorldGen theWorldGen;
+	
+	public WorldStorage storage;
 
 	public World(String save, long seed, TurremServer turrem)
 	{
 		this.theTurrem = turrem;
 		this.saveLoc = save;
 		this.seed = seed;
+		this.storage = new WorldStorage(32, 9, this);
 		this.theWorldGen = new WorldGenBasic(this.seed);
 	}
 
-	public void addEntity(Entity ent)
-	{
-		if (ent != null)
-		{
-			boolean sort = false;
-			if (!this.entities.isEmpty() && this.entities.get(this.entities.size() - 1).entityIdentifier > ent.entityIdentifier)
-			{
-				sort = true;
-			}
-			this.entities.add(ent);
-			ent.onWorldRegister(this);
-			if (sort)
-			{
-				this.sortEntities();
-			}
-		}
-	}
-
-	public Iterator<Entity> getEntities()
-	{
-		return this.entities.iterator();
-	}
 
 	/**
 	 * Finds the entity with the given identifier using a binary search
@@ -77,63 +46,6 @@ public class World
 	 * @return The entity with that identifier. Null if that entity has been
 	 *         removed or if the world's entity list is out of order.
 	 */
-	public Entity getEntity(long id)
-	{
-		int num = this.entities.size();
-		if (num == 0)
-		{
-			return null;
-		}
-		int size = num;
-		int exp = 0;
-		while (size != 1)
-		{
-			size >>>= 1;
-			exp++;
-		}
-		size = 1;
-		size <<= exp;
-		if (num > size)
-		{
-			size <<= 1;
-		}
-		size >>>= 1;
-		int select = size;
-		int its = 0;
-		while (its++ <= exp + 1)
-		{
-			if (size > 1)
-			{
-				size >>>= 1;
-			}
-			if (select >= num)
-			{
-				select -= size;
-			}
-			else
-			{
-				long sid = this.entities.get(select).entityIdentifier;
-				if (sid == id)
-				{
-					return this.entities.get(select);
-				}
-				if (sid > id)
-				{
-					select -= size;
-				}
-				if (sid < id)
-				{
-					select += size;
-				}
-			}
-		}
-		return null;
-	}
-
-	public void sortEntities()
-	{
-		Collections.sort(this.entities, new Entity.EntityIndexComparator());
-	}
 
 	public void addPlayer(ClientPlayer player)
 	{
@@ -155,8 +67,8 @@ public class World
 	public void tick()
 	{
 		this.worldTime++;
-		this.updateEntities();
-		this.storage.tick(this.worldTime);
+		this.storage.tickChunks();
+		this.storage.tickEntities();
 		for (Realm realm : this.realms)
 		{
 			if (realm != null)
@@ -166,61 +78,12 @@ public class World
 		}
 	}
 
-	public BufferedImage testTerrainMap()
-	{
-		BufferedImage img = new BufferedImage(128, 128, BufferedImage.TYPE_INT_RGB);
-		for (int ci = -4; ci < 4; ci++)
-		{
-			for (int cj = -4; cj < 4; cj++)
-			{
-				Chunk chunk = this.getChunk(ci, cj);
-				short[] map = chunk.getHeightMap();
-				for (int i = 0; i < 16; i++)
-				{
-					for (int j = 0; j < 16; j++)
-					{
-						int k = i + j * 16;
-						int x = (ci + 4) * 16 + i;
-						int y = (cj + 4) * 16 + j;
-						float h = map[k];
-						h -= 64;
-						h /= 128;
-						if (h < 0.0F)
-						{
-							h = 0.0F;
-						}
-						if (h > 1.0F)
-						{
-							h = 1.0F;
-						}
-						Material mat = Material.list.get(chunk.getTopMaterial(x, y));
-						int rgb = 0x000000;
-						if (mat != null)
-						{
-							rgb = mat.getColor();
-						}
-						{
-							int r = (rgb >> 16) & 0xFF;
-							int g = (rgb >> 8) & 0xFF;
-							int b = (rgb >> 0) & 0xFF;
-							r = (int) (h * r);
-							g = (int) (h * g);
-							b = (int) (h * b);
-							rgb = (r << 16) | (g << 8) | b;
-						}
-						img.setRGB(x, y, rgb);
-					}
-				}
-			}
-		}
-		return img;
-	}
-
 	public void unloadAll()
 	{
 		this.storage.clear();
 	}
 
+	/**
 	public void updateEntities()
 	{
 		for (int i = 0; i < this.entities.size(); i++)
@@ -304,6 +167,7 @@ public class World
 
 		this.storage.processVisibility();
 	}
+	**/
 
 	public short getHeight(int x, int z)
 	{
@@ -320,12 +184,12 @@ public class World
 
 	public Chunk chunkAt(int x, int z)
 	{
-		return this.storage.getChunk(x >> 4, z >> 4);
+		return this.storage.chunks.findAndGenerateChunk(x >> 4, z >> 4, this);
 	}
 
-	public Chunk getChunk(int x, int z)
+	public Chunk getChunk(int chunkx, int chunkz)
 	{
-		return this.storage.getChunk(x, z);
+		return this.storage.chunks.findAndGenerateChunk(chunkx, chunkz, this);
 	}
 
 	public int getSideDrop(int x, int z)

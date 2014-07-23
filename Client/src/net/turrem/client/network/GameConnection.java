@@ -11,6 +11,7 @@ import net.turrem.client.Config;
 import net.turrem.client.game.world.ClientWorld;
 import net.turrem.client.network.client.ClientPacket;
 import net.turrem.client.network.client.ClientPacketKeepAlive;
+import net.turrem.client.network.server.NullPacket;
 import net.turrem.client.network.server.ServerPacket;
 import net.turrem.client.network.server.ServerPacketManager;
 
@@ -94,7 +95,14 @@ public class GameConnection
 		}
 		if (pak != null)
 		{
-			this.incoming.add(pak);
+			if (pak instanceof NullPacket)
+			{
+				System.err.println("Warning! Null Packet with id: " + pak.getPacketType());
+			}
+			else
+			{
+				this.incoming.add(pak);
+			}
 		}
 		else
 		{

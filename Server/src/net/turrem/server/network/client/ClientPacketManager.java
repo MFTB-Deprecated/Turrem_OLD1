@@ -28,8 +28,6 @@ public class ClientPacketManager
 		{
 			case 0x10:
 				return ClientPacketAction.create(data, user, length, packetType);
-			case 0x11:
-				return ClientPacketMove.create(data, user, packetType);
 			case 0x30:
 				return ClientPacketRequest.create(user, data, length, packetType);
 			case 0x31:
@@ -55,8 +53,6 @@ public class ClientPacketManager
 		{
 			case 0x10:
 				return ClientPacketAction.class;
-			case 0x11:
-				return ClientPacketMove.class;
 			case 0x30:
 				return ClientPacketRequest.class;
 			case 0x31:

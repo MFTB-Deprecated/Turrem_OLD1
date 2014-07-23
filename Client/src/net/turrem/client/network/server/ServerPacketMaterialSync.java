@@ -6,7 +6,10 @@ import java.io.IOException;
 public class ServerPacketMaterialSync extends ServerPacket
 {
 	public short num;
-	public String id;
+	public String name;
+	public byte r;
+	public byte g;
+	public byte b;
 	
 	private ServerPacketMaterialSync(DataInput data, byte type) throws IOException
 	{
@@ -15,7 +18,10 @@ public class ServerPacketMaterialSync extends ServerPacket
 		int stringlength = data.readByte() & 0xFF;
 		byte[] stringbytes = new byte[stringlength];
 		data.readFully(stringbytes);
-		this.id = new String(stringbytes, "UTF-8");
+		this.name = new String(stringbytes, "UTF-8");
+		this.r = data.readByte();
+		this.g = data.readByte();
+		this.b = data.readByte();
 	}
 	
 	public static ServerPacketMaterialSync create(DataInput data, byte type) throws IOException

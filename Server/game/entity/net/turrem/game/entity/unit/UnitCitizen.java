@@ -5,56 +5,25 @@ import net.turrem.server.entity.unit.EntityUnit;
 import net.turrem.server.load.control.GameEntity;
 import net.turrem.server.load.control.SubscribeStartingEntity;
 import net.turrem.server.world.World;
-import net.turrem.utils.geo.Point;
-import net.turrem.utils.nbt.NBTCompound;
 
 @GameEntity(from = "turrem", author = "eekysam")
 public class UnitCitizen extends EntityUnit
-{
-	@Override
-	public void onEnter()
-	{
-	}
-
-	@Override
-	public void onTick()
-	{
-		super.onTick();
-	}
-	
-	@Override
-	public short loadRadius()
-	{
-		return 2;
-	}
-
-	@Override
-	public float veiwDistance()
-	{
-		return 32.0F;
-	}
-
-	@Override
-	public String getEntityType()
-	{
-		return "citizen";
-	}
-	
+{	
 	@SubscribeStartingEntity
 	public static UnitCitizen startingUnits(Realm realm, World world)
 	{
-		UnitCitizen cit = new UnitCitizen();
-		cit.setAllegiance(realm);
-		Point start = realm.startingLocation;
-		cit.x = start.xCoord + 0.5D;
-		cit.y = start.yCoord;
-		cit.z = start.zCoord + 0.5D;
-		world.addEntity(cit);
-		return cit;
+		return null;
 	}
 
 	@Override
-	public void writeNBT(NBTCompound data)
+	public boolean getRealmVisibility(int x, int z)
 	{
+		return false;
+	}
+
+	@Override
+	public boolean getThisVisibility(int x, int z)
+	{
+		return false;
 	}
 }

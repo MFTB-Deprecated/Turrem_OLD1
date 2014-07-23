@@ -2,15 +2,13 @@ package net.turrem.server.load;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import net.turrem.server.Realm;
-import net.turrem.server.entity.Entity;
+import net.turrem.server.entity.IEntity;
 import net.turrem.server.load.control.SubscribeDecorate;
-import net.turrem.server.load.control.SubscribeStartingEntity;
 import net.turrem.server.world.Chunk;
 import net.turrem.server.world.World;
 
@@ -36,6 +34,7 @@ public class EntityLoader implements IGameLoad
 
 	private void processMethod(Method mtd, Class<?> clss)
 	{
+		/**
 		if (Modifier.isStatic(mtd.getModifiers()))
 		{
 			Class<?>[] pars = mtd.getParameterTypes();
@@ -55,6 +54,7 @@ public class EntityLoader implements IGameLoad
 				}
 			}
 		}
+		**/
 	}
 
 	public void processChunkDecorates(Chunk chunk, World world)
@@ -74,9 +74,10 @@ public class EntityLoader implements IGameLoad
 		}
 	}
 	
-	public List<Entity> processRealmInits(Realm realm, World world)
+	public List<IEntity> processRealmInits(Realm realm, World world)
 	{
-		List<Entity> ents = new ArrayList<Entity>();
+		List<IEntity> ents = new ArrayList<IEntity>();
+		/**
 		for (Method mtd : this.realmInitCalls)
 		{
 			try
@@ -88,6 +89,7 @@ public class EntityLoader implements IGameLoad
 				System.err.println("Starting entities call for \"" + mtd.getClass().getName() + "\" failed");
 			}
 		}
+		**/
 		return ents;
 	}
 

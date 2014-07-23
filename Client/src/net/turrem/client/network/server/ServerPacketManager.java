@@ -25,8 +25,6 @@ public class ServerPacketManager
 	{
 		switch (packetType & 0xFF)
 		{
-			case 0x10:
-				return ServerPacketMoveEntity.create(data, length, packetType);
 			case 0x20:
 				return ServerPacketTerrain.create(data, packetType);
 			case 0x21:
@@ -37,10 +35,6 @@ public class ServerPacketManager
 				return ServerPacketStartingInfo.create(data, packetType);
 			case 0x32:
 				return ServerPacketPing.create(data, packetType);
-			case 0x90:
-				return ServerPacketAddEntity.create(data, length, packetType);
-			case 0x91:
-				return ServerPacketRemoveEntity.create(data, packetType);
 			case 0xA0:
 				return ServerPacketChat.create(data, length, packetType);
 			case 0xFD:
@@ -50,7 +44,7 @@ public class ServerPacketManager
 			case 0xFF:
 				return ServerPacketCustom.create(data, length, packetType);
 			default:
-				return null;
+				return new NullPacket(packetType, length, data);
 		}
 	}
 	
@@ -66,8 +60,6 @@ public class ServerPacketManager
 				return ServerPacketAddPlayer.class;
 			case 0x32:
 				return ServerPacketPing.class;
-			case 0x90:
-				return ServerPacketAddEntity.class;
 			case 0xA0:
 				return ServerPacketChat.class;
 			case 0xFD:

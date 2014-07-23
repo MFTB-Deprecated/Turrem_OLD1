@@ -6,14 +6,19 @@ import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+
 import org.lwjgl.opengl.GL11;
+
 import org.lwjgl.util.glu.GLU;
 
 import net.turrem.client.Config;
 import net.turrem.client.Turrem;
 import net.turrem.client.game.world.ClientWorld;
-import net.turrem.client.network.client.ClientPacketMove;
 import net.turrem.client.render.engine.RenderManager;
+import net.turrem.client.render.font.Font;
+import net.turrem.client.render.font.FontRender;
+import net.turrem.client.render.texture.TextureIcon;
+import net.turrem.utils.geo.EnumDir;
 import net.turrem.utils.geo.Point;
 import net.turrem.utils.geo.Ray;
 
@@ -24,7 +29,6 @@ public class ClientGame
 
 	private FloatBuffer lightPosition;
 	private FloatBuffer whiteLight;
-	private FloatBuffer specLight;
 	private FloatBuffer lModelAmbient;
 
 	public RenderManager theManager;
@@ -34,13 +38,20 @@ public class ClientGame
 	private PlayerFace face;
 
 	public long mine = -1;
+	protected FontRender debugFont;
+	
+	protected TextureIcon terrselect;
+	protected TextureIcon toppin;
+	
+	public static final int[][] vertOffs = new int[][] { new int[] { 1, 0, 1 }/*0*/, new int[] { 0, 0, 1 }/*1*/, new int[] { 0, 0, 0 }/*2*/, new int[] { 1, 0, 0 }/*3*/, new int[] { 1, 1, 1 }/*4*/, new int[] { 0, 1, 1 }/*5*/, new int[] { 0, 1, 0 }/*6*/, new int[] { 1, 1, 0 }/*7*/ };
+	public static final int[][] vertOffinds = new int[][] { new int[] { 4, 0, 3, 7 }/*XUp*/, new int[] { 5, 6, 2, 1 }/*XDown*/, new int[] { 4, 7, 6, 5 }/*YUp*/, new int[] { 0, 1, 2, 3 }/*YDown*/, new int[] { 4, 5, 1, 0 }/*ZUp*/, new int[] { 7, 3, 2, 6 }/*ZDown*/ };
 
 	public ClientGame(RenderManager manager, Turrem turrem)
 	{
 		this.theTurrem = turrem;
 		this.theWorld = new ClientWorld(this);
 		this.theManager = manager;
-		this.face = new PlayerFace();
+		this.face = new PlayerFace(this.theWorld);
 
 		try
 		{
@@ -76,7 +87,10 @@ public class ClientGame
 
 	public void renderInterface()
 	{
-
+		if (this.face.getTerrainPickSide() != null)
+		{
+			this.debugFont.renderText("@(" + this.face.getTerrainPickX() + ", " + this.face.getTerrainPickY() + ", " + this.face.getTerrainPickZ() + ", " + this.face.getTerrainPickSide().name() + ")", 16, 16, 32);
+		}
 	}
 
 	public void renderWorld()
@@ -84,6 +98,47 @@ public class ClientGame
 		this.face.doGLULook();
 		this.doLighting();
 		this.theWorld.render();
+		this.renderSelect();
+	}
+	
+	public void renderSelect()
+	{
+		EnumDir side = this.face.getTerrainPickSide();
+		if (side != null)
+		{
+			float off = 1.0F / 16.0F;
+			int[] inds = vertOffinds[side.ind - 1];
+			int posx = this.face.getTerrainPickX();
+			int posy = this.face.getTerrainPickY();
+			int posz = this.face.getTerrainPickZ();
+			this.terrselect.start();
+			GL11.glBegin(GL11.GL_QUADS);
+			float addx = side.xoff * off;
+			float addy = side.yoff * off;
+			float addz = side.zoff * off;
+			for (int i = 0; i < 4; i++)
+			{
+				this.renderSelectVert(posx, posy, posz, vertOffs[inds[i]], i, addx, addy, addz);
+			}
+			GL11.glEnd();
+			this.terrselect.end();
+			this.toppin.start();
+			GL11.glBegin(GL11.GL_QUADS);
+			inds = vertOffinds[EnumDir.YUp.ind - 1];
+			posy = this.theWorld.getHeight(posx, posz) - 1;
+			for (int i = 0; i < 4; i++)
+			{
+				this.renderSelectVert(posx, posy, posz, vertOffs[inds[i]], i, 0.0F, off, 0.0F);
+			}
+			GL11.glEnd();
+			toppin.end();
+		}
+	}
+	
+	private void renderSelectVert(int posx, int posy, int posz, int vert[], int i, float addx, float addy, float addz)
+	{
+		GL11.glTexCoord2f(((i + 1) / 2) % 2, (i / 2) % 2);
+		GL11.glVertex3f(posx + vert[0] + addx, posy + vert[1] + addy, posz + vert[2] + addz);
 	}
 
 	private void initLightArrays()
@@ -93,9 +148,6 @@ public class ClientGame
 
 		this.whiteLight = BufferUtils.createFloatBuffer(4);
 		this.whiteLight.put(0.5f).put(0.5f).put(0.5f).put(0.75f).flip();
-
-		this.specLight = BufferUtils.createFloatBuffer(4);
-		this.specLight.put(0.1f).put(0.1f).put(0.1f).put(1.0f).flip();
 
 		this.lModelAmbient = BufferUtils.createFloatBuffer(4);
 		this.lModelAmbient.put(0.5f).put(0.5f).put(0.5f).put(1.75f).flip();
@@ -130,7 +182,6 @@ public class ClientGame
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 
 		GL11.glLight(GL11.GL_LIGHT0, GL11.GL_POSITION, this.lightPosition);
-		GL11.glLight(GL11.GL_LIGHT0, GL11.GL_SPECULAR, this.specLight);
 		GL11.glLight(GL11.GL_LIGHT0, GL11.GL_DIFFUSE, this.whiteLight);
 		GL11.glLightModel(GL11.GL_LIGHT_MODEL_AMBIENT, this.lModelAmbient);
 
@@ -140,6 +191,7 @@ public class ClientGame
 		{
 			GL11.glEnable(GL11.GL_COLOR_MATERIAL);
 			GL11.glColorMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT_AND_DIFFUSE);
+			GL11.glMaterialf(GL11.GL_FRONT, GL11.GL_SHININESS, 0.0F);
 		}
 		else
 		{
@@ -154,7 +206,14 @@ public class ClientGame
 
 	public void start()
 	{
-
+		Font font = new Font("basicintro");
+		font.loadTexture("core.fonts.basic", this.theTurrem.theRender);
+		font.push();
+		this.debugFont = new FontRender(font);
+		this.terrselect = new TextureIcon("core.misc.terrselect");
+		this.terrselect.load(this.theTurrem.theRender);
+		this.toppin = new TextureIcon("core.misc.toppin");
+		this.toppin.load(this.theTurrem.theRender);
 	}
 
 	public void mouseEvent()
@@ -165,14 +224,7 @@ public class ClientGame
 			{
 				Ray pick = this.face.pickMouse();
 				Point location = Point.getSlideWithYValue(pick.start, pick.end, 96.0D);
-				ClientPacketMove move = new ClientPacketMove();
-				move.addEntity(this.mine);
-				move.xpos = (float) location.xCoord;
-				move.zpos = (float) location.zCoord;
-				if (this.theWorld.theConnection != null)
-				{
-					this.theWorld.theConnection.addToSendQueue(move);
-				}
+				System.out.println("R-Click @ " + location);
 			}
 		}
 	}

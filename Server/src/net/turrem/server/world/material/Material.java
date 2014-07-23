@@ -1,43 +1,56 @@
 package net.turrem.server.world.material;
 
-import java.util.HashMap;
+import java.awt.Color;
 
-public abstract class Material
+public class Material
 {
-	public static HashMap<String, Material> list = new HashMap<String, Material>();
+	private int color;
+	private String name;
+	private short numId;
 	
-	public static Material stone = new Stone("stone");
-	public static Material dirt = new Dirt("dirt");
-	public static Material grass = new Grass("grass");
-	public static Material water = new Water("water");
-	public static Material sand = new Sand("sand");
-	
-	private static short nextNum = 0;
-	
-	public final String id;
-	public final short num;
-	
-	public Material(String id)
+	protected Material(String name, byte red, byte green, byte blue)
 	{
-		this.id = id;
-		this.num = nextNum++;
-		list.put(this.id, this);
+		this.name = name;
+		this.color = 0;
+		this.color |= red;
+		this.color <<= 8;
+		this.color |= green;
+		this.color <<= 8;
+		this.color |= blue;
+		this.numId = (short) MaterialList.list.size();
+		MaterialList.list.add(this);
 	}
 	
-	public abstract int getColor();
-	
-	public short getNumId()
+	protected Material(String name, int color)
 	{
-		return this.num;
+		this.name = name;
+		this.color = color;
+		this.numId = (short) MaterialList.list.size();
+		MaterialList.list.add(this);
 	}
 	
-	public boolean canGrowTrees(float prob)
-	{
-		return false;
-	}
-
-	public boolean isPlayerSpawnable()
+	public boolean isSolid()
 	{
 		return true;
+	}
+
+	public short getNumId()
+	{
+		return this.numId;
+	}
+
+	public String getName()
+	{
+		return name;
+	}
+
+	public int getColorInt()
+	{
+		return color;
+	}
+
+	public Color getColor()
+	{
+		return new Color(this.color);
 	}
 }
