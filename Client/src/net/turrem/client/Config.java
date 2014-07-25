@@ -14,7 +14,9 @@ public class Config
 	public static float camDistMin = 8.0F;
 	public static float camDistMax = 120.0F;
 	public static float terrainAoSampleMult = 0.5F;
+	public static float finalAoSampleMult = 0.5F;
 	public static boolean doTerrainAo = true;
+	public static boolean doAO = true;
 	public static int turremServerPort = 26555;
 	public static String turremServerHost = "localhost";
 	public static int connectionReadSleep = 2;
@@ -25,6 +27,8 @@ public class Config
 	public static long chunkRequestTimeLimit = 100;
 	public static int chunkRequestDistance = 8;
 	public static boolean shouldRequestChunks = false;
+	public static boolean doMat = true;
+	public static int renderSettingsVersion = 0;
 	
 	public static int getHeight()
 	{

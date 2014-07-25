@@ -33,18 +33,16 @@ public class ClientGame
 
 	public RenderManager theManager;
 
-	private boolean mat = true;
-
 	private PlayerFace face;
 
 	public long mine = -1;
 	protected FontRender debugFont;
-	
+
 	protected TextureIcon terrselect;
 	protected TextureIcon toppin;
-	
-	public static final int[][] vertOffs = new int[][] { new int[] { 1, 0, 1 }/*0*/, new int[] { 0, 0, 1 }/*1*/, new int[] { 0, 0, 0 }/*2*/, new int[] { 1, 0, 0 }/*3*/, new int[] { 1, 1, 1 }/*4*/, new int[] { 0, 1, 1 }/*5*/, new int[] { 0, 1, 0 }/*6*/, new int[] { 1, 1, 0 }/*7*/ };
-	public static final int[][] vertOffinds = new int[][] { new int[] { 4, 0, 3, 7 }/*XUp*/, new int[] { 5, 6, 2, 1 }/*XDown*/, new int[] { 4, 7, 6, 5 }/*YUp*/, new int[] { 0, 1, 2, 3 }/*YDown*/, new int[] { 4, 5, 1, 0 }/*ZUp*/, new int[] { 7, 3, 2, 6 }/*ZDown*/ };
+
+	public static final int[][] vertOffs = new int[][] { new int[] { 1, 0, 1 }/* 0 */, new int[] { 0, 0, 1 }/* 1 */, new int[] { 0, 0, 0 }/* 2 */, new int[] { 1, 0, 0 }/* 3 */, new int[] { 1, 1, 1 }/* 4 */, new int[] { 0, 1, 1 }/* 5 */, new int[] { 0, 1, 0 }/* 6 */, new int[] { 1, 1, 0 } /* 7 */};
+	public static final int[][] vertOffinds = new int[][] { new int[] { 4, 0, 3, 7 }/* XUp */, new int[] { 5, 6, 2, 1 }/* XDown */, new int[] { 4, 7, 6, 5 }/* YUp */, new int[] { 0, 1, 2, 3 }/* YDown */, new int[] { 4, 5, 1, 0 }/* ZUp */, new int[] { 7, 3, 2, 6 } /* ZDown */};
 
 	public ClientGame(RenderManager manager, Turrem turrem)
 	{
@@ -100,7 +98,7 @@ public class ClientGame
 		this.theWorld.render();
 		this.renderSelect();
 	}
-	
+
 	public void renderSelect()
 	{
 		EnumDir side = this.face.getTerrainPickSide();
@@ -134,7 +132,7 @@ public class ClientGame
 			toppin.end();
 		}
 	}
-	
+
 	private void renderSelectVert(int posx, int posy, int posz, int vert[], int i, float addx, float addy, float addz)
 	{
 		GL11.glTexCoord2f(((i + 1) / 2) % 2, (i / 2) % 2);
@@ -187,16 +185,9 @@ public class ClientGame
 
 		GL11.glEnable(GL11.GL_LIGHT0);
 
-		if (this.mat)
-		{
-			GL11.glEnable(GL11.GL_COLOR_MATERIAL);
-			GL11.glColorMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT_AND_DIFFUSE);
-			GL11.glMaterialf(GL11.GL_FRONT, GL11.GL_SHININESS, 0.0F);
-		}
-		else
-		{
-			GL11.glDisable(GL11.GL_COLOR_MATERIAL);
-		}
+		GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+		GL11.glColorMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT_AND_DIFFUSE);
+		GL11.glMaterialf(GL11.GL_FRONT, GL11.GL_SHININESS, 0.0F);
 	}
 
 	public void end()
@@ -235,7 +226,8 @@ public class ClientGame
 		{
 			if (Keyboard.getEventKey() == Keyboard.KEY_M)
 			{
-				this.mat = !this.mat;
+				Config.doMat = !Config.doMat;
+				Config.renderSettingsVersion++;
 			}
 		}
 	}

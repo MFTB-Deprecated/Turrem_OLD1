@@ -2,6 +2,7 @@ package net.turrem.client.game.world;
 
 import org.lwjgl.opengl.GL11;
 
+import net.turrem.client.Config;
 import net.turrem.client.network.server.ServerPacketTerrain;
 import net.turrem.client.render.engine.RenderEngine;
 import net.turrem.client.render.object.RenderObject;
@@ -34,7 +35,7 @@ public class Chunk
 	{
 		return render;
 	}
-	
+
 	public boolean isLoaded()
 	{
 		return loaded;
@@ -49,6 +50,20 @@ public class Chunk
 		}
 		this.loaded = true;
 		this.render = engine.makeObject(this.tvf, 1.0F, 0.0F, (this.voff - ServerPacketTerrain.basePadding) * -1.0F, 0.0F);
+	}
+
+	public boolean checkRebuildRender(RenderEngine engine)
+	{
+		if (this.render != null && this.loaded)
+		{
+			if (this.render.getRenderSettingsVersion() != Config.renderSettingsVersion)
+			{
+				this.render.doDelete();
+				this.render = engine.makeObject(this.tvf, 1.0F, 0.0F, (this.voff - ServerPacketTerrain.basePadding) * -1.0F, 0.0F);
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void unload()

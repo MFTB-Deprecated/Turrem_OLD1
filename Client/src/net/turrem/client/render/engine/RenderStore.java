@@ -3,6 +3,7 @@ package net.turrem.client.render.engine;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import net.turrem.client.Config;
 import net.turrem.client.render.object.IRenderObject;
 import net.turrem.client.render.object.RenderObject;
 import net.turrem.client.render.object.model.ModelIcon;
@@ -37,7 +38,8 @@ public class RenderStore extends RenderEngine
 		RenderObject obj = new RenderObject(this.objects.size());
 		this.objects.add(obj);
 		TVFBuffer buff = new TVFBuffer();
-		buff.bindTVF(tvf, obj, scale, x, y, z);
+		buff.renderSettingsVersion = Config.renderSettingsVersion;
+		buff.bindTVF(tvf, obj, scale, x, y, z, Config.doAO, Config.doMat);
 		return obj;
 	}
 
@@ -47,7 +49,8 @@ public class RenderStore extends RenderEngine
 		RenderObject obj = new RenderObject(i);
 		this.objects.set(i, obj);
 		TVFBuffer buff = new TVFBuffer();
-		buff.bindTVF(tvf, obj, scale, x, y, z);
+		buff.renderSettingsVersion = Config.renderSettingsVersion;
+		buff.bindTVF(tvf, obj, scale, x, y, z, Config.doAO, Config.doMat);
 		return obj;
 	}
 

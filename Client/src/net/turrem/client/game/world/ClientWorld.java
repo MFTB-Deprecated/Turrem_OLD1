@@ -76,6 +76,10 @@ public class ClientWorld
 		z -= pz;
 		if (x * x + z * z < dist)
 		{
+			if (chunk.checkRebuildRender(this.chunkRender))
+			{
+				System.out.println("Rebuilt Chunk Render");
+			}
 			chunk.render();
 		}
 	}

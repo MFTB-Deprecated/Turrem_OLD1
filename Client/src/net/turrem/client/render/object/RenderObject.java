@@ -15,6 +15,8 @@ public class RenderObject implements IRenderObject
 	private int colors;
 	private int vertnum;
 	private int vao;
+	
+	private int renderSettingsVersion = 0;
 
 	public RenderObject(int indx)
 	{
@@ -23,6 +25,7 @@ public class RenderObject implements IRenderObject
 
 	public void push(TVFBuffer buffer)
 	{
+		this.renderSettingsVersion = buffer.renderSettingsVersion;
 		this.verts = buffer.getVboVertsId();
 		this.colors = buffer.getVboColorsId();
 		this.normals = buffer.getVboNormalsId();
@@ -45,11 +48,11 @@ public class RenderObject implements IRenderObject
 
 		GL11.glEnableClientState(GL11.GL_COLOR_ARRAY);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.colors);
-		GL11.glColorPointer(3, GL11.GL_FLOAT, 0, 0);
+		GL11.glColorPointer(3, GL11.GL_UNSIGNED_BYTE, 0, 0);
 
 		GL11.glEnableClientState(GL11.GL_NORMAL_ARRAY);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.normals);
-		GL11.glNormalPointer(GL11.GL_FLOAT, 0, 0);
+		GL11.glNormalPointer(GL11.GL_BYTE, 0, 0);
 
 		GL11.glDrawArrays(GL11.GL_QUADS, 0, this.vertnum);
 	}
@@ -67,5 +70,10 @@ public class RenderObject implements IRenderObject
 	public int getEngineIndex()
 	{
 		return this.index;
+	}
+
+	public int getRenderSettingsVersion()
+	{
+		return renderSettingsVersion;
 	}
 }
