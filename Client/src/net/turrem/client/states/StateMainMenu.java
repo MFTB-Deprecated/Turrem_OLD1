@@ -16,7 +16,6 @@ import static org.lwjgl.opengl.GL11.glOrtho;
 import java.awt.Color;
 
 import net.turrem.client.Turrem;
-import net.turrem.client.gui.GuiFrame;
 import net.turrem.client.render.font.Font;
 import net.turrem.client.render.font.FontRender;
 
@@ -38,8 +37,6 @@ public class StateMainMenu implements IState
 
 	public FontRender testFont;
 
-	public GuiFrame frame = new GuiFrame(600, 60, true, true, 6, "turrem.gui.frames.plain", 2.0F);
-
 	public StateMainMenu(Turrem turrem)
 	{
 		this.theTurrem = turrem;
@@ -48,17 +45,15 @@ public class StateMainMenu implements IState
 	@Override
 	public void start()
 	{
-		Font font = new Font("basicintro");
-		font.loadTexture("core.fonts.basic", this.theTurrem.theRender);
-		font.push();
-		this.frame.onStart(this.theTurrem.theRender);
+		Font font = new Font();
+		font.loadTexture("core.fonts.screen", this.theTurrem.theRender, true);
 		this.testFont = new FontRender(font);
 	}
 
 	@Override
 	public void end()
 	{
-		this.testFont.theFont.unload();
+		
 	}
 
 	@Override
@@ -86,16 +81,12 @@ public class StateMainMenu implements IState
 
 		glColor3f(1.0F, 1.0F, 1.0F);
 
-		this.frame.setPos(this.theTurrem.getScreenWidth() / 2 - 300, this.theTurrem.getScreenHeight() / 2 - 5);
-		this.frame.render();
-
 		glColor3f(0.0F, 0.0F, 0.0F);
 		this.testFont.renderTextCentered("- Press any Key -", this.theTurrem.getScreenWidth() / 2, this.theTurrem.getScreenHeight() / 2, 50.0F);
 		this.testFont.renderTextCentered("Right Click - Move Citizen", this.theTurrem.getScreenWidth() / 2, (this.theTurrem.getScreenHeight() / 14) * 1, 50.0F);
 		this.testFont.renderTextCentered("Left Click - Move Camera", this.theTurrem.getScreenWidth() / 2, (this.theTurrem.getScreenHeight() / 14) * 2, 50.0F);
 		this.testFont.renderTextCentered("Middle Click - Rotate Camera", this.theTurrem.getScreenWidth() / 2, (this.theTurrem.getScreenHeight() / 14) * 3, 50.0F);
 		this.testFont.renderTextCentered("Scroll - Zoom", this.theTurrem.getScreenWidth() / 2, (this.theTurrem.getScreenHeight() / 14) * 4, 50.0F);
-		this.testFont.renderTextCentered("'M' - Toggle Materials", this.theTurrem.getScreenWidth() / 2, (this.theTurrem.getScreenHeight() / 14) * 5, 50.0F);
 		this.testFont.renderTextCentered("Don't Forget to Start the Server!", this.theTurrem.getScreenWidth() / 2, (this.theTurrem.getScreenHeight() / 14) * 10, 50.0F);
 		glColor3f(1.0F, 1.0F, 1.0F);
 	}

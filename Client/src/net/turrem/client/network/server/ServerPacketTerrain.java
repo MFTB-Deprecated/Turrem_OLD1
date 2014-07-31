@@ -93,7 +93,7 @@ public class ServerPacketTerrain extends ServerPacket
 		TVFFace[] far = new TVFFace[faces.size()];
 		far = faces.toArray(far);
 		TVFFile tvf = new TVFFile(far, colors);
-		if (Config.doTerrainAo)
+		if (Config.terrainUsePreAO)
 		{
 			tvf.prelit = 1;
 		}

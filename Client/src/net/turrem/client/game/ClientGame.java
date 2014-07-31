@@ -14,10 +14,10 @@ import org.lwjgl.util.glu.GLU;
 import net.turrem.client.Config;
 import net.turrem.client.Turrem;
 import net.turrem.client.game.world.ClientWorld;
-import net.turrem.client.render.engine.RenderManager;
+import net.turrem.client.render.RenderEngine;
 import net.turrem.client.render.font.Font;
 import net.turrem.client.render.font.FontRender;
-import net.turrem.client.render.texture.TextureIcon;
+import net.turrem.client.render.icon.TextureIcon;
 import net.turrem.utils.geo.EnumDir;
 import net.turrem.utils.geo.Point;
 import net.turrem.utils.geo.Ray;
@@ -31,26 +31,24 @@ public class ClientGame
 	private FloatBuffer whiteLight;
 	private FloatBuffer lModelAmbient;
 
-	public RenderManager theManager;
-
-	private boolean mat = true;
+	public RenderEngine theRender;
 
 	private PlayerFace face;
 
 	public long mine = -1;
 	protected FontRender debugFont;
-	
+
 	protected TextureIcon terrselect;
 	protected TextureIcon toppin;
-	
-	public static final int[][] vertOffs = new int[][] { new int[] { 1, 0, 1 }/*0*/, new int[] { 0, 0, 1 }/*1*/, new int[] { 0, 0, 0 }/*2*/, new int[] { 1, 0, 0 }/*3*/, new int[] { 1, 1, 1 }/*4*/, new int[] { 0, 1, 1 }/*5*/, new int[] { 0, 1, 0 }/*6*/, new int[] { 1, 1, 0 }/*7*/ };
-	public static final int[][] vertOffinds = new int[][] { new int[] { 4, 0, 3, 7 }/*XUp*/, new int[] { 5, 6, 2, 1 }/*XDown*/, new int[] { 4, 7, 6, 5 }/*YUp*/, new int[] { 0, 1, 2, 3 }/*YDown*/, new int[] { 4, 5, 1, 0 }/*ZUp*/, new int[] { 7, 3, 2, 6 }/*ZDown*/ };
 
-	public ClientGame(RenderManager manager, Turrem turrem)
+	public static final int[][] vertOffs = new int[][] { new int[] { 1, 0, 1 }/* 0 */, new int[] { 0, 0, 1 }/* 1 */, new int[] { 0, 0, 0 }/* 2 */, new int[] { 1, 0, 0 }/* 3 */, new int[] { 1, 1, 1 }/* 4 */, new int[] { 0, 1, 1 }/* 5 */, new int[] { 0, 1, 0 }/* 6 */, new int[] { 1, 1, 0 } /* 7 */};
+	public static final int[][] vertOffinds = new int[][] { new int[] { 4, 0, 3, 7 }/* XUp */, new int[] { 5, 6, 2, 1 }/* XDown */, new int[] { 4, 7, 6, 5 }/* YUp */, new int[] { 0, 1, 2, 3 }/* YDown */, new int[] { 4, 5, 1, 0 }/* ZUp */, new int[] { 7, 3, 2, 6 } /* ZDown */};
+
+	public ClientGame(RenderEngine engine, Turrem turrem)
 	{
 		this.theTurrem = turrem;
+		this.theRender = engine;
 		this.theWorld = new ClientWorld(this);
-		this.theManager = manager;
 		this.face = new PlayerFace(this.theWorld);
 
 		try
@@ -89,7 +87,9 @@ public class ClientGame
 	{
 		if (this.face.getTerrainPickSide() != null)
 		{
-			this.debugFont.renderText("@(" + this.face.getTerrainPickX() + ", " + this.face.getTerrainPickY() + ", " + this.face.getTerrainPickZ() + ", " + this.face.getTerrainPickSide().name() + ")", 16, 16, 32);
+			GL11.glColor3f(0.0F, 0.0F, 0.0F);
+			this.debugFont.renderText("@(" + this.face.getTerrainPickX() + ", " + this.face.getTerrainPickY() + ", " + this.face.getTerrainPickZ() + ", " + this.face.getTerrainPickSide().name() + ")", 16, 16, 16);
+			GL11.glColor3f(1.0F, 1.0F, 1.0F);
 		}
 	}
 
@@ -100,7 +100,7 @@ public class ClientGame
 		this.theWorld.render();
 		this.renderSelect();
 	}
-	
+
 	public void renderSelect()
 	{
 		EnumDir side = this.face.getTerrainPickSide();
@@ -134,7 +134,7 @@ public class ClientGame
 			toppin.end();
 		}
 	}
-	
+
 	private void renderSelectVert(int posx, int posy, int posz, int vert[], int i, float addx, float addy, float addz)
 	{
 		GL11.glTexCoord2f(((i + 1) / 2) % 2, (i / 2) % 2);
@@ -187,16 +187,9 @@ public class ClientGame
 
 		GL11.glEnable(GL11.GL_LIGHT0);
 
-		if (this.mat)
-		{
-			GL11.glEnable(GL11.GL_COLOR_MATERIAL);
-			GL11.glColorMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT_AND_DIFFUSE);
-			GL11.glMaterialf(GL11.GL_FRONT, GL11.GL_SHININESS, 0.0F);
-		}
-		else
-		{
-			GL11.glDisable(GL11.GL_COLOR_MATERIAL);
-		}
+		GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+		GL11.glColorMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT_AND_DIFFUSE);
+		GL11.glMaterialf(GL11.GL_FRONT, GL11.GL_SHININESS, 0.0F);
 	}
 
 	public void end()
@@ -206,13 +199,12 @@ public class ClientGame
 
 	public void start()
 	{
-		Font font = new Font("basicintro");
-		font.loadTexture("core.fonts.basic", this.theTurrem.theRender);
-		font.push();
+		Font font = new Font();
+		font.loadTexture("core.fonts.basic", this.theTurrem.theRender, false);
 		this.debugFont = new FontRender(font);
-		this.terrselect = new TextureIcon("core.misc.terrselect");
+		this.terrselect = new TextureIcon("core.misc.terrselect", true);
 		this.terrselect.load(this.theTurrem.theRender);
-		this.toppin = new TextureIcon("core.misc.toppin");
+		this.toppin = new TextureIcon("core.misc.toppin", true);
 		this.toppin.load(this.theTurrem.theRender);
 	}
 
@@ -235,7 +227,7 @@ public class ClientGame
 		{
 			if (Keyboard.getEventKey() == Keyboard.KEY_M)
 			{
-				this.mat = !this.mat;
+				
 			}
 		}
 	}

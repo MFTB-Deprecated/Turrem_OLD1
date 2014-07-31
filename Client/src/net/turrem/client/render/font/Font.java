@@ -1,7 +1,7 @@
 package net.turrem.client.render.font;
 
-import net.turrem.client.render.engine.RenderManager;
-import net.turrem.client.render.texture.TextureIcon;
+import net.turrem.client.render.RenderEngine;
+import net.turrem.client.render.icon.TextureIcon;
 
 public class Font
 {
@@ -12,33 +12,18 @@ public class Font
 	public int width;
 	public int height;
 
-	public final String name;
-
-	public Font(String name)
+	public Font()
 	{
-		this.name = name;
+		
 	}
 
-	public void loadTexture(String texture, RenderManager manager)
+	public void loadTexture(String texture, RenderEngine render, boolean isPixelFont)
 	{
-		this.ico = new TextureIcon(texture);
-		this.ico.load(manager);
+		this.ico = new TextureIcon(texture, isPixelFont);
+		this.ico.load(render);
 		this.aspect = this.ico.getAspect();
 		this.height = this.ico.getHeight();
 		this.width = this.ico.getWidth();
-	}
-
-	public void push()
-	{
-		FontList.fonts.put(this.name, this);
-	}
-
-	public void unload()
-	{
-		if (this.ico != null)
-		{
-			this.ico.unload();
-		}
 	}
 
 	public final float getAspect()

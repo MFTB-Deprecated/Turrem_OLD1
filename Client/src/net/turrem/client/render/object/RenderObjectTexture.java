@@ -1,84 +1,71 @@
-package net.turrem.client.render.texture;
+package net.turrem.client.render.object;
 
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
-
-import net.turrem.client.asset.AssetLoader;
-import net.turrem.utils.graphics.ImgUtils;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL30;
 
-public class TextureObject implements ITextureObject
-{
-	private String name;
+import net.turrem.client.render.RenderEngine;
+import net.turrem.utils.graphics.ImgUtils;
 
+public class RenderObjectTexture implements IRenderObject
+{
+	private String source;
+	private String identifier;
+	private int glSample;
 	private int textureId = -1;
 
-	private int width;
-	private int height;
-	private float aspect;
-
-	public TextureObject(String name)
+	private int width = -1;
+	private int height = -1;
+	private float aspect = Float.NaN;
+	
+	public RenderObjectTexture(String source, String id, boolean pixel)
 	{
-		this.name = name;
-	}
-
-	@Override
-	public void unbind()
-	{
-		GL11.glDeleteTextures(this.textureId);
-		this.textureId = -1;
-	}
-
-	@Override
-	public int bind(AssetLoader assets)
-	{
-		if (this.textureId != -1)
+		this.source = source;
+		this.identifier = id;
+		if (pixel)
 		{
-			return this.textureId;
+			this.glSample = GL11.GL_NEAREST;
 		}
-		try
+		else
 		{
-			BufferedImage img = assets.loadTexture(this.name);
-			this.width = img.getWidth();
-			this.height = img.getHeight();
-			this.aspect = (float) this.width / (float) this.height;
-			ByteBuffer bytes = ImgUtils.imgToByteBuffer(img);
-
-			int texId = GL11.glGenTextures();
-			GL13.glActiveTexture(GL13.GL_TEXTURE0);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texId);
-
-			GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
-
-			GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, this.width, this.height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, bytes);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
-			GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
-
-			this.textureId = texId;
-			return this.textureId;
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			this.textureId = -1;
-			return this.textureId;
+			this.glSample = GL11.GL_LINEAR;
 		}
 	}
 	
-	@Override
-	public int rebind(AssetLoader assets)
+	public int getWidth()
 	{
-		if (this.textureId != -1)
+		return width;
+	}
+
+	public int getHeight()
+	{
+		return height;
+	}
+
+	public float getAspect()
+	{
+		return aspect;
+	}
+
+	@Override
+	public boolean isLoaded()
+	{
+		return this.textureId != -1;
+	}
+
+	@Override
+	public boolean load(RenderEngine render)
+	{
+		if (this.isLoaded())
 		{
-			this.unbind();
+			return false;
 		}
-		try
+		BufferedImage img = render.loadTexture(this);
+		if (img != null)
 		{
-			BufferedImage img = assets.loadTexture(this.name);
 			this.width = img.getWidth();
 			this.height = img.getHeight();
 			this.aspect = (float) this.width / (float) this.height;
@@ -91,49 +78,64 @@ public class TextureObject implements ITextureObject
 			GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
 
 			GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, this.width, this.height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, bytes);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, this.glSample);
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
 			GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
 
 			this.textureId = texId;
-			return this.textureId;
+			return true;
 		}
-		catch (Exception e)
+		else
 		{
-			e.printStackTrace();
-			this.textureId = -1;
-			return this.textureId;
+			return false;
 		}
 	}
 
 	@Override
-	public String getName()
+	public boolean reload(RenderEngine render)
 	{
-		return this.name;
+		if (this.isLoaded())
+		{
+			this.unload(render);
+		}
+		BufferedImage img = render.loadTexture(this);
+		if (img != null)
+		{
+			this.width = img.getWidth();
+			this.height = img.getHeight();
+			this.aspect = (float) this.width / (float) this.height;
+			ByteBuffer bytes = ImgUtils.imgToByteBuffer(img);
+
+			int texId = GL11.glGenTextures();
+			GL13.glActiveTexture(GL13.GL_TEXTURE0);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texId);
+
+			GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
+
+			GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, this.width, this.height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, bytes);
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, this.glSample);
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+			GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
+
+			this.textureId = texId;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	@Override
-	public final int getWidth()
+	public boolean unload(RenderEngine render)
 	{
-		return this.width;
+		GL11.glDeleteTextures(this.textureId);
+		this.textureId = -1;
+		return true;
 	}
-
-	@Override
-	public final int getHeight()
+	
+	public boolean bind()
 	{
-		return this.height;
-	}
-
-	@Override
-	public final float getAspect()
-	{
-		return this.aspect;
-	}
-
-	@Override
-	public void start()
-	{
-
 		GL11.glPushMatrix();
 		if (this.textureId != -1)
 		{
@@ -142,11 +144,12 @@ public class TextureObject implements ITextureObject
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.textureId);
+			return true;
 		}
+		return false;
 	}
-
-	@Override
-	public void end()
+	
+	public void unbind()
 	{
 		if (this.textureId != -1)
 		{
@@ -154,5 +157,17 @@ public class TextureObject implements ITextureObject
 			GL11.glDisable(GL11.GL_BLEND);
 		}
 		GL11.glPopMatrix();
+	}
+
+	@Override
+	public String getSource()
+	{
+		return this.source;
+	}
+
+	@Override
+	public String getIdentifier()
+	{
+		return this.identifier;
 	}
 }

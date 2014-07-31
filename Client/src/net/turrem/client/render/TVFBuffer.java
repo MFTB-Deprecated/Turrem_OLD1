@@ -1,30 +1,30 @@
-package net.turrem.client.render.object.model;
+package net.turrem.client.render;
 
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
-import net.turrem.client.render.object.RenderObject;
+import net.turrem.client.Config;
+import net.turrem.client.render.object.RenderTVF;
 import net.turrem.utils.models.TVFFile;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
 
-/**
- * Binds a TVF file to a LWJGL VBO (Vertex Buffer Object) for rendering
- */
+import org.lwjgl.BufferUtils;
+
 public class TVFBuffer
 {
 	/**
 	 * A list of vertex offsets to be used when converting faces in the file to
 	 * vertices in the VBO
 	 */
-	public static final int[][] offs = new int[][] { new int[] { 1, 0, 1 }/*0*/, new int[] { 0, 0, 1 }/*1*/, new int[] { 0, 0, 0 }/*2*/, new int[] { 1, 0, 0 }/*3*/, new int[] { 1, 1, 1 }/*4*/, new int[] { 0, 1, 1 }/*5*/, new int[] { 0, 1, 0 }/*6*/, new int[] { 1, 1, 0 }/*7*/ };
+	public static final int[][] offs = new int[][] { new int[] { 1, 0, 1 }/* 0 */, new int[] { 0, 0, 1 }/* 1 */, new int[] { 0, 0, 0 }/* 2 */, new int[] { 1, 0, 0 }/* 3 */, new int[] { 1, 1, 1 }/* 4 */, new int[] { 0, 1, 1 }/* 5 */, new int[] { 0, 1, 0 }/* 6 */, new int[] { 1, 1, 0 } /* 7 */};
 	/**
 	 * A list specifing which vericies in offs belong to which faces on a cube
 	 */
-	public static final int[][] offinds = new int[][] { new int[] { 4, 0, 3, 7 }/*XUp*/, new int[] { 5, 6, 2, 1 }/*XDown*/, new int[] { 4, 7, 6, 5 }/*YUp*/, new int[] { 0, 1, 2, 3 }/*YDown*/, new int[] { 4, 5, 1, 0 }/*ZUp*/, new int[] { 7, 3, 2, 6 }/*ZDown*/ };
+	public static final int[][] offinds = new int[][] { new int[] { 4, 0, 3, 7 }/* XUp */, new int[] { 5, 6, 2, 1 }/* XDown */, new int[] { 4, 7, 6, 5 }/* YUp */, new int[] { 0, 1, 2, 3 }/* YDown */, new int[] { 4, 5, 1, 0 }/* ZUp */, new int[] { 7, 3, 2, 6 } /* ZDown */};
 
 	private int vaoId = 0;
 	/**
@@ -51,12 +51,12 @@ public class TVFBuffer
 	 * @param tvf The TVF file
 	 * @param obj The render object to push to
 	 */
-	public void bindTVF(TVFFile tvf, RenderObject obj, float scale, float xo, float yo, float zo)
+	public void bindTVF(TVFFile tvf, RenderTVF obj, float scale, boolean doAO)
 	{
 		this.vertnum = tvf.faceNum * 4;
 		float[] verts = new float[this.vertnum * 3];
-		float[] colors = new float[this.vertnum * 3];
-		float[] norms = new float[this.vertnum * 3];
+		byte[] colors = new byte[this.vertnum * 3];
+		byte[] norms = new byte[this.vertnum * 3];
 
 		for (int i = 0; i < tvf.faceNum; i++)
 		{
@@ -72,15 +72,28 @@ public class TVFBuffer
 				}
 			}
 			TVFFile.TVFColor c = tvf.colors[cind];
-			
+
 			int[] foffinds = offinds[(f.dir & 0xFF) - 1];
-			
+
 			for (int j = 0; j < 4; j++)
-			{				
+			{
+				float aoMult = (f.light[j] & 0xFF) / 255.0F;
+				aoMult *= Config.finalAoSampleMult;
+				aoMult += (1.0F - Config.finalAoSampleMult);
+
 				int ind = ((i * 4) + j) * 3;
-				colors[ind + 0] = (c.r & 0xFF) / 255.0F;
-				colors[ind + 1] = (c.g & 0xFF) / 255.0F;
-				colors[ind + 2] = (c.b & 0xFF) / 255.0F;
+				if (doAO)
+				{
+					colors[ind + 0] = (byte) (int) ((c.r & 0xFF) * aoMult);
+					colors[ind + 1] = (byte) (int) ((c.g & 0xFF) * aoMult);
+					colors[ind + 2] = (byte) (int) ((c.b & 0xFF) * aoMult);
+				}
+				else
+				{
+					colors[ind + 0] = c.r;
+					colors[ind + 1] = c.g;
+					colors[ind + 2] = c.b;
+				}
 
 				float x = f.x & 0xFF;
 				float y = f.y & 0xFF;
@@ -88,32 +101,11 @@ public class TVFBuffer
 
 				int[] foffs = offs[foffinds[j]];
 
-				verts[ind + 0] = (x + foffs[0] - xo) / scale;
-				verts[ind + 1] = (y + foffs[1] - yo) / scale;
-				verts[ind + 2] = (z + foffs[2] - zo) / scale;
+				verts[ind + 0] = (x + foffs[0]) / scale;
+				verts[ind + 1] = (y + foffs[1]) / scale;
+				verts[ind + 2] = (z + foffs[2]) / scale;
 
-				float length = (f.light[j] & 0xFF) / 255.0F;
-				switch (f.dir & 0xFF)
-				{
-					case 1:
-						norms[ind + 0] = length;
-						break;
-					case 2:
-						norms[ind + 0] = length;
-						break;
-					case 3:
-						norms[ind + 1] = length;
-						break;
-					case 4:
-						norms[ind + 1] = length;
-						break;
-					case 5:
-						norms[ind + 2] = length;
-						break;
-					case 6:
-						norms[ind + 2] = length;
-						break;
-				}
+				norms[ind + (((f.dir & 0xFF) - 1) / 2)] = Byte.MAX_VALUE;
 			}
 		}
 
@@ -121,11 +113,11 @@ public class TVFBuffer
 		verticesBuffer.put(verts);
 		verticesBuffer.flip();
 
-		FloatBuffer colorsBuffer = BufferUtils.createFloatBuffer(colors.length);
+		ByteBuffer colorsBuffer = BufferUtils.createByteBuffer(colors.length);
 		colorsBuffer.put(colors);
 		colorsBuffer.flip();
 
-		FloatBuffer normalsBuffer = BufferUtils.createFloatBuffer(norms.length);
+		ByteBuffer normalsBuffer = BufferUtils.createByteBuffer(norms.length);
 		normalsBuffer.put(norms);
 		normalsBuffer.flip();
 
@@ -145,13 +137,13 @@ public class TVFBuffer
 		this.vbocId = GL15.glGenBuffers();
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.vbocId);
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, colorsBuffer, GL15.GL_STATIC_DRAW);
-		GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 0, 0);
+		GL20.glVertexAttribPointer(1, 3, GL11.GL_BYTE, false, 0, 0);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 
 		this.vbonId = GL15.glGenBuffers();
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.vbonId);
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, normalsBuffer, GL15.GL_STATIC_DRAW);
-		GL20.glVertexAttribPointer(2, 3, GL11.GL_FLOAT, false, 0, 0);
+		GL20.glVertexAttribPointer(2, 3, GL11.GL_BYTE, true, 0, 0);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 
 		// Deselect (bind to 0) the VAO

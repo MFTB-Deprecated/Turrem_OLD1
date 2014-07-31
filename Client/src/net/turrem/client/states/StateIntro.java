@@ -1,7 +1,7 @@
 package net.turrem.client.states;
 
 import net.turrem.client.Turrem;
-import net.turrem.client.render.texture.TextureIcon;
+import net.turrem.client.render.icon.TextureIcon;
 
 import org.lwjgl.opengl.GL11;
 
@@ -17,7 +17,7 @@ public class StateIntro implements IState
 
 	private int ticks = 0;
 
-	private TextureIcon zaplogo = new TextureIcon("core.misc.ZapCloud");
+	private TextureIcon zaplogo = new TextureIcon("core.misc.ZapCloud", false);
 
 	public StateIntro(Turrem turrem)
 	{
@@ -33,7 +33,7 @@ public class StateIntro implements IState
 	@Override
 	public void end()
 	{
-		this.zaplogo.unload();
+		this.zaplogo.object.unload(this.theTurrem.theRender);
 	}
 
 	@Override
