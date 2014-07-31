@@ -45,8 +45,8 @@ public class StateMainMenu implements IState
 	@Override
 	public void start()
 	{
-		Font font = new Font("basicintro");
-		font.loadTexture("core.fonts.screen", this.theTurrem.theRender);
+		Font font = new Font();
+		font.loadTexture("core.fonts.screen", this.theTurrem.theRender, true);
 		this.testFont = new FontRender(font);
 	}
 

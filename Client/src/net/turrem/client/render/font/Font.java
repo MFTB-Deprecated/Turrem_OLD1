@@ -12,16 +12,14 @@ public class Font
 	public int width;
 	public int height;
 
-	public final String name;
-
-	public Font(String name)
+	public Font()
 	{
-		this.name = name;
+		
 	}
 
-	public void loadTexture(String texture, RenderEngine render)
+	public void loadTexture(String texture, RenderEngine render, boolean isPixelFont)
 	{
-		this.ico = new TextureIcon(texture, true);
+		this.ico = new TextureIcon(texture, isPixelFont);
 		this.ico.load(render);
 		this.aspect = this.ico.getAspect();
 		this.height = this.ico.getHeight();

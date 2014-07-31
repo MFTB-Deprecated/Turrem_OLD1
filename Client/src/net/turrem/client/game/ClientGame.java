@@ -87,7 +87,9 @@ public class ClientGame
 	{
 		if (this.face.getTerrainPickSide() != null)
 		{
-			this.debugFont.renderText("@(" + this.face.getTerrainPickX() + ", " + this.face.getTerrainPickY() + ", " + this.face.getTerrainPickZ() + ", " + this.face.getTerrainPickSide().name() + ")", 16, 16, 12);
+			GL11.glColor3f(0.0F, 0.0F, 0.0F);
+			this.debugFont.renderText("@(" + this.face.getTerrainPickX() + ", " + this.face.getTerrainPickY() + ", " + this.face.getTerrainPickZ() + ", " + this.face.getTerrainPickSide().name() + ")", 16, 16, 16);
+			GL11.glColor3f(1.0F, 1.0F, 1.0F);
 		}
 	}
 
@@ -197,8 +199,8 @@ public class ClientGame
 
 	public void start()
 	{
-		Font font = new Font("basicintro");
-		font.loadTexture("core.fonts.screen", this.theTurrem.theRender);
+		Font font = new Font();
+		font.loadTexture("core.fonts.basic", this.theTurrem.theRender, false);
 		this.debugFont = new FontRender(font);
 		this.terrselect = new TextureIcon("core.misc.terrselect", true);
 		this.terrselect.load(this.theTurrem.theRender);
