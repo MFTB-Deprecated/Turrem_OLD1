@@ -39,7 +39,7 @@ public class RenderObjectTVF implements IRenderObject
 		{
 			return false;
 		}
-		this.tvf = render.loadTVFRender(this.source, this.scale, Config.doAO, Config.doMat);
+		this.tvf = render.loadTVFRender(this.source, this.scale, Config.doAO);
 		return true;
 	}
 
@@ -47,7 +47,7 @@ public class RenderObjectTVF implements IRenderObject
 	public boolean reload(RenderEngine render)
 	{
 		this.unload(render);
-		this.tvf = render.loadTVFRender(this.source, this.scale, Config.doAO, Config.doMat);
+		this.tvf = render.loadTVFRender(this.source, this.scale, Config.doAO);
 		return true;
 	}
 

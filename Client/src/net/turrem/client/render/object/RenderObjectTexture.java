@@ -14,16 +14,25 @@ public class RenderObjectTexture implements IRenderObject
 {
 	private String source;
 	private String identifier;
+	private int glSample;
 	private int textureId = -1;
 
 	private int width = -1;
 	private int height = -1;
 	private float aspect = Float.NaN;
 	
-	public RenderObjectTexture(String source, String id)
+	public RenderObjectTexture(String source, String id, boolean pixel)
 	{
 		this.source = source;
 		this.identifier = id;
+		if (pixel)
+		{
+			this.glSample = GL11.GL_NEAREST;
+		}
+		else
+		{
+			this.glSample = GL11.GL_LINEAR;
+		}
 	}
 	
 	public int getWidth()
@@ -69,8 +78,8 @@ public class RenderObjectTexture implements IRenderObject
 			GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
 
 			GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, this.width, this.height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, bytes);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, this.glSample);
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
 			GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
 
 			this.textureId = texId;
@@ -104,8 +113,8 @@ public class RenderObjectTexture implements IRenderObject
 			GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
 
 			GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, this.width, this.height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, bytes);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, this.glSample);
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
 			GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
 
 			this.textureId = texId;

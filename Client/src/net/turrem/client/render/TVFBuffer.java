@@ -51,7 +51,7 @@ public class TVFBuffer
 	 * @param tvf The TVF file
 	 * @param obj The render object to push to
 	 */
-	public void bindTVF(TVFFile tvf, RenderTVF obj, float scale, boolean doAO, boolean doColor)
+	public void bindTVF(TVFFile tvf, RenderTVF obj, float scale, boolean doAO)
 	{
 		this.vertnum = tvf.faceNum * 4;
 		float[] verts = new float[this.vertnum * 3];
@@ -82,36 +82,17 @@ public class TVFBuffer
 				aoMult += (1.0F - Config.finalAoSampleMult);
 
 				int ind = ((i * 4) + j) * 3;
-				if (doColor)
+				if (doAO)
 				{
-					if (doAO)
-					{
-						colors[ind + 0] = (byte) (int) ((c.r & 0xFF) * aoMult);
-						colors[ind + 1] = (byte) (int) ((c.g & 0xFF) * aoMult);
-						colors[ind + 2] = (byte) (int) ((c.b & 0xFF) * aoMult);
-					}
-					else
-					{
-						colors[ind + 0] = c.r;
-						colors[ind + 1] = c.g;
-						colors[ind + 2] = c.b;
-					}
+					colors[ind + 0] = (byte) (int) ((c.r & 0xFF) * aoMult);
+					colors[ind + 1] = (byte) (int) ((c.g & 0xFF) * aoMult);
+					colors[ind + 2] = (byte) (int) ((c.b & 0xFF) * aoMult);
 				}
 				else
 				{
-					if (doAO)
-					{
-						byte cb = (byte) (int) (0xFF * aoMult);
-						colors[ind + 0] = cb;
-						colors[ind + 1] = cb;
-						colors[ind + 2] = cb;
-					}
-					else
-					{
-						colors[ind + 0] = (byte) 0xFF;
-						colors[ind + 1] = (byte) 0xFF;
-						colors[ind + 2] = (byte) 0xFF;
-					}
+					colors[ind + 0] = c.r;
+					colors[ind + 1] = c.g;
+					colors[ind + 2] = c.b;
 				}
 
 				float x = f.x & 0xFF;

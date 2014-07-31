@@ -28,7 +28,7 @@ public class ClientWorld
 	public long worldTime = 0;
 
 	public GameConnection theConnection;
-	
+
 	public RenderEngine theRender;
 
 	public ClientWorld(ClientGame game)
@@ -76,19 +76,17 @@ public class ClientWorld
 		z -= pz;
 		if (x * x + z * z < dist)
 		{
-			/*
-			if (chunk.checkRebuildRender(this.chunkRender))
+			if (chunk.usingPreAO != Config.terrainUsePreAO)
 			{
-				System.out.println("Rebuilt Chunk Render");
+				chunk.buildRender(this.theRender);
 			}
 			chunk.render();
-			*/
 		}
 	}
 
 	public void renderEntities()
 	{
-		
+
 	}
 
 	public Chunk getChunk(int chunkx, int chunkz)
@@ -105,7 +103,7 @@ public class ClientWorld
 		}
 		return c.getHeight(x, z);
 	}
-	
+
 	public int getRayHeight(double x1, double z1, double x2, double z2, double extend)
 	{
 		double x = x1;
@@ -261,9 +259,7 @@ public class ClientWorld
 			ServerPacketTerrain terr = (ServerPacketTerrain) pack;
 			Chunk c = terr.buildChunk();
 			this.chunks.setChunk(c);
-			/*
-			c.buildRender(this.chunkRender);
-			*/
+			c.buildRender(this.theRender);
 		}
 		if (pack instanceof ServerPacketStartingInfo)
 		{

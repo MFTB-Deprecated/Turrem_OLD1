@@ -50,22 +50,22 @@ public class RenderEngine
 		}
 	}
 
-	public RenderTVF loadTVFRender(TVFFile tvf, float scale, boolean doAO, boolean doColor)
+	public RenderTVF loadTVFRender(TVFFile tvf, float scale, boolean doAO)
 	{
 		TVFBuffer buffer = new TVFBuffer();
 		RenderTVF render = new RenderTVF();
-		buffer.bindTVF(tvf, render, scale, Config.doAO, Config.doMat);
+		buffer.bindTVF(tvf, render, scale, Config.doAO);
 		return render;
 	}
 
-	public RenderTVF loadTVFRender(String name, float scale, boolean doAO, boolean doColor)
+	public RenderTVF loadTVFRender(String name, float scale, boolean doAO)
 	{
 		TVFFile tvf = this.loadTVF(name);
 		RenderTVF render = new RenderTVF();
 		if (tvf != null)
 		{
 			TVFBuffer buffer = new TVFBuffer();
-			buffer.bindTVF(tvf, render, scale, Config.doAO, Config.doMat);
+			buffer.bindTVF(tvf, render, scale, Config.doAO);
 		}
 		return render;
 

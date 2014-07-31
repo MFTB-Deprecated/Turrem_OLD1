@@ -6,11 +6,13 @@ import net.turrem.client.render.object.RenderObjectTexture;
 public class TextureIcon extends RenderIcon2D
 {
 	private final String name;
+	public final boolean isPixelArt;
 	public RenderObjectTexture object;
 	
-	public TextureIcon(String name)
+	public TextureIcon(String name, boolean isPixelArt)
 	{
 		this.name = name;
+		this.isPixelArt = isPixelArt;
 	}
 	
 	@Override
@@ -78,6 +80,6 @@ public class TextureIcon extends RenderIcon2D
 	@Override
 	public String getIdentifier()
 	{
-		return this.name;
+		return this.name + (this.isPixelArt ? "[pix1" : "[pix0");
 	}
 }

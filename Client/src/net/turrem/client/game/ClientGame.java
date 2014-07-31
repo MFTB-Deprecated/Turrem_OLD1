@@ -47,8 +47,8 @@ public class ClientGame
 	public ClientGame(RenderEngine engine, Turrem turrem)
 	{
 		this.theTurrem = turrem;
-		this.theWorld = new ClientWorld(this);
 		this.theRender = engine;
+		this.theWorld = new ClientWorld(this);
 		this.face = new PlayerFace(this.theWorld);
 
 		try
@@ -87,7 +87,7 @@ public class ClientGame
 	{
 		if (this.face.getTerrainPickSide() != null)
 		{
-			this.debugFont.renderText("@(" + this.face.getTerrainPickX() + ", " + this.face.getTerrainPickY() + ", " + this.face.getTerrainPickZ() + ", " + this.face.getTerrainPickSide().name() + ")", 16, 16, 32);
+			this.debugFont.renderText("@(" + this.face.getTerrainPickX() + ", " + this.face.getTerrainPickY() + ", " + this.face.getTerrainPickZ() + ", " + this.face.getTerrainPickSide().name() + ")", 16, 16, 12);
 		}
 	}
 
@@ -200,9 +200,9 @@ public class ClientGame
 		Font font = new Font("basicintro");
 		font.loadTexture("core.fonts.screen", this.theTurrem.theRender);
 		this.debugFont = new FontRender(font);
-		this.terrselect = new TextureIcon("core.misc.terrselect");
+		this.terrselect = new TextureIcon("core.misc.terrselect", true);
 		this.terrselect.load(this.theTurrem.theRender);
-		this.toppin = new TextureIcon("core.misc.toppin");
+		this.toppin = new TextureIcon("core.misc.toppin", true);
 		this.toppin.load(this.theTurrem.theRender);
 	}
 
@@ -225,8 +225,7 @@ public class ClientGame
 		{
 			if (Keyboard.getEventKey() == Keyboard.KEY_M)
 			{
-				Config.doMat = !Config.doMat;
-				Config.renderSettingsVersion++;
+				
 			}
 		}
 	}

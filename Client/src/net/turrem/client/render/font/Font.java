@@ -21,7 +21,7 @@ public class Font
 
 	public void loadTexture(String texture, RenderEngine render)
 	{
-		this.ico = new TextureIcon(texture);
+		this.ico = new TextureIcon(texture, true);
 		this.ico.load(render);
 		this.aspect = this.ico.getAspect();
 		this.height = this.ico.getHeight();

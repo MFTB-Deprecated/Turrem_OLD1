@@ -45,11 +45,11 @@ public class RenderTVF
 
 		GL11.glEnableClientState(GL11.GL_COLOR_ARRAY);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.colors);
-		GL11.glColorPointer(3, GL11.GL_FLOAT, 0, 0);
+		GL11.glColorPointer(3, GL11.GL_UNSIGNED_BYTE, 0, 0);
 
 		GL11.glEnableClientState(GL11.GL_NORMAL_ARRAY);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.normals);
-		GL11.glNormalPointer(GL11.GL_FLOAT, 0, 0);
+		GL11.glNormalPointer(GL11.GL_BYTE, 0, 0);
 
 		GL11.glDrawArrays(GL11.GL_QUADS, 0, this.vertnum);
 	}
