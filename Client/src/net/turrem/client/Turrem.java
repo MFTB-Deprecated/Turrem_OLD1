@@ -10,7 +10,7 @@ import javax.imageio.ImageIO;
 
 import net.turrem.client.asset.AssetLoader;
 import net.turrem.client.load.ClientLoader;
-import net.turrem.client.render.engine.RenderManager;
+import net.turrem.client.render.RenderEngine;
 import net.turrem.client.states.IState;
 import net.turrem.client.states.StateIntro;
 import net.turrem.utils.graphics.ImgUtils;
@@ -18,6 +18,7 @@ import net.turrem.utils.graphics.ImgUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
@@ -28,7 +29,7 @@ public class Turrem
 	public final Session theSession;
 	public final String theGameDir;
 
-	public RenderManager theRender;
+	public RenderEngine theRender;
 	public AssetLoader theAssets;
 
 	private IState thisState;
@@ -54,7 +55,7 @@ public class Turrem
 
 		this.theLoader = new ClientLoader(this);
 		this.theAssets = new AssetLoader(this.theGameDir);
-		this.theRender = new RenderManager(this.theAssets);
+		this.theRender = new RenderEngine(this.theAssets);
 		
 		Keyboard.enableRepeatEvents(false);
 

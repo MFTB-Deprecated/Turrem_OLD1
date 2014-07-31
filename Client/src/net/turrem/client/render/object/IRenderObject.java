@@ -1,6 +1,16 @@
 package net.turrem.client.render.object;
 
-public interface IRenderObject
-{
+import net.turrem.client.render.RenderEngine;
 
+public interface IRenderObject
+{	
+	public String getName();
+	
+	public boolean isLoaded();
+	
+	public boolean load(RenderEngine render);
+	
+	public boolean reload(RenderEngine render);
+	
+	public boolean unload(RenderEngine render);
 }
