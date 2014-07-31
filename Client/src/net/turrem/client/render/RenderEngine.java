@@ -9,10 +9,12 @@ import net.turrem.client.render.object.RenderObjectTexture;
 public class RenderEngine
 {
 	public AssetLoader assets;
+	public RenderStoreTexture renderStore2D;
 	
 	public RenderEngine(AssetLoader assets)
 	{
 		this.assets = assets;
+		this.renderStore2D = new RenderStoreTexture(this);
 	}
 	
 	public BufferedImage loadTexture(RenderObjectTexture object)

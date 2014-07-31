@@ -23,6 +23,7 @@ public class RenderStoreTexture implements IRenderStore
 		{
 			tex.unload(this.theEngine);
 		}
+		this.objects.clear();
 	}
 
 	@Override
@@ -38,15 +39,15 @@ public class RenderStoreTexture implements IRenderStore
 	}
 
 	@Override
-	public IRenderObject getObject(String name)
+	public RenderObjectTexture getObject(String name)
 	{
 		return this.objects.get(name);
 	}
 
 	@Override
-	public IRenderObject unloadObject(String name)
+	public RenderObjectTexture unloadObject(String name)
 	{
-		IRenderObject obj = this.objects.get(name);
+		RenderObjectTexture obj = this.objects.get(name);
 		if (obj != null)
 		{
 			obj.unload(this.theEngine);
@@ -56,7 +57,7 @@ public class RenderStoreTexture implements IRenderStore
 	}
 
 	@Override
-	public IRenderObject loadObject(String name)
+	public RenderObjectTexture loadObject(String name)
 	{
 		RenderObjectTexture obj = this.objects.get(name);
 		if (obj == null)
@@ -72,7 +73,7 @@ public class RenderStoreTexture implements IRenderStore
 	}
 
 	@Override
-	public IRenderObject reloadObject(String name)
+	public RenderObjectTexture reloadObject(String name)
 	{
 		RenderObjectTexture obj = this.objects.get(name);
 		if (obj == null)
@@ -82,5 +83,17 @@ public class RenderStoreTexture implements IRenderStore
 		}
 		obj.reload(this.theEngine);
 		return obj;
+	}
+
+	@Override
+	public void reloadAll(boolean loadnew)
+	{
+		for (RenderObjectTexture tex : this.objects.values())
+		{
+			if (tex.isLoaded() || loadnew)
+			{
+				tex.reload(this.theEngine);
+			}
+		}
 	}
 }

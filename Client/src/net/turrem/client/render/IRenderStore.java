@@ -8,6 +8,8 @@ public interface IRenderStore
 {
 	public void unloadAll();
 	
+	public void reloadAll(boolean loadnew);
+	
 	public int size();
 	
 	public Map<String, IRenderObject> getMap();
