@@ -12,24 +12,20 @@ import net.turrem.utils.graphics.ImgUtils;
 
 public class RenderObjectTexture implements IRenderObject
 {
-	private String name;
+	private String source;
+	private String identifier;
 	private int textureId = -1;
 
 	private int width = -1;
 	private int height = -1;
 	private float aspect = Float.NaN;
 	
-	public RenderObjectTexture(String name)
+	public RenderObjectTexture(String source, String id)
 	{
-		this.name = name;
+		this.source = source;
+		this.identifier = id;
 	}
 	
-	@Override
-	public String getName()
-	{
-		return this.name;
-	}
-
 	public int getWidth()
 	{
 		return width;
@@ -154,8 +150,15 @@ public class RenderObjectTexture implements IRenderObject
 		GL11.glPopMatrix();
 	}
 
-	public String getPath()
+	@Override
+	public String getSource()
 	{
-		return this.getName();
+		return this.source;
+	}
+
+	@Override
+	public String getIdentifier()
+	{
+		return this.identifier;
 	}
 }

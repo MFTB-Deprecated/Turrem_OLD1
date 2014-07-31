@@ -4,7 +4,9 @@ import net.turrem.client.render.RenderEngine;
 
 public interface IRenderObject
 {	
-	public String getName();
+	public String getSource();
+	
+	public String getIdentifier();
 	
 	public boolean isLoaded();
 	

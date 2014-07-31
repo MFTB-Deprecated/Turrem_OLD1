@@ -250,7 +250,7 @@ public class Turrem
 		return instance.theAssets;
 	}
 
-	public static RenderManager getRender()
+	public static RenderEngine getRender()
 	{
 		return instance.theRender;
 	}

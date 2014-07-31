@@ -2,6 +2,7 @@ package net.turrem.client.render;
 
 import java.util.Map;
 
+import net.turrem.client.render.icon.IRenderIcon;
 import net.turrem.client.render.object.IRenderObject;
 
 public interface IRenderStore
@@ -14,11 +15,11 @@ public interface IRenderStore
 	
 	public Map<String, IRenderObject> getMap();
 	
-	public IRenderObject getObject(String name);
+	public IRenderObject getObject(IRenderIcon ico);
 	
-	public IRenderObject unloadObject(String name);
+	public IRenderObject unloadObject(IRenderIcon ico);
 	
-	public IRenderObject loadObject(String name);
+	public IRenderObject loadObject(IRenderIcon ico);
 	
-	public IRenderObject reloadObject(String name);
+	public IRenderObject reloadObject(IRenderIcon ico);
 }

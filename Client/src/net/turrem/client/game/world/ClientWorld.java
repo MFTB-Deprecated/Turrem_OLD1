@@ -14,7 +14,7 @@ import net.turrem.client.network.server.ServerPacket;
 import net.turrem.client.network.server.ServerPacketMaterialSync;
 import net.turrem.client.network.server.ServerPacketStartingInfo;
 import net.turrem.client.network.server.ServerPacketTerrain;
-import net.turrem.client.render.engine.RenderEngine;
+import net.turrem.client.render.RenderEngine;
 import net.turrem.utils.geo.Point;
 
 public class ClientWorld
@@ -27,14 +27,14 @@ public class ClientWorld
 
 	public long worldTime = 0;
 
-	public RenderEngine chunkRender;
-
 	public GameConnection theConnection;
+	
+	public RenderEngine theRender;
 
 	public ClientWorld(ClientGame game)
 	{
 		this.theGame = game;
-		this.chunkRender = new RenderEngine();
+		this.theRender = game.theRender;
 		this.chunks = new ChunkStorage(Config.chunkStorageWidth);
 	}
 
@@ -76,11 +76,13 @@ public class ClientWorld
 		z -= pz;
 		if (x * x + z * z < dist)
 		{
+			/*
 			if (chunk.checkRebuildRender(this.chunkRender))
 			{
 				System.out.println("Rebuilt Chunk Render");
 			}
 			chunk.render();
+			*/
 		}
 	}
 
@@ -259,7 +261,9 @@ public class ClientWorld
 			ServerPacketTerrain terr = (ServerPacketTerrain) pack;
 			Chunk c = terr.buildChunk();
 			this.chunks.setChunk(c);
+			/*
 			c.buildRender(this.chunkRender);
+			*/
 		}
 		if (pack instanceof ServerPacketStartingInfo)
 		{

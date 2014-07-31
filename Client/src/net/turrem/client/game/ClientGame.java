@@ -14,10 +14,10 @@ import org.lwjgl.util.glu.GLU;
 import net.turrem.client.Config;
 import net.turrem.client.Turrem;
 import net.turrem.client.game.world.ClientWorld;
-import net.turrem.client.render.engine.RenderManager;
+import net.turrem.client.render.RenderEngine;
 import net.turrem.client.render.font.Font;
 import net.turrem.client.render.font.FontRender;
-import net.turrem.client.render.texture.TextureIcon;
+import net.turrem.client.render.icon.TextureIcon;
 import net.turrem.utils.geo.EnumDir;
 import net.turrem.utils.geo.Point;
 import net.turrem.utils.geo.Ray;
@@ -31,7 +31,7 @@ public class ClientGame
 	private FloatBuffer whiteLight;
 	private FloatBuffer lModelAmbient;
 
-	public RenderManager theManager;
+	public RenderEngine theRender;
 
 	private PlayerFace face;
 
@@ -44,11 +44,11 @@ public class ClientGame
 	public static final int[][] vertOffs = new int[][] { new int[] { 1, 0, 1 }/* 0 */, new int[] { 0, 0, 1 }/* 1 */, new int[] { 0, 0, 0 }/* 2 */, new int[] { 1, 0, 0 }/* 3 */, new int[] { 1, 1, 1 }/* 4 */, new int[] { 0, 1, 1 }/* 5 */, new int[] { 0, 1, 0 }/* 6 */, new int[] { 1, 1, 0 } /* 7 */};
 	public static final int[][] vertOffinds = new int[][] { new int[] { 4, 0, 3, 7 }/* XUp */, new int[] { 5, 6, 2, 1 }/* XDown */, new int[] { 4, 7, 6, 5 }/* YUp */, new int[] { 0, 1, 2, 3 }/* YDown */, new int[] { 4, 5, 1, 0 }/* ZUp */, new int[] { 7, 3, 2, 6 } /* ZDown */};
 
-	public ClientGame(RenderManager manager, Turrem turrem)
+	public ClientGame(RenderEngine engine, Turrem turrem)
 	{
 		this.theTurrem = turrem;
 		this.theWorld = new ClientWorld(this);
-		this.theManager = manager;
+		this.theRender = engine;
 		this.face = new PlayerFace(this.theWorld);
 
 		try
@@ -198,8 +198,7 @@ public class ClientGame
 	public void start()
 	{
 		Font font = new Font("basicintro");
-		font.loadTexture("core.fonts.basic", this.theTurrem.theRender);
-		font.push();
+		font.loadTexture("core.fonts.screen", this.theTurrem.theRender);
 		this.debugFont = new FontRender(font);
 		this.terrselect = new TextureIcon("core.misc.terrselect");
 		this.terrselect.load(this.theTurrem.theRender);

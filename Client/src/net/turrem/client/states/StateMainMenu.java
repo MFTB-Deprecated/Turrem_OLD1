@@ -16,7 +16,6 @@ import static org.lwjgl.opengl.GL11.glOrtho;
 import java.awt.Color;
 
 import net.turrem.client.Turrem;
-import net.turrem.client.gui.GuiFrame;
 import net.turrem.client.render.font.Font;
 import net.turrem.client.render.font.FontRender;
 
@@ -38,8 +37,6 @@ public class StateMainMenu implements IState
 
 	public FontRender testFont;
 
-	public GuiFrame frame = new GuiFrame(600, 60, true, true, 6, "turrem.gui.frames.plain", 2.0F);
-
 	public StateMainMenu(Turrem turrem)
 	{
 		this.theTurrem = turrem;
@@ -49,16 +46,14 @@ public class StateMainMenu implements IState
 	public void start()
 	{
 		Font font = new Font("basicintro");
-		font.loadTexture("core.fonts.basic", this.theTurrem.theRender);
-		font.push();
-		this.frame.onStart(this.theTurrem.theRender);
+		font.loadTexture("core.fonts.screen", this.theTurrem.theRender);
 		this.testFont = new FontRender(font);
 	}
 
 	@Override
 	public void end()
 	{
-		this.testFont.theFont.unload();
+		
 	}
 
 	@Override
@@ -85,9 +80,6 @@ public class StateMainMenu implements IState
 		glEnd();
 
 		glColor3f(1.0F, 1.0F, 1.0F);
-
-		this.frame.setPos(this.theTurrem.getScreenWidth() / 2 - 300, this.theTurrem.getScreenHeight() / 2 - 5);
-		this.frame.render();
 
 		glColor3f(0.0F, 0.0F, 0.0F);
 		this.testFont.renderTextCentered("- Press any Key -", this.theTurrem.getScreenWidth() / 2, this.theTurrem.getScreenHeight() / 2, 50.0F);
