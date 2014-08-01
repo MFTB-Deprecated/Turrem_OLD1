@@ -19,6 +19,8 @@ public class ServerPacketStartingInfo extends ServerPacket
 	{
 		stream.writeInt((int) realm.startingLocation.xCoord);
 		stream.writeInt((int) realm.startingLocation.zCoord);
+		stream.writeInt((int) realm.theWorld.storage.chunks.width);
+		stream.writeInt((int) realm.theWorld.storage.chunks.depth);
 	}
 
 	@Override

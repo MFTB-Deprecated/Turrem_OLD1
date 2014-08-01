@@ -8,6 +8,7 @@ import net.turrem.client.Config;
 import net.turrem.client.game.ClientGame;
 import net.turrem.client.game.PlayerFace;
 import net.turrem.client.game.world.material.MaterialList;
+import net.turrem.client.game.world.storage.ChunkStorage;
 import net.turrem.client.network.GameConnection;
 import net.turrem.client.network.client.request.RequestChunk;
 import net.turrem.client.network.server.ServerPacket;
@@ -19,44 +20,31 @@ import net.turrem.utils.geo.Point;
 
 public class ClientWorld
 {
-	public final int worldSize = 32000;
-
 	public ClientGame theGame;
-
-	public ChunkStorage chunks;
-
+	public ChunkStorage chunks = null;
 	public long worldTime = 0;
-
 	public GameConnection theConnection;
-
 	public RenderEngine theRender;
+	
+	private boolean hasStartingInfo = false;
 
 	public ClientWorld(ClientGame game)
 	{
 		this.theGame = game;
 		this.theRender = game.theRender;
-		this.chunks = new ChunkStorage(Config.chunkStorageWidth);
 	}
 
 	public void render()
 	{
+		if (!this.hasStartingInfo)
+		{
+			return;
+		}
 		this.worldTime++;
 		Point foc = this.theGame.getFace().getFocus();
 		int px = (int) foc.xCoord;
 		int pz = (int) foc.zCoord;
-		int mincx = (px >> 4) - Config.chunkCheckRenderDistance;
-		int mincz = (pz >> 4) - Config.chunkCheckRenderDistance;
-		int maxcx = (px >> 4) + Config.chunkCheckRenderDistance;
-		int maxcz = (pz >> 4) + Config.chunkCheckRenderDistance;
-		ChunkGroup[] aro = this.chunks.getChunksAround(px >> 4, pz >> 4);
-		for (int i = 0; i < 4; i++)
-		{
-			ChunkGroup cg = aro[i];
-			if (cg != null)
-			{
-				cg.renderChunks(mincx, mincz, maxcx, maxcz, px, pz, this);
-			}
-		}
+		this.chunks.renderTick(px, pz, Config.chunkRenderRadius, Config.chunkRenderRadiusPrecise);
 		this.renderEntities();
 
 		this.theConnection.processPackets();
@@ -64,23 +52,6 @@ public class ClientWorld
 		if (!this.theConnection.isRunning())
 		{
 			this.theGame.stopGame();
-		}
-	}
-
-	public void renderChunk(Chunk chunk, int px, int pz)
-	{
-		int dist = Config.chunkRenderDistance * Config.chunkRenderDistance;
-		int x = chunk.chunkx * 16 + 8;
-		int z = chunk.chunkz * 16 + 8;
-		x -= px;
-		z -= pz;
-		if (x * x + z * z < dist)
-		{
-			if (chunk.usingPreAO != Config.terrainUsePreAO)
-			{
-				chunk.buildRender(this.theRender);
-			}
-			chunk.render();
 		}
 	}
 
@@ -249,6 +220,22 @@ public class ClientWorld
 
 	public void processPacket(ServerPacket pack)
 	{
+		if (!this.hasStartingInfo)
+		{
+			if (pack instanceof ServerPacketStartingInfo)
+			{
+				ServerPacketStartingInfo sti = (ServerPacketStartingInfo) pack;
+				PlayerFace face = this.theGame.getFace();
+				face.setFocus(Point.getPoint(sti.startx + 0.5D, 128.0D, sti.startz + 0.5D));
+				this.chunks = new ChunkStorage(sti.chunkStoreWidth, sti.chunkStoreDepth);
+				this.hasStartingInfo = true;
+			}
+			else
+			{
+				System.out.println("WARNING! The starting info packet has not arrived!");
+				return;
+			}
+		}
 		if (pack instanceof ServerPacketMaterialSync)
 		{
 			ServerPacketMaterialSync sync = (ServerPacketMaterialSync) pack;
@@ -258,14 +245,7 @@ public class ClientWorld
 		{
 			ServerPacketTerrain terr = (ServerPacketTerrain) pack;
 			Chunk c = terr.buildChunk();
-			this.chunks.setChunk(c);
-			c.buildRender(this.theRender);
-		}
-		if (pack instanceof ServerPacketStartingInfo)
-		{
-			ServerPacketStartingInfo sti = (ServerPacketStartingInfo) pack;
-			PlayerFace face = this.theGame.getFace();
-			face.setFocus(Point.getPoint(sti.startx + 0.5D, 128.0D, sti.startz + 0.5D));
+			this.chunks.saveChunk(c);
 		}
 	}
 }
