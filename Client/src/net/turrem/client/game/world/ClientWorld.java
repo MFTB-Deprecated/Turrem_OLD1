@@ -25,8 +25,10 @@ public class ClientWorld
 	public long worldTime = 0;
 	public GameConnection theConnection;
 	public RenderEngine theRender;
-	
+
 	private boolean hasStartingInfo = false;
+	
+	private float chunkrends = 0;
 
 	public ClientWorld(ClientGame game)
 	{
@@ -36,16 +38,23 @@ public class ClientWorld
 
 	public void render()
 	{
-		if (!this.hasStartingInfo)
-		{
-			return;
-		}
 		this.worldTime++;
-		Point foc = this.theGame.getFace().getFocus();
-		int px = (int) foc.xCoord;
-		int pz = (int) foc.zCoord;
-		this.chunks.renderTick(px, pz, Config.chunkRenderRadius, Config.chunkRenderRadiusPrecise);
-		this.renderEntities();
+		
+		if (this.hasStartingInfo)
+		{
+			Point foc = this.theGame.getFace().getFocus();
+			int px = (int) foc.xCoord;
+			int pz = (int) foc.zCoord;
+			Chunk.chunkRenders = 0;
+			this.chunks.renderTick(px, pz, Config.chunkRenderRadius, Config.chunkRenderRadiusPrecise);
+			this.chunkrends += Chunk.chunkRenders;
+			if (this.worldTime % 200 == 0)
+			{
+				System.out.printf("Rendered an average of %.1f chunks%n", this.chunkrends / 200);
+				this.chunkrends = 0.0F;
+			}
+			this.renderEntities();
+		}
 
 		this.theConnection.processPackets();
 
@@ -62,6 +71,10 @@ public class ClientWorld
 
 	public Chunk getChunk(int chunkx, int chunkz)
 	{
+		if (this.chunks == null)
+		{
+			return null;
+		}
 		return this.chunks.getChunk(chunkx, chunkz);
 	}
 

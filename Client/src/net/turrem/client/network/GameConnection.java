@@ -97,7 +97,7 @@ public class GameConnection
 		{
 			if (pak instanceof NullPacket)
 			{
-				System.err.println("Warning! Null Packet with id: " + pak.getPacketType());
+				System.err.printf("Warning! %d byte Null Packet with id: %d%n", ((NullPacket) pak).length, pak.getPacketType());
 			}
 			else
 			{

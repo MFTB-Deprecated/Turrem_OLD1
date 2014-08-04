@@ -100,7 +100,7 @@ public class ChunkStorage implements IWorldChunkStorage
 		int v = chunkz << (32 - this.depth);
 		int U = chunkx >> (this.depth);
 		int V = chunkz >> (this.depth);
-		if (U < 0 || U >= this.width || V < 0 || V >= this.width)
+		if (U >= 0 && U < this.width && V >= 0 && V < this.width)
 		{
 			int i = U + V * this.width;
 			ChunkQuad quad = this.quads[i];
@@ -186,8 +186,8 @@ public class ChunkStorage implements IWorldChunkStorage
 
 		int imin = xmin < 0 ? -1 : 0;
 		int jmin = zmin < 0 ? -1 : 0;
-		int imax = xmin >= this.chunksInQuad ? 1 : 0;
-		int jmax = zmin >= this.chunksInQuad ? 1 : 0;
+		int imax = xmax >= this.chunksInQuad ? 1 : 0;
+		int jmax = zmax >= this.chunksInQuad ? 1 : 0;
 
 		int xo;
 		int zo;

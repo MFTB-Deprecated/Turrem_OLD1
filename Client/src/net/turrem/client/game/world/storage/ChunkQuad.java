@@ -63,7 +63,7 @@ public class ChunkQuad implements IWorldChunkStorageSegment, IWorldChunkStorage
 			return quad.binaryFindChunk(u << 1, v << 1);
 		}
 	}
-	
+
 	public Chunk binarySetChunk(int u, int v, Chunk chunk)
 	{
 		int i = 0;
@@ -143,7 +143,7 @@ public class ChunkQuad implements IWorldChunkStorageSegment, IWorldChunkStorage
 		this.theParent.removeMe(this.xpos % 2, this.zpos % 2);
 		return true;
 	}
-	
+
 	public void clear()
 	{
 		for (int i = 0; i < 4; i++)
@@ -173,7 +173,11 @@ public class ChunkQuad implements IWorldChunkStorageSegment, IWorldChunkStorage
 			{
 				for (int j = zmin; j <= zmax; j++)
 				{
-					((Chunk) this.quad[i + j * 2]).render(viewx, viewz, chunkRadius, preciseRadius);
+					Chunk c = ((Chunk) this.quad[i + j * 2]);
+					if (c != null)
+					{
+						c.render(viewx, viewz, chunkRadius, preciseRadius);
+					}
 				}
 			}
 		}
@@ -182,7 +186,7 @@ public class ChunkQuad implements IWorldChunkStorageSegment, IWorldChunkStorage
 			this.renderTickQuad(xmin, xmax, zmin, zmax, viewx, viewz, chunkRadius, preciseRadius);
 		}
 	}
-	
+
 	private void renderTickQuad(int xmin, int xmax, int zmin, int zmax, int viewx, int viewz, int radius, int preciseRadius)
 	{
 		int xo;
@@ -194,14 +198,14 @@ public class ChunkQuad implements IWorldChunkStorageSegment, IWorldChunkStorage
 				ChunkQuad quad = ((ChunkQuad) this.quad[i + j * 2]);
 				if (quad != null)
 				{
-					xo = i * this.scale;
-					zo = j * this.scale;
+					xo = i * (this.scale / 2);
+					zo = j * (this.scale / 2);
 					quad.renderTick(xmin - xo, xmax - xo, zmin - zo, zmax - zo, viewx, viewz, radius, preciseRadius);
 				}
 			}
 		}
 	}
-	
+
 	private int clip(int x)
 	{
 		if (x < 0)
@@ -214,7 +218,7 @@ public class ChunkQuad implements IWorldChunkStorageSegment, IWorldChunkStorage
 		}
 		return x;
 	}
-	
+
 	private int getSide(int x)
 	{
 		if (x >= this.scale / 2)

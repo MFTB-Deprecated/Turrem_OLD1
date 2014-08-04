@@ -16,8 +16,6 @@ public class PlayerFace
 {
 	public final static float hdamp = 0.9F;
 
-	private final int worldSize;
-
 	protected float camPitch = 30.0F;
 	protected float camYaw = 45.0F;
 	protected float camDist = 16.0F;
@@ -45,7 +43,6 @@ public class PlayerFace
 	public PlayerFace(ClientWorld world)
 	{
 		this.reset();
-		this.worldSize = world.worldSize;
 		this.camFocus = Point.getPoint(0.0D, 128.0D, 0.0D);
 		this.camLoc = Point.getPoint(0.0D, 0.0D, 0.0D);
 		this.lastChunkRequestX = (int) this.camLoc.xCoord;
@@ -185,7 +182,7 @@ public class PlayerFace
 		{
 			return;
 		}
-		
+
 		if (dy > 0)
 		{
 			this.pickx = -1;
@@ -197,18 +194,15 @@ public class PlayerFace
 
 		radius /= direction.length();
 
-		while ((stepX > 0 ? x < this.worldSize : x >= 0) && (stepY > 0 ? y < this.worldSize : y >= 0) && (stepZ > 0 ? z < this.worldSize : z >= 0))
+		while ((stepY > 0 ? y < 512 : y >= 0))
 		{
-			if (!(x < 0 || y < 0 || z < 0 || x >= this.worldSize || y >= this.worldSize || z >= this.worldSize))
+			if (testPickTerrain(x, y, z, face, world))
 			{
-				if (testPickTerrain(x, y, z, face, world))
-				{
-					this.pickx = x;
-					this.picky = y;
-					this.pickz = z;
-					this.pickSide = face;
-					return;
-				}
+				this.pickx = x;
+				this.picky = y;
+				this.pickz = z;
+				this.pickSide = face;
+				return;
 			}
 
 			// tMaxX stores the t-value at which we cross a cube boundary along

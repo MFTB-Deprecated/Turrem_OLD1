@@ -39,8 +39,8 @@ public class Realm
 	public void spawn()
 	{
 		//Random rand = new Random(this.theWorld.seed ^ this.user.hashCode());
-		int x = 500;
-		int z = 500;
+		int x = 2000;
+		int z = 2000;
 		int y;
 		/**
 		int size = this.theWorld.storage.chunks.mapSize;

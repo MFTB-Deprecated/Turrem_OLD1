@@ -115,9 +115,9 @@ public class ClientPlayer
 			this.sentWorld = true;
 			int x = ((int) this.theRealm.startingLocation.xCoord) >> 4;
 			int z = ((int) this.theRealm.startingLocation.zCoord) >> 4;
-			for (int i = -10; i <= 10; i++)
+			for (int i = -50; i <= 50; i++)
 			{
-				for (int j = -10; j <= 10; j++)
+				for (int j = -50; j <= 50; j++)
 				{
 					this.addChunkUpdate(x + i, z + j);
 				}

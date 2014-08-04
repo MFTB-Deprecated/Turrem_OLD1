@@ -18,9 +18,12 @@ public class Chunk implements IWorldChunkStorageSegment
 	private short voff;
 	private float yoffset;
 	protected short[] height;
+	public float averageHeight;
 	private boolean loaded = false;
 	public boolean usingPreAO;
 	protected ChunkQuad parentQuad;
+	
+	public static int chunkRenders = 0;
 
 	public Chunk(int chunkx, int chunkz, TVFFile tvf, byte[] hmap, short voff)
 	{
@@ -29,10 +32,14 @@ public class Chunk implements IWorldChunkStorageSegment
 		this.voff = voff;
 		this.tvf = tvf;
 		this.height = new short[256];
+		float aver = 0.0F;
 		for (int i = 0; i < 256; i++)
 		{
 			this.height[i] = (short) ((hmap[i] & 0xFF) + voff);
+			aver += this.height[i];
 		}
+		aver /= 256;
+		this.averageHeight = aver;
 	}
 
 	public boolean isLoaded()
@@ -50,6 +57,15 @@ public class Chunk implements IWorldChunkStorageSegment
 
 	public void render(int viewx, int viewz, int radius, int preciseRadius)
 	{
+		chunkRenders++;
+		GL11.glBegin(GL11.GL_QUADS);
+		int x = this.chunkx * 16;
+		int z = this.chunkz * 16;
+		GL11.glVertex3f(x, this.averageHeight, z);
+		GL11.glVertex3f(x + 16, this.averageHeight, z);
+		GL11.glVertex3f(x + 16, this.averageHeight, z + 16);
+		GL11.glVertex3f(x, this.averageHeight, z + 16);
+		GL11.glEnd();
 	}
 
 	public void unload()

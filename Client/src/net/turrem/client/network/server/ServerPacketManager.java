@@ -82,9 +82,19 @@ public class ServerPacketManager
 			length = (stream.read() << 24) | (stream.read() << 16) | (stream.read() << 8) | (stream.read() << 0);
 		}
 		byte[] packet = new byte[length];
-		stream.read(packet);
+		readArray(packet, stream);
 		DataInput input = new DataInputStream(new ByteArrayInputStream(packet));
 		return readPacket(type, length, input);
+	}
+	
+	public static void readArray(byte[] array, InputStream stream) throws IOException
+	{
+		int i = 0;
+		while (i < array.length)
+		{
+			array[i] = (byte) stream.read();
+			i++;
+		}
 	}
 	
 	public static boolean addProcessCall(Method call, byte type)
