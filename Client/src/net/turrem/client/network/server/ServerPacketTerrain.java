@@ -8,9 +8,13 @@ import net.turrem.client.Config;
 import net.turrem.client.game.world.Chunk;
 import net.turrem.client.game.world.material.Material;
 import net.turrem.client.game.world.material.MaterialList;
-import net.turrem.utils.models.TVFFile;
-import net.turrem.utils.models.TVFFile.TVFFace;
-import net.turrem.utils.models.TVFFile.TVFColor;
+import net.turrem.tvf.TVFFile;
+import net.turrem.tvf.color.TVFColor;
+import net.turrem.tvf.color.TVFPaletteColor;
+import net.turrem.tvf.face.EnumLightingType;
+import net.turrem.tvf.face.TVFFace;
+import net.turrem.tvf.layer.TVFLayerFaces;
+import net.turrem.utils.geo.EnumDir;
 
 public class ServerPacketTerrain extends ServerPacket
 {
@@ -59,27 +63,33 @@ public class ServerPacketTerrain extends ServerPacket
 
 	public TVFFile buildTVF()
 	{
+		TVFFile tvf = new TVFFile();
+		tvf.width = 16;
+		tvf.length = 16;
+		tvf.height = 256;
+		tvf.layers[0] = this.buildTVFLayer();
+		return tvf;
+	}
+	
+	public TVFLayerFaces buildTVFLayer()
+	{
+		TVFPaletteColor pal = new TVFPaletteColor();
+		
 		ArrayList<TVFFace> faces = new ArrayList<TVFFace>();
-		TVFColor[] colors = new TVFColor[this.mats.length];
 
-		for (int i = 0; i < colors.length; i++)
+		for (int i = 0; i < this.mats.length; i++)
 		{
 			Material mat = MaterialList.getMaterial(this.mats[i]);
-			TVFColor color = new TVFColor();
+			TVFColor color;
 			if (mat != null)
 			{
-				color.b = mat.blue;
-				color.g = mat.green;
-				color.r = mat.red;
+			color = new TVFColor(mat.red, mat.green, mat.blue);
 			}
 			else
 			{
-				color.b = (byte) 0xFF;
-				color.g = (byte) 0xFF;
-				color.r = (byte) 0xFF;
+				color = new TVFColor(0xFFFFFF);
 			}
-			color.id = (byte) i;
-			colors[i] = color;
+			pal.palette[i] = color;
 		}
 
 		for (int i = 0; i < 16; i++)
@@ -92,14 +102,14 @@ public class ServerPacketTerrain extends ServerPacket
 
 		TVFFace[] far = new TVFFace[faces.size()];
 		far = faces.toArray(far);
-		TVFFile tvf = new TVFFile(far, colors);
+		TVFLayerFaces tvf = new TVFLayerFaces();
 		if (Config.terrainUsePreAO)
 		{
-			tvf.prelit = 1;
+			tvf.prelightType = EnumLightingType.SMOOTH;
 		}
 		else
 		{
-			tvf.prelit = 0;
+			tvf.prelightType = EnumLightingType.NONE;
 		}
 		return tvf;
 	}
@@ -125,13 +135,13 @@ public class ServerPacketTerrain extends ServerPacket
 		int y = this.getHeight(x, z);
 		if (col != null && col.length > 0)
 		{
-			TVFFace top = new TVFFace();
+			TVFFace top = new TVFFace(EnumLightingType.SMOOTH);
 			top.color = col[0];
 			top.x = (byte) x;
 			top.z = (byte) z;
 			top.y = (byte) y;
 			top.y += basePadding;
-			top.dir = TVFFace.Dir_YUp;
+			top.direction = EnumDir.YUp.ind;
 			faces.add(top);
 
 			int h;
@@ -151,13 +161,13 @@ public class ServerPacketTerrain extends ServerPacket
 			{
 				if (y - i > h)
 				{
-					TVFFace f = new TVFFace();
+					TVFFace f = new TVFFace(EnumLightingType.SMOOTH);
 					f.color = col[i];
 					f.x = (byte) x;
 					f.z = (byte) z;
 					f.y = (byte) (y - i);
 					f.y += basePadding;
-					f.dir = TVFFace.Dir_XUp;
+					f.direction = EnumDir.XUp.ind;
 					faces.add(f);
 					if (y - i == h + 1)
 					{
@@ -197,13 +207,13 @@ public class ServerPacketTerrain extends ServerPacket
 			{
 				if (y - i > h)
 				{
-					TVFFace f = new TVFFace();
+					TVFFace f = new TVFFace(EnumLightingType.SMOOTH);
 					f.color = col[i];
 					f.x = (byte) x;
 					f.z = (byte) z;
 					f.y = (byte) (y - i);
 					f.y += basePadding;
-					f.dir = TVFFace.Dir_XDown;
+					f.direction = EnumDir.XDown.ind;
 					faces.add(f);
 					if (y - i == h + 1)
 					{
@@ -243,13 +253,13 @@ public class ServerPacketTerrain extends ServerPacket
 			{
 				if (y - i > h)
 				{
-					TVFFace f = new TVFFace();
+					TVFFace f = new TVFFace(EnumLightingType.SMOOTH);
 					f.color = col[i];
 					f.x = (byte) x;
 					f.z = (byte) z;
 					f.y = (byte) (y - i);
 					f.y += basePadding;
-					f.dir = TVFFace.Dir_ZUp;
+					f.direction = EnumDir.ZUp.ind;
 					faces.add(f);
 					if (y - i == h + 1)
 					{
@@ -289,13 +299,13 @@ public class ServerPacketTerrain extends ServerPacket
 			{
 				if (y - i > h)
 				{
-					TVFFace f = new TVFFace();
+					TVFFace f = new TVFFace(EnumLightingType.SMOOTH);
 					f.color = col[i];
 					f.x = (byte) x;
 					f.z = (byte) z;
 					f.y = (byte) (y - i);
 					f.y += basePadding;
-					f.dir = TVFFace.Dir_ZDown;
+					f.direction = EnumDir.ZDown.ind;
 					faces.add(f);
 					if (y - i == h + 1)
 					{

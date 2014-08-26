@@ -52,7 +52,7 @@ public class RenderEngine
 
 	public RenderTVF loadTVFRender(TVFFile tvf, float scale, boolean doAO)
 	{
-		TVFBuffer buffer = new TVFBuffer();
+		TVFLayerBuffer buffer = new TVFLayerBuffer();
 		RenderTVF render = new RenderTVF();
 		buffer.bindTVF(tvf, render, scale, Config.doAO);
 		return render;
@@ -64,7 +64,7 @@ public class RenderEngine
 		RenderTVF render = new RenderTVF();
 		if (tvf != null)
 		{
-			TVFBuffer buffer = new TVFBuffer();
+			TVFLayerBuffer buffer = new TVFLayerBuffer();
 			buffer.bindTVF(tvf, render, scale, Config.doAO);
 		}
 		return render;

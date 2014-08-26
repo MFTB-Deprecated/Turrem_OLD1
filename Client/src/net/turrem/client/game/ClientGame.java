@@ -107,7 +107,7 @@ public class ClientGame
 		if (side != null)
 		{
 			float off = 1.0F / 16.0F;
-			int[] inds = vertOffinds[side.ind - 1];
+			int[] inds = vertOffinds[side.ind];
 			int posx = this.face.getTerrainPickX();
 			int posy = this.face.getTerrainPickY();
 			int posz = this.face.getTerrainPickZ();
@@ -124,7 +124,7 @@ public class ClientGame
 			this.terrselect.end();
 			this.toppin.start();
 			GL11.glBegin(GL11.GL_QUADS);
-			inds = vertOffinds[EnumDir.YUp.ind - 1];
+			inds = vertOffinds[EnumDir.YUp.ind];
 			posy = this.theWorld.getHeight(posx, posz) - 1;
 			for (int i = 0; i < 4; i++)
 			{

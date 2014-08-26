@@ -8,7 +8,7 @@ import net.turrem.client.game.world.storage.IWorldChunkStorageSegment;
 import net.turrem.client.network.server.ServerPacketTerrain;
 import net.turrem.client.render.RenderEngine;
 import net.turrem.client.render.object.RenderTVF;
-import net.turrem.utils.models.TVFFile;
+import net.turrem.tvf.TVFFile;
 
 public class Chunk implements IWorldChunkStorageSegment
 {

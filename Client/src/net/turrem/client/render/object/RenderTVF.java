@@ -1,6 +1,6 @@
 package net.turrem.client.render.object;
 
-import net.turrem.client.render.TVFBuffer;
+import net.turrem.client.render.TVFLayerBuffer;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
@@ -54,7 +54,7 @@ public class RenderTVF
 		GL11.glDrawArrays(GL11.GL_QUADS, 0, this.vertnum);
 	}
 	
-	public void push(TVFBuffer buffer)
+	public void push(TVFLayerBuffer buffer)
 	{
 		this.verts = buffer.getVboVertsId();
 		this.colors = buffer.getVboColorsId();
