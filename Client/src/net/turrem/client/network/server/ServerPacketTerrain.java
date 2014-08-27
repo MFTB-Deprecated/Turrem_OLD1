@@ -67,7 +67,7 @@ public class ServerPacketTerrain extends ServerPacket
 		tvf.width = 16;
 		tvf.length = 16;
 		tvf.height = 256;
-		tvf.layers[0] = this.buildTVFLayer();
+		tvf.layers.add(this.buildTVFLayer());
 		return tvf;
 	}
 	

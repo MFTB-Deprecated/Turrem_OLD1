@@ -90,7 +90,6 @@ public class Turrem
 	public void afterStart()
 	{
 		System.out.println("Username: " + this.theSession.username);
-		this.theAssets.convertAllVox(true);
 	}
 
 	public void render()

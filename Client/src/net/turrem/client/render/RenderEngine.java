@@ -3,11 +3,10 @@ package net.turrem.client.render;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-import net.turrem.client.Config;
 import net.turrem.client.asset.AssetLoader;
 import net.turrem.client.render.object.RenderObjectTexture;
 import net.turrem.client.render.object.RenderTVF;
-import net.turrem.utils.models.TVFFile;
+import net.turrem.tvf.TVFFile;
 
 public class RenderEngine
 {
@@ -52,22 +51,17 @@ public class RenderEngine
 
 	public RenderTVF loadTVFRender(TVFFile tvf, float scale, boolean doAO)
 	{
-		TVFLayerBuffer buffer = new TVFLayerBuffer();
-		RenderTVF render = new RenderTVF();
-		buffer.bindTVF(tvf, render, scale, Config.doAO);
+		RenderTVF render = new RenderTVF(tvf, scale, doAO, this);
 		return render;
 	}
 
 	public RenderTVF loadTVFRender(String name, float scale, boolean doAO)
 	{
 		TVFFile tvf = this.loadTVF(name);
-		RenderTVF render = new RenderTVF();
 		if (tvf != null)
 		{
-			TVFLayerBuffer buffer = new TVFLayerBuffer();
-			buffer.bindTVF(tvf, render, scale, Config.doAO);
+			return this.loadTVFRender(tvf, scale, doAO);
 		}
-		return render;
-
+		return null;
 	}
 }

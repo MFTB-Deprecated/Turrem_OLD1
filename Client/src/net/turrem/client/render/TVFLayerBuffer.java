@@ -4,7 +4,6 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
 import net.turrem.client.Config;
-import net.turrem.client.render.object.RenderTVF;
 import net.turrem.tvf.color.TVFColor;
 import net.turrem.tvf.color.TVFPaletteColor;
 import net.turrem.tvf.face.EnumLightingType;
@@ -21,31 +20,31 @@ import org.lwjgl.BufferUtils;
 
 public class TVFLayerBuffer
 {
-
 	public static final int[][] offs = FaceUtils.vertexOffset;
 	public static final int[][] offinds = FaceUtils.vertexOffsetIndices;
 
-	private int vaoId = 0;
+	private int vaoId = -1;
 	/**
 	 * VBO vertex object id
 	 */
-	private int vboId = 0;
+	private int vboId = -1;
 	/**
 	 * VBO color object id
 	 */
-	private int vbocId = 0;
+	private int vbocId = -1;
 	/**
 	 * VBO normal object id
 	 */
-	private int vbonId = 0;
+	private int vbonId = -1;
 
 	/**
 	 * Number of verticies in this VBO
 	 */
 	private int vertnum;
 
-	public void bindTVF(TVFLayerFaces tvf, RenderTVF obj, float scale, boolean doAO)
+	public void bindTVF(TVFLayerFaces tvf, float scale, boolean doAO)
 	{
+		this.delete();
 		int facenum = tvf.faces.size();
 		this.vertnum = facenum * 4;
 		float[] verts = new float[this.vertnum * 3];
@@ -152,7 +151,7 @@ public class TVFLayerBuffer
 		}
 		else
 		{
-			this.vbocId = 0;
+			this.vbocId = -1;
 		}
 
 		this.vbonId = GL15.glGenBuffers();
@@ -163,31 +162,75 @@ public class TVFLayerBuffer
 
 		// Deselect (bind to 0) the VAO
 		GL30.glBindVertexArray(0);
-
-		obj.push(this);
 	}
 
-	public final int getVboVertsId()
+	public boolean delete()
+	{
+		boolean flag = false;
+		if (this.vaoId != -1)
+		{
+			GL15.glDeleteBuffers(this.vboId);
+			if (this.vbocId != 0)
+			{
+				GL15.glDeleteBuffers(this.vbocId);
+			}
+			GL15.glDeleteBuffers(this.vbonId);
+			GL30.glDeleteVertexArrays(this.vaoId);
+			flag = true;
+		}
+		this.vboId = -1;
+		this.vbocId = -1;
+		this.vbonId = -1;
+		this.vertnum = 0;
+		this.vaoId = -1;
+		return flag;
+	}
+
+	public void doRender()
+	{
+		GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glPolygonMode(GL11.GL_FRONT, GL11.GL_FILL);
+		GL11.glEnable(GL11.GL_LIGHTING);
+
+		GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.vboId);
+		GL11.glVertexPointer(3, GL11.GL_FLOAT, 0, 0);
+
+		if (this.vbocId != -1)
+		{
+			GL11.glEnableClientState(GL11.GL_COLOR_ARRAY);
+			GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.vbocId);
+			GL11.glColorPointer(3, GL11.GL_UNSIGNED_BYTE, 0, 0);
+		}
+
+		GL11.glEnableClientState(GL11.GL_NORMAL_ARRAY);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.vbonId);
+		GL11.glNormalPointer(GL11.GL_BYTE, 0, 0);
+
+		GL11.glDrawArrays(GL11.GL_QUADS, 0, this.vertnum);
+	}
+
+	public int getVboVertsId()
 	{
 		return this.vboId;
 	}
 
-	public final int getVboColorsId()
+	public int getVboColorsId()
 	{
 		return this.vbocId;
 	}
 
-	public final int getVboNormalsId()
+	public int getVboNormalsId()
 	{
 		return this.vbonId;
 	}
 
-	public final int getVertCount()
+	public int getVertCount()
 	{
 		return this.vertnum;
 	}
 
-	public final int getVaoId()
+	public int getVaoId()
 	{
 		return this.vaoId;
 	}
