@@ -3,10 +3,8 @@ package net.turrem.client.render;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
-import net.turrem.client.Config;
 import net.turrem.tvf.color.TVFColor;
 import net.turrem.tvf.color.TVFPaletteColor;
-import net.turrem.tvf.face.EnumLightingType;
 import net.turrem.tvf.face.TVFFace;
 import net.turrem.tvf.layer.TVFLayerFaces;
 import net.turrem.utils.geo.FaceUtils;
@@ -76,31 +74,11 @@ public class TVFLayerBuffer
 
 			for (int j = 0; j < 4; j++)
 			{
-				float aoMult = 1.0F;
-				if (tvf.prelightType == EnumLightingType.SMOOTH)
-				{
-					aoMult = (f.lighting[j] & 0xFF) / 255.0F;
-				}
-				else if (tvf.prelightType == EnumLightingType.SOLID)
-				{
-					aoMult = (f.lighting[0] & 0xFF) / 255.0F;
-				}
-				aoMult *= Config.finalAoSampleMult;
-				aoMult += (1.0F - Config.finalAoSampleMult);
 
 				int ind = ((i * 4) + j) * 3;
-				if (doAO)
-				{
-					colors[ind + 0] = (byte) (int) (c.getRedInt() * aoMult);
-					colors[ind + 1] = (byte) (int) (c.getGreenInt() * aoMult);
-					colors[ind + 2] = (byte) (int) (c.getBlueInt() * aoMult);
-				}
-				else
-				{
-					colors[ind + 0] = c.getRed();
-					colors[ind + 1] = c.getGreen();
-					colors[ind + 2] = c.getBlue();
-				}
+				colors[ind + 0] = c.getRed();
+				colors[ind + 1] = c.getGreen();
+				colors[ind + 2] = c.getBlue();
 
 				float x = f.x & 0xFF;
 				float y = f.y & 0xFF;

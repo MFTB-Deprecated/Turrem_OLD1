@@ -4,14 +4,12 @@ import java.io.DataInput;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import net.turrem.client.Config;
 import net.turrem.client.game.world.Chunk;
 import net.turrem.client.game.world.material.Material;
 import net.turrem.client.game.world.material.MaterialList;
 import net.turrem.tvf.TVFFile;
 import net.turrem.tvf.color.TVFColor;
 import net.turrem.tvf.color.TVFPaletteColor;
-import net.turrem.tvf.face.EnumLightingType;
 import net.turrem.tvf.face.TVFFace;
 import net.turrem.tvf.layer.TVFLayerFaces;
 import net.turrem.utils.geo.EnumDir;
@@ -103,14 +101,6 @@ public class ServerPacketTerrain extends ServerPacket
 		TVFFace[] far = new TVFFace[faces.size()];
 		far = faces.toArray(far);
 		TVFLayerFaces tvf = new TVFLayerFaces();
-		if (Config.terrainUsePreAO)
-		{
-			tvf.prelightType = EnumLightingType.SMOOTH;
-		}
-		else
-		{
-			tvf.prelightType = EnumLightingType.NONE;
-		}
 		return tvf;
 	}
 
@@ -135,7 +125,7 @@ public class ServerPacketTerrain extends ServerPacket
 		int y = this.getHeight(x, z);
 		if (col != null && col.length > 0)
 		{
-			TVFFace top = new TVFFace(EnumLightingType.SMOOTH);
+			TVFFace top = new TVFFace();
 			top.color = col[0];
 			top.x = (byte) x;
 			top.z = (byte) z;
@@ -145,23 +135,13 @@ public class ServerPacketTerrain extends ServerPacket
 			faces.add(top);
 
 			int h;
-			int hu;
-			int hd;
-
-			float mao = Config.terrainAoSampleMult;
 
 			h = this.getHeight(x + 1, z);
-			hu = this.getHeight(x + 1, z + 1);
-			hd = this.getHeight(x + 1, z - 1);
-			if (h > y)
-			{
-				top.multiplyLight(1, 1, 0, mao);
-			}
 			for (int i = 0; i < col.length; i++)
 			{
 				if (y - i > h)
 				{
-					TVFFace f = new TVFFace(EnumLightingType.SMOOTH);
+					TVFFace f = new TVFFace();
 					f.color = col[i];
 					f.x = (byte) x;
 					f.z = (byte) z;
@@ -169,26 +149,6 @@ public class ServerPacketTerrain extends ServerPacket
 					f.y += basePadding;
 					f.direction = EnumDir.XUp.ind;
 					faces.add(f);
-					if (y - i == h + 1)
-					{
-						f.multiplyLight(1, -1, 0, mao);
-					}
-					if (y - i <= hu)
-					{
-						f.multiplyLight(1, 0, 1, mao);
-					}
-					if (y - i <= hd)
-					{
-						f.multiplyLight(1, 0, -1, mao);
-					}
-					if (y - i == hu + 1)
-					{
-						f.multiplyLight(1, -1, 1, mao);
-					}
-					if (y - i == hd + 1)
-					{
-						f.multiplyLight(1, -1, -1, mao);
-					}
 				}
 				else
 				{
@@ -197,17 +157,11 @@ public class ServerPacketTerrain extends ServerPacket
 			}
 
 			h = this.getHeight(x - 1, z);
-			hu = this.getHeight(x - 1, z + 1);
-			hd = this.getHeight(x - 1, z - 1);
-			if (h > y)
-			{
-				top.multiplyLight(-1, 1, 0, mao);
-			}
 			for (int i = 0; i < col.length; i++)
 			{
 				if (y - i > h)
 				{
-					TVFFace f = new TVFFace(EnumLightingType.SMOOTH);
+					TVFFace f = new TVFFace();
 					f.color = col[i];
 					f.x = (byte) x;
 					f.z = (byte) z;
@@ -215,26 +169,6 @@ public class ServerPacketTerrain extends ServerPacket
 					f.y += basePadding;
 					f.direction = EnumDir.XDown.ind;
 					faces.add(f);
-					if (y - i == h + 1)
-					{
-						f.multiplyLight(-1, -1, 0, mao);
-					}
-					if (y - i <= hu)
-					{
-						f.multiplyLight(-1, 0, 1, mao);
-					}
-					if (y - i <= hd)
-					{
-						f.multiplyLight(-1, 0, -1, mao);
-					}
-					if (y - i == hu + 1)
-					{
-						f.multiplyLight(-1, -1, 1, mao);
-					}
-					if (y - i == hd + 1)
-					{
-						f.multiplyLight(-1, -1, -1, mao);
-					}
 				}
 				else
 				{
@@ -243,17 +177,11 @@ public class ServerPacketTerrain extends ServerPacket
 			}
 
 			h = this.getHeight(x, z + 1);
-			hu = this.getHeight(x + 1, z + 1);
-			hd = this.getHeight(x - 1, z + 1);
-			if (h > y)
-			{
-				top.multiplyLight(0, 1, 1, mao);
-			}
 			for (int i = 0; i < col.length; i++)
 			{
 				if (y - i > h)
 				{
-					TVFFace f = new TVFFace(EnumLightingType.SMOOTH);
+					TVFFace f = new TVFFace();
 					f.color = col[i];
 					f.x = (byte) x;
 					f.z = (byte) z;
@@ -261,26 +189,6 @@ public class ServerPacketTerrain extends ServerPacket
 					f.y += basePadding;
 					f.direction = EnumDir.ZUp.ind;
 					faces.add(f);
-					if (y - i == h + 1)
-					{
-						f.multiplyLight(0, -1, 1, mao);
-					}
-					if (y - i <= hu)
-					{
-						f.multiplyLight(1, 0, 1, mao);
-					}
-					if (y - i <= hd)
-					{
-						f.multiplyLight(-1, 0, 1, mao);
-					}
-					if (y - i == hu + 1)
-					{
-						f.multiplyLight(1, -1, 1, mao);
-					}
-					if (y - i == hd + 1)
-					{
-						f.multiplyLight(-1, -1, 1, mao);
-					}
 				}
 				else
 				{
@@ -288,18 +196,11 @@ public class ServerPacketTerrain extends ServerPacket
 				}
 			}
 
-			h = this.getHeight(x, z - 1);
-			hu = this.getHeight(x + 1, z - 1);
-			hd = this.getHeight(x - 1, z - 1);
-			if (h > y)
-			{
-				top.multiplyLight(0, 1, -1, mao);
-			}
 			for (int i = 0; i < col.length; i++)
 			{
 				if (y - i > h)
 				{
-					TVFFace f = new TVFFace(EnumLightingType.SMOOTH);
+					TVFFace f = new TVFFace();
 					f.color = col[i];
 					f.x = (byte) x;
 					f.z = (byte) z;
@@ -307,55 +208,11 @@ public class ServerPacketTerrain extends ServerPacket
 					f.y += basePadding;
 					f.direction = EnumDir.ZDown.ind;
 					faces.add(f);
-					if (y - i == h + 1)
-					{
-						f.multiplyLight(0, -1, -1, mao);
-					}
-					if (y - i <= hu)
-					{
-						f.multiplyLight(1, 0, -1, mao);
-					}
-					if (y - i <= hd)
-					{
-						f.multiplyLight(-1, 0, -1, mao);
-					}
-					if (y - i == hu + 1)
-					{
-						f.multiplyLight(1, -1, -1, mao);
-					}
-					if (y - i == hd + 1)
-					{
-						f.multiplyLight(-1, -1, -1, mao);
-					}
 				}
 				else
 				{
 					break;
 				}
-			}
-
-			h = this.getHeight(x + 1, z + 1);
-			if (h > y)
-			{
-				top.multiplyLight(1, 1, 1, mao);
-			}
-
-			h = this.getHeight(x + 1, z - 1);
-			if (h > y)
-			{
-				top.multiplyLight(1, 1, -1, mao);
-			}
-
-			h = this.getHeight(x - 1, z - 1);
-			if (h > y)
-			{
-				top.multiplyLight(-1, 1, -1, mao);
-			}
-
-			h = this.getHeight(x - 1, z + 1);
-			if (h > y)
-			{
-				top.multiplyLight(-1, 1, 1, mao);
 			}
 		}
 	}
