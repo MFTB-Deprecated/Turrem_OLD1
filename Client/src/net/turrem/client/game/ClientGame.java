@@ -67,20 +67,33 @@ public class ClientGame
 	{
 		this.face.tickCamera(this.theWorld);
 
+		boolean useFrame = this.theRender.useRenderFrame();
+
+		if (useFrame)
+		{
+			this.theRender.startFrame();
+		}
+
 		GL11.glClearColor(0.18F, 0.18F, 0.23F, 1.0F);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-		GL11.glPushMatrix();
 
+		GL11.glPushMatrix();
 		this.doPerspective(this.getFace());
 		this.renderWorld();
-
 		GL11.glPopMatrix();
 
-		GL11.glPushMatrix();
+		if (useFrame)
+		{
+			this.theRender.endFrame();
 
+			GL11.glPushMatrix();
+			this.theRender.renderFrame();
+			GL11.glPopMatrix();
+		}
+
+		GL11.glPushMatrix();
 		this.doOrtho();
 		this.renderInterface();
-
 		GL11.glPopMatrix();
 	}
 
@@ -228,7 +241,7 @@ public class ClientGame
 		{
 			if (Keyboard.getEventKey() == Keyboard.KEY_M)
 			{
-				
+
 			}
 		}
 	}

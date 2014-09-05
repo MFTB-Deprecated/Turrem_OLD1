@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -183,7 +182,7 @@ public class ClientPacketManager
 		}
 	}
 	
-	public static ClientPacket readSinglePacket(String user, InputStream stream) throws IOException
+	public static ClientPacket readSinglePacket(String user, DataInputStream stream) throws IOException
 	{
 		byte type = (byte) stream.read();
 		int length = (stream.read() << 8) | (stream.read() << 0);
@@ -192,19 +191,9 @@ public class ClientPacketManager
 			length = (stream.read() << 24) | (stream.read() << 16) | (stream.read() << 8) | (stream.read() << 0);
 		}
 		byte[] packet = new byte[length];
-		readArray(packet, stream);
+		stream.readFully(packet);
 		DataInput input = new DataInputStream(new ByteArrayInputStream(packet));
 		return readPacket(type, length, input, user);
-	}
-	
-	public static void readArray(byte[] array, InputStream stream) throws IOException
-	{
-		int i = 0;
-		while (i < array.length)
-		{
-			array[i] = (byte) stream.read();
-			i++;
-		}
 	}
 	
 	static

@@ -101,9 +101,4 @@ public class RenderTVF implements ITVFRenderInterface
 			this.buffers[layerindex].doRender();
 		}
 	}
-
-	@Override
-	public void renderLayer(int layerindex, Object visiblePar)
-	{
-	}
 }

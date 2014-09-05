@@ -20,7 +20,27 @@ public class RenderEngine
 		this.renderStore2D = new RenderStoreTexture(this);
 		this.renderStoreTVF = new RenderStoreTVF(this);
 	}
+	
+	public void startFrame()
+	{
+		
+	}
+	
+	public void endFrame()
+	{
+		
+	}
 
+	public void renderFrame()
+	{
+		
+	}
+	
+	public boolean useRenderFrame()
+	{
+		return true;
+	}
+	
 	public BufferedImage loadTexture(RenderObjectTexture object)
 	{
 		if (object.isLoaded())
