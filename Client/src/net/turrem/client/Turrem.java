@@ -13,6 +13,7 @@ import net.turrem.client.load.ClientLoader;
 import net.turrem.client.render.RenderEngine;
 import net.turrem.client.states.IState;
 import net.turrem.client.states.StateIntro;
+import net.turrem.utils.file.FilePacker;
 import net.turrem.utils.graphics.ImgUtils;
 
 import org.lwjgl.LWJGLException;
@@ -40,6 +41,8 @@ public class Turrem
 	public static String networkLoc;
 	
 	public ClientLoader theLoader;
+	
+	public String tempAssetDir;
 
 	public Turrem(Session session, String dir)
 	{
@@ -54,7 +57,22 @@ public class Turrem
 		this.updateDisplay(1280, 720, false, true);
 
 		this.theLoader = new ClientLoader(this);
-		this.theAssets = new AssetLoader(this.theGameDir);
+		
+		File tempAssets = new File(this.theGameDir + "tmp/");
+		tempAssets.mkdirs();
+		
+		this.tempAssetDir = tempAssets.getAbsolutePath() + "/";
+		
+		try
+		{
+			FilePacker.extractZip(new File(this.theGameDir + "bin/coreAssets.zip"), tempAssets);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		
+		this.theAssets = new AssetLoader(this.tempAssetDir);
 		this.theRender = new RenderEngine(this.theAssets);
 		
 		Keyboard.enableRepeatEvents(false);
@@ -100,7 +118,7 @@ public class Turrem
 		}
 		if (this.renderCount == 3)
 		{
-			this.theLoader.loadClientJar();
+			//this.theLoader.loadClientJar();
 		}
 		if (this.thisState != null)
 		{
@@ -231,7 +249,7 @@ public class Turrem
 	{
 		ArrayList<ByteBuffer> icos = new ArrayList<ByteBuffer>();
 
-		File folder = new File(this.theGameDir + "assets/core/icons/");
+		File folder = new File(this.tempAssetDir + "core/icons/");
 
 		File[] filelist = folder.listFiles();
 

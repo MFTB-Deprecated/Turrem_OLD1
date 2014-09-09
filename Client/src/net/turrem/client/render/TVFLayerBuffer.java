@@ -7,7 +7,7 @@ import net.turrem.tvf.color.TVFColor;
 import net.turrem.tvf.color.TVFPaletteColor;
 import net.turrem.tvf.face.TVFFace;
 import net.turrem.tvf.layer.TVFLayerFaces;
-import net.turrem.utils.geo.FaceUtils;
+import net.turrem.utils.geo.VoxelGeoUtils;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
@@ -18,8 +18,10 @@ import org.lwjgl.BufferUtils;
 
 public class TVFLayerBuffer
 {
-	public static final int[][] offs = FaceUtils.vertexOffset;
-	public static final int[][] offinds = FaceUtils.vertexOffsetIndices;
+	public static final int[][] offs = VoxelGeoUtils.vertexOffset;
+	public static final int[][] offinds = VoxelGeoUtils.vertexOffsetIndices;
+	
+	public static final int[][] triangulate = new int[][] {new int[] {0, 1, 2, 2, 3, 0}, new int[] {3, 0, 1, 1, 2, 3}};
 
 	private int vaoId = -1;
 	/**
@@ -44,7 +46,7 @@ public class TVFLayerBuffer
 	{
 		this.delete();
 		int facenum = tvf.faces.size();
-		this.vertnum = facenum * 4;
+		this.vertnum = facenum * 6;
 		float[] verts = new float[this.vertnum * 3];
 		byte[] colors = new byte[this.vertnum * 3];
 		byte[] norms = new byte[this.vertnum * 3];
@@ -72,10 +74,17 @@ public class TVFLayerBuffer
 
 			int[] foffinds = offinds[(f.direction & 0xFF)];
 
-			for (int j = 0; j < 4; j++)
+			boolean flipped = false;
+			
+			if (f.lighting.length == 4)
 			{
-
-				int ind = ((i * 4) + j) * 3;
+				flipped = (f.lighting[0] & 0xFF) + (f.lighting[2] & 0xFF) < (f.lighting[1] & 0xFF) + (f.lighting[3] & 0xFF);
+			}
+			
+			for (int j = 0; j < 6; j++)
+			{
+				int k = triangulate[flipped ? 0 : 1][j];
+				int ind = ((i * 6) + j) * 3;
 				colors[ind + 0] = c.getRed();
 				colors[ind + 1] = c.getGreen();
 				colors[ind + 2] = c.getBlue();
@@ -84,7 +93,7 @@ public class TVFLayerBuffer
 				float y = f.y & 0xFF;
 				float z = f.z & 0xFF;
 
-				int[] foffs = offs[foffinds[j]];
+				int[] foffs = offs[foffinds[k]];
 
 				verts[ind + 0] = (x + foffs[0]) / scale;
 				verts[ind + 1] = (y + foffs[1]) / scale;
@@ -141,7 +150,7 @@ public class TVFLayerBuffer
 		// Deselect (bind to 0) the VAO
 		GL30.glBindVertexArray(0);
 	}
-
+	
 	public boolean delete()
 	{
 		boolean flag = false;
@@ -185,7 +194,7 @@ public class TVFLayerBuffer
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, this.vbonId);
 		GL11.glNormalPointer(GL11.GL_BYTE, 0, 0);
 
-		GL11.glDrawArrays(GL11.GL_QUADS, 0, this.vertnum);
+		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, this.vertnum);
 	}
 
 	public int getVboVertsId()

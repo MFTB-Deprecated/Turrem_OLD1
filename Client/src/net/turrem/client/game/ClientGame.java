@@ -19,7 +19,7 @@ import net.turrem.client.render.font.Font;
 import net.turrem.client.render.font.FontRender;
 import net.turrem.client.render.icon.TextureIcon;
 import net.turrem.utils.geo.EnumDir;
-import net.turrem.utils.geo.FaceUtils;
+import net.turrem.utils.geo.VoxelGeoUtils;
 import net.turrem.utils.geo.Point;
 import net.turrem.utils.geo.Ray;
 
@@ -42,8 +42,8 @@ public class ClientGame
 	protected TextureIcon terrselect;
 	protected TextureIcon toppin;
 
-	public static final int[][] vertOffs = FaceUtils.vertexOffset;
-	public static final int[][] vertOffinds = FaceUtils.vertexOffsetIndices;
+	public static final int[][] vertOffs = VoxelGeoUtils.vertexOffset;
+	public static final int[][] vertOffinds = VoxelGeoUtils.vertexOffsetIndices;
 
 	public ClientGame(RenderEngine engine, Turrem turrem)
 	{
