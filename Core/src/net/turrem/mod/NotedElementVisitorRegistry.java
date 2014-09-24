@@ -10,7 +10,7 @@ public class NotedElementVisitorRegistry
 {
 	private HashMultimap<Class<? extends Annotation>, INotedElementVisitor> visitors = HashMultimap.create();
 	
-	public void addRegistry(INotedElementVisitor visitor, Class<? extends Annotation> annotation)
+	protected void addVisitor(INotedElementVisitor visitor, Class<? extends Annotation> annotation)
 	{
 		if (annotation == null || visitor == null)
 		{
@@ -23,7 +23,7 @@ public class NotedElementVisitorRegistry
 		this.visitors.put(annotation, visitor);
 	}
 	
-	public void regesterElement(AnnotatedElement element)
+	private void visitElement(AnnotatedElement element)
 	{
 		for (Annotation ann : element.getDeclaredAnnotations())
 		{
@@ -38,20 +38,20 @@ public class NotedElementVisitorRegistry
 		}
 	}
 	
-	public void registerClass(Class<?> clas)
+	protected void visitClass(Class<?> clas)
 	{
-		this.regesterElement(clas);
+		this.visitElement(clas);
 		for (AnnotatedElement element : clas.getDeclaredConstructors())
 		{
-			this.regesterElement(element);
+			this.visitElement(element);
 		}
 		for (AnnotatedElement element : clas.getDeclaredFields())
 		{
-			this.regesterElement(element);
+			this.visitElement(element);
 		}
 		for (AnnotatedElement element : clas.getDeclaredMethods())
 		{
-			this.regesterElement(element);
+			this.visitElement(element);
 		}
 	}
 }
