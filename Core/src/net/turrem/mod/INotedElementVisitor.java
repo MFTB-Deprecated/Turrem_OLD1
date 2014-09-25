@@ -5,5 +5,5 @@ import java.lang.reflect.AnnotatedElement;
 
 public interface INotedElementVisitor
 {
-	public void visitElement(Annotation annotation, AnnotatedElement element);
+	public void visitElement(Annotation annotation, AnnotatedElement element, ModInstance mod);
 }

@@ -65,7 +65,7 @@ public class NotedElementVisitorRegistry
 		this.visitors.put(annotation, visitor);
 	}
 
-	private void visitElement(AnnotatedElement element)
+	private void visitElement(AnnotatedElement element, ModInstance mod)
 	{
 		for (Annotation ann : element.getDeclaredAnnotations())
 		{
@@ -74,26 +74,26 @@ public class NotedElementVisitorRegistry
 			{
 				for (INotedElementVisitor vis : viss)
 				{
-					vis.visitElement(ann, element);
+					vis.visitElement(ann, element, mod);
 				}
 			}
 		}
 	}
 
-	protected void visitClass(Class<?> clas)
+	protected void visitClass(Class<?> clas, ModInstance mod)
 	{
-		this.visitElement(clas);
+		this.visitElement(clas, mod);
 		for (AnnotatedElement element : clas.getDeclaredConstructors())
 		{
-			this.visitElement(element);
+			this.visitElement(element, mod);
 		}
 		for (AnnotatedElement element : clas.getDeclaredFields())
 		{
-			this.visitElement(element);
+			this.visitElement(element, mod);
 		}
 		for (AnnotatedElement element : clas.getDeclaredMethods())
 		{
-			this.visitElement(element);
+			this.visitElement(element, mod);
 		}
 	}
 }

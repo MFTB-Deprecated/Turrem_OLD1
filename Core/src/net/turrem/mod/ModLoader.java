@@ -1,8 +1,7 @@
 package net.turrem.mod;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.jar.JarFile;
 
 import java.io.File;
@@ -16,6 +15,7 @@ import net.turrem.EnumSide;
 import net.turrem.utils.JarExplore;
 
 import com.google.common.base.Charsets;
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.io.Files;
 
 import argo.saj.InvalidSyntaxException;
@@ -77,16 +77,16 @@ public class ModLoader
 
 	public void loadMods(NotedElementVisitorRegistry notedElements)
 	{
-		Collection<Class<?>> claz = new ArrayList<Class<?>>();
-		for (String id : this.mods.keySet())
+		ArrayListMultimap<ModInstance, Class<?>> claz = ArrayListMultimap.create();
+		for (ModInstance mod : this.mods.values())
 		{
 			try
 			{
-				claz.addAll(JarExplore.newInstance(this.getModJar(id)).getLoadedClasses());
+				claz.putAll(mod, JarExplore.newInstance(this.getModJar(mod)).getLoadedClasses());
 			}
 			catch (IOException e)
 			{
-				System.out.printf("Failed to get class list for [%s].%n", id);
+				System.out.printf("Failed to get class list for [%s].%n", mod.identifier);
 			}
 		}
 		this.onPreVisitLoad(notedElements, claz);
@@ -110,141 +110,158 @@ public class ModLoader
 		return new JarFile(new File(this.modDirectory, id + jar));
 	}
 
-	protected void onLoad(NotedElementVisitorRegistry registry, Collection<Class<?>> claz)
+	protected JarFile getModJar(ModInstance mod) throws IOException
 	{
-		for (Class<?> clas : claz)
+		return this.getModJar(mod.identifier);
+	}
+
+	protected void onLoad(NotedElementVisitorRegistry registry, ArrayListMultimap<ModInstance, Class<?>> map)
+	{
+		for (ModInstance mod : map.keySet())
 		{
-			registry.visitClass(clas);
-			for (Method met : clas.getDeclaredMethods())
+			List<Class<?>> claz = map.get(mod);
+			for (Class<?> clas : claz)
 			{
-				if (met.isAnnotationPresent(OnLoad.class))
+				registry.visitClass(clas, mod);
+				for (Method met : clas.getDeclaredMethods())
 				{
-					String name = met.getName();
-					if (!Modifier.isStatic(met.getModifiers()))
+					if (met.isAnnotationPresent(OnLoad.class))
 					{
-						System.out.printf("Method %s has @OnLoad, but is not static.%n", name);
-					}
-					else if (met.getParameterTypes().length != 0)
-					{
-						System.out.printf("Method %s has @OnLoad, but requires %d parameters. It should not require any parameters.%n", name, met.getParameterTypes().length);
-					}
-					else
-					{
-						try
+						String name = met.getName();
+						if (!Modifier.isStatic(met.getModifiers()))
 						{
-							met.invoke(null);
+							System.out.printf("Method %s has @OnLoad, but is not static.%n", name);
 						}
-						catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
+						else if (met.getParameterTypes().length != 0)
 						{
-							System.out.printf("Method %s has @OnLoad and is correctly declared, but threw %s when invoked.%n", name, e.getClass().getSimpleName());
+							System.out.printf("Method %s has @OnLoad, but requires %d parameters. It should not require any parameters.%n", name, met.getParameterTypes().length);
 						}
-						catch (Exception ex)
+						else
 						{
-							ex.printStackTrace();
+							try
+							{
+								met.invoke(null);
+							}
+							catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
+							{
+								System.out.printf("Method %s has @OnLoad and is correctly declared, but threw %s when invoked.%n", name, e.getClass().getSimpleName());
+							}
+							catch (Exception ex)
+							{
+								ex.printStackTrace();
+							}
 						}
 					}
 				}
 			}
 		}
 	}
-	
-	protected void onPostLoad(Collection<Class<?>> claz)
+
+	protected void onPostLoad(ArrayListMultimap<ModInstance, Class<?>> map)
 	{
-		for (Class<?> clas : claz)
+		for (ModInstance mod : map.keySet())
 		{
-			for (Method met : clas.getDeclaredMethods())
+			List<Class<?>> claz = map.get(mod);
+			for (Class<?> clas : claz)
 			{
-				if (met.isAnnotationPresent(OnPostLoad.class))
+				for (Method met : clas.getDeclaredMethods())
 				{
-					String name = met.getName();
-					if (!Modifier.isStatic(met.getModifiers()))
+					if (met.isAnnotationPresent(OnPostLoad.class))
 					{
-						System.out.printf("Method %s has @OnPostLoad, but is not static.%n", name);
-					}
-					else if (met.getParameterTypes().length != 0)
-					{
-						System.out.printf("Method %s has @OnPostLoad, but requires %d parameters. It should not require any parameters.%n", name, met.getParameterTypes().length);
-					}
-					else
-					{
-						try
+						String name = met.getName();
+						if (!Modifier.isStatic(met.getModifiers()))
 						{
-							met.invoke(null);
+							System.out.printf("Method %s has @OnPostLoad, but is not static.%n", name);
 						}
-						catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
+						else if (met.getParameterTypes().length != 0)
 						{
-							System.out.printf("Method %s has @OnPostLoad and is correctly declared, but threw %s when invoked.%n", name, e.getClass().getSimpleName());
+							System.out.printf("Method %s has @OnPostLoad, but requires %d parameters. It should not require any parameters.%n", name, met.getParameterTypes().length);
 						}
-						catch (Exception ex)
+						else
 						{
-							ex.printStackTrace();
+							try
+							{
+								met.invoke(null);
+							}
+							catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
+							{
+								System.out.printf("Method %s has @OnPostLoad and is correctly declared, but threw %s when invoked.%n", name, e.getClass().getSimpleName());
+							}
+							catch (Exception ex)
+							{
+								ex.printStackTrace();
+							}
 						}
 					}
 				}
 			}
 		}
 	}
-	
-	protected void onPreVisitLoad(NotedElementVisitorRegistry registry, Collection<Class<?>> claz)
+
+	protected void onPreVisitLoad(NotedElementVisitorRegistry registry, ArrayListMultimap<ModInstance, Class<?>> map)
 	{
-		for (Class<?> clas : claz)
+		for (ModInstance mod : map.keySet())
 		{
-			for (Method met : clas.getDeclaredMethods())
+			List<Class<?>> claz = map.get(mod);
+			for (Class<?> clas : claz)
 			{
-				String name = met.getName();
-				if (met.isAnnotationPresent(PreRegister.class))
+				for (Method met : clas.getDeclaredMethods())
 				{
-					if (!Modifier.isStatic(met.getModifiers()))
+					String name = met.getName();
+					if (met.isAnnotationPresent(PreRegister.class))
 					{
-						System.out.printf("Method %s has @RegisterVisitors, but is not static.%n", name);
-					}
-					else if (met.getParameterTypes().length != 1)
-					{
-						System.out.printf("Method %s has @PreRegister, but requires %d parameters. It should require a single parameter.%n", name, met.getParameterTypes().length);
-					}
-					else if (!met.getParameterTypes()[0].isAssignableFrom(NotedElementVisitorRegistry.class))
-					{
-						System.out.printf("Method %s has @PreRegister, but takes a parameter that is not assignable from NotedElementVisitorRegistry.%n", name);
-					}
-					else
-					{
-						try
+						if (!Modifier.isStatic(met.getModifiers()))
 						{
-							met.invoke(null, registry);
+							System.out.printf("Method %s has @RegisterVisitors, but is not static.%n", name);
 						}
-						catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
+						else if (met.getParameterTypes().length != 1)
 						{
-							System.out.printf("Method %s has @RegisterVisitors and is correctly declared, but threw %s when invoked.%n", name, e.getClass().getSimpleName());
+							System.out.printf("Method %s has @PreRegister, but requires %d parameters. It should require a single parameter.%n", name, met.getParameterTypes().length);
 						}
-						catch (Exception ex)
+						else if (!met.getParameterTypes()[0].isAssignableFrom(NotedElementVisitorRegistry.class))
 						{
-							ex.printStackTrace();
+							System.out.printf("Method %s has @PreRegister, but takes a parameter that is not assignable from NotedElementVisitorRegistry.%n", name);
+						}
+						else
+						{
+							try
+							{
+								met.invoke(null, registry);
+							}
+							catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
+							{
+								System.out.printf("Method %s has @RegisterVisitors and is correctly declared, but threw %s when invoked.%n", name, e.getClass().getSimpleName());
+							}
+							catch (Exception ex)
+							{
+								ex.printStackTrace();
+							}
 						}
 					}
-				}
-				if (met.isAnnotationPresent(OnPreLoad.class))
-				{
-					if (!Modifier.isStatic(met.getModifiers()))
+					if (met.isAnnotationPresent(OnPreLoad.class))
 					{
-						System.out.printf("Method %s has @OnPreLoad, but is not static.%n", name);
-					}
-					else if (met.getParameterTypes().length != 0)
-					{
-						System.out.printf("Method %s has @OnPreLoad, but requires %d parameters. It should not require any parameters.%n", name, met.getParameterTypes().length);
-					}
-					else
-					{
-						try
+						if (!Modifier.isStatic(met.getModifiers()))
 						{
-							met.invoke(null);
+							System.out.printf("Method %s has @OnPreLoad, but is not static.%n", name);
 						}
-						catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
+						else if (met.getParameterTypes().length != 0)
 						{
-							System.out.printf("Method %s has @OnPreLoad and is correctly declared, but but threw %s when invoked.%n", name, e.getClass().getSimpleName());
+							System.out.printf("Method %s has @OnPreLoad, but requires %d parameters. It should not require any parameters.%n", name, met.getParameterTypes().length);
 						}
-						catch (Exception ex)
+						else
 						{
-							ex.printStackTrace();
+							try
+							{
+								met.invoke(null);
+							}
+							catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
+							{
+								System.out.printf("Method %s has @OnPreLoad and is correctly declared, but but threw %s when invoked.%n", name, e.getClass().getSimpleName());
+							}
+							catch (Exception ex)
+							{
+								ex.printStackTrace();
+							}
 						}
 					}
 				}

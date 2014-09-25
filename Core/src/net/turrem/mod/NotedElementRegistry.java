@@ -7,7 +7,7 @@ public abstract class NotedElementRegistry<A extends Annotation, E extends Annot
 {	
 	@SuppressWarnings("unchecked")
 	@Override
-	public void visitElement(Annotation annotation, AnnotatedElement element)
+	public void visitElement(Annotation annotation, AnnotatedElement element, ModInstance mod)
 	{
 		try
 		{

@@ -11,6 +11,7 @@ import java.lang.reflect.Modifier;
 
 import net.turrem.EnumSide;
 import net.turrem.mod.INotedElementVisitor;
+import net.turrem.mod.ModInstance;
 
 public class EntityArticleRegistry implements INotedElementVisitor
 {
@@ -25,13 +26,13 @@ public class EntityArticleRegistry implements INotedElementVisitor
 	}
 
 	@Override
-	public void visitElement(Annotation annotation, AnnotatedElement element)
+	public void visitElement(Annotation annotation, AnnotatedElement element, ModInstance mod)
 	{
 		RegisterEntityArticle reg = (RegisterEntityArticle) annotation;
 		Class<?> clas = (Class<?>) element;
 		if (EntityArticle.class.isAssignableFrom(clas))
 		{
-			this.registerArticle(reg, clas.asSubclass(EntityArticle.class));
+			this.registerArticle(reg, clas.asSubclass(EntityArticle.class), mod);
 		}
 		else
 		{
@@ -39,7 +40,7 @@ public class EntityArticleRegistry implements INotedElementVisitor
 		}
 	}
 	
-	public void registerArticle(RegisterEntityArticle annotation, Class<? extends EntityArticle> clas)
+	public void registerArticle(RegisterEntityArticle annotation, Class<? extends EntityArticle> clas, ModInstance mod)
 	{
 		for (Method met : clas.getMethods())
 		{
@@ -47,7 +48,7 @@ public class EntityArticleRegistry implements INotedElementVisitor
 			{
 				try
 				{
-					this.callFactory(annotation.id(), met);
+					this.callFactory(annotation.id(), met, mod);
 				}
 				catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
 				{
@@ -57,7 +58,7 @@ public class EntityArticleRegistry implements INotedElementVisitor
 		}
 	}
 	
-	private void callFactory(String id, Method met) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException
+	private void callFactory(String id, Method met, ModInstance mod) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException
 	{
 		if (!Modifier.isStatic(met.getModifiers()))
 		{
@@ -108,6 +109,8 @@ public class EntityArticleRegistry implements INotedElementVisitor
 		}
 		for (EntityArticle out : outs)
 		{
+			out.mod = mod;
+			out.side = this.side;
 			this.addArticle(out);
 		}
 	}

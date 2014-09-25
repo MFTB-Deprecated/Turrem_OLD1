@@ -11,6 +11,7 @@ import java.lang.reflect.Modifier;
 import net.turrem.client.game.ClientGame;
 import net.turrem.client.game.world.ClientWorld;
 import net.turrem.mod.INotedElementVisitor;
+import net.turrem.mod.ModInstance;
 
 public class StaticEventRegistry implements INotedElementVisitor
 {
@@ -20,7 +21,7 @@ public class StaticEventRegistry implements INotedElementVisitor
 	public ArrayList<Method> postWorldTickCalls = new ArrayList<Method>();
 
 	@Override
-	public void visitElement(Annotation annotation, AnnotatedElement element)
+	public void visitElement(Annotation annotation, AnnotatedElement element, ModInstance mod)
 	{
 		TurremSubscribeStatic subscribe = (TurremSubscribeStatic) annotation;
 		this.registerEvent(subscribe.event(), (Method) element);

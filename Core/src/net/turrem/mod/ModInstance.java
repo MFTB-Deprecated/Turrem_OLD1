@@ -60,4 +60,21 @@ public class ModInstance
 
 		this.type = t;
 	}
+	
+	@Override
+	public int hashCode()
+	{
+		return (this.identifier + this.version).hashCode();
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (obj != null && obj instanceof ModInstance)
+		{
+			ModInstance mod = (ModInstance) obj;
+			return mod.identifier == this.identifier && mod.version == this.version;
+		}
+		return false;
+	}
 }
