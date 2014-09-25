@@ -3,11 +3,10 @@ package net.turrem.server;
 import java.io.File;
 
 import net.turrem.EnumSide;
+import net.turrem.entity.EntityArticleRegistry;
+import net.turrem.entity.RegisterEntityArticle;
 import net.turrem.mod.ModLoader;
 import net.turrem.mod.NotedElementVisitorRegistry.NotedElementVisitorRegistryWrapper;
-import net.turrem.server.entity.SoftEntityTip;
-import net.turrem.server.entity.SolidEntityTip;
-import net.turrem.server.mod.EntityRegistry;
 import net.turrem.server.network.NetworkRoom;
 import net.turrem.server.world.World;
 
@@ -37,7 +36,7 @@ public class TurremServer
 	public ModLoader modLoader;
 	private NotedElementVisitorRegistryWrapper elementVisitorRegistry;
 	
-	public EntityRegistry entityRegistry;
+	public EntityArticleRegistry entityArticleRegistry;
 
 	public TurremServer(String dir, String save)
 	{
@@ -52,12 +51,11 @@ public class TurremServer
 		this.elementVisitorRegistry = new NotedElementVisitorRegistryWrapper();
 		this.modLoader = new ModLoader(new File(this.theGameDir, "mods"), EnumSide.SERVER);
 		
-		this.entityRegistry = new EntityRegistry();
+		this.entityArticleRegistry = new EntityArticleRegistry();
 		
 		this.modLoader.findMods();
 		
-		this.elementVisitorRegistry.addVisitor(this.entityRegistry, SolidEntityTip.class);
-		this.elementVisitorRegistry.addVisitor(this.entityRegistry, SoftEntityTip.class);
+		this.elementVisitorRegistry.addVisitor(this.entityArticleRegistry, RegisterEntityArticle.class);
 		
 		this.modLoader.loadMods(this.elementVisitorRegistry.getRegistry());
 		

@@ -26,8 +26,8 @@ public class ChunkUpdate
 	public int hashCode()
 	{
 		int hash = 1;
-		hash = hash * 17 + this.chunkx;
-		hash = hash * 31 + this.chunkz;
+		hash = hash * 17 + ((Integer) this.chunkx).hashCode();
+		hash = hash * 31 + ((Integer) this.chunkz).hashCode();
 		return hash;
 	}
 }

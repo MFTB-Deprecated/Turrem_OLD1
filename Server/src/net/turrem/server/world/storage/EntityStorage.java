@@ -18,6 +18,15 @@ public class EntityStorage
 		this.theWorld = world;
 	}
 	
+	/**
+	 * Finds the entity with the given identifier using a binary search
+	 * algorithm. It is expected to finish in log2(N)-1 iterations, giving it
+	 * O(LOG N) time.
+	 * 
+	 * @param id The entity's server/client identifier.
+	 * @return The entity with that identifier. Null if that entity has been
+	 *         removed or if the world's entity list is out of order.
+	 */
 	public SoftEntity getSoftEntity(int id)
 	{
 		int num = this.entities.size();

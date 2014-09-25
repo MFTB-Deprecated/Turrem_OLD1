@@ -49,7 +49,6 @@ public class Realm
 		**/
 		y = this.theWorld.getHeight(x, z);
 		this.startingLocation = Point.getPoint(x, y, z);
-		this.theWorld.theTurrem.theLoader.getEntityLoader().processRealmInits(this, this.theWorld);
 	}
 
 	public void sendPacket(ServerPacket packet)

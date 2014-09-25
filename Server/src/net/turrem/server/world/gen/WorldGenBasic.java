@@ -168,6 +168,6 @@ public class WorldGenBasic extends WorldGen
 	@Override
 	public void decorateChunk(Chunk chunk, TurremServer turrem)
 	{
-		turrem.theLoader.getEntityLoader().processChunkDecorates(chunk, turrem.theWorld);
+		
 	}
 }

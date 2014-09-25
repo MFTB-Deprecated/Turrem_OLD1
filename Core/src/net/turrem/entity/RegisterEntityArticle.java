@@ -1,4 +1,4 @@
-package net.turrem.server.entity;
+package net.turrem.entity;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,7 +10,7 @@ import net.turrem.mod.Visitable;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Visitable
-public @interface SoftEntityTip
+public @interface RegisterEntityArticle
 {
 	public String id();
 }
