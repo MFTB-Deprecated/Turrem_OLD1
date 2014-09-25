@@ -13,9 +13,29 @@ import com.google.common.collect.HashMultimap;
 
 public class NotedElementVisitorRegistry
 {
+	public static class NotedElementVisitorRegistryWrapper
+	{
+		private NotedElementVisitorRegistry registry;
+		
+		public NotedElementVisitorRegistryWrapper()
+		{
+			registry = new NotedElementVisitorRegistry();
+		}
+		
+		public NotedElementVisitorRegistry getRegistry()
+		{
+			return this.registry;
+		}
+		
+		public void addVisitor(INotedElementVisitor visitor, Class<? extends Annotation> annotation)
+		{
+			this.registry.addVisitor(visitor, annotation);
+		}
+	}
+	
 	private HashMultimap<Class<? extends Annotation>, INotedElementVisitor> visitors = HashMultimap.create();
 
-	protected void addVisitor(INotedElementVisitor visitor, Class<? extends Annotation> annotation)
+	void addVisitor(INotedElementVisitor visitor, Class<? extends Annotation> annotation)
 	{
 		if (annotation == null || visitor == null)
 		{
@@ -23,7 +43,7 @@ public class NotedElementVisitorRegistry
 		}
 		if (!annotation.isAnnotationPresent(Visitable.class))
 		{
-			throw new IllegalArgumentException(String.format("Annotation %s does not have @Visitable.%n", annotation.getName()));
+			throw new IllegalArgumentException(String.format("Annotation %s does not have @Visitable.", annotation.getName()));
 		}
 		Target target = (Target) annotation.getAnnotation(Target.class);
 		if (target != null)
@@ -31,15 +51,15 @@ public class NotedElementVisitorRegistry
 			List<ElementType> types = Arrays.asList(target.value());
 			if (types.contains(ElementType.PACKAGE))
 			{
-				throw new IllegalArgumentException(String.format("Annotation %s can not target packages.%n", annotation.getName()));
+				throw new IllegalArgumentException(String.format("Annotation %s can not target packages.", annotation.getName()));
 			}
 			if (types.contains(ElementType.LOCAL_VARIABLE))
 			{
-				throw new IllegalArgumentException(String.format("Annotation %s can not target local variables.%n", annotation.getName()));
+				throw new IllegalArgumentException(String.format("Annotation %s can not target local variables.", annotation.getName()));
 			}
 			if (types.contains(ElementType.PARAMETER))
 			{
-				throw new IllegalArgumentException(String.format("Annotation %s can not target local parameters.%n", annotation.getName()));
+				throw new IllegalArgumentException(String.format("Annotation %s can not target local parameters.", annotation.getName()));
 			}
 		}
 		this.visitors.put(annotation, visitor);

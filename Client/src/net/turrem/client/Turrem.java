@@ -1,25 +1,30 @@
 package net.turrem.client;
 
 import java.awt.image.BufferedImage;
+
 import java.io.File;
 import java.io.IOException;
+
 import java.nio.ByteBuffer;
+
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
+import net.turrem.EnumSide;
 import net.turrem.client.asset.AssetLoader;
-import net.turrem.client.load.ClientLoader;
+import net.turrem.client.mod.StaticEventRegistry;
+import net.turrem.client.mod.TurremSubscribeStatic;
 import net.turrem.client.render.RenderEngine;
 import net.turrem.client.states.IState;
 import net.turrem.client.states.StateIntro;
-import net.turrem.utils.file.FilePacker;
+import net.turrem.mod.ModLoader;
+import net.turrem.mod.NotedElementVisitorRegistry.NotedElementVisitorRegistryWrapper;
 import net.turrem.utils.graphics.ImgUtils;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
@@ -28,26 +33,25 @@ public class Turrem
 	private static Turrem instance;
 
 	public final Session theSession;
-	public final String theGameDir;
+	public final File theGameDir;
 
 	public RenderEngine theRender;
 	public AssetLoader theAssets;
 
 	private IState thisState;
 	private long statechange = 0;
-
-	private long renderCount = 0;
 	
 	public static String networkLoc;
 	
-	public ClientLoader theLoader;
+	public ModLoader modLoader;
+	private NotedElementVisitorRegistryWrapper elementVisitorRegistry;
 	
-	public String tempAssetDir;
+	public StaticEventRegistry staticEventRegistry;
 
 	public Turrem(Session session, String dir)
 	{
 		this.theSession = session;
-		this.theGameDir = dir;
+		this.theGameDir = new File(dir);
 
 		instance = this;
 	}
@@ -55,24 +59,12 @@ public class Turrem
 	protected void run()
 	{
 		this.updateDisplay(1280, 720, false, true);
-
-		this.theLoader = new ClientLoader(this);
 		
-		File tempAssets = new File(this.theGameDir + "tmp/");
-		tempAssets.mkdirs();
+		this.modLoader = new ModLoader(new File(this.theGameDir, "mods"), EnumSide.CLIENT);
+		this.elementVisitorRegistry = new NotedElementVisitorRegistryWrapper();
 		
-		this.tempAssetDir = tempAssets.getAbsolutePath() + "/";
-		
-		try
-		{
-			FilePacker.extractZip(new File(this.theGameDir + "bin/coreAssets.zip"), tempAssets);
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-		
-		this.theAssets = new AssetLoader(this.tempAssetDir);
+		//TODO Asset loading
+		this.theAssets = new AssetLoader(null);
 		this.theRender = new RenderEngine(this.theAssets);
 		
 		Keyboard.enableRepeatEvents(false);
@@ -101,8 +93,15 @@ public class Turrem
 
 	public void onRun()
 	{
-		System.out.println("bin - " + this.theGameDir);
+		System.out.println("Game Directory: " + this.theGameDir.getAbsolutePath());
 		this.setClientState(StateIntro.class);
+		
+		this.modLoader.findMods();
+		
+		this.staticEventRegistry = new StaticEventRegistry();
+		this.elementVisitorRegistry.addVisitor(this.staticEventRegistry, TurremSubscribeStatic.class);
+		
+		this.modLoader.loadMods(this.elementVisitorRegistry.getRegistry());
 	}
 
 	public void afterStart()
@@ -112,14 +111,6 @@ public class Turrem
 
 	public void render()
 	{
-		if (this.renderCount == 2)
-		{
-			this.afterStart();
-		}
-		if (this.renderCount == 3)
-		{
-			//this.theLoader.loadClientJar();
-		}
 		if (this.thisState != null)
 		{
 			if (this.statechange == 0)
@@ -129,7 +120,6 @@ public class Turrem
 			this.thisState.render();
 		}
 		this.statechange++;
-		this.renderCount++;
 	}
 
 	public void runloop()
@@ -249,7 +239,7 @@ public class Turrem
 	{
 		ArrayList<ByteBuffer> icos = new ArrayList<ByteBuffer>();
 
-		File folder = new File(this.tempAssetDir + "core/icons/");
+		File folder = new File(this.theGameDir, "client/resources/appicons");
 
 		File[] filelist = folder.listFiles();
 
