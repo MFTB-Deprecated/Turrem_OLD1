@@ -46,7 +46,7 @@ public class ClientLoader implements IClientLoad
 	{
 		File jar = new File(this.theGame.theGameDir + "/jars/client.jar");
 		JarExplore explore = JarExplore.newInstance(jar);
-		ArrayList<Class<?>> classList = explore.getClassFiles();
+		ArrayList<Class<?>> classList = explore.getLoadedClasses();
 		for (Class<?> clss : classList)
 		{
 			this.processTurremClass(clss);

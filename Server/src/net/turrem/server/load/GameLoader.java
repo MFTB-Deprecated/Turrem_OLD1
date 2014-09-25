@@ -36,7 +36,7 @@ public class GameLoader implements IGameLoad
 	{
 		File jar = new File(this.theServer.theGameDir + "/jars/server.jar");
 		JarExplore explore = JarExplore.newInstance(jar);
-		ArrayList<Class<?>> classList = explore.getClassFiles();
+		ArrayList<Class<?>> classList = explore.getLoadedClasses();
 		for (Class<?> clss : classList)
 		{
 			this.processTurremClass(clss);
