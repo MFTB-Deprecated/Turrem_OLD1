@@ -111,7 +111,9 @@ public class ClientGame
 	{
 		this.face.doGLULook();
 		this.doLighting();
+		this.theTurrem.staticEventRegistry.onPreWorldRender(this.theWorld);
 		this.theWorld.render();
+		this.theTurrem.staticEventRegistry.onPostWorldRender(this.theWorld);
 		this.renderSelect();
 	}
 

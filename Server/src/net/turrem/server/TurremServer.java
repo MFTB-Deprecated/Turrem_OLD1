@@ -2,14 +2,19 @@ package net.turrem.server;
 
 import java.io.File;
 
-import net.turrem.server.load.GameLoader;
+import net.turrem.EnumSide;
+import net.turrem.mod.ModLoader;
+import net.turrem.mod.NotedElementVisitorRegistry.NotedElementVisitorRegistryWrapper;
+import net.turrem.server.entity.SoftEntityTip;
+import net.turrem.server.entity.SolidEntityTip;
+import net.turrem.server.mod.EntityRegistry;
 import net.turrem.server.network.NetworkRoom;
 import net.turrem.server.world.World;
 
 public class TurremServer
 {
-	public final String theGameDir;
-	public final String theSaveDir;
+	public final File theGameDir;
+	public final File theSaveDir;
 
 	protected long lastTime;
 	protected long timeoff = 0;
@@ -27,31 +32,42 @@ public class TurremServer
 
 	public World theWorld;
 
-	public GameLoader theLoader;
-
 	public NetworkRoom theNetwork;
+	
+	public ModLoader modLoader;
+	private NotedElementVisitorRegistryWrapper elementVisitorRegistry;
+	
+	public EntityRegistry entityRegistry;
 
 	public TurremServer(String dir, String save)
 	{
-		this.theGameDir = dir;
-		System.out.println("dir: " + dir);
-		this.theSaveDir = save;
-		System.out.println("save: " + save);
+		this.theGameDir = new File(dir);
+		System.out.println("Game Dir: " + this.theGameDir.getAbsolutePath());
+		this.theSaveDir = new File(save);
+		System.out.println("Save File: " + this.theSaveDir.getAbsolutePath());
 	}
 
 	protected void run()
 	{
+		this.elementVisitorRegistry = new NotedElementVisitorRegistryWrapper();
+		this.modLoader = new ModLoader(new File(this.theGameDir, "mods"), EnumSide.SERVER);
+		
+		this.entityRegistry = new EntityRegistry();
+		
+		this.modLoader.findMods();
+		
+		this.elementVisitorRegistry.addVisitor(this.entityRegistry, SolidEntityTip.class);
+		this.elementVisitorRegistry.addVisitor(this.entityRegistry, SoftEntityTip.class);
+		
+		this.modLoader.loadMods(this.elementVisitorRegistry.getRegistry());
+		
 		this.onRun();
 		this.runloop();
 	}
 
 	public void onRun()
 	{
-		this.theLoader = new GameLoader(this);
-		this.theLoader.loadServerJar();
 		this.theWorld = new World(this.theSaveDir, System.currentTimeMillis(), this);
-		File entityjar = new File(this.theGameDir + "/jars/entity.game.jar");
-		this.theLoader.loadJar(entityjar);
 		this.theNetwork = new NetworkRoom(this);
 	}
 

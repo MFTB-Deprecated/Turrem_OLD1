@@ -8,12 +8,16 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
+import net.turrem.client.game.ClientGame;
+import net.turrem.client.game.world.ClientWorld;
 import net.turrem.mod.INotedElementVisitor;
 
 public class StaticEventRegistry implements INotedElementVisitor
 {
 	public ArrayList<Method> preTickCalls = new ArrayList<Method>();
 	public ArrayList<Method> postTickCalls = new ArrayList<Method>();
+	public ArrayList<Method> preWorldTickCalls = new ArrayList<Method>();
+	public ArrayList<Method> postWorldTickCalls = new ArrayList<Method>();
 	
 	@Override
 	public void visitElement(Annotation annotation, AnnotatedElement element)
@@ -73,18 +77,24 @@ public class StaticEventRegistry implements INotedElementVisitor
 			case POST_GAME_RENDER:
 				this.postTickCalls.add(method);
 				return;
+			case PRE_WORLD_RENDER:
+				this.preWorldTickCalls.add(method);
+				return;
+			case POST_WORLD_RENDER:
+				this.postWorldTickCalls.add(method);
+				return;
 			default:
 				return;
 		}
 	}
 	
-	public void onPreGameRender(long renderTicks)
+	public void onPreGameRender(long renderTicks, ClientGame game)
 	{
 		for (Method met : this.preTickCalls)
 		{
 			try
 			{
-				met.invoke(null, renderTicks);
+				met.invoke(null, renderTicks, game);
 			}
 			catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
 			{
@@ -93,13 +103,43 @@ public class StaticEventRegistry implements INotedElementVisitor
 		}
 	}
 	
-	public void onPostGameRender(long renderTicks)
+	public void onPostGameRender(long renderTicks, ClientGame game)
 	{
 		for (Method met : this.postTickCalls)
 		{
 			try
 			{
-				met.invoke(null, renderTicks);
+				met.invoke(null, renderTicks, game);
+			}
+			catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
+			{
+				
+			}
+		}
+	}
+	
+	public void onPreWorldRender(ClientWorld game)
+	{
+		for (Method met : this.preWorldTickCalls)
+		{
+			try
+			{
+				met.invoke(null, game);
+			}
+			catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
+			{
+				
+			}
+		}
+	}
+	
+	public void onPostWorldRender(ClientWorld game)
+	{
+		for (Method met : this.postWorldTickCalls)
+		{
+			try
+			{
+				met.invoke(null, game);
 			}
 			catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
 			{

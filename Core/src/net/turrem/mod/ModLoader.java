@@ -192,7 +192,7 @@ public class ModLoader
 			for (Method met : clas.getDeclaredMethods())
 			{
 				String name = met.getName();
-				if (met.isAnnotationPresent(RegisterVisitors.class))
+				if (met.isAnnotationPresent(PreRegister.class))
 				{
 					if (!Modifier.isStatic(met.getModifiers()))
 					{
@@ -200,11 +200,11 @@ public class ModLoader
 					}
 					else if (met.getParameterTypes().length != 1)
 					{
-						System.out.printf("Method %s has @RegisterVisitors, but requires %d parameters. It should require a single parameter.%n", name, met.getParameterTypes().length);
+						System.out.printf("Method %s has @PreRegister, but requires %d parameters. It should require a single parameter.%n", name, met.getParameterTypes().length);
 					}
 					else if (!met.getParameterTypes()[0].isInstance(NotedElementVisitorRegistry.class))
 					{
-						System.out.printf("Method %s has @RegisterVisitors, but takes a parameter that is not a NotedElementVisitorRegistry.%n", name);
+						System.out.printf("Method %s has @PreRegister, but takes a parameter that is not a NotedElementVisitorRegistry.%n", name);
 					}
 					else
 					{

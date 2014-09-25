@@ -30,9 +30,9 @@ public class StateGame implements IState
 	@Override
 	public void render()
 	{
-		this.theTurrem.staticEventRegistry.onPreGameRender(gameTime);
+		this.theTurrem.staticEventRegistry.onPreGameRender(gameTime, this.theGame);
 		this.theGame.render();
-		this.theTurrem.staticEventRegistry.onPostGameRender(gameTime);
+		this.theTurrem.staticEventRegistry.onPostGameRender(gameTime, this.theGame);
 		gameTime++;
 	}
 

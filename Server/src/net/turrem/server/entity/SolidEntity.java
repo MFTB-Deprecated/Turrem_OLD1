@@ -4,18 +4,21 @@ import net.turrem.server.world.Chunk;
 
 public abstract class SolidEntity implements IEntity
 {
-	public int x;
-	public int y;
-	public int z;
+	public final int x;
+	public final int y;
+	public final int z;
 	
 	public final int entityIdentifier;
 	private static int nextId = 0;
 	
 	private boolean isAlive = true;
 	
-	public SolidEntity()
+	public SolidEntity(int x, int y, int z)
 	{
 		this.entityIdentifier = nextId++;
+		this.x = x;
+		this.y = y;
+		this.z = z;
 	}
 	
 	@Override
