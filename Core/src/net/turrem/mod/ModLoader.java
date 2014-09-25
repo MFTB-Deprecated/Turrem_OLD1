@@ -136,7 +136,7 @@ public class ModLoader
 						}
 						catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
 						{
-							System.out.printf("Method %s has @OnLoad and is correctly declared, but could not be invoked because an %s was thrown.%n", name, e.getClass().getSimpleName());
+							System.out.printf("Method %s has @OnLoad and is correctly declared, but threw %s when invoked.%n", name, e.getClass().getSimpleName());
 						}
 						catch (Exception ex)
 						{
@@ -173,7 +173,7 @@ public class ModLoader
 						}
 						catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
 						{
-							System.out.printf("Method %s has @OnPostLoad and is correctly declared, but could not be invoked because an %s was thrown.%n", name, e.getClass().getSimpleName());
+							System.out.printf("Method %s has @OnPostLoad and is correctly declared, but threw %s when invoked.%n", name, e.getClass().getSimpleName());
 						}
 						catch (Exception ex)
 						{
@@ -202,9 +202,9 @@ public class ModLoader
 					{
 						System.out.printf("Method %s has @PreRegister, but requires %d parameters. It should require a single parameter.%n", name, met.getParameterTypes().length);
 					}
-					else if (!met.getParameterTypes()[0].isInstance(NotedElementVisitorRegistry.class))
+					else if (!met.getParameterTypes()[0].isAssignableFrom(NotedElementVisitorRegistry.class))
 					{
-						System.out.printf("Method %s has @PreRegister, but takes a parameter that is not a NotedElementVisitorRegistry.%n", name);
+						System.out.printf("Method %s has @PreRegister, but takes a parameter that is not assignable from NotedElementVisitorRegistry.%n", name);
 					}
 					else
 					{
@@ -214,7 +214,7 @@ public class ModLoader
 						}
 						catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
 						{
-							System.out.printf("Method %s has @RegisterVisitors and is correctly declared, but could not be invoked because an %s was thrown.%n", name, e.getClass().getSimpleName());
+							System.out.printf("Method %s has @RegisterVisitors and is correctly declared, but threw %s when invoked.%n", name, e.getClass().getSimpleName());
 						}
 						catch (Exception ex)
 						{
@@ -240,7 +240,7 @@ public class ModLoader
 						}
 						catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
 						{
-							System.out.printf("Method %s has @OnPreLoad and is correctly declared, but could not be invoked because an %s was thrown.%n", name, e.getClass().getSimpleName());
+							System.out.printf("Method %s has @OnPreLoad and is correctly declared, but but threw %s when invoked.%n", name, e.getClass().getSimpleName());
 						}
 						catch (Exception ex)
 						{

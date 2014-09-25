@@ -1,6 +1,9 @@
 package net.turrem.entity;
 
-public class SolidEntityArticle
+public abstract class SolidEntityArticle extends EntityArticle
 {
-
+	public SolidEntityArticle(String id)
+	{
+		super(id);
+	}
 }

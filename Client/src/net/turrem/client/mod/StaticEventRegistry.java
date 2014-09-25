@@ -18,7 +18,7 @@ public class StaticEventRegistry implements INotedElementVisitor
 	public ArrayList<Method> postTickCalls = new ArrayList<Method>();
 	public ArrayList<Method> preWorldTickCalls = new ArrayList<Method>();
 	public ArrayList<Method> postWorldTickCalls = new ArrayList<Method>();
-	
+
 	@Override
 	public void visitElement(Annotation annotation, AnnotatedElement element)
 	{
@@ -48,46 +48,44 @@ public class StaticEventRegistry implements INotedElementVisitor
 			}
 			arguments += ")";
 		}
-		
+
 		Class<?>[] metPars = method.getParameterTypes();
-		boolean flag = true;
-		for (int i = 0; i < metPars.length; i++)
+		if (metPars.length == event.parameters.length)
 		{
-			if (i >= event.parameters.length)
+			boolean flag = true;
+			for (int i = 0; i < metPars.length; i++)
 			{
-				flag = false;
-				break;
+				if (!metPars[i].isAssignableFrom(event.parameters[i]))
+				{
+					flag = false;
+					break;
+				}
 			}
-			if (!metPars[i].isInstance(event.parameters[i]))
+			if (!flag)
 			{
-				flag = false;
-				break;
+				System.out.printf("Method %s has @TurremSubscribeStatic(event=%s), but does not have the parameters %s.%n", method.getName(), event.name(), arguments);
+				return;
 			}
-		}
-		if (!flag)
-		{
-			System.out.printf("Method %s has @TurremSubscribeStatic(event=%s), but does not have the parameters %s.%n", method.getName(), event.name(), arguments);
-			return;
-		}
-		switch (event)
-		{
-			case PRE_GAME_RENDER:
-				this.preTickCalls.add(method);
-				return;
-			case POST_GAME_RENDER:
-				this.postTickCalls.add(method);
-				return;
-			case PRE_WORLD_RENDER:
-				this.preWorldTickCalls.add(method);
-				return;
-			case POST_WORLD_RENDER:
-				this.postWorldTickCalls.add(method);
-				return;
-			default:
-				return;
+			switch (event)
+			{
+				case PRE_GAME_RENDER:
+					this.preTickCalls.add(method);
+					return;
+				case POST_GAME_RENDER:
+					this.postTickCalls.add(method);
+					return;
+				case PRE_WORLD_RENDER:
+					this.preWorldTickCalls.add(method);
+					return;
+				case POST_WORLD_RENDER:
+					this.postWorldTickCalls.add(method);
+					return;
+				default:
+					return;
+			}
 		}
 	}
-	
+
 	public void onPreGameRender(long renderTicks, ClientGame game)
 	{
 		for (Method met : this.preTickCalls)
@@ -98,11 +96,11 @@ public class StaticEventRegistry implements INotedElementVisitor
 			}
 			catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
 			{
-				
+
 			}
 		}
 	}
-	
+
 	public void onPostGameRender(long renderTicks, ClientGame game)
 	{
 		for (Method met : this.postTickCalls)
@@ -113,11 +111,11 @@ public class StaticEventRegistry implements INotedElementVisitor
 			}
 			catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
 			{
-				
+
 			}
 		}
 	}
-	
+
 	public void onPreWorldRender(ClientWorld game)
 	{
 		for (Method met : this.preWorldTickCalls)
@@ -128,11 +126,11 @@ public class StaticEventRegistry implements INotedElementVisitor
 			}
 			catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
 			{
-				
+
 			}
 		}
 	}
-	
+
 	public void onPostWorldRender(ClientWorld game)
 	{
 		for (Method met : this.postWorldTickCalls)
@@ -143,7 +141,7 @@ public class StaticEventRegistry implements INotedElementVisitor
 			}
 			catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
 			{
-				
+
 			}
 		}
 	}

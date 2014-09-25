@@ -51,7 +51,7 @@ public class TurremServer
 		this.elementVisitorRegistry = new NotedElementVisitorRegistryWrapper();
 		this.modLoader = new ModLoader(new File(this.theGameDir, "mods"), EnumSide.SERVER);
 		
-		this.entityArticleRegistry = new EntityArticleRegistry();
+		this.entityArticleRegistry = new EntityArticleRegistry(EnumSide.SERVER);
 		
 		this.modLoader.findMods();
 		
