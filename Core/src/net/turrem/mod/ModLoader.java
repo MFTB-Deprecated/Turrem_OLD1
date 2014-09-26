@@ -1,5 +1,6 @@
 package net.turrem.mod;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.jar.JarFile;
@@ -10,6 +11,9 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 import net.turrem.EnumSide;
 import net.turrem.utils.JarExplore;
@@ -25,6 +29,7 @@ public class ModLoader
 	private HashMap<String, ModInstance> mods = new HashMap<String, ModInstance>();
 	private final EnumSide side;
 	private final File modDirectory;
+	public URLClassLoader modClassLoader;
 
 	public ModLoader(File modDirectory, EnumSide side)
 	{
@@ -74,6 +79,33 @@ public class ModLoader
 			}
 		}
 	}
+	
+	public void loadModClasses(ClassLoader parent)
+	{
+		ArrayList<URL> jarlist = new ArrayList<URL>();
+		for (ModInstance mod : this.mods.values())
+		{
+			File jar = this.getModJarFile(mod);
+			if (jar.exists())
+			{
+				try
+				{
+					jarlist.add(jar.toURI().toURL());
+				}
+				catch (MalformedURLException e)
+				{
+					e.printStackTrace();
+				}
+			}
+			else
+			{
+				System.out.printf("The %s jar for mod %s does not exist.", this.side.name().toLowerCase(), mod.identifier);
+			}
+		}
+		URL[] jars = new URL[jarlist.size()];
+		jars = jarlist.toArray(jars);
+		this.modClassLoader = URLClassLoader.newInstance(jars, parent);
+	}
 
 	public void loadMods(NotedElementVisitorRegistry notedElements)
 	{
@@ -82,7 +114,7 @@ public class ModLoader
 		{
 			try
 			{
-				claz.putAll(mod, JarExplore.newInstance(this.getModJar(mod)).getLoadedClasses());
+				claz.putAll(mod, JarExplore.newInstance(this.getModJar(mod)).getLoadedClasses(this.modClassLoader));
 			}
 			catch (IOException e)
 			{
@@ -96,6 +128,11 @@ public class ModLoader
 
 	protected JarFile getModJar(String id) throws IOException
 	{
+		return new JarFile(this.getModJarFile(id));
+	}
+	
+	protected File getModJarFile(String id)
+	{
 		String jar = "/";
 		switch (this.side)
 		{
@@ -107,12 +144,17 @@ public class ModLoader
 				break;
 		}
 		jar += ".jar";
-		return new JarFile(new File(this.modDirectory, id + jar));
+		return new File(this.modDirectory, id + jar);
 	}
 
 	protected JarFile getModJar(ModInstance mod) throws IOException
 	{
 		return this.getModJar(mod.identifier);
+	}
+	
+	protected File getModJarFile(ModInstance mod)
+	{
+		return this.getModJarFile(mod.identifier);
 	}
 
 	protected void onLoad(NotedElementVisitorRegistry registry, ArrayListMultimap<ModInstance, Class<?>> map)

@@ -3,6 +3,7 @@
 - finish mod loading system
 - random player spawns
 - gui system
+- mod dependancy resolution
 
 eekysam
 =======

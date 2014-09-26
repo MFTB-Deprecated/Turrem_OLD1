@@ -54,6 +54,7 @@ public class TurremServer
 		this.entityArticleRegistry = new EntityArticleRegistry(EnumSide.SERVER);
 		
 		this.modLoader.findMods();
+		this.modLoader.loadModClasses(this.getClass().getClassLoader());
 		
 		this.elementVisitorRegistry.addVisitor(this.entityArticleRegistry, RegisterEntityArticle.class);
 		
