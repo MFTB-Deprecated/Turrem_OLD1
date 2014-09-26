@@ -216,11 +216,11 @@ public class ClientGame
 	public void start()
 	{
 		Font font = new Font();
-		font.loadTexture("core.fonts.basic", this.theTurrem.theRender, false);
+		font.loadTexture("app:font.screen", this.theTurrem.theRender, false);
 		this.debugFont = new FontRender(font);
-		this.terrselect = new TextureIcon("core.misc.terrselect", true);
+		this.terrselect = new TextureIcon("app:misc.terrselect", true);
 		this.terrselect.load(this.theTurrem.theRender);
-		this.toppin = new TextureIcon("core.misc.toppin", true);
+		this.toppin = new TextureIcon("app:misc.toppin", true);
 		this.toppin.load(this.theTurrem.theRender);
 	}
 

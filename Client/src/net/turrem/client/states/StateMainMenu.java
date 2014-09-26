@@ -46,7 +46,7 @@ public class StateMainMenu implements IState
 	public void start()
 	{
 		Font font = new Font();
-		font.loadTexture("core.fonts.screen", this.theTurrem.theRender, true);
+		font.loadTexture("app:font.screen", this.theTurrem.theRender, true);
 		this.testFont = new FontRender(font);
 	}
 

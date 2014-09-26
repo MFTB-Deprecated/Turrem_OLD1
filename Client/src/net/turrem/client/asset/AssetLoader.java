@@ -10,17 +10,35 @@ import net.turrem.tvf.TVFFile;
 
 public class AssetLoader
 {
-	String bin;
+	File bin;
 
-	public AssetLoader(String bindir)
+	public AssetLoader(File theGameDir)
 	{
-		this.bin = bindir;
+		this.bin = theGameDir;
+	}
+	
+	public File getFile(String name, String ext)
+	{
+		String mod = name.substring(0, name.indexOf(':'));
+		String file = name.substring(name.indexOf(':') + 1);
+		file = file.replaceAll("\\.", "/");
+		String dir;
+		if (mod.equals("app"))
+		{
+			dir = "client/resources/";
+		}
+		else
+		{
+			dir = "mods/" + mod + "/resources/";
+		}
+		dir += file;
+		dir += "." + ext;
+		return new File(bin, dir);
 	}
 
 	public TVFFile loadTVF(String name) throws IOException
 	{
-		String dir = this.bin + name.replaceAll("\\.", "/") + ".tvf";
-		File filein = new File(dir);
+		File filein = this.getFile(name, "tvf");
 		if (filein.exists())
 		{
 			return TVFFile.read(filein);
@@ -30,13 +48,16 @@ public class AssetLoader
 
 	public BufferedImage loadTexture(String name) throws IOException
 	{
-		String dir = this.bin + name.replaceAll("\\.", "/") + ".png";
-		return ImageIO.read(new File(dir));
+		File file = this.getFile(name, "png");
+		if (!file.exists())
+		{
+			return null;
+		}
+		return ImageIO.read(file);
 	}
 
 	public boolean doesTextureFileExist(String name)
 	{
-		String dir = this.bin + name.replaceAll("\\.", "/") + ".png";
-		return (new File(dir)).exists();
+		return this.getFile(name, "png").exists();
 	}
 }

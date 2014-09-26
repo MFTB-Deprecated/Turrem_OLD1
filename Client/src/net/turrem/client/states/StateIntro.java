@@ -17,7 +17,7 @@ public class StateIntro implements IState
 
 	private int ticks = 0;
 
-	private TextureIcon zaplogo = new TextureIcon("core.misc.ZapCloud", false);
+	private TextureIcon zaplogo = new TextureIcon("app:misc.ZapCloud", false);
 
 	public StateIntro(Turrem turrem)
 	{

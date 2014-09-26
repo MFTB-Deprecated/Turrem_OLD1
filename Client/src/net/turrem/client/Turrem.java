@@ -62,9 +62,8 @@ public class Turrem
 		
 		this.modLoader = new ModLoader(new File(this.theGameDir, "mods"), EnumSide.CLIENT);
 		this.elementVisitorRegistry = new NotedElementVisitorRegistryWrapper();
-		
-		//TODO Asset loading
-		this.theAssets = new AssetLoader(null);
+
+		this.theAssets = new AssetLoader(this.theGameDir);
 		this.theRender = new RenderEngine(this.theAssets);
 		
 		Keyboard.enableRepeatEvents(false);
