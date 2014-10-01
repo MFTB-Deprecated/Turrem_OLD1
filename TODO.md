@@ -1,5 +1,5 @@
 - figure out how to build game binaries
-- terrain generation using mesh fractle weighting idea
+- terrain generation using mesh fractal weighting idea
 - finish mod loading system
 - random player spawns
 - gui system
