@@ -38,15 +38,15 @@ public class WorldVertex
 	
 	protected Random rand;
 	
-	public WorldVertex(WorldMesh mesh, int row, int col, long seed)
+	public WorldVertex(WorldMesh mesh, int row, int col, long seed, VertexGenData start)
 	{
 		this.mesh = mesh;
 		this.row = row;
 		this.col = col;
+		this.rand = new Random(seed);
 		this.level = 0;
 		this.lastData = null;
-		this.data = this.generate();
-		this.rand = new Random(seed);
+		this.data = this.generate(start);
 	}
 	
 	public WorldVertex getNeighbor(EnumMeshNeighbor neighbor)
@@ -85,8 +85,9 @@ public class WorldVertex
 			}
 		}
 		this.level++;
+		
 		this.lastData = this.data;
-		this.data = this.generate();
+		this.data = this.generate(this.data);
 	}
 	
 	public VertexGenData getVisibleGenData(int atLevel)
@@ -116,10 +117,10 @@ public class WorldVertex
 		return this.getNeighborGenData(neighbor.ordinal());
 	}
 	
-	protected VertexGenData generate()
+	protected VertexGenData generate(VertexGenData last)
 	{
-		VertexGenData data = new VertexGenData();
-		
-		return data;
+		VertexGenData next = new VertexGenData();
+		//TODO Generate vertex
+		return next;
 	}
 }
