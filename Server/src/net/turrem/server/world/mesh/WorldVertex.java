@@ -2,6 +2,8 @@ package net.turrem.server.world.mesh;
 
 import java.util.Random;
 
+import net.turrem.server.world.morph.IGeomorph;
+
 public class WorldVertex
 {
 	public static enum EnumMeshNeighbor
@@ -12,32 +14,32 @@ public class WorldVertex
 		RIGHT(0, 1),
 		BOTTOM_LEFT(1, 0),
 		BOTTOM_RIGHT(1, 1);
-		
+
 		public final int row;
 		public final int col;
-		
+
 		EnumMeshNeighbor(int row, int col)
 		{
 			this.row = row;
 			this.col = col;
 		}
 	}
-	
+
 	public static final int maxLevel = 2;
-	
+
 	protected final WorldMesh mesh;
 	public final int row;
 	public final int col;
-	
+
 	private WorldVertex[] neighbors = new WorldVertex[6];
-	
+
 	private VertexGenData data;
 	private VertexGenData lastData;
-	
+
 	private int level;
-	
+
 	protected Random rand;
-	
+
 	public WorldVertex(WorldMesh mesh, int row, int col, long seed, VertexGenData start)
 	{
 		this.mesh = mesh;
@@ -48,22 +50,22 @@ public class WorldVertex
 		this.lastData = null;
 		this.data = this.generate(start);
 	}
-	
+
 	public WorldVertex getNeighbor(EnumMeshNeighbor neighbor)
 	{
 		return this.getNeighbor(neighbor.ordinal());
 	}
-	
+
 	public WorldVertex getNeighbor(int neighbor)
 	{
 		return this.neighbors[neighbor];
 	}
-	
+
 	public int getLevel()
 	{
 		return this.level;
 	}
-	
+
 	void upgrade()
 	{
 		if (this.level == maxLevel)
@@ -85,11 +87,16 @@ public class WorldVertex
 			}
 		}
 		this.level++;
-		
+
 		this.lastData = this.data;
 		this.data = this.generate(this.data);
 	}
-	
+
+	VertexGenData getData()
+	{
+		return this.data;
+	}
+
 	public VertexGenData getVisibleGenData(int atLevel)
 	{
 		if (this.getLevel() < atLevel)
@@ -102,7 +109,7 @@ public class WorldVertex
 		}
 		return null;
 	}
-	
+
 	public VertexGenData getNeighborGenData(int neighbor)
 	{
 		if (this.neighbors[neighbor] != null)
@@ -111,16 +118,39 @@ public class WorldVertex
 		}
 		return null;
 	}
-	
+
 	public VertexGenData getNeighborGenData(EnumMeshNeighbor neighbor)
 	{
 		return this.getNeighborGenData(neighbor.ordinal());
 	}
-	
+
 	protected VertexGenData generate(VertexGenData last)
 	{
-		VertexGenData next = new VertexGenData();
-		//TODO Generate vertex
-		return next;
+		VertexGenDataWork work;
+		if (last == null)
+		{
+			work = new VertexGenDataWork();
+		}
+		else
+		{
+			work = new VertexGenDataWork(last.height);
+		}
+		if (last == null)
+		{
+			/*
+			for (IGeomorph morph : )
+			{
+
+			}
+			*/
+		}
+		else
+		{
+			for (IGeomorph morph : last.morphs)
+			{
+				morph.generateUpgrade(work, last, this);
+			}
+		}
+		return new VertexGenData(work);
 	}
 }

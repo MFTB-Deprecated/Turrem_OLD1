@@ -18,7 +18,7 @@ abstract class EntityArticle
 	}
 	
 	EnumSide side = null;
-	private String id;
+	private final String id;
 	ModInstance mod = null;
 	
 	public EntityArticle(String id)

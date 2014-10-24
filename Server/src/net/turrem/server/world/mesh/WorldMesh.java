@@ -82,7 +82,7 @@ public class WorldMesh
 		switch (i)
 		{
 			case 0:
-				return this.getStartData(this.parent.createVertexFull(r, c));
+				return this.getStartData(this.parent.createVertexFull(r, c), null);
 			case 1:
 				return this.getStartData(this.parent.createVertexFull(r, c), this.parent.createVertexFull(r + 1, c));
 			case 2:
@@ -95,7 +95,7 @@ public class WorldMesh
 				
 	}
 	
-	private VertexGenData getStartData(WorldVertex... parents)
+	private VertexGenData getStartData(WorldVertex parent1, WorldVertex parent2)
 	{
 		//TODO Mix parent vertices
 		return null;
