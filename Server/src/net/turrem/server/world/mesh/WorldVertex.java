@@ -38,14 +38,14 @@ public class WorldVertex
 
 	private int level;
 
-	protected Random rand;
+	protected long seed;
 
 	public WorldVertex(WorldMesh mesh, int row, int col, long seed, VertexGenData start)
 	{
 		this.mesh = mesh;
 		this.row = row;
 		this.col = col;
-		this.rand = new Random(seed);
+		this.seed = seed;
 		this.level = 0;
 		this.lastData = null;
 		this.data = this.generate(start);
@@ -148,7 +148,7 @@ public class WorldVertex
 		{
 			for (IGeomorph morph : last.morphs)
 			{
-				morph.generateUpgrade(work, last, this);
+				morph.generateUpgrade(work, last, this, new Random(morph.getSeed(this.seed)));
 			}
 		}
 		return new VertexGenData(work);

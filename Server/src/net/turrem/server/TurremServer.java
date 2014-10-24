@@ -9,6 +9,8 @@ import net.turrem.mod.ModLoader;
 import net.turrem.mod.NotedElementVisitorRegistry.NotedElementVisitorRegistryWrapper;
 import net.turrem.server.network.NetworkRoom;
 import net.turrem.server.world.World;
+import net.turrem.server.world.morph.GeomorphRegistry;
+import net.turrem.server.world.morph.RegisterGeomorph;
 
 public class TurremServer
 {
@@ -52,11 +54,13 @@ public class TurremServer
 		this.modLoader = new ModLoader(new File(this.theGameDir, "mods"), EnumSide.SERVER);
 		
 		this.entityArticleRegistry = new EntityArticleRegistry(EnumSide.SERVER);
+		GeomorphRegistry geomorphs = new GeomorphRegistry();
 		
 		this.modLoader.findMods();
 		this.modLoader.loadModClasses(this.getClass().getClassLoader());
 		
 		this.elementVisitorRegistry.addVisitor(this.entityArticleRegistry, RegisterEntityArticle.class);
+		this.elementVisitorRegistry.addVisitor(geomorphs, RegisterGeomorph.class);
 		
 		this.modLoader.loadMods(this.elementVisitorRegistry.getRegistry());
 		
