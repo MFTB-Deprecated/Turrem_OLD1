@@ -18,7 +18,7 @@ public class ClientPacketCustomNBT extends ClientPacket
 	 * The custom packet's NBT data
 	 */
 	public NBTCompound data;
-
+	
 	private ClientPacketCustomNBT(String user, DataInput data, byte type) throws IOException
 	{
 		super(user, type);

@@ -10,23 +10,23 @@ import java.lang.reflect.Modifier;
 
 import net.turrem.client.game.ClientGame;
 import net.turrem.client.game.world.ClientWorld;
-import net.turrem.mod.INotedElementVisitor;
 import net.turrem.mod.ModInstance;
+import net.turrem.mod.registry.INotedElementRegister;
 
-public class StaticEventRegistry implements INotedElementVisitor
+public class StaticEventRegistry implements INotedElementRegister
 {
 	public ArrayList<Method> preTickCalls = new ArrayList<Method>();
 	public ArrayList<Method> postTickCalls = new ArrayList<Method>();
 	public ArrayList<Method> preWorldTickCalls = new ArrayList<Method>();
 	public ArrayList<Method> postWorldTickCalls = new ArrayList<Method>();
-
+	
 	@Override
 	public void visitElement(Annotation annotation, AnnotatedElement element, ModInstance mod)
 	{
 		TurremSubscribeStatic subscribe = (TurremSubscribeStatic) annotation;
 		this.registerEvent(subscribe.event(), (Method) element);
 	}
-
+	
 	private void registerEvent(EnumTurremEvent event, Method method)
 	{
 		if (!Modifier.isStatic(method.getModifiers()))
@@ -49,7 +49,7 @@ public class StaticEventRegistry implements INotedElementVisitor
 			}
 			arguments += ")";
 		}
-
+		
 		Class<?>[] metPars = method.getParameterTypes();
 		if (metPars.length == event.parameters.length)
 		{
@@ -86,7 +86,7 @@ public class StaticEventRegistry implements INotedElementVisitor
 			}
 		}
 	}
-
+	
 	public void onPreGameRender(long renderTicks, ClientGame game)
 	{
 		for (Method met : this.preTickCalls)
@@ -97,11 +97,11 @@ public class StaticEventRegistry implements INotedElementVisitor
 			}
 			catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
 			{
-
+				
 			}
 		}
 	}
-
+	
 	public void onPostGameRender(long renderTicks, ClientGame game)
 	{
 		for (Method met : this.postTickCalls)
@@ -112,11 +112,11 @@ public class StaticEventRegistry implements INotedElementVisitor
 			}
 			catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
 			{
-
+				
 			}
 		}
 	}
-
+	
 	public void onPreWorldRender(ClientWorld game)
 	{
 		for (Method met : this.preWorldTickCalls)
@@ -127,11 +127,11 @@ public class StaticEventRegistry implements INotedElementVisitor
 			}
 			catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
 			{
-
+				
 			}
 		}
 	}
-
+	
 	public void onPostWorldRender(ClientWorld game)
 	{
 		for (Method met : this.postWorldTickCalls)
@@ -142,7 +142,7 @@ public class StaticEventRegistry implements INotedElementVisitor
 			}
 			catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
 			{
-
+				
 			}
 		}
 	}

@@ -1,11 +1,13 @@
 package net.turrem.server.network;
 
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+
 import java.net.Socket;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import net.turrem.server.Config;
 import net.turrem.server.network.client.ClientPacket;
@@ -21,17 +23,17 @@ public class GameConnection
 {
 	public String name;
 	public Socket network;
-
+	
 	protected NetworkRoom theRoom;
-
+	
 	public Queue<ServerPacket> outgoing;
 	public Queue<ClientPacket> incoming;
-
+	
 	protected volatile DataInputStream input;
 	protected volatile DataOutputStream output;
-
+	
 	private boolean isRunning = false;
-
+	
 	private int outTimer = 0;
 	
 	private Thread readThread;
@@ -40,7 +42,7 @@ public class GameConnection
 	public ClientPlayer player = null;
 	
 	private int currentWriteCount = 0;
-
+	
 	public GameConnection(String name, Socket network, NetworkRoom room) throws IOException
 	{
 		this.isRunning = true;
@@ -49,7 +51,7 @@ public class GameConnection
 		this.network = network;
 		this.outgoing = new ConcurrentLinkedQueue<ServerPacket>();
 		this.incoming = new ConcurrentLinkedQueue<ClientPacket>();
-
+		
 		this.input = new DataInputStream(this.network.getInputStream());
 		this.output = new DataOutputStream(this.network.getOutputStream());
 		
@@ -58,9 +60,10 @@ public class GameConnection
 		this.readThread.start();
 		this.writeThread.start();
 	}
-
+	
 	/**
 	 * Add a packet to the send queue.
+	 * 
 	 * @param packet The packet to send to the client
 	 */
 	public void addToSendQueue(ServerPacket packet)
@@ -74,17 +77,17 @@ public class GameConnection
 			}
 		}
 	}
-
+	
 	public int sendQueueSize()
 	{
 		return this.outgoing.size();
 	}
-
+	
 	public int recieveQueueSize()
 	{
 		return this.incoming.size();
 	}
-
+	
 	private boolean readPacket()
 	{
 		if (!this.isRunning)
@@ -111,9 +114,10 @@ public class GameConnection
 		}
 		return true;
 	}
-
+	
 	/**
 	 * Causes the given connection to read a single packet from the TCP stream.
+	 * 
 	 * @param connection The client-server connection.
 	 * @return True if a packet was successfully read, false otherwise.
 	 */
@@ -121,7 +125,7 @@ public class GameConnection
 	{
 		return connection.readPacket();
 	}
-
+	
 	private boolean writePacket()
 	{
 		if (!this.isRunning)
@@ -145,9 +149,10 @@ public class GameConnection
 		}
 		return false;
 	}
-
+	
 	/**
 	 * Causes the given connection to write a single packet to the TCP stream.
+	 * 
 	 * @param connection The client-server connection.
 	 * @return True if a packet was successfully written, false otherwise.
 	 */
@@ -155,12 +160,12 @@ public class GameConnection
 	{
 		return connection.writePacket();
 	}
-
+	
 	public boolean isRunning()
 	{
-		return isRunning;
+		return this.isRunning;
 	}
-
+	
 	/**
 	 * Should be called after writing each group of packets.
 	 */
@@ -191,9 +196,11 @@ public class GameConnection
 			}
 		}
 	}
-
+	
 	/**
-	 * Causes a number of received packets to be polled from the receive queue and processed by the server.
+	 * Causes a number of received packets to be polled from the receive queue
+	 * and processed by the server.
+	 * 
 	 * @param maxnum How many packets to process this call.
 	 */
 	public void processPackets(int maxnum)
@@ -240,10 +247,12 @@ public class GameConnection
 			this.shutdown("Player not assigned");
 		}
 	}
-
+	
 	/**
 	 * Ends this client-server connection.
-	 * @param reason A short message describing the reason for the shutdown (ex. "Timeout")
+	 * 
+	 * @param reason A short message describing the reason for the shutdown (ex.
+	 *            "Timeout")
 	 * @param cause Any exceptions associated with the shutdown.
 	 */
 	public void shutdown(String reason, Exception... cause)
@@ -256,7 +265,7 @@ public class GameConnection
 				this.player.exit();
 			}
 			this.isRunning = false;
-
+			
 			try
 			{
 				this.network.shutdownInput();
@@ -265,7 +274,7 @@ public class GameConnection
 			{
 				
 			}
-
+			
 			try
 			{
 				this.network.shutdownOutput();
@@ -274,7 +283,7 @@ public class GameConnection
 			{
 				
 			}
-
+			
 			try
 			{
 				this.network.close();
@@ -283,7 +292,7 @@ public class GameConnection
 			{
 				
 			}
-
+			
 			this.input = null;
 			this.output = null;
 			this.network = null;

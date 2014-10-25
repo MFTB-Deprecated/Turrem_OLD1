@@ -16,7 +16,7 @@ public class ClientPacketCustom extends ClientPacket
 	 * The custom packet's data
 	 */
 	public byte[] packet;
-
+	
 	private ClientPacketCustom(String user, DataInput data, int length, byte type) throws IOException
 	{
 		super(user, type);

@@ -1,8 +1,9 @@
 package net.turrem.server.network.server;
 
+import java.util.ArrayList;
+
 import java.io.DataOutput;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import net.turrem.server.world.Chunk;
 import net.turrem.server.world.World;
@@ -16,7 +17,7 @@ public class ServerPacketTerrain extends ServerPacket
 	public byte[] hmap;
 	public short[] mats;
 	public byte[][] chunk;
-
+	
 	public ServerPacketTerrain(Chunk ch, World world)
 	{
 		this.chunkx = ch.chunkx;
@@ -29,7 +30,7 @@ public class ServerPacketTerrain extends ServerPacket
 	{
 		this.chunkx = chunkx;
 		this.chunkz = chunkz;
-
+		
 		Chunk ch = world.getChunk(chunkx, chunkz);
 		
 		this.create(ch, world);
@@ -38,31 +39,31 @@ public class ServerPacketTerrain extends ServerPacket
 	private void create(Chunk ch, World world)
 	{
 		this.voffset = ch.getMinHeight();
-
+		
 		short[] map = ch.getHeight();
-
+		
 		this.hmap = new byte[256];
 		this.chunk = new byte[256][];
-
+		
 		ArrayList<Short> matlist = new ArrayList<Short>();
-
+		
 		for (int i = 0; i < 256; i++)
 		{
 			this.hmap[i] = (byte) (map[i] - this.voffset);
-
-			int x = chunkx * 16 + (i % 16);
-			int z = chunkz * 16 + (i / 16);
-
+			
+			int x = this.chunkx * 16 + (i % 16);
+			int z = this.chunkz * 16 + (i / 16);
+			
 			int d = world.getSideDrop(x, z);
-
+			
 			if (d == 0)
 			{
 				d = 1;
 			}
-
+			
 			Material[] cs = ch.coreTerrain(x, d, z);
 			byte[] cb = new byte[cs.length];
-
+			
 			for (int j = 0; j < cs.length; j++)
 			{
 				if (cs[j] != null)
@@ -78,14 +79,14 @@ public class ServerPacketTerrain extends ServerPacket
 			}
 			this.chunk[i] = cb;
 		}
-
+		
 		this.mats = new short[matlist.size()];
 		for (int i = 0; i < this.mats.length; i++)
 		{
 			this.mats[i] = matlist.get(i);
 		}
 	}
-
+	
 	@Override
 	protected void writePacket(DataOutput stream) throws IOException
 	{
@@ -105,7 +106,7 @@ public class ServerPacketTerrain extends ServerPacket
 			stream.write(col);
 		}
 	}
-
+	
 	@Override
 	public byte type()
 	{

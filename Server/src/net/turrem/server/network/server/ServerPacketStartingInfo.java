@@ -17,12 +17,12 @@ public class ServerPacketStartingInfo extends ServerPacket
 	@Override
 	protected void writePacket(DataOutput stream) throws IOException
 	{
-		stream.writeInt((int) realm.startingLocation.xCoord);
-		stream.writeInt((int) realm.startingLocation.zCoord);
-		stream.writeInt((int) realm.theWorld.storage.chunks.width);
-		stream.writeInt((int) realm.theWorld.storage.chunks.depth);
+		stream.writeInt((int) this.realm.startingLocation.xCoord);
+		stream.writeInt((int) this.realm.startingLocation.zCoord);
+		stream.writeInt(this.realm.theWorld.storage.chunks.width);
+		stream.writeInt(this.realm.theWorld.storage.chunks.depth);
 	}
-
+	
 	@Override
 	public byte type()
 	{

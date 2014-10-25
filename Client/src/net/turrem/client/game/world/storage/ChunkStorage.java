@@ -11,11 +11,11 @@ public class ChunkStorage implements IWorldChunkStorage
 	public final int depth;
 	public final int mapSize;
 	private final int chunksInQuad;
-
+	
 	private ChunkQuad[] quads;
-
+	
 	public static int chunksRendered = 0;
-
+	
 	public ChunkStorage(int width, int depth)
 	{
 		if (depth < 1)
@@ -37,12 +37,12 @@ public class ChunkStorage implements IWorldChunkStorage
 		this.mapSize = s * this.width;
 		this.quads = new ChunkQuad[width * width];
 	}
-
+	
 	public Chunk getChunk(int chunkx, int chunkz)
 	{
 		return this.binaryFindChunk(chunkx, chunkz);
 	}
-
+	
 	private Chunk binaryFindChunk(int chunkx, int chunkz)
 	{
 		if (!this.isChunkInMap(chunkx, chunkz))
@@ -60,7 +60,7 @@ public class ChunkStorage implements IWorldChunkStorage
 		}
 		return null;
 	}
-
+	
 	public Chunk saveChunk(Chunk chunk)
 	{
 		if (chunk != null)
@@ -72,7 +72,7 @@ public class ChunkStorage implements IWorldChunkStorage
 			throw new IllegalArgumentException("Chunk is null! Use \"clearChunk(int, int)\" instead.");
 		}
 	}
-
+	
 	public Chunk setChunk(int chunkx, int chunkz, Chunk chunk)
 	{
 		if (chunk != null)
@@ -84,12 +84,12 @@ public class ChunkStorage implements IWorldChunkStorage
 		}
 		return this.binarySetChunk(chunkx, chunkz, chunk);
 	}
-
+	
 	public Chunk clearChunk(int chunkx, int chunkz)
 	{
 		return this.binarySetChunk(chunkx, chunkz, null);
 	}
-
+	
 	private Chunk binarySetChunk(int chunkx, int chunkz, Chunk chunk)
 	{
 		if (!this.isChunkInMap(chunkx, chunkz))
@@ -113,7 +113,7 @@ public class ChunkStorage implements IWorldChunkStorage
 		}
 		return null;
 	}
-
+	
 	private ChunkQuad getQuad(int U, int V)
 	{
 		if (U < 0 || U >= this.width || V < 0 || V >= this.width)
@@ -127,7 +127,7 @@ public class ChunkStorage implements IWorldChunkStorage
 		}
 		return null;
 	}
-
+	
 	@Override
 	public Collection<Chunk> getChunks(Collection<Chunk> list)
 	{
@@ -140,7 +140,7 @@ public class ChunkStorage implements IWorldChunkStorage
 		}
 		return list;
 	}
-
+	
 	public Collection<Chunk> getChunks()
 	{
 		ArrayList<Chunk> list = new ArrayList<Chunk>();
@@ -153,42 +153,42 @@ public class ChunkStorage implements IWorldChunkStorage
 		}
 		return list;
 	}
-
+	
 	public Chunk loadChunk(int chunkx, int chunkz)
 	{
 		return null;
 	}
-
+	
 	public boolean isChunkInMap(int chunkx, int chunkz)
 	{
 		return chunkx >= 0 && chunkx < this.mapSize && chunkz >= 0 && chunkz < this.mapSize;
 	}
-
+	
 	@Override
 	public void removeMe(int U, int V)
 	{
 		int i = U + V * this.width;
 		this.quads[i] = null;
 	}
-
+	
 	public void renderTick(int viewx, int viewz, int chunkRadius, int preciseRadius)
 	{
 		int chunkx = viewx / 16;
 		int chunkz = viewz / 16;
-
+		
 		int xmin = (chunkx % this.chunksInQuad) - chunkRadius;
 		int xmax = (chunkx % this.chunksInQuad) + chunkRadius;
 		int zmin = (chunkz % this.chunksInQuad) - chunkRadius;
 		int zmax = (chunkz % this.chunksInQuad) + chunkRadius;
-
+		
 		int U = chunkx >> (this.depth);
 		int V = chunkz >> (this.depth);
-
+		
 		int imin = xmin < 0 ? -1 : 0;
 		int jmin = zmin < 0 ? -1 : 0;
 		int imax = xmax >= this.chunksInQuad ? 1 : 0;
 		int jmax = zmax >= this.chunksInQuad ? 1 : 0;
-
+		
 		int xo;
 		int zo;
 		for (int i = imin; i <= imax; i++)
@@ -205,7 +205,7 @@ public class ChunkStorage implements IWorldChunkStorage
 			}
 		}
 	}
-
+	
 	public void clear()
 	{
 		for (int i = 0; i < 4; i++)

@@ -10,7 +10,7 @@ public class RenderStoreTVF extends RenderStore<RenderObjectTVF>
 	{
 		super(render);
 	}
-
+	
 	@Override
 	public RenderObjectTVF createObject(IRenderIcon ico)
 	{

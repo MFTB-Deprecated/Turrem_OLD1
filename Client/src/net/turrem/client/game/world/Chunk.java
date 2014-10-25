@@ -1,14 +1,10 @@
 package net.turrem.client.game.world;
 
-import org.lwjgl.opengl.GL11;
-
-import net.turrem.client.Config;
 import net.turrem.client.game.world.storage.ChunkQuad;
 import net.turrem.client.game.world.storage.IWorldChunkStorageSegment;
-import net.turrem.client.network.server.ServerPacketTerrain;
-import net.turrem.client.render.RenderEngine;
-import net.turrem.client.render.object.RenderTVF;
 import net.turrem.tvf.TVFFile;
+
+import org.lwjgl.opengl.GL11;
 
 public class Chunk implements IWorldChunkStorageSegment
 {
@@ -24,7 +20,7 @@ public class Chunk implements IWorldChunkStorageSegment
 	protected ChunkQuad parentQuad;
 	
 	public static int chunkRenders = 0;
-
+	
 	public Chunk(int chunkx, int chunkz, TVFFile tvf, byte[] hmap, short voff)
 	{
 		this.chunkx = chunkx;
@@ -41,20 +37,19 @@ public class Chunk implements IWorldChunkStorageSegment
 		aver /= 256;
 		this.averageHeight = aver;
 	}
-
+	
 	public boolean isLoaded()
 	{
-		return loaded;
+		return this.loaded;
 	}
 	
-
 	public int getHeight(int x, int z)
 	{
 		x &= 0x0F;
 		z &= 0x0F;
 		return this.height[x + z * 16];
 	}
-
+	
 	public void render(int viewx, int viewz, int radius, int preciseRadius)
 	{
 		chunkRenders++;
@@ -67,11 +62,11 @@ public class Chunk implements IWorldChunkStorageSegment
 		GL11.glVertex3f(x, this.averageHeight, z + 16);
 		GL11.glEnd();
 	}
-
+	
 	public void unload()
 	{
 	}
-
+	
 	public void setParentQuad(ChunkQuad quad)
 	{
 		this.parentQuad = quad;

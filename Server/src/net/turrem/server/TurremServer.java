@@ -6,7 +6,7 @@ import net.turrem.EnumSide;
 import net.turrem.entity.EntityArticleRegistry;
 import net.turrem.entity.RegisterEntityArticle;
 import net.turrem.mod.ModLoader;
-import net.turrem.mod.NotedElementVisitorRegistry.NotedElementVisitorRegistryWrapper;
+import net.turrem.mod.NotedElementRegistryRegistry.NotedElementRegistryRegistryWrapper;
 import net.turrem.server.network.NetworkRoom;
 import net.turrem.server.world.World;
 import net.turrem.server.world.morph.GeomorphRegistry;
@@ -16,30 +16,30 @@ public class TurremServer
 {
 	public final File theGameDir;
 	public final File theSaveDir;
-
+	
 	protected long lastTime;
 	protected long timeoff = 0;
-
+	
 	private float lasttps = 10.0F;
 	private long lastTickTime;
 	private int secticks = 0;
-
+	
 	private float tpsstore = 0.0F;
 	private int tpssamp = 0;
-
+	
 	private long lastTPSAnTime;
-
+	
 	private long ticks = 0;
-
+	
 	public World theWorld;
-
+	
 	public NetworkRoom theNetwork;
 	
 	public ModLoader modLoader;
-	private NotedElementVisitorRegistryWrapper elementVisitorRegistry;
+	private NotedElementRegistryRegistryWrapper elementRegistryRegistry;
 	
 	public EntityArticleRegistry entityArticleRegistry;
-
+	
 	public TurremServer(String dir, String save)
 	{
 		this.theGameDir = new File(dir);
@@ -47,10 +47,10 @@ public class TurremServer
 		this.theSaveDir = new File(save);
 		System.out.println("Save File: " + this.theSaveDir.getAbsolutePath());
 	}
-
+	
 	protected void run()
 	{
-		this.elementVisitorRegistry = new NotedElementVisitorRegistryWrapper();
+		this.elementRegistryRegistry = new NotedElementRegistryRegistryWrapper();
 		this.modLoader = new ModLoader(new File(this.theGameDir, "mods"), EnumSide.SERVER);
 		
 		this.entityArticleRegistry = new EntityArticleRegistry(EnumSide.SERVER);
@@ -59,31 +59,31 @@ public class TurremServer
 		this.modLoader.findMods();
 		this.modLoader.loadModClasses(this.getClass().getClassLoader());
 		
-		this.elementVisitorRegistry.addVisitor(this.entityArticleRegistry, RegisterEntityArticle.class);
-		this.elementVisitorRegistry.addVisitor(geomorphs, RegisterGeomorph.class);
+		this.elementRegistryRegistry.addVisitor(this.entityArticleRegistry, RegisterEntityArticle.class);
+		this.elementRegistryRegistry.addVisitor(geomorphs, RegisterGeomorph.class);
 		
-		this.modLoader.loadMods(this.elementVisitorRegistry.getRegistry());
+		this.modLoader.loadMods(this.elementRegistryRegistry.getRegistry());
 		
 		this.onRun();
 		this.runloop();
 	}
-
+	
 	public void onRun()
 	{
 		this.theWorld = new World(this.theSaveDir, System.currentTimeMillis(), this);
 		this.theNetwork = new NetworkRoom(this);
 	}
-
+	
 	public synchronized boolean acceptingClients()
 	{
 		return true;
 	}
-
+	
 	public boolean isDone()
 	{
 		return false;
 	}
-
+	
 	public void runloop()
 	{
 		this.lastTime = System.currentTimeMillis();
@@ -94,7 +94,7 @@ public class TurremServer
 			{
 				this.timeoff *= 0.98F;
 				long time = System.currentTimeMillis();
-
+				
 				this.timeoff += (time - this.lastTime) - 100;
 				if (this.timeoff < 0)
 				{
@@ -105,9 +105,9 @@ public class TurremServer
 					this.timeoff = 1000;
 				}
 				this.lastTime = time;
-
+				
 				this.tick();
-
+				
 				if (0 < 100 - this.timeoff)
 				{
 					try
@@ -129,13 +129,13 @@ public class TurremServer
 		}
 		this.shutdown();
 	}
-
+	
 	public void tick()
 	{
 		this.theWorld.tick();
-
+		
 		this.ticks++;
-
+		
 		long dif = System.currentTimeMillis() - this.lastTickTime;
 		if (dif > 1000)
 		{
@@ -145,7 +145,7 @@ public class TurremServer
 			this.secticks = 0;
 		}
 		this.secticks++;
-
+		
 		if (this.ticks % 100 == 0)
 		{
 			this.resetTPS();
@@ -153,26 +153,26 @@ public class TurremServer
 			System.out.println("Ticks per Second - " + (100.0F / ((time - this.lastTPSAnTime) / 1000.0F)));
 			this.lastTPSAnTime = time;
 		}
-
+		
 		this.theNetwork.networkTick();
 	}
-
+	
 	public float getLastTPS()
 	{
 		return this.lasttps;
 	}
-
+	
 	public void shutdown()
 	{
 		System.exit(0);
 	}
-
+	
 	public void addTPS(float tps)
 	{
 		this.tpsstore += tps;
 		this.tpssamp++;
 	}
-
+	
 	public float getTPS()
 	{
 		if (this.tpssamp == 0)
@@ -181,7 +181,7 @@ public class TurremServer
 		}
 		return this.tpsstore / this.tpssamp;
 	}
-
+	
 	public void resetTPS()
 	{
 		this.tpssamp = 0;

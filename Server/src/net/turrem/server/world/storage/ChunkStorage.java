@@ -12,9 +12,9 @@ public class ChunkStorage implements IWorldChunkStorage
 	public final int width;
 	public final int depth;
 	public final int mapSize;
-
+	
 	private ChunkQuad[] quads;
-
+	
 	public ChunkStorage(int width, int depth)
 	{
 		if (depth < 1)
@@ -35,22 +35,22 @@ public class ChunkStorage implements IWorldChunkStorage
 		this.mapSize = s * this.width;
 		this.quads = new ChunkQuad[width * width];
 	}
-
+	
 	public Chunk findChunk(int chunkx, int chunkz)
 	{
 		return this.binaryFindChunk(chunkx, chunkz, false, null);
 	}
-
+	
 	public void generateChunk(int chunkx, int chunkz, WorldGen gen)
 	{
 		this.binaryFindChunk(chunkx, chunkz, true, gen);
 	}
-
+	
 	public Chunk findAndGenerateChunk(int chunkx, int chunkz, World world)
 	{
 		return this.binaryFindChunk(chunkx, chunkz, true, world.theWorldGen);
 	}
-
+	
 	private Chunk binaryFindChunk(int chunkx, int chunkz, boolean dogen, WorldGen gen)
 	{
 		if (!this.isChunkInMap(chunkx, chunkz))
@@ -68,7 +68,7 @@ public class ChunkStorage implements IWorldChunkStorage
 		}
 		return null;
 	}
-
+	
 	private ChunkQuad getQuad(int U, int V, boolean make)
 	{
 		if (U < 0 || U >= this.width || V < 0 || V >= this.width)
@@ -91,7 +91,7 @@ public class ChunkStorage implements IWorldChunkStorage
 			return null;
 		}
 	}
-
+	
 	@Override
 	public Collection<Chunk> getChunks(Collection<Chunk> list)
 	{
@@ -104,7 +104,7 @@ public class ChunkStorage implements IWorldChunkStorage
 		}
 		return list;
 	}
-
+	
 	public Collection<Chunk> getChunks()
 	{
 		ArrayList<Chunk> list = new ArrayList<Chunk>();
@@ -117,29 +117,29 @@ public class ChunkStorage implements IWorldChunkStorage
 		}
 		return list;
 	}
-
+	
 	public Chunk loadChunk(int chunkx, int chunkz)
 	{
 		return null;
 	}
-
+	
 	public Chunk genChunk(int chunkx, int chunkz, WorldGen gen)
 	{
 		return gen.generateChunk(chunkx, chunkz);
 	}
-
+	
 	public boolean isChunkInMap(int chunkx, int chunkz)
 	{
 		return chunkx >= 0 && chunkx < this.mapSize && chunkz >= 0 && chunkz < this.mapSize;
 	}
-
+	
 	@Override
 	public void removeMe(int U, int V)
 	{
 		int i = U + V * this.width;
 		this.quads[i] = null;
 	}
-
+	
 	public void worldTick()
 	{
 		for (ChunkQuad quad : this.quads)
@@ -150,7 +150,7 @@ public class ChunkStorage implements IWorldChunkStorage
 			}
 		}
 	}
-
+	
 	public void clear()
 	{
 		for (int i = 0; i < 4; i++)

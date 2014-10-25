@@ -29,7 +29,7 @@ public abstract class SoftEntity implements IEntity
 	{
 		return this.entityIdentifier;
 	}
-
+	
 	public void onWorldRegister(World world)
 	{
 		
@@ -52,7 +52,7 @@ public abstract class SoftEntity implements IEntity
 	{
 		return this.isAlive;
 	}
-
+	
 	public void onPreWorldRegister(World theWorld)
 	{
 		this.isAlive = true;

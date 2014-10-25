@@ -17,9 +17,12 @@ public class WorldMesh
 	
 	/**
 	 * Gets the world vertex at the given row and column.
+	 * 
 	 * @param row The row that the vertex lies on.
-	 * @param col The diagonal line that the vertex lies on, see {@link WorldVertex.EnumMeshNeighbor#col}.
-	 * @return The vertex at the given coordinate, or null if that vertex has not been created.
+	 * @param col The diagonal line that the vertex lies on, see
+	 *            {@link WorldVertex.EnumMeshNeighbor#col}.
+	 * @return The vertex at the given coordinate, or null if that vertex has
+	 *         not been created.
 	 */
 	public WorldVertex getVertex(int row, int col)
 	{
@@ -32,9 +35,12 @@ public class WorldMesh
 	}
 	
 	/**
-	 * Gets the world vertex at the given row and column. If the vertex has not been generated yet, it is created at the lowest level.
+	 * Gets the world vertex at the given row and column. If the vertex has not
+	 * been generated yet, it is created at the lowest level.
+	 * 
 	 * @param row The row that the vertex lies on.
-	 * @param col The diagonal line that the vertex lies on, see {@link WorldVertex.EnumMeshNeighbor#col}.
+	 * @param col The diagonal line that the vertex lies on, see
+	 *            {@link WorldVertex.EnumMeshNeighbor#col}.
 	 * @return The vertex at the given coordinate.
 	 */
 	public WorldVertex createVertex(int row, int col)
@@ -55,10 +61,14 @@ public class WorldMesh
 	}
 	
 	/**
-	 * Gets the world vertex at the given row and column and ensures that it is at {@link WorldVertex#maxLevel}.
+	 * Gets the world vertex at the given row and column and ensures that it is
+	 * at {@link WorldVertex#maxLevel}.
+	 * 
 	 * @param row The row that the vertex lies on.
-	 * @param col The diagonal line that the vertex lies on, see {@link WorldVertex.EnumMeshNeighbor#col}.
-	 * @return The vertex at the given coordinate generated to {@link WorldVertex#maxLevel}.
+	 * @param col The diagonal line that the vertex lies on, see
+	 *            {@link WorldVertex.EnumMeshNeighbor#col}.
+	 * @return The vertex at the given coordinate generated to
+	 *         {@link WorldVertex#maxLevel}.
 	 */
 	public WorldVertex createVertexFull(int row, int col)
 	{
@@ -92,12 +102,12 @@ public class WorldMesh
 			default:
 				return null;
 		}
-				
+		
 	}
 	
 	private VertexGenData getStartData(WorldVertex parent1, WorldVertex parent2)
 	{
-		//TODO Mix parent vertices
+		// TODO Mix parent vertices
 		return null;
 	}
 	

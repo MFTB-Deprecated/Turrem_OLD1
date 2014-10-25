@@ -24,7 +24,7 @@ public class WorldStorage
 	{
 		this.chunks.worldTick();
 	}
-
+	
 	public void clear()
 	{
 		this.chunks.clear();

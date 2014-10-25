@@ -50,17 +50,17 @@ public class NetworkRoom
 	
 	public void networkTick()
 	{
-        for (int i = 0; i < this.clients.size(); ++i)
-        {
-        	GameConnection con = this.clients.get(i);
-        	if (con.isRunning())
-        	{
-        		con.processPackets(clientLimitPerTick);
-        	}
-        	else
-        	{
-        		this.clients.remove(i--);
-        	}
-        }
+		for (int i = 0; i < this.clients.size(); ++i)
+		{
+			GameConnection con = this.clients.get(i);
+			if (con.isRunning())
+			{
+				con.processPackets(clientLimitPerTick);
+			}
+			else
+			{
+				this.clients.remove(i--);
+			}
+		}
 	}
 }

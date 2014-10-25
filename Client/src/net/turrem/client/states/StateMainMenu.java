@@ -29,19 +29,19 @@ import org.lwjgl.opengl.GL11;
 public class StateMainMenu implements IState
 {
 	protected Turrem theTurrem;
-
+	
 	private float h = 0.62F;
 	private float s = 0.5F;
 	private float b = 0.5F;
 	private int t = 0;
-
+	
 	public FontRender testFont;
-
+	
 	public StateMainMenu(Turrem turrem)
 	{
 		this.theTurrem = turrem;
 	}
-
+	
 	@Override
 	public void start()
 	{
@@ -49,38 +49,38 @@ public class StateMainMenu implements IState
 		font.loadTexture("app:font.screen", this.theTurrem.theRender, true);
 		this.testFont = new FontRender(font);
 	}
-
+	
 	@Override
 	public void end()
 	{
 		
 	}
-
+	
 	@Override
 	public void render()
 	{
 		this.t++;
-
+		
 		this.h = 0.5F + (float) Math.sin(this.t / 457.0f) / 6.0F;
 		this.s = ((float) Math.sin(this.t / 47.0f + 5) + 1.0F) / 2.0F;
 		this.b = ((float) Math.sin(this.t / 109.0f + 7) + 1.0F) / 2.0F;
-
+		
 		Color c = Color.getHSBColor(this.h, this.s * 0.2f, this.b * 0.2f + 0.6F);
-
+		
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+		
 		glColor3f(c.getRed() / 255.0f, c.getGreen() / 255.0f, c.getBlue() / 255.0f);
 		glBegin(GL_QUADS);
-
+		
 		GL11.glVertex2f(0, 0);
 		GL11.glVertex2f(0, this.theTurrem.getScreenHeight());
 		GL11.glVertex2f(this.theTurrem.getScreenWidth(), this.theTurrem.getScreenHeight());
 		GL11.glVertex2f(this.theTurrem.getScreenWidth(), 0);
-
+		
 		glEnd();
-
+		
 		glColor3f(1.0F, 1.0F, 1.0F);
-
+		
 		glColor3f(0.0F, 0.0F, 0.0F);
 		this.testFont.renderTextCentered("- Press any Key -", this.theTurrem.getScreenWidth() / 2, this.theTurrem.getScreenHeight() / 2, 50.0F);
 		this.testFont.renderTextCentered("Right Click - Move Citizen", this.theTurrem.getScreenWidth() / 2, (this.theTurrem.getScreenHeight() / 14) * 1, 50.0F);
@@ -90,7 +90,7 @@ public class StateMainMenu implements IState
 		this.testFont.renderTextCentered("Don't Forget to Start the Server!", this.theTurrem.getScreenWidth() / 2, (this.theTurrem.getScreenHeight() / 14) * 10, 50.0F);
 		glColor3f(1.0F, 1.0F, 1.0F);
 	}
-
+	
 	@Override
 	public void updateGL()
 	{
@@ -99,7 +99,7 @@ public class StateMainMenu implements IState
 		glOrtho(0, this.theTurrem.getScreenWidth(), this.theTurrem.getScreenHeight(), 0, 1, -1);
 		glMatrixMode(GL_MODELVIEW);
 	}
-
+	
 	@Override
 	public void mouseEvent()
 	{
@@ -108,7 +108,7 @@ public class StateMainMenu implements IState
 			this.theTurrem.setClientState(StateGame.class);
 		}
 	}
-
+	
 	@Override
 	public void keyEvent()
 	{

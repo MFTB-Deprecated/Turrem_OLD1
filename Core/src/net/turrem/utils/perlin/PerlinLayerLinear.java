@@ -4,14 +4,14 @@ class PerlinLayerLinear extends PerlinLayer
 {
 	protected LocationRandom rand;
 	protected long seed;
-
+	
 	public PerlinLayer[] list = new PerlinLayer[4];
 	protected boolean[] removed = new boolean[4];
-
+	
 	public boolean isLast;
-
+	
 	protected float[] grid;
-
+	
 	public PerlinLayerLinear(PerlinWorld parent, Perlin perlin, long seed, int xpos, int ypos)
 	{
 		super();
@@ -26,7 +26,7 @@ class PerlinLayerLinear extends PerlinLayer
 		this.rand = new LocationRandom(seed);
 		this.buildGrid();
 	}
-
+	
 	public PerlinLayerLinear(PerlinLayer parent, Perlin perlin, int layer, byte corner, long seed, int xpos, int ypos) throws Exception
 	{
 		super();
@@ -53,7 +53,7 @@ class PerlinLayerLinear extends PerlinLayer
 		this.rand = new LocationRandom(seed);
 		this.buildGrid();
 	}
-
+	
 	@Override
 	public float getValue(int x, int y, byte corner)
 	{
@@ -83,7 +83,7 @@ class PerlinLayerLinear extends PerlinLayer
 		}
 		return this.blur((x / 2), (y / 2), c);
 	}
-
+	
 	public float blur(int x, int y, byte corner)
 	{
 		if (corner == 0)
@@ -104,19 +104,19 @@ class PerlinLayerLinear extends PerlinLayer
 		}
 		return 0;
 	}
-
+	
 	private float getOwnValue(int x, int y)
 	{
 		return this.grid[(x + 1) + (y + 1) * 18];
 	}
-
+	
 	@Override
 	public void buildGrid()
 	{
 		this.grid = new float[324];
-
+		
 		float m = this.perlin.getMult(this.layer);
-
+		
 		for (int i = -1; i < 17; i++)
 		{
 			for (int j = -1; j < 17; j++)
@@ -127,7 +127,7 @@ class PerlinLayerLinear extends PerlinLayer
 				this.grid[ind] = this.perlin.rand(this.rand.nextFloat(x, y), this.layer, this.rand.getLocSeed(x, y)) * m;
 			}
 		}
-
+		
 		if (this.parent instanceof PerlinLayer)
 		{
 			PerlinLayer l = (PerlinLayer) this.parent;
@@ -141,7 +141,7 @@ class PerlinLayerLinear extends PerlinLayer
 			}
 		}
 	}
-
+	
 	public void makeGrid(byte corner)
 	{
 		if (this.isLast || this.list[corner] != null)
@@ -174,7 +174,7 @@ class PerlinLayerLinear extends PerlinLayer
 			e.printStackTrace();
 		}
 	}
-
+	
 	public long downSeed()
 	{
 		return (this.seed * 0x5DEECE66DL + 0xBL) & ((1L << 48) - 1);
@@ -203,7 +203,7 @@ class PerlinLayerLinear extends PerlinLayer
 		float V = 1.0F - v;
 		return lt * U * V + rt * u * V + lb * U * v + rb * u * v;
 	}
-
+	
 	@Override
 	public float[] getChunk(float u, float v)
 	{
@@ -259,7 +259,7 @@ class PerlinLayerLinear extends PerlinLayer
 		}
 		return dat;
 	}
-
+	
 	public boolean isDone()
 	{
 		boolean flag = true;
@@ -269,7 +269,7 @@ class PerlinLayerLinear extends PerlinLayer
 		}
 		return flag;
 	}
-
+	
 	@Override
 	public void removeme(byte corner)
 	{

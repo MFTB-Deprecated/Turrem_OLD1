@@ -11,7 +11,7 @@ public class ServerPacketCustomNBT extends ServerPacket
 	public NBTCompound nbt;
 	
 	private ServerPacketCustomNBT(DataInput data, int length, byte type) throws IOException
-	{		
+	{
 		super(type);
 		length -= 1;
 		int stringlength = data.readByte() & 0xFF;

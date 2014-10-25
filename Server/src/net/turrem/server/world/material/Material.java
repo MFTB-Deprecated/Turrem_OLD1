@@ -33,22 +33,22 @@ public class Material
 	{
 		return true;
 	}
-
+	
 	public short getNumId()
 	{
 		return this.numId;
 	}
-
+	
 	public String getName()
 	{
-		return name;
+		return this.name;
 	}
-
+	
 	public int getColorInt()
 	{
-		return color;
+		return this.color;
 	}
-
+	
 	public Color getColor()
 	{
 		return new Color(this.color);

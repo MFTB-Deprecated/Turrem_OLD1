@@ -1,7 +1,8 @@
 package net.turrem.client.render;
 
-import java.awt.image.BufferedImage;
 import java.io.IOException;
+
+import java.awt.image.BufferedImage;
 
 import net.turrem.client.asset.AssetLoader;
 import net.turrem.client.render.object.RenderObjectTexture;
@@ -13,7 +14,7 @@ public class RenderEngine
 	public AssetLoader assets;
 	public RenderStoreTexture renderStore2D;
 	public RenderStoreTVF renderStoreTVF;
-
+	
 	public RenderEngine(AssetLoader assets)
 	{
 		this.assets = assets;
@@ -30,7 +31,7 @@ public class RenderEngine
 	{
 		
 	}
-
+	
 	public void renderFrame()
 	{
 		
@@ -56,7 +57,7 @@ public class RenderEngine
 			return null;
 		}
 	}
-
+	
 	public TVFFile loadTVF(String name)
 	{
 		try
@@ -68,13 +69,13 @@ public class RenderEngine
 			return null;
 		}
 	}
-
+	
 	public RenderTVF loadTVFRender(TVFFile tvf, float scale, boolean doAO)
 	{
 		RenderTVF render = new RenderTVF(tvf, scale, doAO, this);
 		return render;
 	}
-
+	
 	public RenderTVF loadTVFRender(String name, float scale, boolean doAO)
 	{
 		TVFFile tvf = this.loadTVF(name);

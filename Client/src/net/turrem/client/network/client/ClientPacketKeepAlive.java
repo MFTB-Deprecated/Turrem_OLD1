@@ -9,7 +9,7 @@ public class ClientPacketKeepAlive extends ClientPacket
 	protected void writePacket(DataOutput stream) throws IOException
 	{
 	}
-
+	
 	@Override
 	public byte type()
 	{

@@ -1,51 +1,54 @@
 package net.turrem.mod;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 import java.lang.reflect.AnnotatedElement;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import net.turrem.mod.registry.INotedElementRegister;
+import net.turrem.mod.registry.Registrable;
 
 import com.google.common.collect.HashMultimap;
 
-public class NotedElementVisitorRegistry
+public class NotedElementRegistryRegistry
 {
-	public static class NotedElementVisitorRegistryWrapper
+	public static class NotedElementRegistryRegistryWrapper
 	{
-		private NotedElementVisitorRegistry registry;
+		private NotedElementRegistryRegistry registry;
 		
-		public NotedElementVisitorRegistryWrapper()
+		public NotedElementRegistryRegistryWrapper()
 		{
-			registry = new NotedElementVisitorRegistry();
+			this.registry = new NotedElementRegistryRegistry();
 		}
 		
-		public NotedElementVisitorRegistry getRegistry()
+		public NotedElementRegistryRegistry getRegistry()
 		{
 			return this.registry;
 		}
 		
-		public void addVisitor(INotedElementVisitor visitor, Class<? extends Annotation> annotation)
+		public void addVisitor(INotedElementRegister visitor, Class<? extends Annotation> annotation)
 		{
 			this.registry.addVisitor(visitor, annotation);
 		}
 	}
 	
-	private HashMultimap<Class<? extends Annotation>, INotedElementVisitor> visitors = HashMultimap.create();
-
-	void addVisitor(INotedElementVisitor visitor, Class<? extends Annotation> annotation)
+	private HashMultimap<Class<? extends Annotation>, INotedElementRegister> visitors = HashMultimap.create();
+	
+	void addVisitor(INotedElementRegister visitor, Class<? extends Annotation> annotation)
 	{
 		if (annotation == null || visitor == null)
 		{
 			throw new IllegalArgumentException();
 		}
-		if (!annotation.isAnnotationPresent(Visitable.class))
+		if (!annotation.isAnnotationPresent(Registrable.class))
 		{
-			throw new IllegalArgumentException(String.format("Annotation %s does not have @Visitable.", annotation.getName()));
+			throw new IllegalArgumentException(String.format("Annotation %s does not have @Registrable.", annotation.getName()));
 		}
-		Target target = (Target) annotation.getAnnotation(Target.class);
+		Target target = annotation.getAnnotation(Target.class);
 		if (target != null)
 		{
 			List<ElementType> types = Arrays.asList(target.value());
@@ -64,22 +67,22 @@ public class NotedElementVisitorRegistry
 		}
 		this.visitors.put(annotation, visitor);
 	}
-
+	
 	private void visitElement(AnnotatedElement element, ModInstance mod)
 	{
 		for (Annotation ann : element.getDeclaredAnnotations())
 		{
-			Set<INotedElementVisitor> viss = this.visitors.get(ann.annotationType());
+			Set<INotedElementRegister> viss = this.visitors.get(ann.annotationType());
 			if (viss != null)
 			{
-				for (INotedElementVisitor vis : viss)
+				for (INotedElementRegister vis : viss)
 				{
 					vis.visitElement(ann, element, mod);
 				}
 			}
 		}
 	}
-
+	
 	protected void visitClass(Class<?> clas, ModInstance mod)
 	{
 		this.visitElement(clas, mod);

@@ -3,12 +3,12 @@ package net.turrem.client.render.object;
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 
+import net.turrem.client.render.RenderEngine;
+import net.turrem.utils.graphics.ImgUtils;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL30;
-
-import net.turrem.client.render.RenderEngine;
-import net.turrem.utils.graphics.ImgUtils;
 
 public class RenderObjectTexture implements IRenderObject
 {
@@ -16,7 +16,7 @@ public class RenderObjectTexture implements IRenderObject
 	private String identifier;
 	private int glSample;
 	private int textureId = -1;
-
+	
 	private int width = -1;
 	private int height = -1;
 	private float aspect = Float.NaN;
@@ -37,25 +37,25 @@ public class RenderObjectTexture implements IRenderObject
 	
 	public int getWidth()
 	{
-		return width;
+		return this.width;
 	}
-
+	
 	public int getHeight()
 	{
-		return height;
+		return this.height;
 	}
-
+	
 	public float getAspect()
 	{
-		return aspect;
+		return this.aspect;
 	}
-
+	
 	@Override
 	public boolean isLoaded()
 	{
 		return this.textureId != -1;
 	}
-
+	
 	@Override
 	public boolean load(RenderEngine render)
 	{
@@ -70,18 +70,18 @@ public class RenderObjectTexture implements IRenderObject
 			this.height = img.getHeight();
 			this.aspect = (float) this.width / (float) this.height;
 			ByteBuffer bytes = ImgUtils.imgToByteBuffer(img);
-
+			
 			int texId = GL11.glGenTextures();
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texId);
-
+			
 			GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
-
+			
 			GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, this.width, this.height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, bytes);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, this.glSample);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
 			GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
-
+			
 			this.textureId = texId;
 			return true;
 		}
@@ -90,7 +90,7 @@ public class RenderObjectTexture implements IRenderObject
 			return false;
 		}
 	}
-
+	
 	@Override
 	public boolean reload(RenderEngine render)
 	{
@@ -105,18 +105,18 @@ public class RenderObjectTexture implements IRenderObject
 			this.height = img.getHeight();
 			this.aspect = (float) this.width / (float) this.height;
 			ByteBuffer bytes = ImgUtils.imgToByteBuffer(img);
-
+			
 			int texId = GL11.glGenTextures();
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);
 			GL11.glBindTexture(GL11.GL_TEXTURE_2D, texId);
-
+			
 			GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
-
+			
 			GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, this.width, this.height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, bytes);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, this.glSample);
 			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
 			GL30.glGenerateMipmap(GL11.GL_TEXTURE_2D);
-
+			
 			this.textureId = texId;
 			return true;
 		}
@@ -125,7 +125,7 @@ public class RenderObjectTexture implements IRenderObject
 			return false;
 		}
 	}
-
+	
 	@Override
 	public boolean unload(RenderEngine render)
 	{
@@ -158,13 +158,13 @@ public class RenderObjectTexture implements IRenderObject
 		}
 		GL11.glPopMatrix();
 	}
-
+	
 	@Override
 	public String getSource()
 	{
 		return this.source;
 	}
-
+	
 	@Override
 	public String getIdentifier()
 	{

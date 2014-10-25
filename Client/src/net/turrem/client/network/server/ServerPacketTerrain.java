@@ -1,8 +1,9 @@
 package net.turrem.client.network.server;
 
+import java.util.ArrayList;
+
 import java.io.DataInput;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import net.turrem.client.game.world.Chunk;
 import net.turrem.client.game.world.material.Material;
@@ -23,7 +24,7 @@ public class ServerPacketTerrain extends ServerPacket
 	public byte[] hmap;
 	public short[] mats;
 	public byte[][] chunk;
-
+	
 	private ServerPacketTerrain(DataInput data, byte type) throws IOException
 	{
 		super(type);
@@ -38,7 +39,7 @@ public class ServerPacketTerrain extends ServerPacket
 		this.mats = new short[data.readByte() & 0xFF];
 		for (int i = 0; i < this.mats.length; i++)
 		{
-			mats[i] = data.readShort();
+			this.mats[i] = data.readShort();
 		}
 		this.chunk = new byte[256][];
 		for (int i = 0; i < 256; i++)
@@ -53,12 +54,12 @@ public class ServerPacketTerrain extends ServerPacket
 	{
 		return new ServerPacketTerrain(data, type);
 	}
-
+	
 	public Chunk buildChunk()
 	{
-		return new Chunk(this.chunkx, this.chunkz, this.buildTVF(), this.hmap, (short) this.voff);
+		return new Chunk(this.chunkx, this.chunkz, this.buildTVF(), this.hmap, this.voff);
 	}
-
+	
 	public TVFFile buildTVF()
 	{
 		TVFFile tvf = new TVFFile();
@@ -74,14 +75,14 @@ public class ServerPacketTerrain extends ServerPacket
 		TVFPaletteColor pal = new TVFPaletteColor();
 		
 		ArrayList<TVFFace> faces = new ArrayList<TVFFace>();
-
+		
 		for (int i = 0; i < this.mats.length; i++)
 		{
 			Material mat = MaterialList.getMaterial(this.mats[i]);
 			TVFColor color;
 			if (mat != null)
 			{
-			color = new TVFColor(mat.red, mat.green, mat.blue);
+				color = new TVFColor(mat.red, mat.green, mat.blue);
 			}
 			else
 			{
@@ -89,7 +90,7 @@ public class ServerPacketTerrain extends ServerPacket
 			}
 			pal.palette[i] = color;
 		}
-
+		
 		for (int i = 0; i < 16; i++)
 		{
 			for (int j = 0; j < 16; j++)
@@ -97,18 +98,18 @@ public class ServerPacketTerrain extends ServerPacket
 				this.makeCore(i, j, faces);
 			}
 		}
-
+		
 		TVFFace[] far = new TVFFace[faces.size()];
 		far = faces.toArray(far);
 		TVFLayerFaces tvf = new TVFLayerFaces();
 		return tvf;
 	}
-
+	
 	private int getHeight(int x, int z)
 	{
 		return this.getHeight(x, z, Integer.MIN_VALUE);
 	}
-
+	
 	private int getHeight(int x, int z, int def)
 	{
 		if (x < 0 || x >= 16 || z < 0 || z >= 16)
@@ -117,7 +118,7 @@ public class ServerPacketTerrain extends ServerPacket
 		}
 		return this.hmap[x + z * 16] & 0xFF;
 	}
-
+	
 	private void makeCore(int x, int z, ArrayList<TVFFace> faces)
 	{
 		int ind = x + z * 16;
@@ -133,9 +134,9 @@ public class ServerPacketTerrain extends ServerPacket
 			top.y += basePadding;
 			top.direction = EnumDir.YUp.ind;
 			faces.add(top);
-
+			
 			int h;
-
+			
 			h = this.getHeight(x + 1, z);
 			for (int i = 0; i < col.length; i++)
 			{
@@ -155,7 +156,7 @@ public class ServerPacketTerrain extends ServerPacket
 					break;
 				}
 			}
-
+			
 			h = this.getHeight(x - 1, z);
 			for (int i = 0; i < col.length; i++)
 			{
@@ -175,7 +176,7 @@ public class ServerPacketTerrain extends ServerPacket
 					break;
 				}
 			}
-
+			
 			h = this.getHeight(x, z + 1);
 			for (int i = 0; i < col.length; i++)
 			{
@@ -195,7 +196,7 @@ public class ServerPacketTerrain extends ServerPacket
 					break;
 				}
 			}
-
+			
 			for (int i = 0; i < col.length; i++)
 			{
 				if (y - i > h)

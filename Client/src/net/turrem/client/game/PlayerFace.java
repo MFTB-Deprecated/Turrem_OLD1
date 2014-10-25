@@ -1,9 +1,5 @@
 package net.turrem.client.game;
 
-import org.lwjgl.input.Mouse;
-
-import org.lwjgl.util.glu.GLU;
-
 import net.turrem.client.Config;
 import net.turrem.client.game.world.Chunk;
 import net.turrem.client.game.world.ClientWorld;
@@ -12,34 +8,37 @@ import net.turrem.utils.geo.Point;
 import net.turrem.utils.geo.Ray;
 import net.turrem.utils.geo.Vector;
 
+import org.lwjgl.input.Mouse;
+import org.lwjgl.util.glu.GLU;
+
 public class PlayerFace
 {
 	public final static float hdamp = 0.9F;
-
+	
 	protected float camPitch = 30.0F;
 	protected float camYaw = 45.0F;
 	protected float camDist = 16.0F;
-
+	
 	protected Point camFocus;
 	protected Point camLoc;
-
+	
 	private int mouselastx;
 	private int mouselasty;
 	private float aspect;
 	private float znear = 1.0F;
 	private float fovy = 60.0F;
-
+	
 	private int requestChunkSelector = 0;
-
+	
 	private long lastChunkRequestTime = 0;
 	private int lastChunkRequestX;
 	private int lastChunkRequestZ;
-
+	
 	private int pickx;
 	private int picky;
 	private int pickz;
 	private EnumDir pickSide;
-
+	
 	public PlayerFace(ClientWorld world)
 	{
 		this.reset();
@@ -50,108 +49,108 @@ public class PlayerFace
 		this.doFocus();
 		this.updatePars();
 	}
-
+	
 	public void updatePars()
 	{
 		float width = Config.getWidth();
 		float height = Config.getHeight();
 		this.aspect = width / height;
 	}
-
+	
 	public float getFOVY()
 	{
 		return this.fovy;
 	}
-
+	
 	public float getZNear()
 	{
 		return this.znear;
 	}
-
+	
 	public float getAspect()
 	{
 		return this.aspect;
 	}
-
+	
 	public void doGLULook()
 	{
 		GLU.gluLookAt((float) this.camLoc.xCoord, (float) this.camLoc.yCoord, (float) this.camLoc.zCoord, (float) this.camFocus.xCoord, (float) this.camFocus.yCoord, (float) this.camFocus.zCoord, 0.0F, 1.0F, 0.0F);
 	}
-
+	
 	public void reset()
 	{
 		this.mouselastx = Mouse.getX();
 		this.mouselasty = Mouse.getY();
 	}
-
+	
 	public Point getFocus()
 	{
 		return this.camFocus;
 	}
-
+	
 	public Point getLocation()
 	{
 		return this.camLoc;
 	}
-
+	
 	public Ray pickMouse()
 	{
 		float mousex = Mouse.getX();
 		float mousey = Mouse.getY();
-
+		
 		Vector view = Vector.getVector(this.camLoc, this.camFocus);
 		view.normalize();
-
+		
 		Vector h = Vector.cross(view, Vector.getVector(0.0F, 1.0F, 0.0F));
 		h.normalize();
-
+		
 		Vector v = Vector.cross(h, view);
 		v.normalize();
-
-		float rad = fovy * 3.1415F / 180.0F;
-		float vLength = (float) (Math.tan(rad / 2) * znear);
-		float hLength = vLength * aspect;
-
+		
+		float rad = this.fovy * 3.1415F / 180.0F;
+		float vLength = (float) (Math.tan(rad / 2) * this.znear);
+		float hLength = vLength * this.aspect;
+		
 		v.scale(vLength);
 		h.scale(hLength);
-
+		
 		int width = Config.getWidth();
 		int height = Config.getHeight();
-
+		
 		mousex -= (width / 2.0F);
 		mousey -= (height / 2.0F);
-
+		
 		mousex /= (width / 2.0F);
 		mousey /= (height / 2.0F);
-
-		double clipx = this.camLoc.xCoord + view.xpart * znear + h.xpart * mousex + v.xpart * mousey;
-		double clipy = this.camLoc.yCoord + view.ypart * znear + h.ypart * mousex + v.ypart * mousey;
-		double clipz = this.camLoc.zCoord + view.zpart * znear + h.zpart * mousex + v.zpart * mousey;
-
+		
+		double clipx = this.camLoc.xCoord + view.xpart * this.znear + h.xpart * mousex + v.xpart * mousey;
+		double clipy = this.camLoc.yCoord + view.ypart * this.znear + h.ypart * mousex + v.ypart * mousey;
+		double clipz = this.camLoc.zCoord + view.zpart * this.znear + h.zpart * mousex + v.zpart * mousey;
+		
 		Point clip = Point.getPoint(clipx, clipy, clipz);
 		return Ray.getRay(this.camLoc, clip);
 	}
-
+	
 	public int getTerrainPickX()
 	{
 		return this.pickx;
 	}
-
+	
 	public int getTerrainPickY()
 	{
 		return this.picky;
 	}
-
+	
 	public int getTerrainPickZ()
 	{
 		return this.pickz;
 	}
-
+	
 	public EnumDir getTerrainPickSide()
 	{
 		return this.pickSide;
 	}
-
+	
 	protected void rayPickTerrain(Point origin, Vector direction, float radius, ClientWorld world)
 	{
 		// Cube containing origin point.
@@ -163,26 +162,26 @@ public class PlayerFace
 		float dy = direction.ypart;
 		float dz = direction.zpart;
 		// Direction to increment x,y,z when stepping.
-		int stepX = signum(dx);
-		int stepY = signum(dy);
-		int stepZ = signum(dz);
+		int stepX = this.signum(dx);
+		int stepY = this.signum(dy);
+		int stepZ = this.signum(dz);
 		// See description above. The initial values depend on the fractional
 		// part of the origin.
-		float tMaxX = intbound((float) origin.xCoord, dx);
-		float tMaxY = intbound((float) origin.yCoord, dy);
-		float tMaxZ = intbound((float) origin.zCoord, dz);
+		float tMaxX = this.intbound((float) origin.xCoord, dx);
+		float tMaxY = this.intbound((float) origin.yCoord, dy);
+		float tMaxZ = this.intbound((float) origin.zCoord, dz);
 		// The change in t when taking a step (always positive).
 		float tDeltaX = stepX / dx;
 		float tDeltaY = stepY / dy;
 		float tDeltaZ = stepZ / dz;
-
+		
 		EnumDir face = null;
-
+		
 		if (dx == 0 && dy == 0 && dz == 0)
 		{
 			return;
 		}
-
+		
 		if (dy > 0)
 		{
 			this.pickx = -1;
@@ -191,12 +190,12 @@ public class PlayerFace
 			this.pickSide = null;
 			return;
 		}
-
+		
 		radius /= direction.length();
-
+		
 		while ((stepY > 0 ? y < 512 : y >= 0))
 		{
-			if (testPickTerrain(x, y, z, face, world))
+			if (this.testPickTerrain(x, y, z, face, world))
 			{
 				this.pickx = x;
 				this.picky = y;
@@ -204,14 +203,11 @@ public class PlayerFace
 				this.pickSide = face;
 				return;
 			}
-
+			
 			// tMaxX stores the t-value at which we cross a cube boundary along
-			// the
-			// X axis, and similarly for Y and Z. Therefore, choosing the least
-			// tMax
-			// chooses the closest cube boundary. Only the first case of the
-			// four
-			// has been commented in detail.
+			// the X axis, and similarly for Y and Z. Therefore, choosing the
+			// least tMax chooses the closest cube boundary. Only the first case
+			// of the four has been commented in detail.
 			if (tMaxX < tMaxZ)
 			{
 				if (tMaxX < tMaxY)
@@ -283,13 +279,13 @@ public class PlayerFace
 		this.pickz = -1;
 		this.pickSide = null;
 	}
-
+	
 	private float intbound(float s, float ds)
 	{
 		// Find the smallest positive t such that s+t*ds is an integer.
 		if (ds < 0)
 		{
-			return intbound(-s, -ds);
+			return this.intbound(-s, -ds);
 		}
 		else
 		{
@@ -302,12 +298,12 @@ public class PlayerFace
 			return (1 - s) / ds;
 		}
 	}
-
+	
 	private int signum(float x)
 	{
 		return x > 0 ? 1 : x < 0 ? -1 : 0;
 	}
-
+	
 	private boolean testPickTerrain(int x, int y, int z, EnumDir face, ClientWorld world)
 	{
 		Chunk chunk = world.getChunk(x >> 4, z >> 4);
@@ -317,12 +313,12 @@ public class PlayerFace
 		}
 		return chunk.getHeight(x, z) > y;
 	}
-
+	
 	public Ray pickCamera()
 	{
 		return Ray.getRay(this.camFocus, this.camLoc);
 	}
-
+	
 	public void tickCamera(ClientWorld world)
 	{
 		long currentTime = System.currentTimeMillis();
@@ -339,7 +335,7 @@ public class PlayerFace
 			this.lastChunkRequestTime = currentTime;
 			this.requestChunkSelector = world.requestNullChunks((int) this.camLoc.xCoord, (int) this.camLoc.zCoord, this.requestChunkSelector, 8);
 		}
-
+		
 		int wm = Mouse.getDWheel();
 		if (Mouse.isButtonDown(2))
 		{
@@ -397,7 +393,7 @@ public class PlayerFace
 		Ray mouse = this.pickMouse();
 		this.rayPickTerrain(mouse.start, mouse.getVector().returnNormalized(), 128, world);
 	}
-
+	
 	public int getLocalHorizon(ClientWorld world)
 	{
 		double x1 = this.camFocus.xCoord;
@@ -406,7 +402,7 @@ public class PlayerFace
 		double z2 = this.camLoc.zCoord;
 		return world.getRayHeight(x1, z1, x2, z2, 5.0F);
 	}
-
+	
 	public void reverseFocus()
 	{
 		double dx = this.camLoc.xCoord - this.camFocus.xCoord;
@@ -425,57 +421,57 @@ public class PlayerFace
 		float yawrad = (float) Math.asin(dx);
 		this.camYaw = (yawrad / 3.14F) * 180.0F;
 	}
-
+	
 	public void setFocus(Point point)
 	{
 		this.camFocus = point;
 		this.doFocus();
 	}
-
+	
 	public void doFocus()
 	{
 		float yawrad = this.camYaw / 180.0F * 3.14F;
 		float pitchrad = this.camPitch / 180.0F * 3.14F;
-
+		
 		double scalev = Math.cos(pitchrad);
-
+		
 		double dx = this.camDist * Math.sin(yawrad) * scalev;
 		double dz = this.camDist * Math.cos(yawrad) * scalev;
-
+		
 		double dy = this.camDist * Math.sin(pitchrad);
-
+		
 		dx += this.camFocus.xCoord;
 		dy += this.camFocus.yCoord;
 		dz += this.camFocus.zCoord;
-
+		
 		this.camLoc.setPoint(dx, dy, dz);
 	}
-
+	
 	public final float getCamPitch()
 	{
-		return camPitch;
+		return this.camPitch;
 	}
-
+	
 	public final void setCamPitch(float camPitch)
 	{
 		this.camPitch = camPitch;
 	}
-
+	
 	public final float getCamYaw()
 	{
-		return camYaw;
+		return this.camYaw;
 	}
-
+	
 	public final void setCamYaw(float camYaw)
 	{
 		this.camYaw = camYaw;
 	}
-
+	
 	public final float getCamDist()
 	{
-		return camDist;
+		return this.camDist;
 	}
-
+	
 	public final void setCamDist(float camDist)
 	{
 		this.camDist = camDist;

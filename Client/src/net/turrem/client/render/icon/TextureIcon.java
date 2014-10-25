@@ -20,7 +20,7 @@ public class TextureIcon extends RenderIcon2D
 	{
 		this.object = engine.renderStore2D.loadObject(this);
 	}
-
+	
 	@Override
 	public void start()
 	{
@@ -29,7 +29,7 @@ public class TextureIcon extends RenderIcon2D
 			this.object.bind();
 		}
 	}
-
+	
 	@Override
 	public void end()
 	{
@@ -43,7 +43,7 @@ public class TextureIcon extends RenderIcon2D
 	{
 		return this.object != null && this.object.isLoaded();
 	}
-
+	
 	public float getAspect()
 	{
 		if (this.loaded())
@@ -52,7 +52,7 @@ public class TextureIcon extends RenderIcon2D
 		}
 		return Float.NaN;
 	}
-
+	
 	public int getWidth()
 	{
 		if (this.loaded())
@@ -61,7 +61,7 @@ public class TextureIcon extends RenderIcon2D
 		}
 		return -1;
 	}
-
+	
 	public int getHeight()
 	{
 		if (this.loaded())
@@ -70,13 +70,13 @@ public class TextureIcon extends RenderIcon2D
 		}
 		return -1;
 	}
-
+	
 	@Override
 	public String getSource()
 	{
 		return this.name;
 	}
-
+	
 	@Override
 	public String getIdentifier()
 	{

@@ -18,7 +18,7 @@ public class SolidEntityRef extends EntityRef
 		this.chunkX = chunkX;
 		this.chunkZ = chunkZ;
 	}
-
+	
 	@Override
 	public void write(DataOutput out) throws IOException
 	{
@@ -27,7 +27,7 @@ public class SolidEntityRef extends EntityRef
 		out.write(this.chunkX);
 		out.write(this.chunkZ);
 	}
-
+	
 	@Override
 	public IEntity getEntity(WorldStorage world)
 	{

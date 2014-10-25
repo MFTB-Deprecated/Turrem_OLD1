@@ -22,7 +22,7 @@ public class ClientPacketRequest extends ClientPacket
 		stream.write(typebytes);
 		this.req.write(stream);
 	}
-
+	
 	@Override
 	public byte type()
 	{

@@ -16,12 +16,12 @@ public class ServerPacketMaterialSync extends ServerPacket
 		byte[] namebytes = this.material.getName().getBytes("UTF-8");
 		stream.writeByte(namebytes.length);
 		stream.write(namebytes);
-		int color = material.getColorInt();
+		int color = this.material.getColorInt();
 		stream.writeByte((color >> 16) & 0xFF);
 		stream.writeByte((color >> 8) & 0xFF);
 		stream.writeByte((color >> 0) & 0xFF);
 	}
-
+	
 	@Override
 	public byte type()
 	{

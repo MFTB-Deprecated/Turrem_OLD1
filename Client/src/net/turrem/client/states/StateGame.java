@@ -8,25 +8,25 @@ public class StateGame implements IState
 	protected Turrem theTurrem;
 	public ClientGame theGame;
 	public static long gameTime = 0;
-
+	
 	public StateGame(Turrem turrem)
 	{
 		this.theTurrem = turrem;
 		this.theGame = new ClientGame(turrem.theRender, this.theTurrem);
 	}
-
+	
 	@Override
 	public void start()
 	{
 		this.theGame.start();
 	}
-
+	
 	@Override
 	public void end()
 	{
 		this.theGame.end();
 	}
-
+	
 	@Override
 	public void render()
 	{
@@ -35,18 +35,18 @@ public class StateGame implements IState
 		this.theTurrem.staticEventRegistry.onPostGameRender(gameTime, this.theGame);
 		gameTime++;
 	}
-
+	
 	@Override
 	public void updateGL()
 	{
 	}
-
+	
 	@Override
 	public void mouseEvent()
 	{
 		this.theGame.mouseEvent();
 	}
-
+	
 	@Override
 	public void keyEvent()
 	{

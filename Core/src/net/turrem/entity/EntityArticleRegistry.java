@@ -8,29 +8,29 @@ import java.lang.annotation.Annotation;
 
 import net.turrem.EnumSide;
 import net.turrem.mod.ModInstance;
-import net.turrem.mod.NotedElementWithFactoryVisitor;
+import net.turrem.mod.registry.NotedElementWithFactoryRegistry;
 
-public class EntityArticleRegistry extends NotedElementWithFactoryVisitor
+public class EntityArticleRegistry extends NotedElementWithFactoryRegistry
 {
 	private final static List<Class<?>[]> valadParameters = new ArrayList<Class<?>[]>();
-
+	
 	public HashMap<String, SoftEntityArticle> softArticles = new HashMap<String, SoftEntityArticle>();
 	public HashMap<String, SolidEntityArticle> solidArticles = new HashMap<String, SolidEntityArticle>();
-
+	
 	public final EnumSide side;
-
+	
 	public EntityArticleRegistry(EnumSide side)
 	{
 		super(EntityArticle.class);
 		this.side = side;
 	}
-
+	
 	@Override
 	protected List<Class<?>[]> getPossibleFactoryParameters()
 	{
 		return valadParameters;
 	}
-
+	
 	@Override
 	protected Object[] getArgs(int argsType, Annotation annotation, ModInstance mod)
 	{
@@ -49,7 +49,7 @@ public class EntityArticleRegistry extends NotedElementWithFactoryVisitor
 				return new Object[] {};
 		}
 	}
-
+	
 	@Override
 	protected void addItem(Object item, ModInstance mod)
 	{
@@ -71,7 +71,7 @@ public class EntityArticleRegistry extends NotedElementWithFactoryVisitor
 			}
 		}
 	}
-
+	
 	static
 	{
 		valadParameters.add(new Class<?>[] {});

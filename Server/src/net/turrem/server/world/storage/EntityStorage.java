@@ -103,7 +103,7 @@ public class EntityStorage
 			}
 		}
 	}
-
+	
 	public void worldTick()
 	{
 		for (int entityIndex = 0; entityIndex < this.entities.size(); entityIndex++)
@@ -124,7 +124,7 @@ public class EntityStorage
 	{
 		
 	}
-
+	
 	public void clear()
 	{
 		this.entities.clear();

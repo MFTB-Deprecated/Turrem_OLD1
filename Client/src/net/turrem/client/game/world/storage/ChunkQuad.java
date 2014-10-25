@@ -12,9 +12,9 @@ public class ChunkQuad implements IWorldChunkStorageSegment, IWorldChunkStorage
 	public final int scale;
 	public final int xpos;
 	public final int zpos;
-
+	
 	private IWorldChunkStorageSegment[] quad = new IWorldChunkStorageSegment[4];
-
+	
 	public ChunkQuad(ChunkStorage storage, IWorldChunkStorage parent, int depth, int x, int z) throws IllegalArgumentException
 	{
 		this.theStorage = storage;
@@ -37,7 +37,7 @@ public class ChunkQuad implements IWorldChunkStorageSegment, IWorldChunkStorage
 		}
 		this.scale = s;
 	}
-
+	
 	public Chunk binaryFindChunk(int u, int v)
 	{
 		int i = 0;
@@ -63,7 +63,7 @@ public class ChunkQuad implements IWorldChunkStorageSegment, IWorldChunkStorage
 			return quad.binaryFindChunk(u << 1, v << 1);
 		}
 	}
-
+	
 	public Chunk binarySetChunk(int u, int v, Chunk chunk)
 	{
 		int i = 0;
@@ -96,7 +96,7 @@ public class ChunkQuad implements IWorldChunkStorageSegment, IWorldChunkStorage
 			return quad.binarySetChunk(u << 1, v << 1, chunk);
 		}
 	}
-
+	
 	@Override
 	public Collection<Chunk> getChunks(Collection<Chunk> list)
 	{
@@ -122,7 +122,7 @@ public class ChunkQuad implements IWorldChunkStorageSegment, IWorldChunkStorage
 		}
 		return list;
 	}
-
+	
 	@Override
 	public void removeMe(int U, int V)
 	{
@@ -130,7 +130,7 @@ public class ChunkQuad implements IWorldChunkStorageSegment, IWorldChunkStorage
 		this.quad[i] = null;
 		this.checkRemove();
 	}
-
+	
 	public boolean checkRemove()
 	{
 		for (int j = 0; j < 4; j++)
@@ -143,7 +143,7 @@ public class ChunkQuad implements IWorldChunkStorageSegment, IWorldChunkStorage
 		this.theParent.removeMe(this.xpos % 2, this.zpos % 2);
 		return true;
 	}
-
+	
 	public void clear()
 	{
 		for (int i = 0; i < 4; i++)
@@ -160,7 +160,7 @@ public class ChunkQuad implements IWorldChunkStorageSegment, IWorldChunkStorage
 			this.quad[i] = null;
 		}
 	}
-
+	
 	public void renderTick(int xmin, int xmax, int zmin, int zmax, int viewx, int viewz, int chunkRadius, int preciseRadius)
 	{
 		xmin = this.clip(xmin);
@@ -186,7 +186,7 @@ public class ChunkQuad implements IWorldChunkStorageSegment, IWorldChunkStorage
 			this.renderTickQuad(xmin, xmax, zmin, zmax, viewx, viewz, chunkRadius, preciseRadius);
 		}
 	}
-
+	
 	private void renderTickQuad(int xmin, int xmax, int zmin, int zmax, int viewx, int viewz, int radius, int preciseRadius)
 	{
 		int xo;
@@ -205,7 +205,7 @@ public class ChunkQuad implements IWorldChunkStorageSegment, IWorldChunkStorage
 			}
 		}
 	}
-
+	
 	private int clip(int x)
 	{
 		if (x < 0)
@@ -218,7 +218,7 @@ public class ChunkQuad implements IWorldChunkStorageSegment, IWorldChunkStorage
 		}
 		return x;
 	}
-
+	
 	private int getSide(int x)
 	{
 		if (x >= this.scale / 2)

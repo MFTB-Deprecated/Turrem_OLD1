@@ -4,13 +4,13 @@ public class ChunkUpdate
 {
 	public final int chunkx;
 	public final int chunkz;
-
+	
 	public ChunkUpdate(int chunkx, int chunkz)
 	{
 		this.chunkx = chunkx;
 		this.chunkz = chunkz;
 	}
-
+	
 	@Override
 	public boolean equals(Object obj)
 	{

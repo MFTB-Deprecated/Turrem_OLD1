@@ -3,7 +3,7 @@ package net.turrem.client.render.object;
 import net.turrem.client.render.RenderEngine;
 
 public interface IRenderObject
-{	
+{
 	public String getSource();
 	
 	public String getIdentifier();

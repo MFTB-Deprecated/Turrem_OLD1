@@ -6,6 +6,6 @@ public class ServerProfile
 {
 	public static void setPing(ServerPacketPing ping)
 	{
-
+		
 	}
 }

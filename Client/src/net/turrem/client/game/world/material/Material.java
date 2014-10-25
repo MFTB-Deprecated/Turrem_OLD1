@@ -11,6 +11,6 @@ public class Material
 	
 	public int getColor()
 	{
-		return MakeColor.RGB(red & 0xFF, green & 0xFF, blue & 0xFF);
+		return MakeColor.RGB(this.red & 0xFF, this.green & 0xFF, this.blue & 0xFF);
 	}
 }

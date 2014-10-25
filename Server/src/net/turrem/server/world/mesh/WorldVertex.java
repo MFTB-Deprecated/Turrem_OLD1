@@ -14,32 +14,32 @@ public class WorldVertex
 		RIGHT(0, 1),
 		BOTTOM_LEFT(1, 0),
 		BOTTOM_RIGHT(1, 1);
-
+		
 		public final int row;
 		public final int col;
-
+		
 		EnumMeshNeighbor(int row, int col)
 		{
 			this.row = row;
 			this.col = col;
 		}
 	}
-
+	
 	public static final int maxLevel = 2;
-
+	
 	protected final WorldMesh mesh;
 	public final int row;
 	public final int col;
-
+	
 	private WorldVertex[] neighbors = new WorldVertex[6];
-
+	
 	private VertexGenData data;
 	private VertexGenData lastData;
-
+	
 	private int level;
-
+	
 	protected long seed;
-
+	
 	public WorldVertex(WorldMesh mesh, int row, int col, long seed, VertexGenData start)
 	{
 		this.mesh = mesh;
@@ -50,22 +50,22 @@ public class WorldVertex
 		this.lastData = null;
 		this.data = this.generate(start);
 	}
-
+	
 	public WorldVertex getNeighbor(EnumMeshNeighbor neighbor)
 	{
 		return this.getNeighbor(neighbor.ordinal());
 	}
-
+	
 	public WorldVertex getNeighbor(int neighbor)
 	{
 		return this.neighbors[neighbor];
 	}
-
+	
 	public int getLevel()
 	{
 		return this.level;
 	}
-
+	
 	void upgrade()
 	{
 		if (this.level == maxLevel)
@@ -87,16 +87,16 @@ public class WorldVertex
 			}
 		}
 		this.level++;
-
+		
 		this.lastData = this.data;
 		this.data = this.generate(this.data);
 	}
-
+	
 	VertexGenData getData()
 	{
 		return this.data;
 	}
-
+	
 	public VertexGenData getVisibleGenData(int atLevel)
 	{
 		if (this.getLevel() < atLevel)
@@ -109,7 +109,7 @@ public class WorldVertex
 		}
 		return null;
 	}
-
+	
 	public VertexGenData getNeighborGenData(int neighbor)
 	{
 		if (this.neighbors[neighbor] != null)
@@ -118,12 +118,12 @@ public class WorldVertex
 		}
 		return null;
 	}
-
+	
 	public VertexGenData getNeighborGenData(EnumMeshNeighbor neighbor)
 	{
 		return this.getNeighborGenData(neighbor.ordinal());
 	}
-
+	
 	protected VertexGenData generate(VertexGenData last)
 	{
 		VertexGenDataWork work;
@@ -138,11 +138,10 @@ public class WorldVertex
 		if (last == null)
 		{
 			/*
-			for (IGeomorph morph : )
-			{
-
-			}
-			*/
+			 * for (IGeomorph morph : ) {
+			 * 
+			 * }
+			 */
 		}
 		else
 		{

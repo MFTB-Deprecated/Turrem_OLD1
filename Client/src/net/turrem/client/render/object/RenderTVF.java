@@ -33,7 +33,7 @@ public class RenderTVF implements ITVFRenderInterface
 		}
 		this.model = tvf.getRender();
 	}
-
+	
 	public boolean delete()
 	{
 		boolean flag = false;
@@ -72,27 +72,27 @@ public class RenderTVF implements ITVFRenderInterface
 			}
 		}
 	}
-
+	
 	@Override
 	public void setDynamicColor(EnumDynamicColorMode mode, Object color)
 	{
 	}
-
+	
 	@Override
 	public void clearDynamicColor()
 	{
 	}
-
+	
 	@Override
 	public void setShader(String shader, Object uniforms)
 	{
 	}
-
+	
 	@Override
 	public void clearShader()
 	{
 	}
-
+	
 	@Override
 	public void renderLayer(int layerindex)
 	{

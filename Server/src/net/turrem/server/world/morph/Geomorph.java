@@ -12,6 +12,7 @@ public abstract class Geomorph implements IGeomorph
 		this.id = id;
 	}
 	
+	@Override
 	public String getId()
 	{
 		return this.mod.identifier + ":" + this.id;
@@ -27,11 +28,13 @@ public abstract class Geomorph implements IGeomorph
 		return this.mod;
 	}
 	
+	@Override
 	public int getOrdering()
 	{
 		return this.getId().hashCode();
 	}
 	
+	@Override
 	public long getSeed(long vertexSeed)
 	{
 		return vertexSeed ^ this.getOrdering();

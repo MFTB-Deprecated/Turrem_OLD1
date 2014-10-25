@@ -1,13 +1,13 @@
 package net.turrem.utils;
 
+import java.util.ArrayList;
+
 import java.io.File;
 import java.io.IOException;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-
-import net.turrem.utils.JarExplore;
 
 public class JarLoader
 {
@@ -15,14 +15,14 @@ public class JarLoader
 	protected JarExplore explore;
 	protected URLClassLoader theLoader = null;
 	protected ClassLoader theSuperLoader;
-
+	
 	private JarLoader(File jarFile, ClassLoader loader) throws IOException
 	{
 		this.theFile = jarFile;
 		this.theSuperLoader = loader;
 		this.explore = JarExplore.newInstance(jarFile);
 	}
-
+	
 	public ArrayList<Class<?>> loadJarClassFiles()
 	{
 		try
@@ -33,7 +33,7 @@ public class JarLoader
 		{
 			return null;
 		}
-
+		
 		if (this.theLoader != null && this.explore != null)
 		{
 			ArrayList<Class<?>> classes = new ArrayList<Class<?>>();
@@ -64,14 +64,14 @@ public class JarLoader
 		}
 		return null;
 	}
-
+	
 	public String getClassName(String name)
 	{
 		String className = name.substring(0, name.lastIndexOf('.'));
 		className = className.replace('/', '.');
 		return className;
 	}
-
+	
 	public static JarLoader newInstance(File jarFile, ClassLoader loader)
 	{
 		if (!jarFile.exists())

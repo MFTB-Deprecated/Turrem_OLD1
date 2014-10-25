@@ -25,6 +25,6 @@ public abstract class ClientPacket
 	}
 	
 	protected abstract void writePacket(DataOutput stream) throws IOException;
-
+	
 	public abstract byte type();
 }

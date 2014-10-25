@@ -22,7 +22,7 @@ public class ClientPacketPing extends ClientPacket
 	{
 		return new ClientPacketPing(user, data, type);
 	}
-
+	
 	@Override
 	public void process(ClientPlayer player)
 	{

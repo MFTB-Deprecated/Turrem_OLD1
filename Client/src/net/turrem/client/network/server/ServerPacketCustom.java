@@ -9,7 +9,7 @@ public class ServerPacketCustom extends ServerPacket
 	public byte[] packet;
 	
 	private ServerPacketCustom(DataInput data, int length, byte type) throws IOException
-	{		
+	{
 		super(type);
 		length -= 1;
 		int stringlength = data.readByte() & 0xFF;

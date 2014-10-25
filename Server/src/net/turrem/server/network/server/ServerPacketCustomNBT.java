@@ -16,9 +16,9 @@ public class ServerPacketCustomNBT extends ServerPacket
 		byte[] typebytes = this.customType.getBytes("UTF-8");
 		stream.writeByte(typebytes.length);
 		stream.write(typebytes);
-		data.writeAsRoot(stream);
+		this.data.writeAsRoot(stream);
 	}
-
+	
 	@Override
 	public byte type()
 	{

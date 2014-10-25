@@ -8,7 +8,7 @@ import net.turrem.server.world.morph.IGeomorph;
 import com.google.common.collect.ImmutableSortedSet;
 
 public class VertexGenData
-{	
+{
 	private static class MorphComparator implements Comparator<IGeomorph>
 	{
 		@Override

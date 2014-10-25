@@ -16,7 +16,7 @@ public class ClientPacketCustom extends ClientPacket
 		stream.write(typebytes);
 		stream.write(this.packet);
 	}
-
+	
 	@Override
 	public byte type()
 	{

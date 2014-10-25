@@ -1,15 +1,8 @@
 package net.turrem.client.game;
 
 import java.io.IOException;
+
 import java.nio.FloatBuffer;
-
-import org.lwjgl.BufferUtils;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-
-import org.lwjgl.opengl.GL11;
-
-import org.lwjgl.util.glu.GLU;
 
 import net.turrem.client.Config;
 import net.turrem.client.Turrem;
@@ -19,39 +12,45 @@ import net.turrem.client.render.font.Font;
 import net.turrem.client.render.font.FontRender;
 import net.turrem.client.render.icon.TextureIcon;
 import net.turrem.utils.geo.EnumDir;
-import net.turrem.utils.geo.VoxelGeoUtils;
 import net.turrem.utils.geo.Point;
 import net.turrem.utils.geo.Ray;
+import net.turrem.utils.geo.VoxelGeoUtils;
+
+import org.lwjgl.BufferUtils;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.glu.GLU;
 
 public class ClientGame
 {
 	public ClientWorld theWorld;
 	protected Turrem theTurrem;
-
+	
 	private FloatBuffer lightPosition;
 	private FloatBuffer whiteLight;
 	private FloatBuffer lModelAmbient;
-
+	
 	public RenderEngine theRender;
-
+	
 	private PlayerFace face;
-
+	
 	public long mine = -1;
 	protected FontRender debugFont;
-
+	
 	protected TextureIcon terrselect;
 	protected TextureIcon toppin;
-
+	
 	public static final int[][] vertOffs = VoxelGeoUtils.vertexOffset;
 	public static final int[][] vertOffinds = VoxelGeoUtils.vertexOffsetIndices;
-
+	
 	public ClientGame(RenderEngine engine, Turrem turrem)
 	{
 		this.theTurrem = turrem;
 		this.theRender = engine;
 		this.theWorld = new ClientWorld(this);
 		this.face = new PlayerFace(this.theWorld);
-
+		
 		try
 		{
 			this.theWorld.startNetwork(turrem.theSession.username);
@@ -62,41 +61,41 @@ public class ClientGame
 			this.theWorld.end();
 		}
 	}
-
+	
 	public void render()
 	{
 		this.face.tickCamera(this.theWorld);
-
+		
 		boolean useFrame = this.theRender.useRenderFrame();
-
+		
 		if (useFrame)
 		{
 			this.theRender.startFrame();
 		}
-
+		
 		GL11.glClearColor(0.18F, 0.18F, 0.23F, 1.0F);
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-
+		
 		GL11.glPushMatrix();
 		this.doPerspective(this.getFace());
 		this.renderWorld();
 		GL11.glPopMatrix();
-
+		
 		if (useFrame)
 		{
 			this.theRender.endFrame();
-
+			
 			GL11.glPushMatrix();
 			this.theRender.renderFrame();
 			GL11.glPopMatrix();
 		}
-
+		
 		GL11.glPushMatrix();
 		this.doOrtho();
 		this.renderInterface();
 		GL11.glPopMatrix();
 	}
-
+	
 	public void renderInterface()
 	{
 		if (this.face.getTerrainPickSide() != null)
@@ -106,7 +105,7 @@ public class ClientGame
 			GL11.glColor3f(1.0F, 1.0F, 1.0F);
 		}
 	}
-
+	
 	public void renderWorld()
 	{
 		this.face.doGLULook();
@@ -116,7 +115,7 @@ public class ClientGame
 		this.theTurrem.staticEventRegistry.onPostWorldRender(this.theWorld);
 		this.renderSelect();
 	}
-
+	
 	public void renderSelect()
 	{
 		EnumDir side = this.face.getTerrainPickSide();
@@ -147,28 +146,28 @@ public class ClientGame
 				this.renderSelectVert(posx, posy, posz, vertOffs[inds[i]], i, 0.0F, off, 0.0F);
 			}
 			GL11.glEnd();
-			toppin.end();
+			this.toppin.end();
 		}
 	}
-
+	
 	private void renderSelectVert(int posx, int posy, int posz, int vert[], int i, float addx, float addy, float addz)
 	{
 		GL11.glTexCoord2f(((i + 1) / 2) % 2, (i / 2) % 2);
 		GL11.glVertex3f(posx + vert[0] + addx, posy + vert[1] + addy, posz + vert[2] + addz);
 	}
-
+	
 	private void initLightArrays()
 	{
 		this.lightPosition = BufferUtils.createFloatBuffer(4);
 		this.lightPosition.put(5.0f).put(10.0f).put(8.0f).put(0.0f).flip();
-
+		
 		this.whiteLight = BufferUtils.createFloatBuffer(4);
 		this.whiteLight.put(0.5f).put(0.5f).put(0.5f).put(0.75f).flip();
-
+		
 		this.lModelAmbient = BufferUtils.createFloatBuffer(4);
 		this.lModelAmbient.put(0.5f).put(0.5f).put(0.5f).put(1.75f).flip();
 	}
-
+	
 	public void doPerspective(PlayerFace face)
 	{
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
@@ -179,7 +178,7 @@ public class ClientGame
 		GL11.glDepthFunc(GL11.GL_LEQUAL);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 	}
-
+	
 	public void doOrtho()
 	{
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
@@ -191,28 +190,28 @@ public class ClientGame
 		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
 		GL11.glColor3f(1.0F, 1.0F, 1.0F);
 	}
-
+	
 	public void doLighting()
 	{
 		this.initLightArrays();
 		GL11.glShadeModel(GL11.GL_SMOOTH);
-
+		
 		GL11.glLight(GL11.GL_LIGHT0, GL11.GL_POSITION, this.lightPosition);
 		GL11.glLight(GL11.GL_LIGHT0, GL11.GL_DIFFUSE, this.whiteLight);
 		GL11.glLightModel(GL11.GL_LIGHT_MODEL_AMBIENT, this.lModelAmbient);
-
+		
 		GL11.glEnable(GL11.GL_LIGHT0);
-
+		
 		GL11.glEnable(GL11.GL_COLOR_MATERIAL);
 		GL11.glColorMaterial(GL11.GL_FRONT, GL11.GL_AMBIENT_AND_DIFFUSE);
 		GL11.glMaterialf(GL11.GL_FRONT, GL11.GL_SHININESS, 0.0F);
 	}
-
+	
 	public void end()
 	{
-
+		
 	}
-
+	
 	public void start()
 	{
 		Font font = new Font();
@@ -223,7 +222,7 @@ public class ClientGame
 		this.toppin = new TextureIcon("app:misc.toppin", true);
 		this.toppin.load(this.theTurrem.theRender);
 	}
-
+	
 	public void mouseEvent()
 	{
 		if (Mouse.getEventButtonState())
@@ -236,23 +235,23 @@ public class ClientGame
 			}
 		}
 	}
-
+	
 	public void keyEvent()
 	{
 		if (Keyboard.getEventKeyState())
 		{
 			if (Keyboard.getEventKey() == Keyboard.KEY_M)
 			{
-
+				
 			}
 		}
 	}
-
+	
 	public PlayerFace getFace()
 	{
-		return face;
+		return this.face;
 	}
-
+	
 	public void stopGame()
 	{
 		this.theTurrem.shutdown();

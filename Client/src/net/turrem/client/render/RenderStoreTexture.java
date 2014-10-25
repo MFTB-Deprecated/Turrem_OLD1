@@ -10,7 +10,7 @@ public class RenderStoreTexture extends RenderStore<RenderObjectTexture>
 	{
 		super(render);
 	}
-
+	
 	@Override
 	public RenderObjectTexture createObject(IRenderIcon ico)
 	{

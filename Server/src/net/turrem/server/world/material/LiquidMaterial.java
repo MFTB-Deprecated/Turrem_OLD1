@@ -11,7 +11,8 @@ public class LiquidMaterial extends Material
 	{
 		super(name, color);
 	}
-
+	
+	@Override
 	public boolean isSolid()
 	{
 		return false;

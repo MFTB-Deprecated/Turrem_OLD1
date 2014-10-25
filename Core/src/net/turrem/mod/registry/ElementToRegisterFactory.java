@@ -1,4 +1,4 @@
-package net.turrem.mod;
+package net.turrem.mod.registry;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface ToRegisterFactory
+public @interface ElementToRegisterFactory
 {
 	
 }

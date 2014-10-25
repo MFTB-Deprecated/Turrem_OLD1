@@ -4,12 +4,12 @@ public class LocationRandom
 {
 	private long seed;
 	private long lastseed;
-
+	
 	public LocationRandom(long seed)
 	{
 		this.seed = seed;
 	}
-
+	
 	private long posSeed(long x, long y)
 	{
 		long seed = this.seed;
@@ -23,7 +23,7 @@ public class LocationRandom
 		seed += y;
 		return seed;
 	}
-
+	
 	private int next(int bits, int x, int y)
 	{
 		long seed = this.posSeed(x, y);
@@ -31,7 +31,7 @@ public class LocationRandom
 		this.lastseed = seed;
 		return (int) (seed >>> (48 - bits));
 	}
-
+	
 	private int next(int bits)
 	{
 		long seed = this.lastseed;
@@ -39,26 +39,26 @@ public class LocationRandom
 		this.lastseed = seed;
 		return (int) (seed >>> (48 - bits));
 	}
-
+	
 	public int nextInt(int x, int y)
 	{
 		return this.next(32, x, y);
 	}
-
+	
 	public int nextInt(int n, int x, int y)
 	{
 		if (n <= 0)
 		{
 			throw new IllegalArgumentException("n must be positive");
 		}
-
+		
 		if ((n & -n) == n) // i.e., n is a power of 2
 		{
 			return (int) ((n * (long) this.next(31, x, y)) >> 31);
 		}
-
+		
 		this.lastseed = this.posSeed(x, y);
-
+		
 		int bits, val;
 		do
 		{
@@ -68,12 +68,12 @@ public class LocationRandom
 		while (bits - val + (n - 1) < 0);
 		return val;
 	}
-
+	
 	public float nextFloat(int x, int y)
 	{
 		return this.next(24, x, y) / ((float) (1 << 24));
 	}
-
+	
 	public long getLocSeed(int x, int y)
 	{
 		return this.posSeed(x, y);

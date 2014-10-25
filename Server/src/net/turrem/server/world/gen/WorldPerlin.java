@@ -38,7 +38,7 @@ public class WorldPerlin extends Perlin
 		}
 		this.sumscale = sum;
 	}
-
+	
 	@Override
 	public float getMult(int layer)
 	{
@@ -49,13 +49,13 @@ public class WorldPerlin extends Perlin
 		}
 		return mult / this.sumscale;
 	}
-
+	
 	@Override
 	public int getLastScale()
 	{
 		return this.scale;
 	}
-
+	
 	@Override
 	public int numLayers()
 	{

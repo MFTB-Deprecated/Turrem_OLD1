@@ -13,13 +13,13 @@ public class SoftEntityRef extends EntityRef
 	{
 		this.entityIdentifier = entityIdentifier;
 	}
-
+	
 	@Override
 	public void write(DataOutput out) throws IOException
 	{
 		out.writeInt(this.entityIdentifier);
 	}
-
+	
 	@Override
 	public IEntity getEntity(WorldStorage world)
 	{

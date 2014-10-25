@@ -31,13 +31,13 @@ public abstract class SolidEntity implements IEntity
 	{
 		
 	}
-
+	
 	@Override
 	public boolean isAlive()
 	{
-		return isAlive;
+		return this.isAlive;
 	}
-
+	
 	@Override
 	public void kill()
 	{
@@ -49,7 +49,7 @@ public abstract class SolidEntity implements IEntity
 	{
 		
 	}
-
+	
 	public void worldTick(Chunk theChunk)
 	{
 	}

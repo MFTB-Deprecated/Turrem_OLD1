@@ -1,9 +1,9 @@
 package net.turrem.client.render.icon;
 
-import org.lwjgl.opengl.GL11;
-
 import net.turrem.client.render.RenderEngine;
 import net.turrem.client.render.object.RenderObjectTVF;
+
+import org.lwjgl.opengl.GL11;
 
 public class TVFIcon extends RenderIcon3D
 {
@@ -13,7 +13,7 @@ public class TVFIcon extends RenderIcon3D
 	private final float yoffset;
 	private final float zoffset;
 	public RenderObjectTVF object;
-
+	
 	public TVFIcon(String name, float scale, float xoffset, float yoffset, float zoffset)
 	{
 		this.name = name;
@@ -22,30 +22,30 @@ public class TVFIcon extends RenderIcon3D
 		this.yoffset = yoffset / scale;
 		this.zoffset = zoffset / scale;
 	}
-
+	
 	public boolean loaded()
 	{
 		return this.object != null && this.object.isLoaded();
 	}
-
+	
 	@Override
 	public void load(RenderEngine engine)
 	{
 		this.object = engine.renderStoreTVF.loadObject(this);
 	}
-
+	
 	@Override
 	public String getSource()
 	{
 		return this.name;
 	}
-
+	
 	@Override
 	public String getIdentifier()
 	{
 		return this.name + String.format("[%.2f", this.scale);
 	}
-
+	
 	@Override
 	public void render()
 	{

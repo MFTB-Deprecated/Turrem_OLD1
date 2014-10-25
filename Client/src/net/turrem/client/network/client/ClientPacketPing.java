@@ -10,7 +10,7 @@ public class ClientPacketPing extends ClientPacket
 	{
 		stream.writeLong(System.nanoTime());
 	}
-
+	
 	@Override
 	public byte type()
 	{

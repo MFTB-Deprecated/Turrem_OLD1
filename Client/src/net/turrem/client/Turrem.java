@@ -1,15 +1,12 @@
 package net.turrem.client;
 
-import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import java.io.File;
 import java.io.IOException;
 
+import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
-
-import java.util.ArrayList;
-
-import javax.imageio.ImageIO;
 
 import net.turrem.EnumSide;
 import net.turrem.client.asset.AssetLoader;
@@ -19,7 +16,7 @@ import net.turrem.client.render.RenderEngine;
 import net.turrem.client.states.IState;
 import net.turrem.client.states.StateIntro;
 import net.turrem.mod.ModLoader;
-import net.turrem.mod.NotedElementVisitorRegistry.NotedElementVisitorRegistryWrapper;
+import net.turrem.mod.NotedElementRegistryRegistry.NotedElementRegistryRegistryWrapper;
 import net.turrem.utils.graphics.ImgUtils;
 
 import org.lwjgl.LWJGLException;
@@ -28,46 +25,48 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
+import javax.imageio.ImageIO;
+
 public class Turrem
 {
 	private static Turrem instance;
-
+	
 	public final Session theSession;
 	public final File theGameDir;
-
+	
 	public RenderEngine theRender;
 	public AssetLoader theAssets;
-
+	
 	private IState thisState;
 	private long statechange = 0;
 	
 	public static String networkLoc;
 	
 	public ModLoader modLoader;
-	private NotedElementVisitorRegistryWrapper elementVisitorRegistry;
+	private NotedElementRegistryRegistryWrapper elementVisitorRegistry;
 	
 	public StaticEventRegistry staticEventRegistry;
-
+	
 	public Turrem(Session session, String dir)
 	{
 		this.theSession = session;
 		this.theGameDir = new File(dir);
-
+		
 		instance = this;
 	}
-
+	
 	protected void run()
 	{
 		this.updateDisplay(1280, 720, false, true);
 		
 		this.modLoader = new ModLoader(new File(this.theGameDir, "mods"), EnumSide.CLIENT);
-		this.elementVisitorRegistry = new NotedElementVisitorRegistryWrapper();
-
+		this.elementVisitorRegistry = new NotedElementRegistryRegistryWrapper();
+		
 		this.theAssets = new AssetLoader(this.theGameDir);
 		this.theRender = new RenderEngine(this.theAssets);
 		
 		Keyboard.enableRepeatEvents(false);
-
+		
 		try
 		{
 			this.setIcons();
@@ -76,7 +75,7 @@ public class Turrem
 		{
 			e.printStackTrace();
 		}
-
+		
 		try
 		{
 			Display.create();
@@ -85,11 +84,11 @@ public class Turrem
 		{
 			e.printStackTrace();
 		}
-
+		
 		this.onRun();
 		this.runloop();
 	}
-
+	
 	public void onRun()
 	{
 		System.out.println("Game Directory: " + this.theGameDir.getAbsolutePath());
@@ -103,12 +102,12 @@ public class Turrem
 		
 		this.modLoader.loadMods(this.elementVisitorRegistry.getRegistry());
 	}
-
+	
 	public void afterStart()
 	{
 		System.out.println("Username: " + this.theSession.username);
 	}
-
+	
 	public void render()
 	{
 		if (this.thisState != null)
@@ -121,7 +120,7 @@ public class Turrem
 		}
 		this.statechange++;
 	}
-
+	
 	public void runloop()
 	{
 		while (!Display.isCloseRequested())
@@ -137,13 +136,13 @@ public class Turrem
 				this.shutdown();
 				return;
 			}
-
+			
 			Display.update();
 			Display.sync(60);
 		}
 		this.shutdown();
 	}
-
+	
 	private void doInputEvents()
 	{
 		while (Mouse.next())
@@ -161,27 +160,27 @@ public class Turrem
 			}
 		}
 	}
-
+	
 	public void setDisplayMode(int width, int height, boolean fullscreen)
 	{
 		if ((Display.getDisplayMode().getWidth() == width) && (Display.getDisplayMode().getHeight() == height) && (Display.isFullscreen() == fullscreen))
 		{
 			return;
 		}
-
+		
 		try
 		{
 			DisplayMode targetDisplayMode = null;
-
+			
 			if (fullscreen)
 			{
 				DisplayMode[] modes = Display.getAvailableDisplayModes();
 				int freq = 0;
-
+				
 				for (int i = 0; i < modes.length; i++)
 				{
 					DisplayMode current = modes[i];
-
+					
 					if ((current.getWidth() == width) && (current.getHeight() == height))
 					{
 						if ((targetDisplayMode == null) || (current.getFrequency() >= freq))
@@ -192,7 +191,7 @@ public class Turrem
 								freq = targetDisplayMode.getFrequency();
 							}
 						}
-
+						
 						if ((current.getBitsPerPixel() == Display.getDesktopDisplayMode().getBitsPerPixel()) && (current.getFrequency() == Display.getDesktopDisplayMode().getFrequency()))
 						{
 							targetDisplayMode = current;
@@ -205,73 +204,73 @@ public class Turrem
 			{
 				targetDisplayMode = new DisplayMode(width, height);
 			}
-
+			
 			if (targetDisplayMode == null)
 			{
 				System.err.println("Failed to find value mode: " + width + "x" + height + " fs=" + fullscreen);
 				return;
 			}
-
+			
 			Display.setDisplayMode(targetDisplayMode);
 			Display.setFullscreen(fullscreen);
-
+			
 		}
 		catch (LWJGLException e)
 		{
 			System.err.println("Unable to setup mode " + width + "x" + height + " fullscreen=" + fullscreen + e);
 		}
 	}
-
+	
 	public void shutdown()
 	{
 		Display.destroy();
 		System.exit(0);
 	}
-
+	
 	public void updateDisplay(int width, int height, boolean full, boolean vsync)
 	{
 		this.setDisplayMode(width, height, full);
 		Display.setTitle("Turrem");
 		Display.setVSyncEnabled(vsync);
 	}
-
+	
 	public void setIcons() throws IOException
 	{
 		ArrayList<ByteBuffer> icos = new ArrayList<ByteBuffer>();
-
+		
 		File folder = new File(this.theGameDir, "client/resources/appicons");
-
+		
 		File[] filelist = folder.listFiles();
-
+		
 		for (File icon : filelist)
 		{
 			BufferedImage img = ImageIO.read(icon);
 			icos.add(ImgUtils.imgToByteBuffer(img));
 		}
-
+		
 		Display.setIcon(icos.toArray(new ByteBuffer[0]));
 	}
-
+	
 	public static AssetLoader getAssets()
 	{
 		return instance.theAssets;
 	}
-
+	
 	public static RenderEngine getRender()
 	{
 		return instance.theRender;
 	}
-
+	
 	public int getScreenWidth()
 	{
 		return Display.getWidth();
 	}
-
+	
 	public int getScreenHeight()
 	{
 		return Display.getHeight();
 	}
-
+	
 	public boolean setClientState(Class<? extends IState> state, Object... pars)
 	{
 		Class<?>[] parc = new Class[pars.length + 1];
@@ -280,14 +279,14 @@ public class Turrem
 		{
 			parc[i + 1] = pars[i].getClass();
 		}
-
+		
 		Object[] obs = new Object[pars.length + 1];
 		obs[0] = this;
 		for (int i = 0; i < pars.length; i++)
 		{
 			obs[i + 1] = pars[i];
 		}
-
+		
 		IState newstate = null;
 		try
 		{
@@ -299,19 +298,19 @@ public class Turrem
 			e.printStackTrace();
 			return false;
 		}
-
+		
 		this.statechange = 0;
-
+		
 		if (this.thisState != null)
 		{
 			this.thisState.end();
 		}
 		this.thisState = newstate;
 		this.thisState.start();
-
+		
 		return true;
 	}
-
+	
 	public boolean isLoading()
 	{
 		return false;

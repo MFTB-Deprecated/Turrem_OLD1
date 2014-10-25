@@ -1,9 +1,11 @@
-package net.turrem.mod;
+package net.turrem.mod.registry;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 
-public interface INotedElementVisitor
+import net.turrem.mod.ModInstance;
+
+public interface INotedElementRegister
 {
 	public void visitElement(Annotation annotation, AnnotatedElement element, ModInstance mod);
 }

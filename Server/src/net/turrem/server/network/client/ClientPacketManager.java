@@ -1,15 +1,17 @@
 package net.turrem.server.network.client;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import java.io.ByteArrayInputStream;
 import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.IOException;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 import net.turrem.server.world.ClientPlayer;
 import net.turrem.utils.CallList;
@@ -20,7 +22,7 @@ public class ClientPacketManager
 	
 	private static CallList[] packetProcessCalls;
 	private static CallList[] packetReviewCalls;
-
+	
 	public static ClientPacket readPacket(byte packetType, int length, DataInput data, String user) throws IOException
 	{
 		switch (packetType & 0xFF)

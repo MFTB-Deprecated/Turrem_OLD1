@@ -5,11 +5,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import net.turrem.mod.Visitable;
+import net.turrem.mod.registry.Registrable;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-@Visitable
+@Registrable
 public @interface RegisterEntityArticle
 {
 	public String id();

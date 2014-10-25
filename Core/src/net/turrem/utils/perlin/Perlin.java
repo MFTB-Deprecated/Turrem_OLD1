@@ -6,31 +6,31 @@ public abstract class Perlin
 	private float[] chunk;
 	private int loadedx;
 	private int loadedy;
-
+	
 	public abstract long getSeed();
-
+	
 	public abstract float getMult(int layer);
-
+	
 	public float rand(float original, int layer, long seed)
 	{
 		return original;
 	}
-
+	
 	public abstract int getLastScale();
 	
 	public abstract int numLayers();
-
+	
 	public void makeWorld()
 	{
 		this.world = new PerlinWorld(this);
 	}
-
+	
 	public float[] getChunk(int chunkx, int chunky)
 	{
 		this.loadChunk(chunkx, chunky);
 		return this.chunk;
 	}
-
+	
 	private void loadChunk(int chunkx, int chunky)
 	{
 		if (chunkx != this.loadedx || chunky != this.loadedy || this.chunk == null)
@@ -40,7 +40,7 @@ public abstract class Perlin
 			this.chunk = this.world.getChunk(chunkx, chunky);
 		}
 	}
-
+	
 	public float getValue(int x, int y)
 	{
 		int chunkx = x / 16;
@@ -48,7 +48,7 @@ public abstract class Perlin
 		this.loadChunk(chunkx, chunky);
 		return this.chunk[(x % 16) + (y % 16) * 16];
 	}
-
+	
 	public float[] getGrid(float[] array, int x, int y, int width, int height)
 	{
 		if (array == null || array.length < width * height)

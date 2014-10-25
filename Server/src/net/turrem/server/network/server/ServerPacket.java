@@ -8,9 +8,9 @@ import java.io.IOException;
 public abstract class ServerPacket
 {
 	protected abstract void writePacket(DataOutput stream) throws IOException;
-
+	
 	public abstract byte type();
-
+	
 	public void write(DataOutputStream stream) throws IOException
 	{
 		ByteArrayOutputStream data = new ByteArrayOutputStream();

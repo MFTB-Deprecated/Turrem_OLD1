@@ -46,17 +46,17 @@ public class Chunk implements IWorldChunkStorageSegment
 	{
 		this.entities.unload();
 	}
-
+	
 	public void setParentQuad(ChunkQuad parentQuad)
 	{
 		this.parentQuad = parentQuad;
 	}
-
+	
 	public void worldTick()
 	{
 		this.entities.worldTick();
 	}
-
+	
 	public short getHeight(int x, int z)
 	{
 		this.build();
@@ -139,19 +139,19 @@ public class Chunk implements IWorldChunkStorageSegment
 		this.strata.addAll(genstrata);
 		this.doRebuild();
 	}
-
+	
 	public short getMinHeight()
 	{
 		this.build();
-		return minHeight;
+		return this.minHeight;
 	}
 	
 	public short getMaxHeight()
 	{
 		this.build();
-		return maxHeight;
+		return this.maxHeight;
 	}
-
+	
 	public Material[] coreTerrain(int x, int size, int z)
 	{
 		x %= 16;
@@ -174,7 +174,7 @@ public class Chunk implements IWorldChunkStorageSegment
 		}
 		return core;
 	}
-
+	
 	public Stratum getTopStratum(int x, int z)
 	{
 		for (int i = this.strata.size() - 1; i >= 0; i--)

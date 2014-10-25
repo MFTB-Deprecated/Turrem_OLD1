@@ -16,6 +16,10 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 import net.turrem.EnumSide;
+import net.turrem.mod.event.OnLoad;
+import net.turrem.mod.event.OnPostLoad;
+import net.turrem.mod.event.OnPreLoad;
+import net.turrem.mod.event.PreRegister;
 import net.turrem.utils.JarExplore;
 
 import com.google.common.base.Charsets;
@@ -30,18 +34,18 @@ public class ModLoader
 	private final EnumSide side;
 	private final File modDirectory;
 	public URLClassLoader modClassLoader;
-
+	
 	public ModLoader(File modDirectory, EnumSide side)
 	{
 		this.modDirectory = modDirectory;
 		this.side = side;
 	}
-
+	
 	public ModInstance getMod(String identifier)
 	{
 		return this.mods.get(identifier);
 	}
-
+	
 	public void findMods()
 	{
 		for (File dir : this.modDirectory.listFiles())
@@ -52,7 +56,7 @@ public class ModLoader
 				if (info.exists())
 				{
 					String id = dir.getName();
-					if (mods.containsKey(id))
+					if (this.mods.containsKey(id))
 					{
 						System.out.printf("Mod [%s] is already registered! This is a bug!%n", id);
 						break;
@@ -106,8 +110,8 @@ public class ModLoader
 		jars = jarlist.toArray(jars);
 		this.modClassLoader = URLClassLoader.newInstance(jars, parent);
 	}
-
-	public void loadMods(NotedElementVisitorRegistry notedElements)
+	
+	public void loadMods(NotedElementRegistryRegistry notedElements)
 	{
 		ArrayListMultimap<ModInstance, Class<?>> claz = ArrayListMultimap.create();
 		for (ModInstance mod : this.mods.values())
@@ -125,7 +129,7 @@ public class ModLoader
 		this.onLoad(notedElements, claz);
 		this.onPostLoad(claz);
 	}
-
+	
 	protected JarFile getModJar(String id) throws IOException
 	{
 		return new JarFile(this.getModJarFile(id));
@@ -146,7 +150,7 @@ public class ModLoader
 		jar += ".jar";
 		return new File(this.modDirectory, id + jar);
 	}
-
+	
 	protected JarFile getModJar(ModInstance mod) throws IOException
 	{
 		return this.getModJar(mod.identifier);
@@ -156,8 +160,8 @@ public class ModLoader
 	{
 		return this.getModJarFile(mod.identifier);
 	}
-
-	protected void onLoad(NotedElementVisitorRegistry registry, ArrayListMultimap<ModInstance, Class<?>> map)
+	
+	protected void onLoad(NotedElementRegistryRegistry registry, ArrayListMultimap<ModInstance, Class<?>> map)
 	{
 		for (ModInstance mod : map.keySet())
 		{
@@ -198,7 +202,7 @@ public class ModLoader
 			}
 		}
 	}
-
+	
 	protected void onPostLoad(ArrayListMultimap<ModInstance, Class<?>> map)
 	{
 		for (ModInstance mod : map.keySet())
@@ -239,8 +243,8 @@ public class ModLoader
 			}
 		}
 	}
-
-	protected void onPreVisitLoad(NotedElementVisitorRegistry registry, ArrayListMultimap<ModInstance, Class<?>> map)
+	
+	protected void onPreVisitLoad(NotedElementRegistryRegistry registry, ArrayListMultimap<ModInstance, Class<?>> map)
 	{
 		for (ModInstance mod : map.keySet())
 		{
@@ -254,13 +258,13 @@ public class ModLoader
 					{
 						if (!Modifier.isStatic(met.getModifiers()))
 						{
-							System.out.printf("Method %s has @RegisterVisitors, but is not static.%n", name);
+							System.out.printf("Method %s has @PreRegister, but is not static.%n", name);
 						}
 						else if (met.getParameterTypes().length != 1)
 						{
 							System.out.printf("Method %s has @PreRegister, but requires %d parameters. It should require a single parameter.%n", name, met.getParameterTypes().length);
 						}
-						else if (!met.getParameterTypes()[0].isAssignableFrom(NotedElementVisitorRegistry.class))
+						else if (!met.getParameterTypes()[0].isAssignableFrom(NotedElementRegistryRegistry.class))
 						{
 							System.out.printf("Method %s has @PreRegister, but takes a parameter that is not assignable from NotedElementVisitorRegistry.%n", name);
 						}
@@ -272,7 +276,7 @@ public class ModLoader
 							}
 							catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e)
 							{
-								System.out.printf("Method %s has @RegisterVisitors and is correctly declared, but threw %s when invoked.%n", name, e.getClass().getSimpleName());
+								System.out.printf("Method %s has @PreRegister and is correctly declared, but threw %s when invoked.%n", name, e.getClass().getSimpleName());
 							}
 							catch (Exception ex)
 							{
@@ -310,5 +314,5 @@ public class ModLoader
 			}
 		}
 	}
-
+	
 }

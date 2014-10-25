@@ -25,13 +25,13 @@ public class RenderObjectTVF implements IRenderObject
 			this.tvf.doRender();
 		}
 	}
-
+	
 	@Override
 	public boolean isLoaded()
 	{
 		return this.tvf != null;
 	}
-
+	
 	@Override
 	public boolean load(RenderEngine render)
 	{
@@ -42,7 +42,7 @@ public class RenderObjectTVF implements IRenderObject
 		this.tvf = render.loadTVFRender(this.source, this.scale, Config.doAO);
 		return true;
 	}
-
+	
 	@Override
 	public boolean reload(RenderEngine render)
 	{
@@ -50,7 +50,7 @@ public class RenderObjectTVF implements IRenderObject
 		this.tvf = render.loadTVFRender(this.source, this.scale, Config.doAO);
 		return true;
 	}
-
+	
 	@Override
 	public boolean unload(RenderEngine render)
 	{
@@ -62,13 +62,13 @@ public class RenderObjectTVF implements IRenderObject
 		}
 		return false;
 	}
-
+	
 	@Override
 	public String getSource()
 	{
 		return this.source;
 	}
-
+	
 	@Override
 	public String getIdentifier()
 	{

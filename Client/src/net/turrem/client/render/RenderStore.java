@@ -10,12 +10,12 @@ public abstract class RenderStore<T extends IRenderObject> implements IRenderSto
 {
 	protected RenderEngine theEngine;
 	private HashMap<String, T> objects = new HashMap<String, T>();
-
+	
 	public RenderStore(RenderEngine render)
 	{
 		this.theEngine = render;
 	}
-
+	
 	@Override
 	public void unloadAll()
 	{
@@ -25,25 +25,25 @@ public abstract class RenderStore<T extends IRenderObject> implements IRenderSto
 		}
 		this.objects.clear();
 	}
-
+	
 	@Override
 	public int size()
 	{
 		return this.objects.size();
 	}
-
+	
 	@Override
 	public Map<String, IRenderObject> getMap()
 	{
 		return this.getMap();
 	}
-
+	
 	@Override
 	public T getObject(IRenderIcon ico)
 	{
 		return this.objects.get(ico.getIdentifier());
 	}
-
+	
 	@Override
 	public T unloadObject(IRenderIcon ico)
 	{
@@ -56,7 +56,7 @@ public abstract class RenderStore<T extends IRenderObject> implements IRenderSto
 		}
 		return obj;
 	}
-
+	
 	@Override
 	public T loadObject(IRenderIcon ico)
 	{
@@ -79,7 +79,7 @@ public abstract class RenderStore<T extends IRenderObject> implements IRenderSto
 	}
 	
 	public abstract T createObject(IRenderIcon ico);
-
+	
 	@Override
 	public T reloadObject(IRenderIcon ico)
 	{
@@ -97,7 +97,7 @@ public abstract class RenderStore<T extends IRenderObject> implements IRenderSto
 		obj.reload(this.theEngine);
 		return obj;
 	}
-
+	
 	@Override
 	public void reloadAll(boolean loadnew)
 	{

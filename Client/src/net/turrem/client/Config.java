@@ -29,7 +29,7 @@ public class Config
 	{
 		return Display.getDisplayMode().getHeight();
 	}
-
+	
 	public static int getWidth()
 	{
 		return Display.getDisplayMode().getWidth();

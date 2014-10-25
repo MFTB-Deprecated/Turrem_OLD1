@@ -5,13 +5,14 @@ import net.turrem.client.Config;
 public class ConnectionWriterThread extends Thread
 {
 	final GameConnection theConnection;
-
+	
 	public ConnectionWriterThread(GameConnection connection)
 	{
 		super("Network writer thread");
 		this.theConnection = connection;
 	}
-
+	
+	@Override
 	public void run()
 	{
 		while (this.theConnection.isRunning())

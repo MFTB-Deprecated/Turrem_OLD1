@@ -1,9 +1,10 @@
 package net.turrem.utils;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import java.lang.reflect.Method;
 
 public class CallList
 {

@@ -8,7 +8,7 @@ import org.lwjgl.BufferUtils;
 public class ImgUtils
 {
 	private static final int BYTES_PER_PIXEL = 4;
-
+	
 	/**
 	 * LWJGL image conversion/storage stuff is done here
 	 * 

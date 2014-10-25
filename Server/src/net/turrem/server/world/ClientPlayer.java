@@ -22,24 +22,24 @@ public class ClientPlayer
 	public String username;
 	public GameConnection theConnection;
 	public Realm theRealm;
-
+	
 	private Set<ChunkUpdate> chunkUpdates = new HashSet<ChunkUpdate>();
 	private Object chunkUpdatesLock = new Object();
-
+	
 	private boolean sentStarting = false;
 	private boolean sentWorld = false;
-
+	
 	public ClientPlayer(World world, String name)
 	{
 		this.theWorld = world;
 		this.username = name;
 	}
-
+	
 	public void joinNetwork(GameConnection connection)
 	{
 		this.theConnection = connection;
 	}
-
+	
 	public void sendPacket(ServerPacket packet)
 	{
 		if (this.theConnection != null)
@@ -47,7 +47,7 @@ public class ClientPlayer
 			this.theConnection.addToSendQueue(packet);
 		}
 	}
-
+	
 	public void exit()
 	{
 		if (this.theRealm != null)
@@ -55,7 +55,7 @@ public class ClientPlayer
 			this.theRealm.onPlayerExit();
 		}
 	}
-
+	
 	public void processPacket(ClientPacket packet)
 	{
 		if (packet instanceof ClientPacketRequest)
@@ -74,7 +74,7 @@ public class ClientPlayer
 			}
 		}
 	}
-
+	
 	public boolean addChunkUpdate(int chunkx, int chunkz)
 	{
 		ChunkUpdate update = new ChunkUpdate(chunkx, chunkz);
@@ -85,7 +85,7 @@ public class ClientPlayer
 		}
 		return flag;
 	}
-
+	
 	public boolean addChunkUpdate(ChunkUpdate update)
 	{
 		boolean flag;
@@ -95,7 +95,7 @@ public class ClientPlayer
 		}
 		return flag;
 	}
-
+	
 	public void sendChunks()
 	{
 		if (!this.sentStarting && this.theRealm.startingLocation != null)
@@ -145,7 +145,7 @@ public class ClientPlayer
 			}
 		}
 	}
-
+	
 	public boolean reviewPacket(ClientPacket packet)
 	{
 		return true;

@@ -92,7 +92,7 @@ public class ChunkEntityStorage
 		}
 		this.entities.clear();
 	}
-
+	
 	public void worldTick()
 	{
 		for (int i = 0; i < this.entities.size(); i++)

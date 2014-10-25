@@ -17,7 +17,7 @@ public class ServerPacketAddPlayer extends ServerPacket
 		byte[] namebytes = this.playerName.getBytes("UTF-8");
 		stream.write(namebytes);
 	}
-
+	
 	@Override
 	public byte type()
 	{

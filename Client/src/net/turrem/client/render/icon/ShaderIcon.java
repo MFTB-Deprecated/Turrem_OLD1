@@ -16,13 +16,13 @@ public class ShaderIcon implements IRenderIcon
 	{
 		return this.name;
 	}
-
+	
 	@Override
 	public String getIdentifier()
 	{
 		return this.name;
 	}
-
+	
 	@Override
 	public void load(RenderEngine engine)
 	{

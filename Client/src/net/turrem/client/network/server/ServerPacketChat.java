@@ -16,7 +16,7 @@ public class ServerPacketChat extends ServerPacket
 	public String chat;
 	
 	private ServerPacketChat(DataInput data, int length, byte type) throws IOException
-	{		
+	{
 		super(type);
 		length -= 1;
 		byte tord = data.readByte();

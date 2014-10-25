@@ -17,9 +17,9 @@ public class ModInstance
 		CLIENT_AND_SERVER,
 		NO_MOD;
 	}
-
+	
 	private static final JdomParser JDOM_PARSER = new JdomParser();
-
+	
 	public final String name;
 	public final String identifier;
 	public final String version;
@@ -27,12 +27,12 @@ public class ModInstance
 	
 	public final String url;
 	public final String srcurl;
-
+	
 	public ModInstance(String info, String identifier) throws InvalidSyntaxException
 	{
 		this.identifier = identifier;
 		JsonRootNode json = JDOM_PARSER.parse(info);
-
+		
 		this.version = Strings.nullToEmpty(json.getNullableStringValue("version"));
 		this.name = Strings.nullToEmpty(json.getNullableStringValue("name"));
 		
@@ -49,7 +49,7 @@ public class ModInstance
 		{
 			t = ModType.CLIENT_AND_SERVER;
 		}
-
+		
 		this.type = t;
 	}
 	

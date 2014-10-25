@@ -2,6 +2,7 @@ package net.turrem.client.game.world;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+
 import java.net.Socket;
 
 import net.turrem.client.Config;
@@ -25,17 +26,17 @@ public class ClientWorld
 	public long worldTime = 0;
 	public GameConnection theConnection;
 	public RenderEngine theRender;
-
+	
 	private boolean hasStartingInfo = false;
 	
 	private float chunkrends = 0;
-
+	
 	public ClientWorld(ClientGame game)
 	{
 		this.theGame = game;
 		this.theRender = game.theRender;
 	}
-
+	
 	public void render()
 	{
 		this.worldTime++;
@@ -55,20 +56,20 @@ public class ClientWorld
 			}
 			this.renderEntities();
 		}
-
+		
 		this.theConnection.processPackets();
-
+		
 		if (!this.theConnection.isRunning())
 		{
 			this.theGame.stopGame();
 		}
 	}
-
+	
 	public void renderEntities()
 	{
-
+		
 	}
-
+	
 	public Chunk getChunk(int chunkx, int chunkz)
 	{
 		if (this.chunks == null)
@@ -77,7 +78,7 @@ public class ClientWorld
 		}
 		return this.chunks.getChunk(chunkx, chunkz);
 	}
-
+	
 	public int getHeight(int x, int z, int empty)
 	{
 		Chunk c = this.getChunk(x >> 4, z >> 4);
@@ -87,7 +88,7 @@ public class ClientWorld
 		}
 		return c.getHeight(x, z);
 	}
-
+	
 	public int getRayHeight(double x1, double z1, double x2, double z2, double extend)
 	{
 		double x = x1;
@@ -122,7 +123,7 @@ public class ClientWorld
 		}
 		return height;
 	}
-
+	
 	public int requestNullChunks(int centerx, int centerz, int select, int num)
 	{
 		if (!Config.shouldRequestChunks)
@@ -135,7 +136,7 @@ public class ClientWorld
 		for (int dist = 1; dist <= Config.chunkRequestDistance * 2; dist += 2)
 		{
 			int hal = dist / 2;
-
+			
 			for (int i = -hal; i <= hal; i++)
 			{
 				if (this.getChunk(chunkx + i, chunkz + hal) == null)
@@ -151,7 +152,7 @@ public class ClientWorld
 					}
 				}
 			}
-
+			
 			for (int i = -hal + 1; i < hal; i++)
 			{
 				if (this.getChunk(chunkx + i, chunkz - hal) == null)
@@ -167,7 +168,7 @@ public class ClientWorld
 					}
 				}
 			}
-
+			
 			for (int i = -hal; i < hal; i++)
 			{
 				if (this.getChunk(chunkx + hal, chunkz + i) == null)
@@ -183,7 +184,7 @@ public class ClientWorld
 					}
 				}
 			}
-
+			
 			for (int i = -hal; i < hal; i++)
 			{
 				if (this.getChunk(chunkx - hal, chunkz + i) == null)
@@ -200,21 +201,21 @@ public class ClientWorld
 				}
 			}
 		}
-
+		
 		return 0;
 	}
-
+	
 	private void requestChunk(int chunkx, int chunkz)
 	{
 		RequestChunk req = new RequestChunk(chunkx, chunkz);
 		this.theConnection.addToSendQueue(req.getPacket());
 	}
-
+	
 	public int getHeight(int x, int z)
 	{
 		return this.getHeight(x, z, -1);
 	}
-
+	
 	public void startNetwork(String username) throws IOException
 	{
 		Socket socket = new Socket(Config.turremServerHost, Config.turremServerPort);
@@ -222,7 +223,7 @@ public class ClientWorld
 		output.writeUTF(username);
 		this.theConnection = new GameConnection(socket, this);
 	}
-
+	
 	public void end()
 	{
 		if (this.theConnection != null)
@@ -230,7 +231,7 @@ public class ClientWorld
 			this.theConnection.shutdown("Client closed");
 		}
 	}
-
+	
 	public void processPacket(ServerPacket pack)
 	{
 		if (!this.hasStartingInfo)

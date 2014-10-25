@@ -19,7 +19,7 @@ public class ServerPacketInfo extends ServerPacket
 	{
 		stream.write(0x00);
 	}
-
+	
 	@Override
 	public byte type()
 	{

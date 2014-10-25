@@ -14,7 +14,7 @@ public class ServerPacketChat extends ServerPacket
 	public ChatType type;
 	public String from;
 	public String chat;
-
+	
 	@Override
 	protected void writePacket(DataOutput stream) throws IOException
 	{
@@ -25,7 +25,7 @@ public class ServerPacketChat extends ServerPacket
 		byte[] chatbytes = this.chat.getBytes("UTF-8");
 		stream.write(chatbytes);
 	}
-
+	
 	@Override
 	public byte type()
 	{
