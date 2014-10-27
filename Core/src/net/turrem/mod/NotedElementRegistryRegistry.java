@@ -9,7 +9,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 import java.lang.reflect.AnnotatedElement;
 
-import net.turrem.mod.registry.INotedElementRegister;
+import net.turrem.mod.registry.INotedElementRegistry;
 import net.turrem.mod.registry.Registrable;
 
 import com.google.common.collect.HashMultimap;
@@ -30,15 +30,15 @@ public class NotedElementRegistryRegistry
 			return this.registry;
 		}
 		
-		public void addVisitor(INotedElementRegister visitor, Class<? extends Annotation> annotation)
+		public void addRegistry(INotedElementRegistry visitor, Class<? extends Annotation> annotation)
 		{
 			this.registry.addVisitor(visitor, annotation);
 		}
 	}
 	
-	private HashMultimap<Class<? extends Annotation>, INotedElementRegister> visitors = HashMultimap.create();
+	private HashMultimap<Class<? extends Annotation>, INotedElementRegistry> visitors = HashMultimap.create();
 	
-	void addVisitor(INotedElementRegister visitor, Class<? extends Annotation> annotation)
+	void addVisitor(INotedElementRegistry visitor, Class<? extends Annotation> annotation)
 	{
 		if (annotation == null || visitor == null)
 		{
@@ -72,10 +72,10 @@ public class NotedElementRegistryRegistry
 	{
 		for (Annotation ann : element.getDeclaredAnnotations())
 		{
-			Set<INotedElementRegister> viss = this.visitors.get(ann.annotationType());
+			Set<INotedElementRegistry> viss = this.visitors.get(ann.annotationType());
 			if (viss != null)
 			{
-				for (INotedElementRegister vis : viss)
+				for (INotedElementRegistry vis : viss)
 				{
 					vis.visitElement(ann, element, mod);
 				}

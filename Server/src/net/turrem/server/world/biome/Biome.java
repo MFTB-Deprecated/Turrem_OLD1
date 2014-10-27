@@ -40,4 +40,10 @@ public abstract class Biome implements IGeomorph
 	{
 		return vertexSeed ^ this.getOrdering();
 	}
+	
+	@Override
+	public int hashCode()
+	{
+		return ("biome:" + this.getId()).hashCode();
+	}
 }

@@ -56,28 +56,35 @@ public class ModLoader
 				if (info.exists())
 				{
 					String id = dir.getName();
-					if (this.mods.containsKey(id))
+					if (id.contains(":"))
 					{
-						System.out.printf("Mod [%s] is already registered! This is a bug!%n", id);
-						break;
+						System.out.printf("Mod IDs cannot contain any ':' characters.%n", id);
 					}
-					System.out.printf("Found mod.info for [%s].%n", id);
-					ModInstance mod = null;
-					try
+					else
 					{
-						mod = new ModInstance(id, Files.toString(info, Charsets.UTF_8));
-					}
-					catch (IOException io)
-					{
-						System.out.printf("Failed to load mod.info for [%s]. An IOException occurred.%n", id);
-					}
-					catch (InvalidSyntaxException e)
-					{
-						System.out.printf("Failed to load mod.info for [%s]. File was not valid JSON.%n", id);
-					}
-					if (mod != null)
-					{
-						this.mods.put(id, mod);
+						if (this.mods.containsKey(id))
+						{
+							System.out.printf("Mod [%s] is already registered! This is a bug!%n", id);
+							break;
+						}
+						System.out.printf("Found mod.info for [%s].%n", id);
+						ModInstance mod = null;
+						try
+						{
+							mod = new ModInstance(id, Files.toString(info, Charsets.UTF_8));
+						}
+						catch (IOException io)
+						{
+							System.out.printf("Failed to load mod.info for [%s]. An IOException occurred.%n", id);
+						}
+						catch (InvalidSyntaxException e)
+						{
+							System.out.printf("Failed to load mod.info for [%s]. File was not valid JSON.%n", id);
+						}
+						if (mod != null)
+						{
+							this.mods.put(id, mod);
+						}
 					}
 				}
 			}

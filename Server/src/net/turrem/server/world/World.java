@@ -7,6 +7,7 @@ import java.io.File;
 import net.turrem.server.Realm;
 import net.turrem.server.TurremServer;
 import net.turrem.server.world.gen.WorldGen;
+import net.turrem.server.world.settings.WorldSettings;
 import net.turrem.server.world.storage.WorldStorage;
 
 public class World
@@ -24,13 +25,16 @@ public class World
 	
 	public WorldStorage storage;
 	
-	public World(File theSaveDir, long seed, TurremServer turrem)
+	public WorldSettings genSettings;
+	
+	public World(File theSaveDir, long seed, WorldSettings set, TurremServer turrem)
 	{
 		this.theTurrem = turrem;
+		this.genSettings = set;
 		this.saveLoc = theSaveDir;
 		this.seed = seed;
 		this.storage = new WorldStorage(32, 9, this);
-		this.theWorldGen = new WorldGenBasic(this.seed);
+		this.theWorldGen = new WorldGen(this.seed, turrem, this);
 	}
 	
 	public void addPlayer(ClientPlayer player)

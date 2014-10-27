@@ -8,10 +8,10 @@ import java.util.List;
 import java.lang.annotation.Annotation;
 
 import net.turrem.mod.ModInstance;
-import net.turrem.mod.registry.NotedElementWithFactoryRegistry;
+import net.turrem.mod.registry.ClassWithFactoryRegistry;
 import net.turrem.server.world.morph.GeomorphRegistry;
 
-public class BiomeRegistry extends NotedElementWithFactoryRegistry
+public class BiomeRegistry extends ClassWithFactoryRegistry
 {
 	private static HashMap<String, Biome> registry = new HashMap<String, Biome>();
 	

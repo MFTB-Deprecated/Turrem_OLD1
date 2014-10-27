@@ -98,7 +98,7 @@ public class Turrem
 		this.modLoader.loadModClasses(this.getClass().getClassLoader());
 		
 		this.staticEventRegistry = new StaticEventRegistry();
-		this.elementVisitorRegistry.addVisitor(this.staticEventRegistry, TurremSubscribeStatic.class);
+		this.elementVisitorRegistry.addRegistry(this.staticEventRegistry, TurremSubscribeStatic.class);
 		
 		this.modLoader.loadMods(this.elementVisitorRegistry.getRegistry());
 	}

@@ -3,17 +3,15 @@ package net.turrem.client.mod;
 import java.util.ArrayList;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 
 import net.turrem.client.game.ClientGame;
 import net.turrem.client.game.world.ClientWorld;
 import net.turrem.mod.ModInstance;
-import net.turrem.mod.registry.INotedElementRegister;
+import net.turrem.mod.registry.StaticMethodRegistry;
 
-public class StaticEventRegistry implements INotedElementRegister
+public class StaticEventRegistry extends StaticMethodRegistry
 {
 	public ArrayList<Method> preTickCalls = new ArrayList<Method>();
 	public ArrayList<Method> postTickCalls = new ArrayList<Method>();
@@ -21,19 +19,19 @@ public class StaticEventRegistry implements INotedElementRegister
 	public ArrayList<Method> postWorldTickCalls = new ArrayList<Method>();
 	
 	@Override
-	public void visitElement(Annotation annotation, AnnotatedElement element, ModInstance mod)
+	protected void registerElement(Annotation annotation, Method met, ModInstance mod)
 	{
+		if (!(annotation instanceof TurremSubscribeStatic))
+		{
+			System.out.printf("Method %s has @%s not @%s but was sent to a StaticEventRegistry.%n", met.getName(), annotation.getClass().getSimpleName(), TurremSubscribeStatic.class.getSimpleName());
+			return;
+		}
 		TurremSubscribeStatic subscribe = (TurremSubscribeStatic) annotation;
-		this.registerEvent(subscribe.event(), (Method) element);
+		this.registerEvent(subscribe.event(), met);
 	}
 	
 	private void registerEvent(EnumTurremEvent event, Method method)
 	{
-		if (!Modifier.isStatic(method.getModifiers()))
-		{
-			System.out.printf("Method %s has @TurremSubscribeStatic(event=%s), but is not static%n", method.getName(), event.name());
-			return;
-		}
 		String arguments = "";
 		{
 			arguments += "(";

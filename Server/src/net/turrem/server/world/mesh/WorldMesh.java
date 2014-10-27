@@ -2,17 +2,21 @@ package net.turrem.server.world.mesh;
 
 import java.util.HashMap;
 
+import net.turrem.server.world.gen.WorldGen;
+
 public class WorldMesh
 {
 	private HashMap<Integer, HashMap<Integer, WorldVertex>> map;
-	public int seed;
+	public long seed;
 	public WorldMesh parent;
+	public WorldGen gen;
 	
-	public WorldMesh(int seed, WorldMesh parent)
+	public WorldMesh(long seed, WorldMesh parent, WorldGen gen)
 	{
 		this.map = new HashMap<Integer, HashMap<Integer, WorldVertex>>();
 		this.seed = seed;
 		this.parent = parent;
+		this.gen = gen;
 	}
 	
 	/**
@@ -84,7 +88,7 @@ public class WorldMesh
 	{
 		if (this.parent == null)
 		{
-			return null;
+			return new VertexGenData(this.gen.startingMorphs, 0.0F);
 		}
 		int i = (row % 2) + (col % 2) * 2;
 		int r = row / 2;
@@ -107,8 +111,15 @@ public class WorldMesh
 	
 	private VertexGenData getStartData(WorldVertex parent1, WorldVertex parent2)
 	{
-		// TODO Mix parent vertices
-		return null;
+		float height = parent1.getData().height;
+		if (parent2 != null)
+		{
+			height += parent2.getData().height;
+			height /= 2.0F;
+		}
+		VertexGenDataWork dat = new VertexGenDataWork(height);
+		
+		return new VertexGenData(dat);
 	}
 	
 	private long posSeed(long x, long y)

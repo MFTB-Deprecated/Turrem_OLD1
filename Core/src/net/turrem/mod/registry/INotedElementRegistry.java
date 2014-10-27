@@ -5,7 +5,7 @@ import java.lang.reflect.AnnotatedElement;
 
 import net.turrem.mod.ModInstance;
 
-public interface INotedElementRegister
+public interface INotedElementRegistry
 {
 	public void visitElement(Annotation annotation, AnnotatedElement element, ModInstance mod);
 }

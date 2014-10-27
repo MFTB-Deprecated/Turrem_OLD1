@@ -39,4 +39,10 @@ public abstract class Geomorph implements IGeomorph
 	{
 		return vertexSeed ^ this.getOrdering();
 	}
+	
+	@Override
+	public int hashCode()
+	{
+		return ("morph:" + this.getId()).hashCode();
+	}
 }

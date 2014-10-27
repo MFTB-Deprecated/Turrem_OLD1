@@ -9,8 +9,13 @@ import net.turrem.mod.ModLoader;
 import net.turrem.mod.NotedElementRegistryRegistry.NotedElementRegistryRegistryWrapper;
 import net.turrem.server.network.NetworkRoom;
 import net.turrem.server.world.World;
+import net.turrem.server.world.biome.BiomeRegistry;
+import net.turrem.server.world.biome.RegisterBiome;
 import net.turrem.server.world.morph.GeomorphRegistry;
 import net.turrem.server.world.morph.RegisterGeomorph;
+import net.turrem.server.world.morph.RegisterStartingGeomorph;
+import net.turrem.server.world.morph.StartingGeomorphRegistry;
+import net.turrem.server.world.settings.WorldSettings;
 
 public class TurremServer
 {
@@ -39,6 +44,7 @@ public class TurremServer
 	private NotedElementRegistryRegistryWrapper elementRegistryRegistry;
 	
 	public EntityArticleRegistry entityArticleRegistry;
+	public StartingGeomorphRegistry startingGeomorphRegistry;
 	
 	public TurremServer(String dir, String save)
 	{
@@ -54,13 +60,17 @@ public class TurremServer
 		this.modLoader = new ModLoader(new File(this.theGameDir, "mods"), EnumSide.SERVER);
 		
 		this.entityArticleRegistry = new EntityArticleRegistry(EnumSide.SERVER);
+		this.startingGeomorphRegistry = new StartingGeomorphRegistry();
 		GeomorphRegistry geomorphs = new GeomorphRegistry();
+		BiomeRegistry biomes = new BiomeRegistry();
 		
 		this.modLoader.findMods();
 		this.modLoader.loadModClasses(this.getClass().getClassLoader());
 		
-		this.elementRegistryRegistry.addVisitor(this.entityArticleRegistry, RegisterEntityArticle.class);
-		this.elementRegistryRegistry.addVisitor(geomorphs, RegisterGeomorph.class);
+		this.elementRegistryRegistry.addRegistry(this.entityArticleRegistry, RegisterEntityArticle.class);
+		this.elementRegistryRegistry.addRegistry(geomorphs, RegisterGeomorph.class);
+		this.elementRegistryRegistry.addRegistry(biomes, RegisterBiome.class);
+		this.elementRegistryRegistry.addRegistry(this.startingGeomorphRegistry, RegisterStartingGeomorph.class);
 		
 		this.modLoader.loadMods(this.elementRegistryRegistry.getRegistry());
 		
@@ -70,7 +80,9 @@ public class TurremServer
 	
 	public void onRun()
 	{
-		this.theWorld = new World(this.theSaveDir, System.currentTimeMillis(), this);
+		WorldSettings set = new WorldSettings(null);
+		set.settings.setShort("meshLayers", (short) 5);
+		this.theWorld = new World(this.theSaveDir, System.currentTimeMillis(), set, this);
 		this.theNetwork = new NetworkRoom(this);
 	}
 	

@@ -8,9 +8,9 @@ import java.util.List;
 import java.lang.annotation.Annotation;
 
 import net.turrem.mod.ModInstance;
-import net.turrem.mod.registry.NotedElementWithFactoryRegistry;
+import net.turrem.mod.registry.ClassWithFactoryRegistry;
 
-public class GeomorphRegistry extends NotedElementWithFactoryRegistry
+public class GeomorphRegistry extends ClassWithFactoryRegistry
 {
 	private static HashMap<String, IGeomorph> registry = new HashMap<String, IGeomorph>();
 	

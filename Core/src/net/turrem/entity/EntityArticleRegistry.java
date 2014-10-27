@@ -8,9 +8,9 @@ import java.lang.annotation.Annotation;
 
 import net.turrem.EnumSide;
 import net.turrem.mod.ModInstance;
-import net.turrem.mod.registry.NotedElementWithFactoryRegistry;
+import net.turrem.mod.registry.ClassWithFactoryRegistry;
 
-public class EntityArticleRegistry extends NotedElementWithFactoryRegistry
+public class EntityArticleRegistry extends ClassWithFactoryRegistry
 {
 	private final static List<Class<?>[]> valadParameters = new ArrayList<Class<?>[]>();
 	

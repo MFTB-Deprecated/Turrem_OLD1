@@ -25,7 +25,7 @@ public class WorldVertex
 		}
 	}
 	
-	public static final int maxLevel = 2;
+	public static final int maxLevel = 3;
 	
 	protected final WorldMesh mesh;
 	public final int row;
@@ -134,17 +134,6 @@ public class WorldVertex
 		else
 		{
 			work = new VertexGenDataWork(last.height);
-		}
-		if (last == null)
-		{
-			/*
-			 * for (IGeomorph morph : ) {
-			 * 
-			 * }
-			 */
-		}
-		else
-		{
 			for (IGeomorph morph : last.morphs)
 			{
 				morph.generateUpgrade(work, last, this, new Random(morph.getSeed(this.seed)));
