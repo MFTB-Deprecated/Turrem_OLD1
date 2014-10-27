@@ -1,0 +1,205 @@
+package net.turrem.app.server.world.storage;
+
+import java.util.Collection;
+
+import net.turrem.app.server.world.Chunk;
+import net.turrem.app.server.world.gen.WorldGen;
+
+public class ChunkQuad implements IWorldChunkStorageSegment, IWorldChunkStorage
+{
+	public ChunkStorage theStorage;
+	public IWorldChunkStorage theParent;
+	public final int thisDepth;
+	public final int scale;
+	public final int xpos;
+	public final int zpos;
+	
+	private IWorldChunkStorageSegment[] quad = new IWorldChunkStorageSegment[4];
+	
+	public ChunkQuad(ChunkStorage storage, IWorldChunkStorage parent, int depth, int x, int z) throws IllegalArgumentException
+	{
+		this.theStorage = storage;
+		this.theParent = parent;
+		this.xpos = x;
+		this.zpos = z;
+		if (depth < 1)
+		{
+			throw new IllegalArgumentException("Depth must be a positive integer!");
+		}
+		if (depth > 25)
+		{
+			throw new IllegalArgumentException("Depth is too large!");
+		}
+		this.thisDepth = depth;
+		int s = 1;
+		for (int i = 1; i < this.thisDepth; i++)
+		{
+			s <<= 1;
+		}
+		this.scale = s;
+	}
+	
+	public Chunk binaryFindChunk(int u, int v, boolean dogen, WorldGen gen)
+	{
+		int i = 0;
+		if (u < 0)
+		{
+			i |= 1;
+		}
+		if (v < 0)
+		{
+			i |= 2;
+		}
+		if (this.thisDepth == 1)
+		{
+			return this.getChunk(i, dogen, gen);
+		}
+		else
+		{
+			ChunkQuad quad = this.getQuad(i, dogen);
+			if (quad == null)
+			{
+				return null;
+			}
+			return quad.binaryFindChunk(u << 1, v << 1, dogen, gen);
+		}
+	}
+	
+	private Chunk getChunk(int i, boolean dogen, WorldGen gen)
+	{
+		if (this.quad[i] != null)
+		{
+			return (Chunk) this.quad[i];
+		}
+		int u = (i >> 0) & 1;
+		int v = (i >> 1) & 1;
+		int chunkx = this.xpos * 2 + u;
+		int chunkz = this.zpos * 2 + v;
+		Chunk chunk = this.theStorage.loadChunk(chunkx, chunkz);
+		if (chunk != null)
+		{
+			this.quad[i] = chunk;
+			if (chunk != null)
+			{
+				chunk.setParentQuad(this);
+			}
+			return chunk;
+		}
+		if (dogen)
+		{
+			chunk = this.theStorage.genChunk(chunkx, chunkz, gen);
+			if (chunk != null)
+			{
+				this.quad[i] = chunk;
+				if (chunk != null)
+				{
+					chunk.setParentQuad(this);
+				}
+				return chunk;
+			}
+		}
+		return null;
+	}
+	
+	private ChunkQuad getQuad(int i, boolean make)
+	{
+		int u = (i >> 0) & 1;
+		int v = (i >> 1) & 1;
+		if (this.quad[i] != null)
+		{
+			return (ChunkQuad) this.quad[i];
+		}
+		if (make)
+		{
+			ChunkQuad qu = new ChunkQuad(this.theStorage, this, this.thisDepth - 1, this.xpos * 2 + u, this.zpos * 2 + v);
+			this.quad[i] = qu;
+			return qu;
+		}
+		else
+		{
+			return null;
+		}
+	}
+	
+	@Override
+	public Collection<Chunk> getChunks(Collection<Chunk> list)
+	{
+		if (this.thisDepth == 1)
+		{
+			for (IWorldChunkStorageSegment seg : this.quad)
+			{
+				if (seg != null && seg instanceof Chunk)
+				{
+					list.add((Chunk) seg);
+				}
+			}
+		}
+		else
+		{
+			for (IWorldChunkStorageSegment seg : this.quad)
+			{
+				if (seg != null && seg instanceof IWorldChunkStorage)
+				{
+					((IWorldChunkStorage) seg).getChunks(list);
+				}
+			}
+		}
+		return list;
+	}
+	
+	@Override
+	public void removeMe(int U, int V)
+	{
+		int i = U + V * 2;
+		this.quad[i] = null;
+		for (int j = 0; j < 4; j++)
+		{
+			if (this.quad[j] != null)
+			{
+				return;
+			}
+		}
+		this.theParent.removeMe(this.xpos % 2, this.zpos % 2);
+	}
+	
+	public void worldTick()
+	{
+		if (this.thisDepth == 1)
+		{
+			for (IWorldChunkStorageSegment seg : this.quad)
+			{
+				if (seg != null && seg instanceof Chunk)
+				{
+					((Chunk) seg).worldTick();
+				}
+			}
+		}
+		else
+		{
+			for (IWorldChunkStorageSegment seg : this.quad)
+			{
+				if (seg != null && seg instanceof ChunkQuad)
+				{
+					((ChunkQuad) seg).worldTick();
+				}
+			}
+		}
+	}
+	
+	public void clear()
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			IWorldChunkStorageSegment seg = this.quad[i];
+			if (seg != null && seg instanceof ChunkQuad)
+			{
+				((ChunkQuad) seg).clear();
+			}
+			else if (seg != null && seg instanceof Chunk)
+			{
+				((Chunk) seg).unload();
+			}
+			this.quad[i] = null;
+		}
+	}
+}
